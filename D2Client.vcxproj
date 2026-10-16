@@ -1,0 +1,379 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{0e9d6b4f-34ba-4cc7-b641-19d55bc3c494}</ProjectGuid>
+    <RootNamespace>D2Client</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <!-- OFF ON PURPOSE. /GL lets the linker give a function a private calling
+         convention when it can see every caller, and it did: D2ClientEntrypoint
+         is __stdcall with `retn 8` in the binary, and LTCG rebuilt it to take
+         hModule in ecx and pConfig in edx. That is a correct optimisation and
+         the wrong answer for a rewrite whose point is to match the original
+         ABI. Measured 2026-09-06 in the disassembly of the built DLL. -->
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <!-- OFF ON PURPOSE. /GL lets the linker give a function a private calling
+         convention when it can see every caller, and it did: D2ClientEntrypoint
+         is __stdcall with `retn 8` in the binary, and LTCG rebuilt it to take
+         hModule in ecx and pConfig in edx. That is a correct optimisation and
+         the wrong answer for a rewrite whose point is to match the original
+         ABI. Measured 2026-09-06 in the disassembly of the built DLL. -->
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <!-- Incremental linking puts every function behind an ILT jump thunk, so the
+       PE entry point and every export RVA point at a `jmp` rather than at the
+       code. Off in every configuration, so the built DLL can be compared with
+       the original as data. -->
+  <PropertyGroup>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>D2Client</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>D2Client</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>D2Client</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>D2Client</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;D2CLIENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <!-- The original PE names its entry point DllEntryPoint at RVA 0xC1C1D;
+           see DLLmain.cpp for why it forwards to the CRT startup. -->
+      <EntryPointSymbol>DllEntryPoint</EntryPointSymbol>
+      <!-- QueryInterface must land on ordinal 10004, which only a .def can
+           pin. -->
+      <ModuleDefinitionFile>D2Client.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;D2CLIENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <!-- The original PE names its entry point DllEntryPoint at RVA 0xC1C1D;
+           see DLLmain.cpp for why it forwards to the CRT startup. -->
+      <EntryPointSymbol>DllEntryPoint</EntryPointSymbol>
+      <!-- QueryInterface must land on ordinal 10004, which only a .def can
+           pin. -->
+      <ModuleDefinitionFile>D2Client.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;D2CLIENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <!-- The original PE names its entry point DllEntryPoint at RVA 0xC1C1D;
+           see DLLmain.cpp for why it forwards to the CRT startup. -->
+      <EntryPointSymbol>DllEntryPoint</EntryPointSymbol>
+      <!-- QueryInterface must land on ordinal 10004, which only a .def can
+           pin. -->
+      <ModuleDefinitionFile>D2Client.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;D2CLIENT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <!-- The original PE names its entry point DllEntryPoint at RVA 0xC1C1D;
+           see DLLmain.cpp for why it forwards to the CRT startup. -->
+      <EntryPointSymbol>DllEntryPoint</EntryPointSymbol>
+      <!-- QueryInterface must land on ordinal 10004, which only a .def can
+           pin. -->
+      <ModuleDefinitionFile>D2Client.def</ModuleDefinitionFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Cursor.cpp" />
+    <ClCompile Include="dialog.cpp" />
+    <ClCompile Include="editbox.cpp" />
+    <ClCompile Include="CmdTbl.cpp" />
+    <ClCompile Include="DLLmain.cpp" />
+    <ClCompile Include="WINMAIN.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="WNDPROC.cpp" />
+    <ClCompile Include="Missile.cpp" />
+    <ClCompile Include="CUnit.cpp" />
+    <ClCompile Include="CUnitEvent.cpp" />
+    <ClCompile Include="chat.cpp" />
+    <ClCompile Include="View.cpp" />
+    <ClCompile Include="Wall2.cpp" />
+    <ClCompile Include="dWall.cpp" />
+    <ClCompile Include="ViewEffects.cpp" />
+    <ClCompile Include="Quests.cpp" />
+    <ClCompile Include="QuestsFX.cpp" />
+    <ClCompile Include="minipanel.cpp" />
+    <ClCompile Include="Env.cpp" />
+    <ClCompile Include="scroll.cpp" />
+    <ClCompile Include="Select.cpp" />
+    <ClCompile Include="PalShift.cpp" />
+    <ClCompile Include="Record.cpp" />
+    <ClCompile Include="Roster.cpp" />
+    <ClCompile Include="RosterPets.cpp" />
+    <ClCompile Include="ui.cpp" />
+    <ClCompile Include="ui_panels.cpp" />
+    <ClCompile Include="useitem.cpp" />
+    <ClCompile Include="MemoryPartitions.cpp" />
+    <ClCompile Include="Video.cpp" />
+    <ClCompile Include="Draw.cpp" />
+    <ClCompile Include="dFloor.cpp" />
+    <ClCompile Include="dLightMap.cpp" />
+    <ClCompile Include="arena.cpp" />
+    <ClCompile Include="Archive.cpp" />
+    <ClCompile Include="Msg.cpp" />
+    <ClCompile Include="automap.cpp" />
+    <ClCompile Include="help.cpp" />
+    <ClCompile Include="char.cpp" />
+    <ClCompile Include="QuestLog.cpp" />
+    <ClCompile Include="Quest.cpp" />
+    <ClCompile Include="Restart.cpp" />
+    <ClCompile Include="config.cpp" />
+    <ClCompile Include="panel.cpp" />
+    <ClCompile Include="Hireables.cpp" />
+    <ClCompile Include="InsertDisc.cpp" />
+    <ClCompile Include="text.cpp" />
+    <ClCompile Include="trade.cpp" />
+    <ClCompile Include="newstats.cpp" />
+    <ClCompile Include="Party.cpp" />
+    <ClCompile Include="waypoint.cpp" />
+    <ClCompile Include="npcmenu.cpp" />
+    <ClCompile Include="inv.cpp" />
+    <ClCompile Include="skillstree.cpp" />
+    <ClCompile Include="spellsel.cpp" />
+    <ClCompile Include="SCmd.cpp" />
+    <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Listbox.cpp" />
+    <ClCompile Include="SkillDesc.cpp" />
+    <ClCompile Include="showitems.cpp" />
+    <ClCompile Include="Skills.cpp" />
+    <ClCompile Include="States.cpp" />
+    <ClCompile Include="SkillsAma.cpp" />
+    <ClCompile Include="SkillsAss.cpp" />
+    <ClCompile Include="SkillsBar.cpp" />
+    <ClCompile Include="SkillsDru.cpp" />
+    <ClCompile Include="SkillsEMon.cpp" />
+    <ClCompile Include="SkillsMon.cpp" />
+    <ClCompile Include="SkillsNec.cpp" />
+    <ClCompile Include="SkillsPal.cpp" />
+    <ClCompile Include="SkillsSor.cpp" />
+    <ClCompile Include="PlrSkills.cpp" />
+    <ClCompile Include="UnitMode.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="mods.cpp" />
+    <ClCompile Include="Monster.cpp" />
+    <ClCompile Include="MonUnique.cpp" />
+    <ClCompile Include="Gfx.cpp" />
+    <ClCompile Include="Shared.cpp" />
+    <ClCompile Include="CoreArchive.cpp" />
+    <ClCompile Include="Lng.cpp" />
+    <ClCompile Include="PlayerList.cpp" />
+    <ClCompile Include="UnitGfx.cpp" />
+    <ClCompile Include="Fault.cpp" />
+    <ClCompile Include="GfxUtil.cpp" />
+    <ClCompile Include="Particle.cpp" />
+    <ClCompile Include="SoundChan.cpp" />
+    <ClCompile Include="SoundEnv.cpp" />
+    <ClCompile Include="SoundHdr.cpp" />
+    <ClCompile Include="SoundInst.cpp" />
+    <ClCompile Include="SoundSong.cpp" />
+    <ClCompile Include="UnitSnd.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="arena.h" />
+    <ClInclude Include="automap.h" />
+    <ClInclude Include="char.h" />
+    <ClInclude Include="chat.h" />
+    <ClInclude Include="CmdTbl.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="CoreArchive.h" />
+    <ClInclude Include="CUnit.h" />
+    <ClInclude Include="Cursor.h" />
+    <ClInclude Include="D2Client.h" />
+    <ClInclude Include="D2Constants.h" />
+    <ClInclude Include="D2Imports.h" />
+    <ClInclude Include="D2Ptrs.h" />
+    <ClInclude Include="D2Structs.h" />
+    <ClInclude Include="D2Vars.h" />
+    <ClInclude Include="dFloor.h" />
+    <ClInclude Include="dialog.h" />
+    <ClInclude Include="dLightMap.h" />
+    <ClInclude Include="DLLmain.h" />
+    <ClInclude Include="Draw.h" />
+    <ClInclude Include="dWall.h" />
+    <ClInclude Include="editbox.h" />
+    <ClInclude Include="Env.h" />
+    <ClInclude Include="Fault.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Gfx.h" />
+    <ClInclude Include="GfxUtil.h" />
+    <ClInclude Include="help.h" />
+    <ClInclude Include="Hireables.h" />
+    <ClInclude Include="InsertDisc.h" />
+    <ClInclude Include="inv.h" />
+    <ClInclude Include="Item.h" />
+    <ClInclude Include="Listbox.h" />
+    <ClInclude Include="Lng.h" />
+    <ClInclude Include="MemoryPartitions.h" />
+    <ClInclude Include="Missile.h" />
+    <ClInclude Include="mods.h" />
+    <ClInclude Include="Monster.h" />
+    <ClInclude Include="MonUnique.h" />
+    <ClInclude Include="Msg.h" />
+    <ClInclude Include="npcmenu.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="PalShift.h" />
+    <ClInclude Include="panel.h" />
+    <ClInclude Include="Party.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="PlrSkills.h" />
+    <ClInclude Include="QuestLog.h" />
+    <ClInclude Include="Quests.h" />
+    <ClInclude Include="QuestsFX.h" />
+    <ClInclude Include="Record.h" />
+    <ClInclude Include="Restart.h" />
+    <ClInclude Include="Roster.h" />
+    <ClInclude Include="RosterPets.h" />
+    <ClInclude Include="SCmd.h" />
+    <ClInclude Include="scroll.h" />
+    <ClInclude Include="Select.h" />
+    <ClInclude Include="showitems.h" />
+    <ClInclude Include="SkillDesc.h" />
+    <ClInclude Include="Skills.h" />
+    <ClInclude Include="SkillsAss.h" />
+    <ClInclude Include="SkillsBar.h" />
+    <ClInclude Include="SkillsDru.h" />
+    <ClInclude Include="SkillsEMon.h" />
+    <ClInclude Include="SkillsMon.h" />
+    <ClInclude Include="SkillsPal.h" />
+    <ClInclude Include="skillstree.h" />
+    <ClInclude Include="SoundChan.h" />
+    <ClInclude Include="SoundEnv.h" />
+    <ClInclude Include="SoundHdr.h" />
+    <ClInclude Include="SoundInst.h" />
+    <ClInclude Include="SoundSong.h" />
+    <ClInclude Include="spellsel.h" />
+    <ClInclude Include="text.h" />
+    <ClInclude Include="trade.h" />
+    <ClInclude Include="ui.h" />
+    <ClInclude Include="UnitMode.h" />
+    <ClInclude Include="UnitSnd.h" />
+    <ClInclude Include="useitem.h" />
+    <ClInclude Include="Video.h" />
+    <ClInclude Include="View.h" />
+    <ClInclude Include="Wall2.h" />
+    <ClInclude Include="waypoint.h" />
+    <ClInclude Include="WINMAIN.h" />
+    <ClInclude Include="WNDPROC.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

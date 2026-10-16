@@ -1,0 +1,65 @@
+LIBRARY D2Lang.dll
+EXPORTS
+    ??0Unicode@@QAE@G@Z                            ; #10014, bound by name
+    ??4Unicode@@QAEAAU0@ABU0@@Z                    ; #10015, bound by name
+    ??BUnicode@@QBEGXZ                             ; #10016, bound by name
+    ??_FUnicode@@QAEXXZ                            ; #10017, bound by name
+    ?Personalize@Unicode@@SIXPAU1@PBU1@1HW4ELANGUAGE@@@Z ; #10018, bound by name
+    ?_toLowerTable@Unicode@@0PAGA DATA             ; #10019, bound by name
+    ?_toUpperTable@Unicode@@0PAGA DATA             ; #10020, bound by name
+    ?compare@Unicode@@QBEHU1@@Z                    ; #10021, bound by name
+    ?compare@Unicode@@SIHU1@0@Z                    ; #10022, bound by name
+    ?directionality@Unicode@@QAE?AW4Direction@1@XZ ; #10023, bound by name
+    ?isASCII@Unicode@@QBEHXZ                       ; #10024, bound by name
+    ?isAlpha@Unicode@@QBEHXZ                       ; #10025, bound by name
+    ?isLeftToRight@Unicode@@QBEHXZ                 ; #10026, bound by name
+    ?isLineBreak@Unicode@@SIHPBU1@I@Z              ; #10027, bound by name
+    ?isNewline@Unicode@@QBEHXZ                     ; #10028, bound by name
+    ?isPipe@Unicode@@QBEHXZ                        ; #10029, bound by name
+    ?isWhitespace@Unicode@@QBEHXZ                  ; #10030, bound by name
+    ?isWordEnd@Unicode@@SIHPBU1@I@Z                ; #10031, bound by name
+    ?loadSysMap@Unicode@@SIHPAUHD2ARCHIVE__@@PBD@Z ; #10032, bound by name
+    ?sprintf@Unicode@@SAXHPAU1@PBU1@ZZ             ; #10033, bound by name
+    ?strcat@Unicode@@SIPAU1@PAU1@PBU1@@Z           ; #10034, bound by name
+    ?strchr@Unicode@@SIPAU1@PBU1@U1@@Z             ; #10035, bound by name
+    ?strcmp@Unicode@@SIHPBU1@0@Z                   ; #10036, bound by name
+    ?strcoll@Unicode@@SIHPBU1@0@Z                  ; #10037, bound by name
+    ?strcpy@Unicode@@SIPAU1@PAU1@PBU1@@Z           ; #10038, bound by name
+    ?stricmp@Unicode@@SIHPBU1@0@Z                  ; #10039, bound by name
+    ?strlen@Unicode@@SIHPBU1@@Z                    ; #10040, bound by name
+    ?strncat@Unicode@@SIPAU1@PAU1@PBU1@H@Z         ; #10041, bound by name
+    ?strncmp@Unicode@@SIHPBU1@0I@Z                 ; #10042, bound by name
+    ?strncoll@Unicode@@SIHPBU1@0H@Z                ; #10043, bound by name
+    ?strncpy@Unicode@@SIPAU1@PAU1@PBU1@H@Z         ; #10044, bound by name
+    ?strnicmp@Unicode@@SIHPBU1@0I@Z                ; #10045, bound by name
+    ?strstr@Unicode@@SIPAU1@PBU1@0@Z               ; #10046, bound by name
+    ?strstri@Unicode@@SIPAU1@PBU1@0@Z              ; #10047, bound by name
+    ?sys2Unicode@Unicode@@SIPAU1@PAU1@PBDH@Z       ; #10048, bound by name
+    ?sysWidth@Unicode@@SIKPBU1@H@Z                 ; #10049, bound by name
+    ?toLower@Unicode@@QBE?AU1@XZ                   ; #10050, bound by name
+    ?toUnicode@Unicode@@SIPAU1@PAU1@PBDH@Z         ; #10051, bound by name
+    ?toUpper@Unicode@@QBE?AU1@XZ                   ; #10052, bound by name
+    ?toUtf@Unicode@@SIPADPADPBU1@H@Z               ; #10053, bound by name
+    ?unicode2Sys@Unicode@@SIPADPADPBU1@H@Z         ; #10054, bound by name
+    ?unicode2Win@Unicode@@SIPADPADPBU1@H@Z         ; #10055, bound by name
+    ?unicodeWidth@Unicode@@SIKPBDH@Z               ; #10056, bound by name
+    ?unicodenwidth@Unicode@@SIIPBDH@Z              ; #10057, bound by name
+    ?unloadSysMap@Unicode@@SIXXZ                   ; #10058, bound by name
+    ?utf8ToUnicode@Unicode@@SIPAU1@PAU1@PBDH@Z     ; #10059, bound by name
+    ?utfnwidth@Unicode@@SIIPBU1@H@Z                ; #10060, bound by name
+    ?utfwidth@Unicode@@QBEHXZ                      ; #10061, bound by name
+    ?win2Unicode@Unicode@@SIPAU1@PAU1@PBDH@Z       ; #10062, bound by name
+    @D2LANG_10000@12                               @10000  NONAME
+    D2LANG_10001@0                                 @10001  NONAME
+    D2Lang_10002                                   @10002  NONAME
+    @D2LANG_GetStringByReferenceString@4           @10003  NONAME
+    @D2LANG_GetStringFromTblIndex@4                @10004  NONAME
+    CRC16_CalculateChecksum@16                     @10005  NONAME
+    D2LANG_10006@8                                 @10006  NONAME
+    D2LANG_STRTABLE_GetLanguage@0                  @10007  NONAME
+    D2Lang_10008                                   @10008  NONAME
+    D2LANG_STR_GroupIntDigits@12                   @10009  NONAME
+    D2LANG_STR_GroupUintDigits@12                  @10010  NONAME
+    strtable_10011                                 @10011  NONAME
+    strtable_10012@16                              @10012  NONAME
+    D2LANG_GetTblIndex                             @10013  NONAME

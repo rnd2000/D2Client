@@ -1,0 +1,18 @@
+LIBRARY     D2Client
+
+; D2Client.dll 1.10 exports four functions, ordinal base 10001, and names only one of them:
+;
+;     ordinal 10001   RVA 0x018EE0   QUESTS_AreStatesReceived   by ordinal only
+;     ordinal 10002   RVA 0x018EF0   QUESTS_GetQuestState       by ordinal only
+;     ordinal 10003   RVA 0x001F50   WINMAIN_DeactivateApp      by ordinal only
+;     ordinal 10004   RVA 0x0011C0   QueryInterface
+;
+; The ordinals cannot come from __declspec(dllexport); a .def is the only way to pin them.
+; The three NONAME exports are extern "C" (__stdcall, __stdcall and __cdecl); LINK matches them by the undecorated
+; names below.
+
+EXPORTS
+    QUESTS_AreStatesReceived @10001 NONAME
+    QUESTS_GetQuestState @10002 NONAME
+    WINMAIN_DeactivateApp @10003 NONAME
+    QueryInterface @10004
