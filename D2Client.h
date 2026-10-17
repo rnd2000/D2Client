@@ -2981,7 +2981,7 @@ void __cdecl ROSTER_FlattenGroupsIntoEntryList();
 void __fastcall ROSTER_MoveEntryToFront(D2UnitGUID dwUnitId);
 void __fastcall ROSTER_OnPartyUpdate(uint32_t dwUnitId, int32_t nKillCount);
 int32_t __fastcall ROSTER_EntryGetKillCount(D2RosterUnitStrc *pEntry);
-int16_t __fastcall ROSTER_EntryGetLevel(D2RosterUnitStrc *pEntry);
+int32_t __fastcall ROSTER_EntryGetLevel(D2RosterUnitStrc *pEntry);
 int32_t __fastcall ROSTER_EntryGetClassId(D2RosterUnitStrc *pEntry);
 D2RosterUnitStrc *__fastcall ROSTER_FindEntryByUnitOrCorpse(D2UnitGUID dwUnitId);
 int16_t __fastcall ROSTER_PartyGetSharedPartyId(D2RosterUnitStrc *pRosterEntry);

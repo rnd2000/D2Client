@@ -228,7 +228,7 @@ void __cdecl PARTY_BuildRowList()
         strcpy(pRow->szName, ROSTER_GetDisplayName(pEntry));
         pRow->nClassId = ROSTER_EntryGetClassId(pEntry);
         //  zero-extended: ROSTER_EntryGetLevel clears eax before its word load (`xor eax, eax`), and answers 0 for a NULL entry
-        pRow->nLevel = (uint16_t)ROSTER_EntryGetLevel(pEntry);
+        pRow->nLevel = ROSTER_EntryGetLevel(pEntry);
         pRow->nLevelId = ROSTER_GetEntryLevelId(pEntry);
 
         if (pHead)
@@ -688,7 +688,7 @@ void __fastcall PARTY_DrawRowButtons(D2ClientPartyRowStrc *pRow, int32_t nUnused
                 }
             }
             //  zero-extended, as in PARTY_BuildRowList
-            if ((uint16_t)ROSTER_EntryGetLevel(ROSTER_PartyGetNextEntry(NULL)) < 9 || bDisabled)
+            if (ROSTER_EntryGetLevel(ROSTER_PartyGetNextEntry(NULL)) < 9 || bDisabled)
             {
                 //  DIFFERENCE: the original pushes MixRGB's whole eax, 0x100 | index (D2CMP leaves its palette size in eax); ours passes the
                 //  byte. Every render driver masks the colour to its byte, so nothing reads the difference.
@@ -1158,7 +1158,7 @@ void __cdecl PARTY_DrawHoverHint()
                 {
                 case ROSTERBUTTONTYPE_HOSTILE:
                     //  zero-extended, as in PARTY_BuildRowList
-                    if ((uint16_t)ROSTER_EntryGetLevel(ROSTER_PartyGetNextEntry(NULL)) < 9 || pRow->nLevel < 9)
+                    if (ROSTER_EntryGetLevel(ROSTER_PartyGetNextEntry(NULL)) < 9 || pRow->nLevel < 9)
                     {
                         //  D2ExpRes PartyBothPlayersMustBeString lands on this call
                         PARTY_DrawHintLines(STR_IDX_4122_StrParty26, STR_IDX_4123_StrParty27, 160, 0, 50, 65, 0);
@@ -1353,7 +1353,7 @@ void __stdcall PARTY_OnLButtonDown(SMSGHANDLER_PARAMS *pMsg)
 
             if (pRowList->Buttons[iRow].nButtonType == ROSTERBUTTONTYPE_HOSTILE)
             {
-                nLevel = (uint16_t)ROSTER_EntryGetLevel(ROSTER_PartyGetNextEntry(NULL));
+                nLevel = ROSTER_EntryGetLevel(ROSTER_PartyGetNextEntry(NULL));
                 if (nLevel < 9)
                 {
                     goto ACCEPT_NO_PRESS;
@@ -1511,7 +1511,7 @@ void __stdcall PARTY_OnLButtonUp(SMSGHANDLER_PARAMS *pMsg)
 
                 if (pRowList->Buttons[iRow].nButtonType == ROSTERBUTTONTYPE_HOSTILE)
                 {
-                    nLevel = (uint16_t)ROSTER_EntryGetLevel(ROSTER_PartyGetNextEntry(NULL));
+                    nLevel = ROSTER_EntryGetLevel(ROSTER_PartyGetNextEntry(NULL));
                     if (nLevel < 9)
                     {
                         pMsg->bReturn = 1;

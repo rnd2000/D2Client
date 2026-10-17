@@ -1596,7 +1596,7 @@ int32_t nSelectedLine;
 int32_t nPressedLine;
 int32_t nSelectableCount;
 int32_t NumLines;
-int32_t nFramesDrawn;
+uint32_t nFramesDrawn;
 int32_t bAutoSize;
 int32_t eHighlight;
 DIALOGCALLBACK pfnCallback;

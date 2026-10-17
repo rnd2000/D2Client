@@ -959,13 +959,13 @@ int32_t __fastcall ROSTER_EntryGetKillCount(D2RosterUnitStrc *pEntry)
 
 //1.10f: D2Client.0x6FAAFD40
 //  An entry's level (+0x20, a word), 0 for NULL: `xor eax, eax` first, so the upper half of eax is 0 on both paths.
-int16_t __fastcall ROSTER_EntryGetLevel(D2RosterUnitStrc *pEntry)
+int32_t __fastcall ROSTER_EntryGetLevel(D2RosterUnitStrc *pEntry)
 {
     if (!pEntry)
     {
         return 0;
     }
-    return (int16_t)pEntry->wLevel;
+    return pEntry->wLevel;
 }
 
 //1.10f: D2Client.0x6FAAFD50

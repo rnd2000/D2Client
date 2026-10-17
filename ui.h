@@ -53,7 +53,7 @@ inline D2WinCommandRegisterStrc gNpcshopMessageHandlers[8] =
 static_assert(sizeof(gNpcshopMessageHandlers) == 96, "gNpcshopMessageHandlers: the item's 96 bytes in the .i64");
 
 //  D2Client 0x6FB6FC78
-//  Rebindable keys for the npc shop panel: Clear Screen in both slots (entries 4 and 5 of gNpcshopMessageHandlers) and Swap Weapons secondary
+//  Rebindable keys for the npc shop panel: Clear Screen in both slots (entries 4 and 5 of gNpcshopMessageHandlers) and Swap Weapons primary
 //  (entry 7).
 inline const D2PanelKeyBindStrc gNpcshopPanelKeys =
 {
@@ -280,7 +280,7 @@ inline D2WinCommandRegisterStrc gStashMessageHandlers[8] =
 static_assert(sizeof(gStashMessageHandlers) == 96, "gStashMessageHandlers: the item's 96 bytes in the .i64");
 
 //  D2Client 0x6FB6FF50
-//  Rebindable keys for the stash: Clear Screen (4, 5) and Swap Weapons secondary (7).
+//  Rebindable keys for the stash: Clear Screen (4, 5) and Swap Weapons primary (7).
 inline const D2PanelKeyBindStrc gStashPanelKeys =
 {
     .nClearScreenPrimary = 4,

@@ -989,8 +989,7 @@ void __fastcall DLIGHTMAP_AddLightToGrid(int32_t nX, int32_t nY, int32_t nIntens
 //  nFalloffStep is (nIntensity << 16) / nRadius, which makes the brightness fall linearly to zero at the radius. Non-positive intensities are
 //  dropped.
 //  The radius read is nRadius (+0x18), the live one, and the window test is the same four compares against gnLightGridOrigin/EndX/Y that
-//  DLIGHTMAP_Update's inline path runs. The nSpan >= 0 test of the original is dead here (the early return has already sent radius 0 home) and is
-//  not written; the 1..255 bounds are the bytes' own.
+//  DLIGHTMAP_Update's inline path runs.
 void __fastcall DLIGHTMAP_ApplyLightSource(D2ClientLightStrc *pLight, int32_t nQualityLevel)
 {
     D2UnitStrc *pPlayer;
@@ -1042,6 +1041,10 @@ void __fastcall DLIGHTMAP_ApplyLightSource(D2ClientLightStrc *pLight, int32_t nQ
     if ((nStartX >> 3) <= gnLightGridEndX && (nStartX >> 3) + nSpan + 1 >= gnLightGridOriginX && (nStartY >> 3) <= gnLightGridEndY && (nStartY >> 3) + nSpan + 1 >= gnLightGridOriginY)
     {
         nFalloffStep = (pLight->nIntensity << 16) / nRadius;
+        if (nSpan < 0)
+        {
+            return;
+        }
         nRowCount = nSpan + 1;
         nY = nStartY;
         do
@@ -1084,7 +1087,7 @@ void __fastcall DLIGHTMAP_ApplyLightSource(D2ClientLightStrc *pLight, int32_t nQ
 //  The square is (nSpan + 1) cells on a side with nSpan = (2 * nRadius) >> 3, and each cell is filled from the 48x48 ambient grid gPlayerLightGrid:
 //  one .nLit lookup per cell at 48 * nGridY + nGridX after the same origin subtraction DLIGHTMAP_AddLightToGrid uses, with 1 substituted wherever
 //  the cell falls outside 0..47. What is stored is 16 * nLitValue.
-//  The nSpan >= 0 test of the original is dead (nRadius is positive on every path) and is not written. void: the register the original leaves in
+//  void: the register the original leaves in
 //  eax carries a grid index with its low byte overwritten by the 1 of the bounds test, and the sole caller never reads it.
 void __fastcall DLIGHTMAP_SeedStaticGridFromAmbient(D2ClientLightStrc *pLight)
 {
@@ -1105,6 +1108,10 @@ void __fastcall DLIGHTMAP_SeedStaticGridFromAmbient(D2ClientLightStrc *pLight)
     nStartX = pLight->nSubtileX - (pLight->nSubtileX & 7) - nRadius;
     nSpan = (2 * nRadius) >> 3;
     nSubtileY = pLight->nSubtileY - (pLight->nSubtileY & 7) - nRadius;
+    if (nSpan < 0)
+    {
+        return;
+    }
     nRowCount = nSpan + 1;
     pnRow = &gStaticLightGrid[65 * (32 - (nRadius >> 3))];
     do
@@ -1468,8 +1475,7 @@ void __fastcall DLIGHTMAP_BuildStaticMap(D2ClientLightStrc *pLight)
 //  and a short circuit before all of it: a cell whose map value is >= 16 is skipped outright. That is how a wall shadows: the bake puts 16 into
 //  blocked cells and propagation spreads it.
 //  The radius bounds and the four window compares run first, so an off-screen light costs those and nothing else, and only then do the two asserts
-//  fire, pnStaticMap and fStaticValid. The map is walked flat across the rows of the (nSpan + 1) square, never reset per row; the nSpan >= 0 guard
-//  is dead for the reason DLIGHTMAP_ApplyLightSource gives, and is not written.
+//  fire, pnStaticMap and fStaticValid. The map is walked flat across the rows of the (nSpan + 1) square, never reset per row.
 void __fastcall DLIGHTMAP_ApplyLight(D2ClientLightStrc *pLight)
 {
     int32_t nRadius;
@@ -1510,6 +1516,10 @@ void __fastcall DLIGHTMAP_ApplyLight(D2ClientLightStrc *pLight)
 
         pnStaticMap = pLight->pnStaticMap;
         nFalloffStep = (pLight->nIntensity << 16) / nRadius;
+        if (nSpan < 0)
+        {
+            return;
+        }
         nRowCount = nSpan + 1;
         nY = nStartY;
         do
