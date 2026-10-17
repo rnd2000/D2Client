@@ -460,7 +460,7 @@ void __cdecl TEXT_ClearMessages()
 
     if (gPopupTextList)
     {
-        D2ClientTextLineStrc *pLines = (gPopupTextList)->pLines;
+        D2ClientTextLineStrc *pLines = gPopupTextList->pLines;
         D2ClientPopupStrc *pPopup = gPopupTextList;
         TEXT_FreeParsedLines(pLines);
         FOG_Free((uint32_t)(UINT_PTR)pPopup, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
@@ -513,7 +513,7 @@ void __cdecl TEXT_Shutdown()
 
     if (gPopupTextList)
     {
-        D2ClientTextLineStrc *pLines = (gPopupTextList)->pLines;
+        D2ClientTextLineStrc *pLines = gPopupTextList->pLines;
         D2ClientPopupStrc *pPopup = gPopupTextList;
         TEXT_FreeParsedLines(pLines);
         FOG_Free((uint32_t)(UINT_PTR)pPopup, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
@@ -658,7 +658,7 @@ void __cdecl TEXT_ClosePopup()
 
     if (gPopupTextList)
     {
-        D2ClientTextLineStrc *pLines = (gPopupTextList)->pLines;
+        D2ClientTextLineStrc *pLines = gPopupTextList->pLines;
         D2ClientPopupStrc *pPopup = gPopupTextList;
         TEXT_FreeParsedLines(pLines);
         FOG_Free((uint32_t)(UINT_PTR)pPopup, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
@@ -713,7 +713,7 @@ int32_t __cdecl TEXT_OnPopupDismissed()
             if (gPopupTextList)
             {
                 D2ClientPopupStrc *pTextList = gPopupTextList;
-                TEXT_FreeParsedLines((gPopupTextList)->pLines);
+                TEXT_FreeParsedLines(gPopupTextList->pLines);
                 FOG_Free((uint32_t)(UINT_PTR)pTextList, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
                 gPopupTextList = nullptr;
             }
@@ -756,7 +756,7 @@ int32_t __cdecl TEXT_OnPopupDismissed()
                 if (gPopupTextList)
                 {
                     D2ClientPopupStrc *pTextList2 = gPopupTextList;
-                    TEXT_FreeParsedLines((gPopupTextList)->pLines);
+                    TEXT_FreeParsedLines(gPopupTextList->pLines);
                     FOG_Free((uint32_t)(UINT_PTR)pTextList2, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
                     gPopupTextList = nullptr;
                 }
@@ -1304,8 +1304,8 @@ void __fastcall TEXT_ShowSpeechPopup(D2UnitStrc *pNpc, int16_t nTblStringId, int
     }
 
     //  The original clears one dword over field_16 and field_18.
-    (gPopupTextList)->field_16 = 0;
-    (gPopupTextList)->field_18 = 0;
+    gPopupTextList->field_16 = 0;
+    gPopupTextList->field_18 = 0;
     sgTextState.bPopupActive = 1;
 
     if (!gbPopupHandlersRegistered)
@@ -1408,8 +1408,8 @@ void __fastcall TEXT_ShowQuestScrollingText(int32_t nTblStringId, int16_t bIsQue
     gPopupTextList = pPopup;
     D2WIN_10127_SetFont(eFontInner);
 
-    (gPopupTextList)->field_16 = 0;
-    (gPopupTextList)->field_18 = 0;
+    gPopupTextList->field_16 = 0;
+    gPopupTextList->field_18 = 0;
     sgTextState.bPopupActive = 1;
     sgTextState.bForceDrawPopupText = 1;
 
@@ -1495,7 +1495,7 @@ void __fastcall TEXT_TickStaticInfoPanel(D2ClientViewStrc *pView)
                 if (!sgTextState.bPopupIsNpcSpeech && gPopupTextList)
                 {
                     D2ClientPopupStrc *pPopupToFree = gPopupTextList;
-                    TEXT_FreeParsedLines((gPopupTextList)->pLines);
+                    TEXT_FreeParsedLines(gPopupTextList->pLines);
                     FOG_Free((uint32_t)(UINT_PTR)pPopupToFree, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
                     gPopupTextList = nullptr;
                     SELECT_SetClickRegion(nullptr);
@@ -1542,7 +1542,7 @@ void __fastcall TEXT_TickStaticInfoPanel(D2ClientViewStrc *pView)
                 SELECT_SetClickRegion(nullptr);
                 if (gPopupTextList)
                 {
-                    TEXT_FreeParsedText((void **)&(gPopupTextList)->pLines);
+                    TEXT_FreeParsedText((void **)&gPopupTextList->pLines);
                     gPopupTextList = nullptr;
                 }
                 TEXT_StopPopupSpeechSound();

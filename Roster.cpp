@@ -138,7 +138,7 @@ void __fastcall ROSTER_AddPlayer(uint32_t dwUnitGUID, int32_t nClass, const char
 
         while (gpPartyEntries)
         {
-            pGroup = ROSTER_FindOrAddListNode((int16_t)(gpPartyEntries)->wPartyId);
+            pGroup = ROSTER_FindOrAddListNode((int16_t)gpPartyEntries->wPartyId);
             ROSTER_PartyExtractPartyMembers(pGroup);
         }
 
@@ -235,7 +235,7 @@ void __fastcall ROSTER_AddPlayer(uint32_t dwUnitGUID, int32_t nClass, const char
 
     while (gpPartyEntries)
     {
-        pGroup = ROSTER_FindOrAddListNode((int16_t)(gpPartyEntries)->wPartyId);
+        pGroup = ROSTER_FindOrAddListNode((int16_t)gpPartyEntries->wPartyId);
         ROSTER_PartyExtractPartyMembers(pGroup);
     }
     ROSTER_ResortAllGroups();
@@ -316,7 +316,7 @@ void __fastcall ROSTER_UpdatePartyState(D2UnitGUID dwUnitId, int16_t nPartyId, i
 
     while (gpPartyEntries)
     {
-        pGroup = ROSTER_FindOrAddListNode((int16_t)(gpPartyEntries)->wPartyId);
+        pGroup = ROSTER_FindOrAddListNode((int16_t)gpPartyEntries->wPartyId);
         ROSTER_PartyExtractPartyMembers(pGroup);
     }
 
@@ -414,7 +414,7 @@ void __fastcall ROSTER_RemovePlayer(uint32_t dwPlayerGUID)
 
     while (gpPartyEntries)
     {
-        nGroupId = (int16_t)(gpPartyEntries)->wPartyId;
+        nGroupId = (int16_t)gpPartyEntries->wPartyId;
         pGroup = ROSTER_FindListNode(nGroupId);
         if (!pGroup)
         {
@@ -908,7 +908,7 @@ void __fastcall ROSTER_OnPartyUpdate(uint32_t dwUnitId, int32_t nKillCount)
 
     while (gpPartyEntries)
     {
-        nGroupId = (int16_t)(gpPartyEntries)->wPartyId;
+        nGroupId = (int16_t)gpPartyEntries->wPartyId;
         pGroup = ROSTER_FindListNode(nGroupId);
         if (!pGroup)
         {
@@ -1311,7 +1311,7 @@ void __fastcall ROSTER_PartySendButtonCommand(D2RosterUnitStrc *pEntry)
 
     while (gpPartyEntries)
     {
-        nGroupId = (int16_t)(gpPartyEntries)->wPartyId;
+        nGroupId = (int16_t)gpPartyEntries->wPartyId;
         pGroup = ROSTER_FindListNode(nGroupId);
         if (!pGroup)
         {
@@ -1393,7 +1393,7 @@ void __cdecl ROSTER_PartySendLeaveParty()
 
     while (gpPartyEntries)
     {
-        pGroup = ROSTER_FindOrAddListNode((int16_t)(gpPartyEntries)->wPartyId);
+        pGroup = ROSTER_FindOrAddListNode((int16_t)gpPartyEntries->wPartyId);
         ROSTER_PartyExtractPartyMembers(pGroup);
     }
 
@@ -1519,7 +1519,7 @@ void __fastcall ROSTER_PartySendHostileToggle(D2RosterUnitStrc *pEntry)
 
     while (gpPartyEntries)
     {
-        pGroup = ROSTER_FindOrAddListNode((int16_t)(gpPartyEntries)->wPartyId);
+        pGroup = ROSTER_FindOrAddListNode((int16_t)gpPartyEntries->wPartyId);
         ROSTER_PartyExtractPartyMembers(pGroup);
     }
 
@@ -1656,7 +1656,7 @@ void __fastcall ROSTER_UpdateLifeAndLevel(int32_t dwUnitGUID, int32_t nLifePerce
 
     while (gpPartyEntries)
     {
-        nGroupId = (int16_t)(gpPartyEntries)->wPartyId;
+        nGroupId = (int16_t)gpPartyEntries->wPartyId;
         pGroup = ROSTER_FindListNode(nGroupId);
         if (!pGroup)
         {
@@ -1937,7 +1937,7 @@ void __fastcall ROSTER_SetPartyId(int32_t dwPlayerGUID, int16_t nPartyGUID)
 
     while (gpPartyEntries)
     {
-        nGroupId = (int16_t)(gpPartyEntries)->wPartyId;
+        nGroupId = (int16_t)gpPartyEntries->wPartyId;
         pGroup = ROSTER_FindListNode(nGroupId);
         if (!pGroup)
         {

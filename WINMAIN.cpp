@@ -253,7 +253,7 @@ D2ConfigStrc *__cdecl WINMAIN_GetConfig()
 //  zero right after the call.
 struct BnClientInterface *__cdecl WINMAIN_GetBnClientInterface()
 {
-    return (gpLaunchConfig)->pComInterface;
+    return gpLaunchConfig->pComInterface;
 }
 
 //  The next three are one shape: NULL when there is no configuration or the string is empty, else the string. `repne scasb` computes the length
@@ -297,7 +297,7 @@ char *__cdecl WINMAIN_GetConfigServerIP()
 //  pointer's upper bytes, and `and eax, 4` clears those: the answer is 4 or 0, and the C reads the same byte. Each caller tests it for zero.
 int32_t __cdecl WINMAIN_IsHardcoreGame()
 {
-    return LOBYTE((gpLaunchConfig)->unpackedCTemp.nCharacterSaveFlags)
+    return LOBYTE(gpLaunchConfig->unpackedCTemp.nCharacterSaveFlags)
            & CLIENTSAVEFLAG_HARDCORE;
 }
 

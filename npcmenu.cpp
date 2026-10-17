@@ -2894,7 +2894,7 @@ void __fastcall NPCMENU_SendTransactionAndWait(int32_t bSkippedVerify, int32_t n
         dwAnimMode = pItem->dwAnimMode;
         if (sgUIState.Transaction == 2)
         {
-            sgUIState.bTransactionItemWasOnCursor = D2COMMON_INVENTORY_GetCursorItem((gpNpcTransactionPlayer)->pInventory) == pItem;
+            sgUIState.bTransactionItemWasOnCursor = D2COMMON_INVENTORY_GetCursorItem(gpNpcTransactionPlayer->pInventory) == pItem;
         }
     }
 

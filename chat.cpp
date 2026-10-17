@@ -277,7 +277,7 @@ void __stdcall CHAT_OnImeNotify(SMSGHANDLER_PARAMS *pMsg)
                     FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 229, 0);
                 gpChatCandidateList = (CANDIDATELIST *)FOG_Alloc(dwBufLen, (uint32_t)szChatCpp, 231, 0);
                 ImmGetCandidateListA(hImc, 0, gpChatCandidateList, dwBufLen);
-                if ((gpChatCandidateList)->dwStyle == IME_CAND_CODE && (gpChatCandidateList)->dwCount == 1)
+                if (gpChatCandidateList->dwStyle == IME_CAND_CODE && gpChatCandidateList->dwCount == 1)
                 {
                     FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 236, 0);
                     gpChatCandidateList = NULL;
@@ -321,7 +321,7 @@ void __stdcall CHAT_OnImeNotify(SMSGHANDLER_PARAMS *pMsg)
                     FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 229, 0);
                 gpChatCandidateList = (CANDIDATELIST *)FOG_Alloc(dwBufLen, (uint32_t)szChatCpp, 231, 0);
                 ImmGetCandidateListA(hImc, 0, gpChatCandidateList, dwBufLen);
-                if ((gpChatCandidateList)->dwStyle == IME_CAND_CODE && (gpChatCandidateList)->dwCount == 1)
+                if (gpChatCandidateList->dwStyle == IME_CAND_CODE && gpChatCandidateList->dwCount == 1)
                 {
                     FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 236, 0);
                     gpChatCandidateList = NULL;
@@ -339,7 +339,7 @@ void __stdcall CHAT_OnImeNotify(SMSGHANDLER_PARAMS *pMsg)
                     FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 229, 0);
                 gpChatCandidateList = (CANDIDATELIST *)FOG_Alloc(dwBufLen, (uint32_t)szChatCpp, 231, 0);
                 ImmGetCandidateListA(hImc, 0, gpChatCandidateList, dwBufLen);
-                if ((gpChatCandidateList)->dwStyle == IME_CAND_CODE && (gpChatCandidateList)->dwCount == 1)
+                if (gpChatCandidateList->dwStyle == IME_CAND_CODE && gpChatCandidateList->dwCount == 1)
                 {
                     FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 236, 0);
                     gpChatCandidateList = NULL;

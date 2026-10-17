@@ -616,10 +616,10 @@ void __cdecl AUTOMAP_Tick()
             }
             gpAutomapCellBlocks = 0;
             gnAutomapCellsUsed = 0;
-            (gpAutomapCurrentLayer)->pFloors = NULL;
-            (gpAutomapCurrentLayer)->pWalls = NULL;
-            (gpAutomapCurrentLayer)->pObjects = NULL;
-            (gpAutomapCurrentLayer)->pExtras = NULL;
+            gpAutomapCurrentLayer->pFloors = NULL;
+            gpAutomapCurrentLayer->pWalls = NULL;
+            gpAutomapCurrentLayer->pObjects = NULL;
+            gpAutomapCurrentLayer->pExtras = NULL;
         }
 
         gpAutomapCurrentLayer = pLayer;
@@ -661,10 +661,10 @@ void __cdecl AUTOMAP_Shutdown()
         }
         gpAutomapCellBlocks = 0;
         gnAutomapCellsUsed = 0;
-        (gpAutomapCurrentLayer)->pFloors = NULL;
-        (gpAutomapCurrentLayer)->pWalls = NULL;
-        (gpAutomapCurrentLayer)->pObjects = NULL;
-        (gpAutomapCurrentLayer)->pExtras = NULL;
+        gpAutomapCurrentLayer->pFloors = NULL;
+        gpAutomapCurrentLayer->pWalls = NULL;
+        gpAutomapCurrentLayer->pObjects = NULL;
+        gpAutomapCurrentLayer->pExtras = NULL;
     }
 
     pIconCels = gpAutomapIconCels;
@@ -1320,7 +1320,7 @@ void __stdcall AUTOMAP_RebuildAutomapLayer(D2ActiveRoomStrc *pRoom)
     int32_t nBlockToFree;
 
     if (gpAutomapCurrentLayer)
-        nPreviousLayerNo = (gpAutomapCurrentLayer)->nLayerNo;
+        nPreviousLayerNo = gpAutomapCurrentLayer->nLayerNo;
     else
         nPreviousLayerNo = -1;
 
@@ -1357,10 +1357,10 @@ void __stdcall AUTOMAP_RebuildAutomapLayer(D2ActiveRoomStrc *pRoom)
             }
             gpAutomapCellBlocks = 0;
             gnAutomapCellsUsed = 0;
-            (gpAutomapCurrentLayer)->pFloors = NULL;
-            (gpAutomapCurrentLayer)->pWalls = NULL;
-            (gpAutomapCurrentLayer)->pObjects = NULL;
-            (gpAutomapCurrentLayer)->pExtras = NULL;
+            gpAutomapCurrentLayer->pFloors = NULL;
+            gpAutomapCurrentLayer->pWalls = NULL;
+            gpAutomapCurrentLayer->pObjects = NULL;
+            gpAutomapCurrentLayer->pExtras = NULL;
         }
 
         gpAutomapCurrentLayer = pLayer;
@@ -1404,10 +1404,10 @@ void __stdcall AUTOMAP_RebuildAutomapLayer(D2ActiveRoomStrc *pRoom)
             }
             gpAutomapCellBlocks = 0;
             gnAutomapCellsUsed = 0;
-            (gpAutomapCurrentLayer)->pFloors = NULL;
-            (gpAutomapCurrentLayer)->pWalls = NULL;
-            (gpAutomapCurrentLayer)->pObjects = NULL;
-            (gpAutomapCurrentLayer)->pExtras = NULL;
+            gpAutomapCurrentLayer->pFloors = NULL;
+            gpAutomapCurrentLayer->pWalls = NULL;
+            gpAutomapCurrentLayer->pObjects = NULL;
+            gpAutomapCurrentLayer->pExtras = NULL;
         }
 
         gpAutomapCurrentLayer = pLayer;
@@ -1461,7 +1461,7 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
     nCelNum = 0;
 
     if (gpAutomapCurrentLayer)
-        nPreviousLayerNo = (gpAutomapCurrentLayer)->nLayerNo;
+        nPreviousLayerNo = gpAutomapCurrentLayer->nLayerNo;
     else
         nPreviousLayerNo = -1;
 
@@ -1498,10 +1498,10 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
             }
             gpAutomapCellBlocks = 0;
             gnAutomapCellsUsed = 0;
-            (gpAutomapCurrentLayer)->pFloors = NULL;
-            (gpAutomapCurrentLayer)->pWalls = NULL;
-            (gpAutomapCurrentLayer)->pObjects = NULL;
-            (gpAutomapCurrentLayer)->pExtras = NULL;
+            gpAutomapCurrentLayer->pFloors = NULL;
+            gpAutomapCurrentLayer->pWalls = NULL;
+            gpAutomapCurrentLayer->pObjects = NULL;
+            gpAutomapCurrentLayer->pExtras = NULL;
         }
 
         gpAutomapCurrentLayer = pLayer;
@@ -1639,10 +1639,10 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
             }
             gpAutomapCellBlocks = 0;
             gnAutomapCellsUsed = 0;
-            (gpAutomapCurrentLayer)->pFloors = NULL;
-            (gpAutomapCurrentLayer)->pWalls = NULL;
-            (gpAutomapCurrentLayer)->pObjects = NULL;
-            (gpAutomapCurrentLayer)->pExtras = NULL;
+            gpAutomapCurrentLayer->pFloors = NULL;
+            gpAutomapCurrentLayer->pWalls = NULL;
+            gpAutomapCurrentLayer->pObjects = NULL;
+            gpAutomapCurrentLayer->pExtras = NULL;
         }
 
         gpAutomapCurrentLayer = pLayer;
@@ -1903,41 +1903,41 @@ void __cdecl AUTOMAP_RebuildDrawLists()
         return;
 
     memset(&tAutoData, 0, sizeof(tAutoData));
-    tAutoData.nLayerNo = (gpAutomapCurrentLayer)->nLayerNo;
-    tAutoData.fSaved = (gpAutomapCurrentLayer)->fSaved;
+    tAutoData.nLayerNo = gpAutomapCurrentLayer->nLayerNo;
+    tAutoData.fSaved = gpAutomapCurrentLayer->fSaved;
     tAutoData.dwGameField = *((uint32_t *)gpClientGameBlock + 1);
 
-    AUTOMAP_MeasureCellTree((gpAutomapCurrentLayer)->pFloors, (int32_t *)&tAutoData.dwFloorSize);
-    AUTOMAP_MeasureCellTree((gpAutomapCurrentLayer)->pWalls, (int32_t *)&tAutoData.dwWallsSize);
-    AUTOMAP_MeasureCellTree((gpAutomapCurrentLayer)->pObjects, (int32_t *)&tAutoData.dwUnitsSize);
-    AUTOMAP_MeasureCellTree((gpAutomapCurrentLayer)->pExtras, (int32_t *)&tAutoData.dwExtraSize);
+    AUTOMAP_MeasureCellTree(gpAutomapCurrentLayer->pFloors, (int32_t *)&tAutoData.dwFloorSize);
+    AUTOMAP_MeasureCellTree(gpAutomapCurrentLayer->pWalls, (int32_t *)&tAutoData.dwWallsSize);
+    AUTOMAP_MeasureCellTree(gpAutomapCurrentLayer->pObjects, (int32_t *)&tAutoData.dwUnitsSize);
+    AUTOMAP_MeasureCellTree(gpAutomapCurrentLayer->pExtras, (int32_t *)&tAutoData.dwExtraSize);
 
     if (tAutoData.dwFloorSize)
     {
         gpAutomapDrawWriteCursor = (uint8_t *)FOG_Alloc(tAutoData.dwFloorSize, (uint32_t)(UINT_PTR)szAutomapCpp, 1258, 0);
         tAutoData.pFloors = (void *)gpAutomapDrawWriteCursor;
-        AUTOMAP_WriteCellTree((gpAutomapCurrentLayer)->pFloors);
+        AUTOMAP_WriteCellTree(gpAutomapCurrentLayer->pFloors);
     }
 
     if (tAutoData.dwWallsSize)
     {
         gpAutomapDrawWriteCursor = (uint8_t *)FOG_Alloc(tAutoData.dwWallsSize, (uint32_t)(UINT_PTR)szAutomapCpp, 1265, 0);
         tAutoData.pWalls = (void *)gpAutomapDrawWriteCursor;
-        AUTOMAP_WriteCellTree((gpAutomapCurrentLayer)->pWalls);
+        AUTOMAP_WriteCellTree(gpAutomapCurrentLayer->pWalls);
     }
 
     if (tAutoData.dwUnitsSize)
     {
         gpAutomapDrawWriteCursor = (uint8_t *)FOG_Alloc(tAutoData.dwUnitsSize, (uint32_t)(UINT_PTR)szAutomapCpp, 1272, 0);
         tAutoData.pUnits = (void *)gpAutomapDrawWriteCursor;
-        AUTOMAP_WriteCellTree((gpAutomapCurrentLayer)->pObjects);
+        AUTOMAP_WriteCellTree(gpAutomapCurrentLayer->pObjects);
     }
 
     if (tAutoData.dwExtraSize)
     {
         gpAutomapDrawWriteCursor = (uint8_t *)FOG_Alloc(tAutoData.dwExtraSize, (uint32_t)(UINT_PTR)szAutomapCpp, 1279, 0);
         tAutoData.pExtras = (void *)gpAutomapDrawWriteCursor;
-        AUTOMAP_WriteCellTree((gpAutomapCurrentLayer)->pExtras);
+        AUTOMAP_WriteCellTree(gpAutomapCurrentLayer->pExtras);
     }
 
     AUTOMAP_WriteExploredLayer(&tAutoData);
@@ -2012,7 +2012,7 @@ void __stdcall AUTOMAP_LoadCelData()
 
     nLastRecord = 0;
     nPrevOffset = 0;
-    nNextOffset = aLayerChainHead[(gpAutomapCurrentLayer)->nLayerNo];
+    nNextOffset = aLayerChainHead[gpAutomapCurrentLayer->nLayerNo];
     nRecordOffset = nNextOffset;
 
     if (!nNextOffset)
@@ -2036,7 +2036,7 @@ void __stdcall AUTOMAP_LoadCelData()
         FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nRecordHeader[4], 4, (uint32_t)(UINT_PTR)&nBytesRead, 0);
         FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nRecordHeader[5], 4, (uint32_t)(UINT_PTR)&nBytesRead, 0);
 
-        if (nRecordLayerNo != (int32_t)(gpAutomapCurrentLayer)->nLayerNo)
+        if (nRecordLayerNo != (int32_t)gpAutomapCurrentLayer->nLayerNo)
             break;
 
         //  block 0: floors
@@ -2066,7 +2066,7 @@ void __stdcall AUTOMAP_LoadCelData()
                     }
                     else
                     {
-                        aLayerChainHead[(gpAutomapCurrentLayer)->nLayerNo] = 0;
+                        aLayerChainHead[gpAutomapCurrentLayer->nLayerNo] = 0;
                         FOG_10112((uint32_t)(UINT_PTR)hFile, 0, 0, 0);
                         FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
                     }
@@ -2078,7 +2078,7 @@ void __stdcall AUTOMAP_LoadCelData()
                 pCell->xPixel = *(uint16_t *)(nBlock + 2 * iWord + 2);
                 pCell->yPixel = *(uint16_t *)(nBlock + 2 * iWord + 4);
                 pCell->fSaved = 1;
-                AUTOMAP_RebalanceTree(pCell, &(gpAutomapCurrentLayer)->pFloors);
+                AUTOMAP_RebalanceTree(pCell, &gpAutomapCurrentLayer->pFloors);
             }
 
             FOG_Free(nBlock, (uint32_t)(UINT_PTR)szAutomapCpp, 1414, 0);
@@ -2111,7 +2111,7 @@ void __stdcall AUTOMAP_LoadCelData()
                     }
                     else
                     {
-                        aLayerChainHead[(gpAutomapCurrentLayer)->nLayerNo] = 0;
+                        aLayerChainHead[gpAutomapCurrentLayer->nLayerNo] = 0;
                         FOG_10112((uint32_t)(UINT_PTR)hFile, 0, 0, 0);
                         FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
                     }
@@ -2123,7 +2123,7 @@ void __stdcall AUTOMAP_LoadCelData()
                 pCell->xPixel = *(uint16_t *)(nBlock + 2 * iWord + 2);
                 pCell->yPixel = *(uint16_t *)(nBlock + 2 * iWord + 4);
                 pCell->fSaved = 1;
-                AUTOMAP_RebalanceTree(pCell, &(gpAutomapCurrentLayer)->pWalls);
+                AUTOMAP_RebalanceTree(pCell, &gpAutomapCurrentLayer->pWalls);
             }
 
             FOG_Free(nBlock, (uint32_t)(UINT_PTR)szAutomapCpp, 1435, 0);
@@ -2158,7 +2158,7 @@ void __stdcall AUTOMAP_LoadCelData()
                         }
                         else
                         {
-                            aLayerChainHead[(gpAutomapCurrentLayer)->nLayerNo] = 0;
+                            aLayerChainHead[gpAutomapCurrentLayer->nLayerNo] = 0;
                             FOG_10112((uint32_t)(UINT_PTR)hFile, 0, 0, 0);
                             FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
                         }
@@ -2170,7 +2170,7 @@ void __stdcall AUTOMAP_LoadCelData()
                     pCell->xPixel = *(uint16_t *)(nBlock + 2 * iWord + 2);
                     pCell->yPixel = *(uint16_t *)(nBlock + 2 * iWord + 4);
                     pCell->fSaved = 1;
-                    AUTOMAP_RebalanceTree(pCell, &(gpAutomapCurrentLayer)->pObjects);
+                    AUTOMAP_RebalanceTree(pCell, &gpAutomapCurrentLayer->pObjects);
                 }
 
                 FOG_Free(nBlock, (uint32_t)(UINT_PTR)szAutomapCpp, 1459, 0);
@@ -2209,7 +2209,7 @@ void __stdcall AUTOMAP_LoadCelData()
                     }
                     else
                     {
-                        aLayerChainHead[(gpAutomapCurrentLayer)->nLayerNo] = 0;
+                        aLayerChainHead[gpAutomapCurrentLayer->nLayerNo] = 0;
                         FOG_10112((uint32_t)(UINT_PTR)hFile, 0, 0, 0);
                         FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
                     }
@@ -2221,7 +2221,7 @@ void __stdcall AUTOMAP_LoadCelData()
                 pCell->xPixel = *(uint16_t *)(nBlock + 2 * iWord + 2);
                 pCell->yPixel = *(uint16_t *)(nBlock + 2 * iWord + 4);
                 pCell->fSaved = 1;
-                AUTOMAP_RebalanceTree(pCell, &(gpAutomapCurrentLayer)->pExtras);
+                AUTOMAP_RebalanceTree(pCell, &gpAutomapCurrentLayer->pExtras);
             }
 
             FOG_Free(nBlock, (uint32_t)(UINT_PTR)szAutomapCpp, 1486, 0);
@@ -2248,7 +2248,7 @@ void __stdcall AUTOMAP_LoadCelData()
     }
     else
     {
-        aLayerChainHead[(gpAutomapCurrentLayer)->nLayerNo] = 0;
+        aLayerChainHead[gpAutomapCurrentLayer->nLayerNo] = 0;
         FOG_10112((uint32_t)(UINT_PTR)hFile, 0, 0, 0);
         FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
     }
@@ -2314,7 +2314,7 @@ void __cdecl AUTOMAP_DrawVersionLabel()
         pComInterface = GAME_GetComInterface();
         nVersion = (*(int32_t(__cdecl **)(void))((char *)pComInterface + 92))();
 
-        if ((gpLaunchConfig)->bBuild)
+        if (gpLaunchConfig->bBuild)
         {
             pComInterface = GAME_GetComInterface();
             nBuild = (*(char(__cdecl **)(void))((char *)pComInterface + 176))();
@@ -3255,13 +3255,13 @@ void __cdecl AUTOMAP_Draw()
             gnAutomapZoom = 10;
         }
 
-        AUTOMAP_DrawCellList((gpAutomapCurrentLayer)->pFloors, &tDrawCtx);
-        AUTOMAP_DrawCellList((gpAutomapCurrentLayer)->pWalls, &tDrawCtx);
-        AUTOMAP_DrawCellList((gpAutomapCurrentLayer)->pObjects, &tDrawCtx);
+        AUTOMAP_DrawCellList(gpAutomapCurrentLayer->pFloors, &tDrawCtx);
+        AUTOMAP_DrawCellList(gpAutomapCurrentLayer->pWalls, &tDrawCtx);
+        AUTOMAP_DrawCellList(gpAutomapCurrentLayer->pObjects, &tDrawCtx);
 
         if (gnAutomapMode == 1)
         {
-            switch ((gpAutomapCurrentLayer)->fSaved)
+            switch (gpAutomapCurrentLayer->fSaved)
             {
             case 1:
                 tDrawCtx.hCel = gpAutomapIconCels[1];
@@ -3308,7 +3308,7 @@ void __cdecl AUTOMAP_Draw()
         }
         else
         {
-            switch ((gpAutomapCurrentLayer)->fSaved)
+            switch (gpAutomapCurrentLayer->fSaved)
             {
             case 1:
                 pIconCel = gpAutomapIconCels[1];
@@ -3357,7 +3357,7 @@ void __cdecl AUTOMAP_Draw()
         }
 
         tDrawCtx.nClipBottom = nIconBottom;
-        AUTOMAP_DrawCellList((gpAutomapCurrentLayer)->pExtras, &tDrawCtx);
+        AUTOMAP_DrawCellList(gpAutomapCurrentLayer->pExtras, &tDrawCtx);
     }
 
     AUTOMAP_DrawUnits();

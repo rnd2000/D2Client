@@ -8810,7 +8810,7 @@ static void __fastcall INV_DrawBookDescription(void)
         exit(-1);
     }
 
-    pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(gpHoverItem ? (gpHoverItem)->dwClassId : -1);
+    pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(gpHoverItem ? gpHoverItem->dwClassId : -1);
     if (!pItemsTxt)
     {
         FOG_DisplayAssert((uint32_t)szPtItemStatsAssert, (uint32_t)szInvCpp, 3312);
@@ -8926,7 +8926,7 @@ static void __fastcall INV_DrawSetItemDescription(D2UnitStrc *pUnit)
     if (D2COMMON_INVENTORY_GetCursorItem(pInventory))
         return;
 
-    pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(gpHoverItem ? (gpHoverItem)->dwClassId : -1);
+    pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(gpHoverItem ? gpHoverItem->dwClassId : -1);
     if (!pItemsTxt)
     {
         FOG_DisplayAssert((uint32_t)szPtItemStatsAssert, (uint32_t)szInvCpp, 3409);
@@ -9055,7 +9055,7 @@ static void __fastcall INV_DrawSetItemDescription(D2UnitStrc *pUnit)
     wszSetBonus[0].ch = 0;
     MODS_AppendSetBonusText(pPlayer, gpHoverItem, wszSetBonus, 512);
     wszStateMods[0].ch = 0;
-    if (gpHoverItem && (gpHoverItem)->dwItemMode == IMODE_EQUIP)
+    if (gpHoverItem && gpHoverItem->dwItemMode == IMODE_EQUIP)
     {
         MODS_AppendStateModsText(pPlayer, gpHoverItem, wszStateMods, 512);
     }
@@ -9156,7 +9156,7 @@ static void __fastcall INV_DrawTransmogrifyDescription(void)
     if (!D2COMMON_ITEMS_GetTransmogrify(gpHoverItem))
         return;
 
-    pOldItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(gpHoverItem ? (gpHoverItem)->dwClassId : -1);
+    pOldItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(gpHoverItem ? gpHoverItem->dwClassId : -1);
     if (!pOldItemsTxt)
     {
         FOG_DisplayAssert((uint32_t)szPtOldItemStatsAssert, (uint32_t)szInvCpp, 3676);
@@ -9490,7 +9490,7 @@ void __fastcall INV_DrawItemDescription(D2UnitStrc *pUnit, BOOL bVendorUnit)
             nColorClass = 1;
     }
 
-    pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(gpHoverItem ? (gpHoverItem)->dwClassId : -1);
+    pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(gpHoverItem ? gpHoverItem->dwClassId : -1);
     if (!pItemsTxt)
     {
         FOG_DisplayAssert((uint32_t)szPtItemStatsAssert, (uint32_t)szInvCpp, 4029);
@@ -9545,7 +9545,7 @@ void __fastcall INV_DrawItemDescription(D2UnitStrc *pUnit, BOOL bVendorUnit)
     //  the runes in the sockets, between quotes
     if (D2COMMON_ITEMS_CheckIfSocketable(gpHoverItem))
     {
-        pSocketInventory = (gpHoverItem)->pInventory;
+        pSocketInventory = gpHoverItem->pInventory;
         if (pSocketInventory)
         {
             //  six: toUnicode's count below; the longest stock letter is five, so its terminator fits
@@ -9759,7 +9759,7 @@ void __fastcall INV_DrawItemDescription(D2UnitStrc *pUnit, BOOL bVendorUnit)
         dwCode = pItemsTxt->dwCode;
         if (dwCode != 0x2067656C)                                        // 'leg '
         {
-            if (!sgInventoryMode && (!gpHoverItem || !(gpHoverItem)->dwItemMode))
+            if (!sgInventoryMode && (!gpHoverItem || !gpHoverItem->dwItemMode))
             {
                 if (dwCode == 0x20646B62)                                // 'bkd '
                 {

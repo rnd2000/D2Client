@@ -76,10 +76,10 @@ void __fastcall MSG_Send_D2CLTSYS_NEWGAME(const char *szName)
 
     tPacket.nLocale = (int8_t)D2LANG_STRTABLE_GetLanguage();
 
-    if (!(gpLaunchConfig)->nArenaFlags)
+    if (!gpLaunchConfig->nArenaFlags)
     {
-        (gpLaunchConfig)->nArenaFlags = 4;
-        (gpLaunchConfig)->nArenaFlags |= 0x100000;
+        gpLaunchConfig->nArenaFlags = 4;
+        gpLaunchConfig->nArenaFlags |= 0x100000;
     }
     pConfig = gpLaunchConfig;
 

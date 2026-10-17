@@ -1006,7 +1006,7 @@ int32_t __stdcall GAME_DrawDisconnectMessage(int32_t nUnused)
         D2GFX_ClearScreen(0);
         D2WIN_10127_SetFont(D2FONT_FONT42);
         const Unicode *wszText = D2LANG_GetStringFromTblIndex((D2C_StringIndices)gnDisconnectMessageStrings[gnDisconnectMessage]);
-        if ((gpLaunchConfig)->unpackedCTemp.nCharacterSaveFlags & CLIENTSAVEFLAG_EXPANSION)
+        if (gpLaunchConfig->unpackedCTemp.nCharacterSaveFlags & CLIENTSAVEFLAG_EXPANSION)
         {
             if (gnDisconnectMessage == D2JOINERR_NightmareNotUnlocked)
                 wszText = D2LANG_GetStringFromTblIndex(STR_IDX_21794_x);
@@ -2283,7 +2283,7 @@ D2C_AppMode __fastcall GAME_AppModeGame()
         //      difficulty 0    menu skipped when the field is 8 or 12
         //      difficulty 1    menu skipped when the field is 12
         //      difficulty 2+   menu always shown
-        const int32_t nSaveFlagsHi = HIBYTE((gpLaunchConfig)->unpackedCTemp.nCharacterSaveFlags) & 0x1F;
+        const int32_t nSaveFlagsHi = HIBYTE(gpLaunchConfig->unpackedCTemp.nCharacterSaveFlags) & 0x1F;
         const uint8_t nDifficulty = gnDifficulty;
 
         if (nDifficulty == 0)
@@ -2293,7 +2293,7 @@ D2C_AppMode __fastcall GAME_AppModeGame()
 
         //  BUG: the field is the character's progression, bits 8..12, and this writes (difficulty << 2) + 5 into it: 5, 9 or 13. The expansion
         //  encoding of the last act completed is 5, 10 and 15, the classic one 4, 8 and 12. NOT ESTABLISHED: whether anything shows it.
-        (gpLaunchConfig)->unpackedCTemp.nCharacterSaveFlags = (uint16_t)(((gpLaunchConfig)->unpackedCTemp.nCharacterSaveFlags & 0xE0FF) | ((nDifficulty << 10) + 1280));
+        gpLaunchConfig->unpackedCTemp.nCharacterSaveFlags = (uint16_t)((gpLaunchConfig->unpackedCTemp.nCharacterSaveFlags & 0xE0FF) | ((nDifficulty << 10) + 1280));
 
         if (bShowEndGameMenu)
         {

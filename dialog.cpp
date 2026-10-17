@@ -381,9 +381,9 @@ void __stdcall DIALOG_OnCancelKey(SMSGHANDLER_PARAMS *pMsg)
         FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 450);
         exit(-1);
     }
-    if ((gpDialogList)->nFramesDrawn >= 5)
+    if (gpDialogList->nFramesDrawn >= 5)
     {
-        pfnCallback = (void (*)(void))(gpDialogList)->pfnCallback;
+        pfnCallback = (void (*)(void))gpDialogList->pfnCallback;
         if (pfnCallback)
         {
             pfnCallback();
@@ -523,9 +523,9 @@ void __stdcall DIALOG_OnEscape(SMSGHANDLER_PARAMS *pMsg)
         FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 450);
         exit(-1);
     }
-    if ((gpDialogList)->nFramesDrawn >= 5)
+    if (gpDialogList->nFramesDrawn >= 5)
     {
-        pfnCallback = (void (*)(void))(gpDialogList)->pfnCallback;
+        pfnCallback = (void (*)(void))gpDialogList->pfnCallback;
         if (pfnCallback)
         {
             pfnCallback();
@@ -810,11 +810,11 @@ void __stdcall DIALOG_OnEnter(SMSGHANDLER_PARAMS *pMsg)
         exit(-1);
     }
 
-    if ((gpDialogList)->nFramesDrawn < 5)
+    if (gpDialogList->nFramesDrawn < 5)
     {
         return;
     }
-    if (!(gpDialogList)->bGrabsKeyboard && ((CMDTBL_ControlsIsActionBound(HOTKEY_CHAT, 1) && CMDTBL_ControlsFindBoundKey(HOTKEY_CHAT, 1) == 13) || (CMDTBL_ControlsIsActionBound(HOTKEY_CHAT, 0) && CMDTBL_ControlsFindBoundKey(HOTKEY_CHAT, 0) == 13)))
+    if (!gpDialogList->bGrabsKeyboard && ((CMDTBL_ControlsIsActionBound(HOTKEY_CHAT, 1) && CMDTBL_ControlsFindBoundKey(HOTKEY_CHAT, 1) == 13) || (CMDTBL_ControlsIsActionBound(HOTKEY_CHAT, 0) && CMDTBL_ControlsFindBoundKey(HOTKEY_CHAT, 0) == 13)))
     {
         return;
     }
@@ -930,9 +930,9 @@ CONSUME:
         FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 450);
         exit(-1);
     }
-    if ((gpDialogList)->nFramesDrawn >= 5)
+    if (gpDialogList->nFramesDrawn >= 5)
     {
-        pfnCallback = (void (*)(void))(gpDialogList)->pfnCallback;
+        pfnCallback = (void (*)(void))gpDialogList->pfnCallback;
         if (pfnCallback)
         {
             pfnCallback();

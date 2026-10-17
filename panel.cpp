@@ -1434,7 +1434,7 @@ void __cdecl PANEL_DrawBeltItemHint()
         return;
     }
 
-    nClassId = gpBeltHoverItem ? (int32_t)(gpBeltHoverItem)->dwClassId : -1;
+    nClassId = gpBeltHoverItem ? (int32_t)gpBeltHoverItem->dwClassId : -1;
     if (!D2COMMON_DATATBLS_GetItemsTxtRecord(nClassId))
     {
         FOG_DisplayAssert((uint32_t)(UINT_PTR)szPtItemStats, (uint32_t)(UINT_PTR)szPanelCpp, 1556);

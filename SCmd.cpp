@@ -743,13 +743,13 @@ static void SCMD_WriteCharacterFile()
     {
         if (nSize < 0x14F)
             return;
-        (gpLaunchConfig)->unpackedCTemp.nCharacterSaveFlags = *(const uint16_t *)(pData + 0x24);
+        gpLaunchConfig->unpackedCTemp.nCharacterSaveFlags = *(const uint16_t *)(pData + 0x24);
     }
     else
     {
         if (nSize < 0x82)
             return;
-        (gpLaunchConfig)->unpackedCTemp.nCharacterSaveFlags = *(const uint16_t *)(pData + 0x18);
+        gpLaunchConfig->unpackedCTemp.nCharacterSaveFlags = *(const uint16_t *)(pData + 0x18);
     }
 
     //  BUG: the path is built into a 500-byte buffer (szFilePath, 500 bytes below szSavePath) by an unbounded sprintf from a save path fetched with a
