@@ -217,7 +217,7 @@ void __cdecl TRADE_SendCancelOnce()
 }
 
 //1.10f: D2Client.0x6FB1F6E0
-//  The protocol's state machine, on pMessage[1]; packet 0x77's handler (SCMD_HandleSrv77) jumps into it. gnTradeState runs 0..7:
+//  The protocol's state machine, on pMessage[1]; packet 0x77's handler (SCMD_HandleSrv77_TradeState) jumps into it. gnTradeState runs 0..7:
 //
 //      0   idle                     4,5,6  the two sides' ready flags
 //      1   waiting for the other    3      both windows open, nobody ready
@@ -569,8 +569,8 @@ void __cdecl TRADE_SendGreenCheck()
 }
 
 //1.10f: D2Client.0x6FB1FF20
-//  The server sets one side's gold. Called by the packet handler SCMD_HandleSrv79, which passes bSelf (packet byte 1) and nGold (the unaligned
-//  dword at byte 2) and validates neither, so a server can put any 32-bit value into either side's displayed gold.
+//  The server sets one side's gold. Called by the packet handler SCMD_HandleSrv79_TradeGold, which passes bSelf (packet byte 1) and nGold (the
+//  unaligned dword at byte 2) and validates neither, so a server can put any 32-bit value into either side's displayed gold.
 void __fastcall TRADE_SetGold(int32_t nGold, uint8_t bSelf)
 {
     if (bSelf)

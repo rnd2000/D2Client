@@ -627,13 +627,11 @@ static_assert(sizeof(gnGameType) == 4, "gnGameType: the item's 4 bytes in the .i
 inline int32_t gbConnectedToGame;
 static_assert(sizeof(gbConnectedToGame) == 4, "gbConnectedToGame: the item's 4 bytes in the .i64");
 
-//  D2Client 0x6FBA796C
-//  The game is live and accepting input. SCMD_HandleSrv04_LoadComplete sets it to 1; SCMD_HandleSrv05, MSG_Send_D2CLTSYS_ENDGAME,
-//  GAME_BeginDisconnect, UI_SetUIToggle's leave path, both disconnect paths in GAME_UpdateFrame and GAME_InitGame's init clear it. Every
-//  window-message handler gates on it (OnLButtonDown/Up, OnRButtonDown/Up, OnMouseWheel, OnXButtonDown/Up, OnActivateApp), as do
-//  PANEL_GameOnMouseMove, GAME_CmdTblActionClearScreen and SOUNDINST_ServiceInstances.
-//  In SCMD_HandleSrv06 it is the realm-side counterpart of gbLeaveGameSent: on game types 2 and 3, still being in game when packet 0x06 arrives
-//  means GAME_BeginDisconnect(7).
+//  D2Client 0x6FBA796C The game is live and accepting input. SCMD_HandleSrv04_LoadComplete sets it to 1; SCMD_HandleSrv05_UnloadComplete,
+//  MSG_Send_D2CLTSYS_ENDGAME, GAME_BeginDisconnect, UI_SetUIToggle's leave path, both disconnect paths in GAME_UpdateFrame and GAME_InitGame's init
+//  clear it. Every window-message handler gates on it (OnLButtonDown/Up, OnRButtonDown/Up, OnMouseWheel, OnXButtonDown/Up, OnActivateApp), as do
+//  PANEL_GameOnMouseMove, GAME_CmdTblActionClearScreen and SOUNDINST_ServiceInstances. In SCMD_HandleSrv06_GameExit it is the realm-side counterpart
+//  of gbLeaveGameSent: on game types 2 and 3, still being in game when packet 0x06 arrives means GAME_BeginDisconnect(7).
 inline BOOL gbInGame;
 static_assert(sizeof(gbInGame) == 4, "gbInGame: the item's 4 bytes in the .i64");
 
@@ -642,11 +640,10 @@ static_assert(sizeof(gbInGame) == 4, "gbInGame: the item's 4 bytes in the .i64")
 inline BOOL gbDisconnecting;
 static_assert(sizeof(gbDisconnecting) == 4, "gbDisconnecting: the item's 4 bytes in the .i64");
 
-//  D2Client 0x6FBA7974
-//  The server has told us to leave. SCMD_HandleSrv05 sets it to 1 and, in the same two instructions, stamps gnConnectionTimestamp with GetTickCount
-//  (the start of a three-minute disconnect deadline). SCMD_HandleSrv04_LoadComplete sets `gbInGame = 1` and clears this to 0 three instructions
-//  later. GAME_InitGame clears it at startup. Read three times by GAME_UpdateFrame (the game loop's exit test) and by UI_LoadScreenBegin and
-//  UI_DrawLoadingScreen, which is how a pending exit suppresses the loading screen.
+//  D2Client 0x6FBA7974 The server has told us to leave. SCMD_HandleSrv05_UnloadComplete sets it to 1 and, in the same two instructions, stamps
+//  gnConnectionTimestamp with GetTickCount (the start of a three-minute disconnect deadline). SCMD_HandleSrv04_LoadComplete sets `gbInGame = 1` and
+//  clears this to 0 three instructions later. GAME_InitGame clears it at startup. Read three times by GAME_UpdateFrame (the game loop's exit test)
+//  and by UI_LoadScreenBegin and UI_DrawLoadingScreen, which is how a pending exit suppresses the loading screen.
 inline int32_t gbGameExitPending;
 static_assert(sizeof(gbGameExitPending) == 4, "gbGameExitPending: the item's 4 bytes in the .i64");
 
@@ -795,11 +792,10 @@ static_assert(sizeof(gnMouseWheelAccum) == 4, "gnMouseWheelAccum: the item's 4 b
 inline uint8_t gbActEnvironmentDirty;
 static_assert(sizeof(gbActEnvironmentDirty) == 1, "gbActEnvironmentDirty: the item's 1 bytes in the .i64");
 
-//  D2Client 0x6FBA79D4
-//  Set when this client asked to leave the game (always alongside a clt 0x68) and zeroed by GAME_InitGame when a new game starts. Written by
-//  GAME_SetLeaveGameSent's callers and inline by GAME_WindowOnClose and GAME_LeaveGameAfterCinematic. Read in exactly one place: SCMD_HandleSrv06,
-//  on game types 7 and 9, calls GAME_BeginDisconnect(8) only when this is clear, so the flag separates "the server dropped us" from "we asked to
-//  go" and stops a voluntary exit from being reported as a disconnect.
+//  D2Client 0x6FBA79D4 Set when this client asked to leave the game (always alongside a clt 0x68) and zeroed by GAME_InitGame when a new game starts.
+//  Written by GAME_SetLeaveGameSent's callers and inline by GAME_WindowOnClose and GAME_LeaveGameAfterCinematic. Read in exactly one place:
+//  SCMD_HandleSrv06_GameExit, on game types 7 and 9, calls GAME_BeginDisconnect(8) only when this is clear, so the flag separates "the server dropped
+//  us" from "we asked to go" and stops a voluntary exit from being reported as a disconnect.
 inline BOOL gbLeaveGameSent;
 static_assert(sizeof(gbLeaveGameSent) == 4, "gbLeaveGameSent: the item's 4 bytes in the .i64");
 

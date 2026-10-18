@@ -15,7 +15,7 @@
 //1.10f: D2Client.0x6FB09C90
 //  Reads the "Resolution" value of the registry key "Diablo II" (one SRegLoadValue call) and applies it: a value of exactly 1 selects
 //  D2GAMERES_800x600 (the 2 the original passes, `mov ecx, 2`), anything else D2GAMERES_640x480 (`xor ecx, ecx`). Called by
-//  SCMD_HandleSrv61 and GAME_InitGame.
+//  SCMD_HandleSrv61_PlayCinematic and GAME_InitGame.
 static_assert(D2GAMERES_640x480 == 0,
               "WNDPROC_SetResolutionMode's default arm is `xor ecx, ecx`");
 static_assert(D2GAMERES_800x600 == 2,
@@ -26,7 +26,7 @@ void __cdecl MINIPANEL_LoadResolutionFromRegistry()
     //  BUG: the original does not initialise this slot: its whole prologue is push ecx / lea eax, [esp+4+pValue] (an initialiser would be
     //  push 0), so the slot goes into SRegLoadValue holding whatever was in ecx. SRegLoadValue writes it only when its read succeeds with
     //  type 1 or 4, so with no "Resolution" value the game starts at 800x600 only if that leftover is exactly 1. REACHABLE: the leftover is a
-    //  callee's at both call sites (GAME_InitGame, SCMD_HandleSrv61's tail jump); its outcome NOT ESTABLISHED.
+    //  callee's at both call sites (GAME_InitGame, SCMD_HandleSrv61_PlayCinematic's tail jump); its outcome NOT ESTABLISHED.
     //  DIFFERENCE: this C reads its own uninitialised local, not the caller's ecx, so with no value it compares whatever our frame holds --
     //  the original's defect with our frame's leftover in place of its ecx. Kept on purpose.
     uint32_t nValue;

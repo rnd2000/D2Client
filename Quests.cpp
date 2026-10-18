@@ -75,8 +75,8 @@ void __fastcall QUESTS_DispatchQuestPacket(D2GSPacketSrv50 *pCmd)
 }
 
 //1.10f: D2Client.0x6FAB8EC0
-//  PACKET 0x5E: keep its 37 bytes in gQuestStates and raise gbQuestStatesReceived. The body behind SCMD_HandleSrv5E, which jumps here.
-//  The copy is a `rep movsd` of nine dwords and a `movsb`, then the store of 1. What the bytes are: see the BUG note of QUESTS_GetQuestState.
+//  PACKET 0x5E: keep its 37 bytes in gQuestStates and raise gbQuestStatesReceived. The body behind SCMD_HandleSrv5E_QuestAvailability, which jumps
+//  here. The copy is a `rep movsd` of nine dwords and a `movsb`, then the store of 1. What the bytes are: see the BUG note of QUESTS_GetQuestState.
 void __fastcall QUESTS_StoreSrv5EPayload(D2GSPacketSrv5E *pPacket)
 {
     static_assert(sizeof(pPacket->unk0x001) == sizeof(gQuestStates), "the copy fills gQuestStates exactly");
@@ -125,8 +125,8 @@ extern "C" int32_t __stdcall QUESTS_GetQuestState(int32_t nUnused, D2Quests nQue
 
 //1.10f: D2Client.0x6FAB8F50
 //  PACKET 0x61: play the cinematic whose id is the byte at +1. The id arrives zero-extended, 0..255, and VIDEO_PlayCinematic asserts it against the
-//  cinematic count. The original is `xor eax, eax / mov al, [ecx+1] / mov ecx, eax / jmp VIDEO_PlayCinematic`. Its caller, SCMD_HandleSrv61,
-//  reloads the resolution after it.
+//  cinematic count. The original is `xor eax, eax / mov al, [ecx+1] / mov ecx, eax / jmp VIDEO_PlayCinematic`. Its caller,
+//  SCMD_HandleSrv61_PlayCinematic, reloads the resolution after it.
 void __fastcall QUESTS_PlayCinematicFromPacket(D2GSPacketSrv61 *pPacket)
 {
     VIDEO_PlayCinematic(pPacket->unk0x001);

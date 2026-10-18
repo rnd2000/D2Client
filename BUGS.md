@@ -410,7 +410,7 @@ something else refreshes them. Ordinary multiplayer play.
 Reproduced as written; the shared follow-up has no assert to prove an inline, so
 it is written out twice, as the bytes have it twice.
 
-## `SCMD_HandleSrvAC` gives STAT_PIERCE_IDX the two coordinates added together
+## `SCMD_HandleSrvAC_SpawnMonster` gives STAT_PIERCE_IDX the two coordinates added together
 
 `0x6FAB4BD0`, `SCmd.cpp`. **Found 2026-09-14**, SCmd.cpp batch 11.
 
@@ -454,7 +454,7 @@ offered 65536.
 
 Reproduced as written, with a MARKED comment.
 
-## `SCMD_HandleSrvAA` prints packet 0xA8's text for one of its two bad-stat traces
+## `SCMD_HandleSrvAA_AllStates` prints packet 0xA8's text for one of its two bad-stat traces
 
 `0x6FAB4950`, `SCmd.cpp`. **Found 2026-09-14**, SCmd.cpp batch 11.
 
@@ -1495,7 +1495,7 @@ the slot as it was, and the test for 1 -- `mov eax, [esp+4+pValue]` /
 `dec eax` / `jnz`, 0x6FB09CA9..0x6FB09CAE -- then decides 800x600 on that
 ecx. At both call sites it is a callee's leftover: GAME_InitGame's
 call at 0x6FAA950B comes after VIEW_Alloc, or after the Color.txt archive
-calls when the view exists, and SCMD_HandleSrv61 tail-jumps at 0x6FAB3F25
+calls when the view exists, and SCMD_HandleSrv61_PlayCinematic tail-jumps at 0x6FAB3F25
 straight after QUESTS_PlayCinematicFromPacket, itself a tail jump to
 VIDEO_PlayCinematic. So with no "Resolution" value the game starts at
 800x600 only if that leftover is exactly 1, and nothing read here says
@@ -3140,12 +3140,12 @@ would settle it.
 
 It needs `dwClassId` outside `[0, 704)`, which nothing in that function can make.
 The two steps of the packet path that were measured do not stop it —
-`SCMD_HandleSrvAC`'s own bounds check on that SIGNED 16-bit field is inside
+`SCMD_HandleSrvAC_SpawnMonster`'s own bounds check on that SIGNED 16-bit field is inside
 `if (BITMANIP_Read(&pBuffer, 1))` at `0x6FAB4C37`, and
 `PALSHIFT_EnsureMonsterPalette` null-checks.
 
 **Not reachable in normal play; the open question is a malformed server.** What
-would settle it: reading the rest of `SCMD_HandleSrvAC`'s field validation.
+would settle it: reading the rest of `SCMD_HandleSrvAC_SpawnMonster`'s field validation.
 
 **SETTLED 2026-09-21, at CUnit.cpp's close: LATENT, and a malformed server does
 not reach it either.** The validation that matters is not HandleSrvAC's but
@@ -4194,7 +4194,7 @@ NPCMENU_QuestGetQuestRecord returns `*gpNpcQuestRecord`, and NPCMENU_Shutdown
 zeroes that cell -- 0x6FAF7CB2, after `xor esi, esi` at 0x6FAF7C96, right
 after freeing both records. Its two callers are NPCMENU_Reset, which
 re-allocates at once, and UI_ShutdownUiSubsystems (0x6FB20306).
-SCMD_HandleSrv5D is the only path to this function, so the NULL window and
+SCMD_HandleSrv5D_QuestState is the only path to this function, so the NULL window and
 the packet pump do not overlap. A mod that leaves the cell NULL while 0x5D
 still arrives would make it live and fatal at the callee's assert.
 
@@ -4211,7 +4211,7 @@ Reproduced -- the short-circuit is written as the bytes have it.
 `record_state`'s first acts read the packet: `xor edx, edx; mov dl, [esi+1]`
 at 0x6FB06ACF takes `nQuestId` off ESI, and 0x6FB06BE0 does the same on the
 label's other arm. With a NULL packet both read address 1. The test cannot
-fire from the shipped caller: SCMD_HandleSrv5D (0x6FAB3E1B) copies the
+fire from the shipped caller: SCMD_HandleSrv5D_QuestState (0x6FAB3E1B) copies the
 packet to its own stack and passes that address, and it is the only caller.
 
 Reproduced -- the test and the label are both where the bytes have them.
@@ -4334,7 +4334,7 @@ selects; RegisterUnit then looks for the squatter in the BY-ID table
 UNCONDITIONALLY, evicts it and retries -- so a unit filed in the by-id table
 always gets in, and NULL comes back only for a unit filed in the CLIENT-ID
 table whose id is taken there. The 0xAC path passes `bAsyncClientUnit` 0
-(`SCmd.cpp`, SCMD_HandleSrvAC) and files by id. The asynchronous path is
+(`SCmd.cpp`, SCMD_HandleSrvAC_SpawnMonster) and files by id. The asynchronous path is
 CUNIT_CreateClientOnlyUnit (`push 1` at 0x6FB27D88), whose id is
 gdwNextClientUnitId pre-incremented and wrapped before 0xFFFFFFFF
 (0x6FB27D57..0x6FB27D6E): a collision needs some 4.29 billion client-only
@@ -4355,7 +4355,7 @@ returns NULL outside `[0, nSuperUniquesTxtRecordCount)` (D2MOO,
 flag 2 (superunique) is set.
 
 **The id is the server's, and the client does not check it.** The only source
-is packet 0xAC: SCMD_HandleSrvAC reads it as `FOG_BITMANIP_ReadSigned(&tBits,
+is packet 0xAC: SCMD_HandleSrvAC_SpawnMonster reads it as `FOG_BITMANIP_ReadSigned(&tBits,
 16)`, only under type flag 2, and hands it on with no bound (`SCmd.cpp`). The
 other creator, CUNIT_CreateClientOnlyUnit, passes 0 with the type flags 0,
 so it never reaches the arm. A stock server sends the index of a row of its
@@ -4400,7 +4400,7 @@ fault; the stock game does not.
 
 **This settles the NOT ESTABLISHED entry "`UIPANELS_DrawUnitNameLabel`'s fault at
 address 0x0D"**: the class that function reads is a monster's `dwClassId`, and
-SCMD_HandleSrvAC's conditional bound does not matter, because
+SCMD_HandleSrvAC_SpawnMonster's conditional bound does not matter, because
 CreateMonsterUnit makes the same test unconditionally. See that entry.
 
 Reproduced -- both reads are written untested.
@@ -5930,7 +5930,7 @@ the unit's close. **LATENT.**
 The next skill is taken at the top (0x6FABDEBE) and moved into ebx only at
 0x6FABDFCB; the id's two bounds, the skills.txt row's NULL test, the skilldesc
 id's two bounds and its row's NULL test jump to 0x6FABDFCF, past that move, and
-`test ebx, ebx / jnz` goes round with the same skill. SCMD_HandleSrv93 looks
+`test ebx, ebx / jnz` goes round with the same skill. SCMD_HandleSrv93_SkillPageLevels looks
 the unit up as a player only. A player's list holds the default skills (0..5
 and 217..220), its class's -- all 210 class rows of stock Skills.txt name a
 SkillDesc.txt row -- and its items': every property that carries a skill, the
@@ -6253,7 +6253,7 @@ without bit 0 and for a dead unit, where SKILLS_SrvDo076_Whirlwind answers 0
 which gates `dosound`, `tgtsound`, `tgtoverlay` and the local player's
 `delay` (Skills.cpp) -- all four empty in stock Skills.txt for Leap Attack
 (143) and Whirlwind (151) -- and the dispatcher's own answer is discarded by
-every caller: SCMD_HandleSrv99 and SCMD_HandleSrv9A through
+every caller: SCMD_HandleSrv99_CastAtUnit and SCMD_HandleSrv9A_CastAtXY through
 SKILLS_ClientCastAtUnit and SKILLS_ClientCastAtPosition (SCmd.cpp), and
 Skills.cpp's other call.
 
@@ -7929,8 +7929,8 @@ STAT_ALIGNMENT, and is read from the list only on the arm that fetches the
 list (0x6FB4D8A6). A caller that passes a list in, or a list made here,
 reports 4 to CUNIT_OnUnitAlignmentChanged, which then cannot see a GOOD
 monster leave GOOD and leaves the room's ally count raised. The callers pass a
-list only from the second stat of one state on (SCMD_HandleSrvA8, and
-SCMD_HandleSrvAA per state), and the server writes STATE_ALIGNMENT's list
+list only from the second stat of one state on (SCMD_HandleSrvA8_StateOnWithStats, and
+SCMD_HandleSrvAA_AllStates per state), and the server writes STATE_ALIGNMENT's list
 with STAT_ALIGNMENT alone (D2MOO's D2Game sub_6FCBDD30, SUnit.cpp) -- so the
 alignment is the first stat of its state and its list is fetched.
 
@@ -8012,8 +8012,8 @@ close. **UNREACHABLE from the stock server.**
 The warp's last arm passes `pUnit->pDynamicPath` to D2Common #10230 for every
 type but UNIT_PLAYER, and +2Ch is the STATIC path of an object, an item or a
 tile. None of the three reaches it. Of SCmd.cpp's ten calls, the three in
-SCMD_HandleSrv18_PlayerAttributes, SCMD_HandleSrv95 and
-SCMD_HandleSrv96 pass CUNIT_GetPlayer(), whose arm returns first
+SCMD_HandleSrv18_PlayerAttributes, SCMD_HandleSrv95_LifeManaUpdate and
+SCMD_HandleSrv96_WalkVerify pass CUNIT_GetPlayer(), whose arm returns first
 (0x6FB4E2D6, 0x6FB4E2EC, 0x6FB4E306); rows 0x0F and 0x10 name their unit by
 the packet's type byte (SCmd.cpp's router) and 0x16 by each update's, and
 D2MOO's D2Game writes UNIT_PLAYER into all three -- `bTOU` 0 in each of the
@@ -8288,7 +8288,7 @@ The dword is the roster pet record's +0x2C, the third of the block ROSTERPETS_Ge
 D2ClientPetInfoStrc's nDisplayState. Every writer, read off the image:
 
     6FAB1746  mov [eax+2Ch], edx     ROSTERPETS_OnPetPacket81's copy of the block's third dword, which its one caller,
-                                     SCMD_HandleSrv81, stores as a literal: mov dword ptr [esp+14h], 0 at 0x6FAB41B9
+                                     SCMD_HandleSrv81_AddPet, stores as a literal: mov dword ptr [esp+14h], 0 at 0x6FAB41B9
     6FAB1579  rep stosd              the record's allocation zeroed whole, in ROSTERPETS_FindOrAddPet
     6FAB16B8  rep stosd              the same, in OnPetPacket81's inlined copy of it
     6FAB6444  mov [eax+8], ecx       SELECT_RosterPetsSetHirelingDisplayState, whose three callers push
@@ -8358,7 +8358,7 @@ The destination, gwszRecipeScrollText, holds 4096 characters
 source's NUL. The callers prevent an overrun. The one caller,
 TEXT_HandleChatMessage's message type 7 (text.cpp), copies from a
 256-character stack buffer filled by `MultiByteToWideChar(..., szMessage, 256,
-..., 256)`, and szMessage is terminated within 256 bytes: SCMD_HandleSrv26
+..., 256)`, and szMessage is terminated within 256 bytes: SCMD_HandleSrv26_ChatMessage
 takes it off the wire with `STORM_SStrCopy(..., 256)` (SCmd.cpp), which writes
 at most 255 characters and a NUL (Msg.cpp, THE LENGTH), and the explicit length
 converts that NUL too. So at most 256 characters, the NUL among them, reach a
@@ -8725,7 +8725,7 @@ The prompts' Escape and Enter records are KEY records
 (D2_WINPROC_KEYDOWN); in a game the MESSAGE list holds CMDTBL_OnKeyDown
 (gKeyCommandHandlers, registered by CMDTBL_SetKeyHookMode), which tests
 nothing about a prompt or a cinematic (CmdTbl.cpp). A prompt comes up in a
-game through SCMD_HandleSrv61 -> QUESTS_PlayCinematicFromPacket ->
+game through SCMD_HandleSrv61_PlayCinematic -> QUESTS_PlayCinematicFromPacket ->
 VIDEO_PlayCinematic, which turns no key handler off before D2Win's loader
 calls the prompt -- the cinematics prompt when an act's cinematic finds no
 d2video.mpq, the play prompt when videos 6 and 7 find no d2Xvideo.mpq. So
@@ -9610,8 +9610,8 @@ words, the 44th 0) with nothing between, so an id of 43 or more reads the
 original's next data in the first two -- as a function pointer -- and one of
 44 or more in the third. The ids reach the array
 from two packets alone (a grep of the sources for its writers): 0xAC, eight
-bits each until a 0 (SCMD_HandleSrvAC, SCmd.cpp, into CUNIT_CreateMonsterUnit's
-copy), and 0x57, three bytes of its fields (SCMD_HandleSrv57). The server
+bits each until a 0 (SCMD_HandleSrvAC_SpawnMonster, SCmd.cpp, into CUNIT_CreateMonsterUnit's
+copy), and 0x57, three bytes of its fields (SCMD_HandleSrv57_MonsterEnchants). The server
 sends the ids it assigned, and in D2MOO's reading every assignment goes
 through D2GAME_BOSSES_AssignUMod_6FC6FF10 (MonsterUnique.cpp:2916) or
 sub_6FC6FFD0 with ids from monumod.txt's picks, superuniques.txt's Mod
@@ -11170,7 +11170,7 @@ same path (Game.cpp).
     6FB5C9E6  and  ecx, 0FFh                  ; the act, widened, no bound
     6FB5C9EC  mov  eax, gActCofDataFiles[ecx*4] ; five names, acts I..V
 
-Two callers, both setting cl alone. SCMD_HandleSrv7E's act is D2Common's DRLG_GetActNoFromLevelId for the player's
+Two callers, both setting cl alone. SCMD_HandleSrv7E_LoadActCofData's act is D2Common's DRLG_GetActNoFromLevelId for the player's
 room's level: levels.txt's `Act` column, which holds 0..4 in every one of the 133 stock rows with an Id (0: 40,
 1: 35, 2: 28, 3: 6, 4: 24). GAME_PreloadActData's act is packet 0x03's byte,
 which D2MOO's D2Game sends from D2GAME_PACKETS_SendPacket0x03 with the act it also uses to index its own five acts

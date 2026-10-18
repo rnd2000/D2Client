@@ -2212,8 +2212,8 @@ int32_t __fastcall PLAYER_ReleaseClickAndResetHireling(D2ClientClickStrc *pClick
 }
 
 //1.10f: D2Client.0x6FB4B3C0
-//  A player's body assigned: the owner dies, the body takes its place, the equipment leaves the owner. ptCmd in ecx, server packet 74h. One
-//  call, SCmd.cpp's SCMD_HandleSrv74, with its twelve-byte stack copy. The original inlines UNITS_GetYPosition and UNITS_GetXPosition here.
+//  A player's body assigned: the owner dies, the body takes its place, the equipment leaves the owner. ptCmd in ecx, server packet 74h. One call,
+//  SCmd.cpp's SCMD_HandleSrv74_AssignCorpse, with its twelve-byte stack copy. The original inlines UNITS_GetYPosition and UNITS_GetXPosition here.
 //
 //  The packet: +2 is the player whose id the body's inventory keeps as its owner (INVENTORY_GetOwnerId), +6 the body, and +1 the body's
 //  UNITFLAGEX_ISCORPSE (bIsCorpse; the members are bIsCorpse, nOwnerGUID and nBodyGUID). The body is a unit of its own.

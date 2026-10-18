@@ -341,9 +341,9 @@ int32_t __fastcall USEITEM_AnvilOnPanelClick(int32_t nMouseX, int32_t nMouseY)
 }
 
 //1.10f: D2Client.0x6FB24F70
-//  The wait dialog refuses to be closed: `xor eax, eax; retn`, three bytes, a bare retn that purges nothing. It has no code caller: it is
-//  registered as a pfnCallback of DIALOG_Create by the NPC menu, the gold entry dialog and the anvil panel, through a DIALOGCALLBACK cast.
-//  It is typed int __cdecl() as the original is. DIALOG_Create's pfnCallback is called with nothing pushed, so there is nothing to purge,
+//  The wait dialog's dismiss callback, its answer never read: `xor eax, eax; retn`, three bytes, a bare retn that purges nothing. It has no code
+//  caller: it is registered as a pfnCallback of DIALOG_Create by the NPC menu, the gold entry dialog and the anvil panel, through a DIALOGCALLBACK
+//  cast. It is typed int __cdecl() as the original is. DIALOG_Create's pfnCallback is called with nothing pushed, so there is nothing to purge,
 //  although the DIALOGCALLBACK typedef is __stdcall.
 int32_t __cdecl USEITEM_NpcMenuWaitDialogRefuseClose(void)
 {

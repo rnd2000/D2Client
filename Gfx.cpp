@@ -3459,17 +3459,16 @@ BOOL __fastcall GFX_IsUnitCofOnScreen(D2UnitStrc *pUnit, int32_t nX, int32_t nY,
 
 //1.10f: D2Client.0x6FB5C9E0
 //  An act's common COF file loaded into the other cache: the path "DATA\GLOBAL\<name>" built (wsprintfA, "%s\\%s") from gActCofDataFiles --
-//  cmncof_a1.d2, a2, a3, a4 and, for act V, cmncof_a6.d2 -- and, unless the cache is loaded already, the file read whole (ARCHIVE_LoadFile,
-//  line 269, `push 10Dh` 0x6FB5CA1D; none asserts "ptHash->lpbFileData", line 270) and its size added to gnCofMemoryUsed. The block is a run of
-//  records, each a 24-byte cache node with its COF after it: the node's flags cleared, when set (`test` / `jz` 0x6FB5CA87); a COF of more than
-//  64 directions asserting "swapCofHeader->bNumDirections <= 64", line 296 (`cmp byte ptr [ebp+1Ah], 40h` / `ja` 0x6FB5CA92, unsigned); pData
-//  set to the COF; the node hashed by its name into the cache's buckets; and the next record nSize bytes past the COF, until the bytes left are
-//  exactly 0 (`jnz` 0x6FB5CB07). Then the cache is marked loaded. The path is built before the test, so a loaded cache builds it for nothing.
-//  A bare `retn`. nActIndex is a uint8_t: the body widens the byte itself (`and ecx, 0FFh` 0x6FB5C9E6) and both callers set cl alone
-//  (GAME_PreloadActData's `mov cl, bl` 0x6FAA93C9, SCMD_HandleSrv7E's `mov cl, al` 0x6FAB4297, a tail jump). The original inlines GFX_HashCofName
-//  here.
-//  BUG: the walk stops only at exactly zero bytes left, so a block whose records did not add up to its size would be walked past its end.
-//  LATENT: the stock files were not checked for it.
+//  cmncof_a1.d2, a2, a3, a4 and, for act V, cmncof_a6.d2 -- and, unless the cache is loaded already, the file read whole (ARCHIVE_LoadFile, line 269,
+//  `push 10Dh` 0x6FB5CA1D; none asserts "ptHash->lpbFileData", line 270) and its size added to gnCofMemoryUsed. The block is a run of records, each a
+//  24-byte cache node with its COF after it: the node's flags cleared, when set (`test` / `jz` 0x6FB5CA87); a COF of more than 64 directions
+//  asserting "swapCofHeader->bNumDirections <= 64", line 296 (`cmp byte ptr [ebp+1Ah], 40h` / `ja` 0x6FB5CA92, unsigned); pData set to the COF; the
+//  node hashed by its name into the cache's buckets; and the next record nSize bytes past the COF, until the bytes left are exactly 0 (`jnz`
+//  0x6FB5CB07). Then the cache is marked loaded. The path is built before the test, so a loaded cache builds it for nothing. A bare `retn`. nActIndex
+//  is a uint8_t: the body widens the byte itself (`and ecx, 0FFh` 0x6FB5C9E6) and both callers set cl alone (GAME_PreloadActData's `mov cl, bl`
+//  0x6FAA93C9, SCMD_HandleSrv7E_LoadActCofData's `mov cl, al` 0x6FAB4297, a tail jump). The original inlines GFX_HashCofName here. BUG: the walk
+//  stops only at exactly zero bytes left, so a block whose records did not add up to its size would be walked past its end. LATENT: the stock files
+//  were not checked for it.
 void __fastcall GFX_LoadActCofData(uint8_t nActIndex)
 {
     D2ClientCofCacheStrc *pCache;
@@ -3572,19 +3571,18 @@ D2MonStats2Txt *__fastcall GFX_GetMonStats2Record(int32_t nMonStats2Id)
 
 //1.10f: D2Client.0x6FB5CC40
 //  A monster's COF files loaded, and its sprites requested: its monstats.txt and monstats2.txt rows (nothing without both), then for each monster
-//  mode of gPreloadAnimModes the class has (monstats2.txt's nModeFlags bit, the byte tested against gdwBitMasks' low byte, `test [edi+edx*4],
-//  cl` 0x6FB5CCE9): the COF's path built (GFX_BuildMonsterCofName, which also answers the weapon class code), its title lower-cased and looked up
-//  in the other cache's bucket (GFX_HashCofName, the eight-byte compare) or loaded into it (GFX_LoadCofFile) -- a COF that cannot be loaded
-//  halts, "Could not add cof file: %s", line 3767, FOG_DisplayHalt and exit; then its COF asserted (`lpbCofData`, 3772), its header
-//  (`ptCofHeader`, 3774) and its layer order for direction 0, frame 0 (`lpbCompByte`, 3779), and each layer's component (`eComponent <
-//  NUM_COMPONENTS`, 3786, a signed `jge` 0x6FB5CE26) resolved into a cel context by GFXUTIL_FillCelContextTokens -- once per COF direction of
-//  the token record, or once for direction 0 when its count is 0 -- and validated by D2CMP's SpriteValidate: waited for and loaded (1, 1) when
-//  bValidateSprites, and on a failure the context's cel file cleared and handed to D2CMP's #10056; else requested (0, 0). A bare `retn`.
-//  The token record is a D2ClientMonCofTokensStrc: 52 bytes zeroed (`rep stosd` 0Dh dwords, 0x6FB5CD04) and given the monster id as a word
-//  (0x6FB5CD2A), and nothing else -- so its count of COF directions at +3 is 0 and the per-direction arm never runs in this build, and the
-//  variants GFXUTIL_FillCelContextTokens reads at +4 are 0.
-//  nMonsterId is an int: the bounds test reads the whole of esi (`test esi, esi` / `cmp esi, [ecx+0A80h]`, 0x6FB5CC4B, 0x6FB5CC5F), and the
-//  callers set the whole of ecx (`mov ecx, 0D3h` 0x6FB0693D; SCMD_HandleSrvA4's word zero-extended, `and ecx, 0FFFFh` 0x6FAB2EE9). The record and
+//  mode of gPreloadAnimModes the class has (monstats2.txt's nModeFlags bit, the byte tested against gdwBitMasks' low byte, `test [edi+edx*4], cl`
+//  0x6FB5CCE9): the COF's path built (GFX_BuildMonsterCofName, which also answers the weapon class code), its title lower-cased and looked up in the
+//  other cache's bucket (GFX_HashCofName, the eight-byte compare) or loaded into it (GFX_LoadCofFile) -- a COF that cannot be loaded halts, "Could
+//  not add cof file: %s", line 3767, FOG_DisplayHalt and exit; then its COF asserted (`lpbCofData`, 3772), its header (`ptCofHeader`, 3774) and its
+//  layer order for direction 0, frame 0 (`lpbCompByte`, 3779), and each layer's component (`eComponent < NUM_COMPONENTS`, 3786, a signed `jge`
+//  0x6FB5CE26) resolved into a cel context by GFXUTIL_FillCelContextTokens -- once per COF direction of the token record, or once for direction 0
+//  when its count is 0 -- and validated by D2CMP's SpriteValidate: waited for and loaded (1, 1) when bValidateSprites, and on a failure the context's
+//  cel file cleared and handed to D2CMP's #10056; else requested (0, 0). A bare `retn`. The token record is a D2ClientMonCofTokensStrc: 52 bytes
+//  zeroed (`rep stosd` 0Dh dwords, 0x6FB5CD04) and given the monster id as a word (0x6FB5CD2A), and nothing else -- so its count of COF directions at
+//  +3 is 0 and the per-direction arm never runs in this build, and the variants GFXUTIL_FillCelContextTokens reads at +4 are 0. nMonsterId is an int:
+//  the bounds test reads the whole of esi (`test esi, esi` / `cmp esi, [ecx+0A80h]`, 0x6FB5CC4B, 0x6FB5CC5F), and the callers set the whole of ecx
+//  (`mov ecx, 0D3h` 0x6FB0693D; SCMD_HandleSrvA4_PreloadMonsterCofs's word zero-extended, `and ecx, 0FFFFh` 0x6FAB2EE9). The record and
 //  GFX_BuildMonsterCofName take the id as a word (`mov word ptr [...], si`, `movsx edx, si`). The frame holds the token record at +38h, two cel
 //  contexts at +6Ch and +0B4h, the title and the path at +0FCh and +200h. The original inlines DATATBLS_GetMonStatsTxtRecord and
 //  GFX_GetMonStats2Record here.
@@ -4007,7 +4005,7 @@ D2ClientModePreloadStrc *__fastcall GFX_GetMonsterPreloadEntry(int32_t nMonsterI
 //  inlined whole) -- asynchronously only when it stands in a room, no window is up (D2Gfx's #10026, WINDOW_GetState) and the loading screen is not
 //  active: bAsync starts 1 (0x6FB5DB2C) and any of the three clears it (0x6FB5DB72). The current mode indexes the record's twenty flags
 //  unchecked; whether #11013 can answer 20 or more was not looked for. A bare `retn`. Its callers are the packet handlers
-//  SCMD_HandleSrv09_SpawnUnit (a tail jump, 0x6FAB23BE) and SCMD_HandleSrvAC (0x6FAB4E85).
+//  SCMD_HandleSrv09_SpawnUnit (a tail jump, 0x6FAB23BE) and SCMD_HandleSrvAC_SpawnMonster (0x6FAB4E85).
 void __fastcall GFX_PreloadUnit(D2UnitStrc *pUnit)
 {
     int32_t nType;

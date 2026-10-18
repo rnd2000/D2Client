@@ -677,7 +677,7 @@ void __fastcall SKILLS_StartLeapArc(D2UnitStrc *pUnit, D2SkillStrc *pSkill)
 
 
 //1.10f: D2Client.0x6FAC1C00
-//  The collision a leap lifted, put back. Its callers end a Leap or a Leap Attack on the client: SCMD_HandleSrvA5 and
+//  The collision a leap lifted, put back. Its callers end a Leap or a Leap Attack on the client: SCMD_HandleSrvA5_EndSkillMove and
 //  SKILLS_StatRemoveCallback_EndMoveSkill. The footprint mask a unit should have is COLLIDE_MONSTER for a monster and COLLIDE_PLAYER for anything
 //  else (dec / neg / sbb / and / add); when D2Common's PATH_GetFootprintCollisionMask already answers that (it answers for a NULL path too),
 //  nothing happens. Otherwise, at a point (the used skill's param1 and param2 when there is a used skill, the unit's own position when there is
@@ -1296,7 +1296,7 @@ int32_t __fastcall SKILLS_CltDoFunc45(D2UnitStrc *pUnit, D2C_Skills nSkillId, in
 
 
 //1.10f: D2Client.0x6FAC2800
-//  Whirlwind ends on the client. Its callers end a skill whose `srvdofunc` is 76 (stock Whirlwind) on the client: SCMD_HandleSrvA5 and
+//  Whirlwind ends on the client. Its callers end a skill whose `srvdofunc` is 76 (stock Whirlwind) on the client: SCMD_HandleSrvA5_EndSkillMove and
 //  SKILLS_StatRemoveCallback_EndMoveSkill. On the unit's highest-level skill of nSkillId, when bit 0 of its flags is set, it sets bit 1 (or al, 2),
 //  the pair SKILLS_CltDoFunc45 takes as the whirl's end on its next frame; then, with the skill or without it, the unit's playing
 //  `barbarian_whirlwind` (sounds.txt 2531, 9E3h) is handed to SOUNDINST_MarkStarted. It ends in a tail jump to it and takes no stack argument. The

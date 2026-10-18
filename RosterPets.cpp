@@ -136,7 +136,7 @@ void __fastcall ROSTERPETS_FindOrAddPet(uint32_t dwUnitId, uint32_t dwOwnerId, i
 //       CUNIT_SetUnitAlive, MONSTER_UpdateClientLight and D2Common's UNITS_ChangeAnimMode(pUnit, 1).
 //
 //  The block is a D2ClientPetInfoStrc {nSeed, wName, nDisplayState}: +0x24 is what ROSTERPETS_GetPetInfo hands out, and the display state is
-//  written 0 on every packet (SCMD_HandleSrv81 stores a literal 0 there). Step 6 reads the name as the word at +4, the low half of the
+//  written 0 on every packet (SCMD_HandleSrv81_AddPet stores a literal 0 there). Step 6 reads the name as the word at +4, the low half of the
 //  second dword. The block parameter stays `unsigned int *`: the copy reads three whole dwords.
 void __fastcall ROSTERPETS_OnPetPacket81(uint32_t dwUnitId, uint32_t dwOwnerId, int32_t nPetTypeId, uint32_t nMonStatsId, uint32_t *pPetInfo)
 {
@@ -520,12 +520,11 @@ void __cdecl ROSTERPETS_UpdateSkeletonPalettes()
 }
 
 //1.10f: D2Client.0x6FAB1A40
-//  Packet 0x7F for a pet: its life percent into +0x1C and wArea into +0x10 (zero-extended, stored as a dword). Called by SCMD_HandleSrv7F
-//  when the packet's bIsPlayer is zero; the word is the packet's nLevelId. For a hireling whose monster unit exists, the unit's hit points
-//  are set to that percent of its maximum.
-//  STATLIST_GetMaxLifeFromUnit takes one argument and STATLIST_SetUnitStat four: the `push 0` at 0x6FAB1A86 is SetUnitStat's nLayer.
-//  The product is a signed wrapping imul, then a signed divide by 100 (0x51EB851F). It is taken through unsigned below so that a product
-//  past INT_MAX wraps as the bytes do instead of being undefined.
+//  Packet 0x7F for a pet: its life percent into +0x1C and wArea into +0x10 (zero-extended, stored as a dword). Called by
+//  SCMD_HandleSrv7F_PartyLifeUpdate when the packet's bIsPlayer is zero; the word is the packet's nLevelId. For a hireling whose monster unit exists,
+//  the unit's hit points are set to that percent of its maximum. STATLIST_GetMaxLifeFromUnit takes one argument and STATLIST_SetUnitStat four: the
+//  `push 0` at 0x6FAB1A86 is SetUnitStat's nLayer. The product is a signed wrapping imul, then a signed divide by 100 (0x51EB851F). It is taken
+//  through unsigned below so that a product past INT_MAX wraps as the bytes do instead of being undefined.
 void __fastcall ROSTERPETS_UpdateLifeAndArea(uint32_t dwPetUnitId, int32_t nLifePercent, uint16_t wArea)
 {
     D2RosterPetStrc *pPet;

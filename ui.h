@@ -644,7 +644,7 @@ static_assert(sizeof(gszExpansion) == 10, "gszExpansion: the item's 10 bytes in 
 //  D2Client 0x6FBB9FC0
 //  A copy of gbGameExitPending, taken at the end of UI_LoadScreenBegin and re-taken by UI_DrawLoadingScreen, which then tests it and skips the
 //  whole draw when it is set: the loading screen stops drawing itself once the server has told the client to leave, rather than sitting over a
-//  game that is already unwinding. gbGameExitPending is what SCMD_HandleSrv05 raises, alongside the three-minute disconnect deadline.
+//  game that is already unwinding. gbGameExitPending is what SCMD_HandleSrv05_UnloadComplete raises, alongside the three-minute disconnect deadline.
 inline int32_t gbLoadScreenExitPending;
 static_assert(sizeof(gbLoadScreenExitPending) == 4, "gbLoadScreenExitPending: the item's 4 bytes in the .i64");
 

@@ -346,7 +346,7 @@ void __fastcall SCMD_HandleSrv28_NpcMenu(D2GSPacketSrv28 *pPacket)
 
 //1.10f: D2Client.0x6FAB2BA0
 //  Packet 0x62: the conversation stops. A tail jump.
-void __fastcall SCMD_HandleSrv62(D2GSPacketSrv62 *pPacket)
+void __fastcall SCMD_HandleSrv62_NpcInteractionStop(D2GSPacketSrv62 *pPacket)
 {
     NPCMENU_OnInteractionStop(pPacket->nUnitType, pPacket->nUnitId);
 }
@@ -368,7 +368,7 @@ void __fastcall SCMD_HandleSrv2A_TransactionResult(D2GSPacketSrv2A *pPacket)
 
 //1.10f: D2Client.0x6FAB3B30
 //  Packet 0x42, copied (6 bytes), handed to the item code that acknowledges an item action and drops the cursor item.
-void __fastcall SCMD_HandleSrv42(D2GSPacketSrv42 *pPacket)
+void __fastcall SCMD_HandleSrv42_ClearCursor(D2GSPacketSrv42 *pPacket)
 {
     D2GSPacketSrv42 tPacket = *pPacket;
     ITEM_NpcMenuAckItemActionAndDropCursorItem(&tPacket);
@@ -376,7 +376,7 @@ void __fastcall SCMD_HandleSrv42(D2GSPacketSrv42 *pPacket)
 
 //1.10f: D2Client.0x6FAB3C30
 //  Packet 0x50, copied (15 bytes), handed to Quests.cpp's dispatch on the quest id.
-void __fastcall SCMD_HandleSrv50(D2GSPacketSrv50 *pPacket)
+void __fastcall SCMD_HandleSrv50_QuestSpecial(D2GSPacketSrv50 *pPacket)
 {
     D2GSPacketSrv50 tPacket = *pPacket;
     QUESTS_DispatchQuestPacket(&tPacket);
@@ -384,14 +384,14 @@ void __fastcall SCMD_HandleSrv50(D2GSPacketSrv50 *pPacket)
 
 //1.10f: D2Client.0x6FAB3C80
 //  Packet 0x4F, header only: the hireling offers are cleared. A tail jump.
-void __fastcall SCMD_HandleSrv4F(D2GSPacketSrv4F *pPacket)
+void __fastcall SCMD_HandleSrv4F_ClearHirelingOffers(D2GSPacketSrv4F *pPacket)
 {
     NPCMENU_ClearHirelingOffers();
 }
 
 //1.10f: D2Client.0x6FAB3C90
 //  Packet 0x4E: one hireling offer, copied (7 bytes).
-void __fastcall SCMD_HandleSrv4E(D2GSPacketSrv4E *pPacket)
+void __fastcall SCMD_HandleSrv4E_AddHirelingOffer(D2GSPacketSrv4E *pPacket)
 {
     D2GSPacketSrv4E tPacket = *pPacket;
     NPCMENU_AddHirelingOffer(&tPacket);
@@ -399,7 +399,7 @@ void __fastcall SCMD_HandleSrv4E(D2GSPacketSrv4E *pPacket)
 
 //1.10f: D2Client.0x6FAB3E40
 //  Packet 0x91, copied (26 bytes, `rep movsd` of six and a `movsw`) and passed as the word pointer the callee declares.
-void __fastcall SCMD_HandleSrv91(D2GSPacketSrv91 *pPacket)
+void __fastcall SCMD_HandleSrv91_NpcIntros(D2GSPacketSrv91 *pPacket)
 {
     D2GSPacketSrv91 tPacket = *pPacket;
     NPCMENU_MarkEntriesFromPacket91((uint16_t *)&tPacket);
@@ -407,7 +407,7 @@ void __fastcall SCMD_HandleSrv91(D2GSPacketSrv91 *pPacket)
 
 //1.10f: D2Client.0x6FAB4350
 //  Packet 0x8A, copied (6 bytes).
-void __fastcall SCMD_HandleSrv8A(D2GSPacketSrv8A *pPacket)
+void __fastcall SCMD_HandleSrv8A_NpcAlert(D2GSPacketSrv8A *pPacket)
 {
     D2GSPacketSrv8A tPacket = *pPacket;
     NPCMENU_ShowNpcAlert(&tPacket);
@@ -419,7 +419,7 @@ void __fastcall SCMD_HandleSrv8A(D2GSPacketSrv8A *pPacket)
 //  BUG: the server writes the cost as a 32-bit value at +3, but 0x9B passes its low word, zero-extended (`xor edx, edx / mov dx, [ecx+3]`,
 //  0x6FAB43D0), and SetResurrectMercOffer stores that edx whole in gnMercResurrectCost: a cost of 65536 or more would be shown and charged
 //  modulo 65536 on the client's side.
-void __fastcall SCMD_HandleSrv9B(D2GSPacketSrv9B *pPacket)
+void __fastcall SCMD_HandleSrv9B_ResurrectMercOffer(D2GSPacketSrv9B *pPacket)
 {
     NPCMENU_SetResurrectMercOffer((D2C_StringIndices)pPacket->wNameTblId, (uint16_t)pPacket->nCost);
 }
@@ -517,7 +517,7 @@ void __fastcall SCMD_HandleSrv04_LoadComplete(D2GSPacketSrv04 *pPacket)
 
 //1.10f: D2Client.0x6FAB2220
 //  Packet 0x05, header only: the game is left.
-void __fastcall SCMD_HandleSrv05(D2GSPacketSrv05 *pPacket)
+void __fastcall SCMD_HandleSrv05_UnloadComplete(D2GSPacketSrv05 *pPacket)
 {
     j_ENV_UnloadImages();
     FOG_10144(0);
@@ -528,7 +528,7 @@ void __fastcall SCMD_HandleSrv05(D2GSPacketSrv05 *pPacket)
 
 //1.10f: D2Client.0x6FAB2250
 //  Packet 0x06, header only: the other end is gone. gnGameType is read once and again only after the disconnect call it may make (0x6FAB2272).
-void __fastcall SCMD_HandleSrv06(D2GSPacketSrv06 *pPacket)
+void __fastcall SCMD_HandleSrv06_GameExit(D2GSPacketSrv06 *pPacket)
 {
     if (gnGameType == GAMETYPE_OBNET_JOIN || gnGameType == GAMETYPE_LAN_JOIN)
     {
@@ -615,7 +615,7 @@ void __fastcall SCMD_HandleSrv0A_RemoveUnit(D2GSPacketSrv0A *pPacket)
 
 //1.10f: D2Client.0x6FAB2450
 //  Packet 0x0B: this client's own unit is assigned. Ends in a tail jump to MEMPART_Nullsub1 (one `retn`), called through its slot.
-void __fastcall SCMD_HandleSrv0B(D2GSPacketSrv0B *pPacket)
+void __fastcall SCMD_HandleSrv0B_SetPlayerUnit(D2GSPacketSrv0B *pPacket)
 {
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
     if (pUnit)
@@ -1155,7 +1155,7 @@ static_assert(offsetof(D2GSPacketSrvA5, nUnitType) == 1 && offsetof(D2GSPacketSr
 
 //1.10f: D2Client.0x6FAB2930
 //  Row 0x11: an overlay on a unit, the id bounded by overlay.txt's count.
-void __fastcall SCMD_HandleSrv11(D2GSPacketSrv11 *pPacket)
+void __fastcall SCMD_HandleSrv11_AddOverlay(D2GSPacketSrv11 *pPacket)
 {
     const uint16_t nOverlayId = pPacket->nOverlayId;
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
@@ -1328,7 +1328,7 @@ void __fastcall SCMD_HandleSrv9E_A2(uint8_t *pPacket)
 //  or its non-progressive twin, the same seven arguments to both. The skill id and level are read as signed words.
 //  HARMLESS: the non-progressive arm loads the last argument with `mov al, [esi+1]` alone (0x6FAB2DFD), so the pushed dword carries the skills.txt
 //  row pointer's upper 24 bits; the callee masks it (`and ecx, 0FFh`, 0x6FABCC40; `and eax, 0FFh`, 0x6FABCC62), and ours passes the byte.
-void __fastcall SCMD_HandleSrvA3(D2GSPacketSrvA3 *pPacket)
+void __fastcall SCMD_HandleSrvA3_SkillEffect(D2GSPacketSrvA3 *pPacket)
 {
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
     if (!pUnit)
@@ -1355,7 +1355,7 @@ void __fastcall SCMD_HandleSrvA3(D2GSPacketSrvA3 *pPacket)
 //1.10f: D2Client.0x6FAB2E20
 //  Row 0xA5: a skill ends, switched on skills.txt's srvdofunc: 67 ends an uninterruptable skill, 76 stops the whirlwind sound, 77 and 78 restore
 //  the collision footprint; STATE_SKILL_MOVE is cleared on every path. The word id is masked and still tested negative (`and edx, 0FFFFh / jl`).
-void __fastcall SCMD_HandleSrvA5(D2GSPacketSrvA5 *pPacket)
+void __fastcall SCMD_HandleSrvA5_EndSkillMove(D2GSPacketSrvA5 *pPacket)
 {
     const uint16_t nSkillId = pPacket->nSkillId;
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType((uint32_t)pPacket->dwUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
@@ -1393,7 +1393,7 @@ void __fastcall SCMD_HandleSrvA5(D2GSPacketSrvA5 *pPacket)
 
 //1.10f: D2Client.0x6FAB2EE0
 //  Row 0xA4: a monster's COF files added, the id bounded by monstats.txt's count. A tail jump.
-void __fastcall SCMD_HandleSrvA4(D2GSPacketSrvA4 *pPacket)
+void __fastcall SCMD_HandleSrvA4_PreloadMonsterCofs(D2GSPacketSrvA4 *pPacket)
 {
     const int32_t nMonsterId = pPacket->nMonsterId;
     if (nMonsterId < sgptDataTables->nMonStatsTxtRecordCount)
@@ -1521,7 +1521,7 @@ void __fastcall SCMD_HandleSrv19_1F_AttributeUpdate(uint8_t *pPacket)
 //  points above zero on a unit in PLRMODE_DEAD put it in PLRMODE_TNEUTRAL and alive; STAT_LEVEL refreshes the local player through
 //  ITEM_RefreshUnitFromMsg (the twelve-byte 0x47 message) and, when the unit is the local player, re-merges its item stat lists and refreshes
 //  its items. In 0x19..0x1F the unit is the local player; in 0x20 it need not be.
-void __fastcall SCMD_HandleSrv20(D2GSPacketSrv20 *pPacket)
+void __fastcall SCMD_HandleSrv20_AttributeUpdate(D2GSPacketSrv20 *pPacket)
 {
     const int32_t nValue = pPacket->nValue;
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, UNIT_PLAYER);
@@ -1621,7 +1621,7 @@ void __fastcall SCMD_HandleSrv18_PlayerAttributes(D2GSPacketSrv18 *pPacket)
 //1.10f: D2Client.0x6FAB3320
 //  Row 0x95: the local player's life, mana, stamina and position, bit-packed over the declared 13 bytes: 8, 15 life, 15 mana, 15 stamina, 16 X,
 //  16 Y, 8, 8. The offsets are -127..+128 as in 0x18, and a dead player is revived on life above zero.
-void __fastcall SCMD_HandleSrv95(D2GSPacketSrv95 *pPacket)
+void __fastcall SCMD_HandleSrv95_LifeManaUpdate(D2GSPacketSrv95 *pPacket)
 {
     D2BitBufferStrc tBits;
     FOG_BITMANIP_Initialize(&tBits, &pPacket->nHeader, 13);
@@ -1661,7 +1661,7 @@ void __fastcall SCMD_HandleSrv95(D2GSPacketSrv95 *pPacket)
 //1.10f: D2Client.0x6FAB3480
 //  Row 0x96: the local player's stamina and position, bit-packed over the declared 9 bytes: 8, 15 stamina, 16 X, 16 Y, 8, 8. The offsets are
 //  -127..+128 as in 0x18; it carries no life and does not revive.
-void __fastcall SCMD_HandleSrv96(D2GSPacketSrv96 *pPacket)
+void __fastcall SCMD_HandleSrv96_WalkVerify(D2GSPacketSrv96 *pPacket)
 {
     D2BitBufferStrc tBits;
     FOG_BITMANIP_Initialize(&tBits, &pPacket->nHeader, 9);
@@ -1754,7 +1754,7 @@ void __fastcall SCMD_HandleSrv21_UpdateSkills(D2GSPacketSrv21 *pPacket)
 //  page byte is stored over the frame slot `push ecx` made, so its dword is the packet pointer's upper bytes; SKILLS_AddLevelsToSkillPage tests
 //  `cmp al, 4` and masks it (`and eax, 0FFh`, 0x6FABDF71). The delta is 0x80-positive as 0x18's offsets are (`cmp esi, 80h / jle` at
 //  0x6FAB35CF): -127..+128.
-void __fastcall SCMD_HandleSrv93(D2GSPacketSrv93 *pPacket)
+void __fastcall SCMD_HandleSrv93_SkillPageLevels(D2GSPacketSrv93 *pPacket)
 {
     int32_t nDelta = pPacket->nLevelDelta;
     if (nDelta > 0x80)
@@ -1808,7 +1808,7 @@ void __fastcall SCMD_HandleSrv22_SetSkill(D2GSPacketSrv22 *pPacket)
 
 //1.10f: D2Client.0x6FAB36D0
 //  Row 0x23: a player's left or right active skill and its owner GUID. The unit is looked up as a player; the unit type at +1 is never read.
-void __fastcall SCMD_HandleSrv23(D2GSPacketSrv23 *pPacket)
+void __fastcall SCMD_HandleSrv23_SetActiveSkill(D2GSPacketSrv23 *pPacket)
 {
     const uint16_t nSkill = pPacket->nSkill;
     const D2UnitGUID dwOwnerGUID = pPacket->dwOwnerGUID;
@@ -1825,7 +1825,7 @@ void __fastcall SCMD_HandleSrv23(D2GSPacketSrv23 *pPacket)
 //1.10f: D2Client.0x6FAB3710
 //  Row 0x98: the class an evil hut spawns, from a stack copy whose eighth byte is never written or read (MONSTER_SetMinionSpawnClassId reads
 //  bytes 1..6).
-void __fastcall SCMD_HandleSrv98(D2GSPacketSrv98 *pPacket)
+void __fastcall SCMD_HandleSrv98_MinionSpawnClass(D2GSPacketSrv98 *pPacket)
 {
     uint8_t tPacket[8];
     memcpy(tPacket, pPacket, sizeof(D2GSPacketSrv98));
@@ -1835,7 +1835,7 @@ void __fastcall SCMD_HandleSrv98(D2GSPacketSrv98 *pPacket)
 //1.10f: D2Client.0x6FAB3740
 //  Row 0x99: a unit's skill cast at a unit. The word at +0x0E (the skill level) is loaded with `mov cx, [..]` after a call; the cast functions
 //  forward the dword and SKILLS_ClientCastAtTarget masks it (`and edx, 0FFFFh`, 0x6FABA77B) before SKILLS_RunClientDoFunc tests it.
-void __fastcall SCMD_HandleSrv99(D2GSPacketSrv99 *pPacket)
+void __fastcall SCMD_HandleSrv99_CastAtUnit(D2GSPacketSrv99 *pPacket)
 {
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
     if (!pUnit)
@@ -1851,7 +1851,7 @@ void __fastcall SCMD_HandleSrv99(D2GSPacketSrv99 *pPacket)
 //1.10f: D2Client.0x6FAB3790
 //  Row 0x9A: a unit's skill cast at a point. The skill id is the low word of the dword at +6; the word at +0x0F is the skill level, handled as in
 //  0x99.
-void __fastcall SCMD_HandleSrv9A(D2GSPacketSrv9A *pPacket)
+void __fastcall SCMD_HandleSrv9A_CastAtXY(D2GSPacketSrv9A *pPacket)
 {
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
     if (!pUnit)
@@ -1867,7 +1867,7 @@ void __fastcall SCMD_HandleSrv9A(D2GSPacketSrv9A *pPacket)
 //  buffer to TEXT_HandleChatMessage. Ours builds the same buffer and walks the wire by offset from the packet rather than through the struct's
 //  16-character szName.
 //  BUG: the message is found by the name's length alone, so a name the wire did not terminate carries the search past it.
-void __fastcall SCMD_HandleSrv26(D2GSPacketSrv26 *pPacket)
+void __fastcall SCMD_HandleSrv26_ChatMessage(D2GSPacketSrv26 *pPacket)
 {
     uint8_t tChatMessage[284];
     tChatMessage[0] = pPacket->nHeader;
@@ -1897,7 +1897,7 @@ void __fastcall SCMD_HandleSrv76_ClearUnitHoverText(D2GSPacketSrv76 *pPacket)
 
 //1.10f: D2Client.0x6FAB3930
 //  Row 0x5A: a system message, from a 40-byte stack copy.
-void __fastcall SCMD_HandleSrv5A(D2GSPacketSrv5A *pPacket)
+void __fastcall SCMD_HandleSrv5A_SystemMessage(D2GSPacketSrv5A *pPacket)
 {
     D2GSPacketSrv5A tPacket;
     memcpy(&tPacket, pPacket, sizeof(tPacket));
@@ -1959,7 +1959,7 @@ static_assert(offsetof(D2GSPacketSrv5C, dwPlayerGUID) == 1 && offsetof(D2GSPacke
 //1.10f: D2Client.0x6FAB39F0
 //  Row 0x3E: an item's stat, bit-packed with self-describing widths: a GUID of 8, 16 or 32 bits (one or two leading bits say which), a set
 //  flag, a 9-bit stat, a value of 8, 16 or 32, a parameter of 8 or 16.
-void __fastcall SCMD_HandleSrv3E(D2GSPacketSrv3E *pPacket)
+void __fastcall SCMD_HandleSrv3E_ItemStatUpdate(D2GSPacketSrv3E *pPacket)
 {
     D2BitBufferStrc tBits;
     //  BUG: the bit buffer is sized as the packet's length byte minus 2 (`sub eax, 2` at 0x6FAB39FE) with no test: a length below 2 hands
@@ -1984,7 +1984,7 @@ void __fastcall SCMD_HandleSrv3E(D2GSPacketSrv3E *pPacket)
 
 //1.10f: D2Client.0x6FAB3AE0
 //  Row 0x3F: a cursor item's skill, from a stack copy.
-void __fastcall SCMD_HandleSrv3F(D2GSPacketSrv3F *pPacket)
+void __fastcall SCMD_HandleSrv3F_CursorItemSkill(D2GSPacketSrv3F *pPacket)
 {
     D2GSPacketSrv3F tPacket;
     memcpy(&tPacket, pPacket, sizeof(tPacket));
@@ -1993,7 +1993,7 @@ void __fastcall SCMD_HandleSrv3F(D2GSPacketSrv3F *pPacket)
 
 //1.10f: D2Client.0x6FAB3B00
 //  Row 0x40: an item flag, from a sixteen-byte stack copy.
-void __fastcall SCMD_HandleSrv40(D2GSPacketSrv40 *pPacket)
+void __fastcall SCMD_HandleSrv40_SetItemFlag(D2GSPacketSrv40 *pPacket)
 {
     uint8_t tPacket[16];
     memcpy(tPacket, pPacket, sizeof(D2GSPacketSrv40));
@@ -2012,7 +2012,7 @@ void __fastcall SCMD_HandleSrv47_RefreshItem(D2GSPacketSrv47 *pPacket)
 
 //1.10f: D2Client.0x6FAB3B90
 //  Row 0x48: the same through ITEM_RefreshUnitFromPacket.
-void __fastcall SCMD_HandleSrv48(D2GSPacketSrv48 *pPacket)
+void __fastcall SCMD_HandleSrv48_RefreshUnit(D2GSPacketSrv48 *pPacket)
 {
     uint8_t tPacket[12];
     memcpy(tPacket, pPacket, sizeof(D2GSPacketSrv48));
@@ -2024,7 +2024,7 @@ void __fastcall SCMD_HandleSrv48(D2GSPacketSrv48 *pPacket)
 //  ticks and the eclipse flag, objects refreshed for day and night, and the player's items refreshed.
 //  BUG: the local player is dereferenced untested (`mov edx, [eax+1Ch]` at 0x6FAB3BD9, straight after CUNIT_GetPlayer) and tested only on the
 //  way out. Reachable only if the server sends 0x53 before the player's unit exists.
-void __fastcall SCMD_HandleSrv53(D2GSPacketSrv53 *pPacket)
+void __fastcall SCMD_HandleSrv53_Environment(D2GSPacketSrv53 *pPacket)
 {
     const int32_t nIndex = pPacket->nIndex;
     const int32_t nTicks = pPacket->nTicks;
@@ -2057,7 +2057,7 @@ void __fastcall j_MEMPART_Nullsub1(void *pPacket)
 //1.10f: D2Client.0x6FAB3CC0
 //  Row 0x57: a monster's name seed, its three modifier bytes, champion and unique type flags, and MONUNIQUE_ApplyModifiers by tail jump, only
 //  when the type byte at +5 is UNIT_MONSTER.
-void __fastcall SCMD_HandleSrv57(D2GSPacketSrv57 *pPacket)
+void __fastcall SCMD_HandleSrv57_MonsterEnchants(D2GSPacketSrv57 *pPacket)
 {
     const uint16_t wUmod2 = pPacket->wUmod2;
     const uint32_t dwUnitGUID = pPacket->dwUnitGUID;
@@ -2084,7 +2084,7 @@ void __fastcall SCMD_HandleSrv57(D2GSPacketSrv57 *pPacket)
 
 //1.10f: D2Client.0x6FAB3D50
 //  Row 0x58: the anvil panel, from a stack copy.
-void __fastcall SCMD_HandleSrv58(D2GSPacketSrv58 *pPacket)
+void __fastcall SCMD_HandleSrv58_AnvilPanel(D2GSPacketSrv58 *pPacket)
 {
     D2GSPacketSrv58 tPacket;
     memcpy(&tPacket, pPacket, sizeof(tPacket));
@@ -2102,7 +2102,7 @@ void __fastcall SCMD_HandleSrv59_AssignPlayer(D2GSPacketSrv59 *pPacket)
 //  Row 0x5B: a player added to the roster; the guild tag at +0x22 and the guild name after its terminator. Three of ROSTER_AddPlayer's words are
 //  pushed from registers holding other upper bits; the callee reads nLevel, nPartyId and the word at +0x20 as words and never reads the one at
 //  +0x1C.
-void __fastcall SCMD_HandleSrv5B(D2GSPacketSrv5B *pPacket)
+void __fastcall SCMD_HandleSrv5B_RosterAddPlayer(D2GSPacketSrv5B *pPacket)
 {
     char *szGuildTag = (char *)pPacket + offsetof(D2GSPacketSrv5B, unk0x22);
     ROSTER_AddPlayer(pPacket->nUnitGUID, pPacket->nClass, pPacket->szName, (int16_t)pPacket->nLevel, (int16_t)pPacket->nPartyId, (int16_t)pPacket->unk0x1C, (D2C_PartyButtons)pPacket->nPartyFlags,
@@ -2111,14 +2111,14 @@ void __fastcall SCMD_HandleSrv5B(D2GSPacketSrv5B *pPacket)
 
 //1.10f: D2Client.0x6FAB3DF0
 //  Row 0x5C: a player removed from the roster. A tail jump.
-void __fastcall SCMD_HandleSrv5C(D2GSPacketSrv5C *pPacket)
+void __fastcall SCMD_HandleSrv5C_RosterRemovePlayer(D2GSPacketSrv5C *pPacket)
 {
     ROSTER_RemovePlayer(pPacket->dwPlayerGUID);
 }
 
 //1.10f: D2Client.0x6FAB3E00
 //  Row 0x5D: a quest state, from a stack copy.
-void __fastcall SCMD_HandleSrv5D(D2GSPacketSrv5D *pPacket)
+void __fastcall SCMD_HandleSrv5D_QuestState(D2GSPacketSrv5D *pPacket)
 {
     D2GSPacketSrv5D tPacket;
     memcpy(&tPacket, pPacket, sizeof(tPacket));
@@ -2127,14 +2127,14 @@ void __fastcall SCMD_HandleSrv5D(D2GSPacketSrv5D *pPacket)
 
 //1.10f: D2Client.0x6FAB3E30
 //  Row 0x5E: a jump to QUESTS_StoreSrv5EPayload.
-void __fastcall SCMD_HandleSrv5E(D2GSPacketSrv5E *pPacket)
+void __fastcall SCMD_HandleSrv5E_QuestAvailability(D2GSPacketSrv5E *pPacket)
 {
     QUESTS_StoreSrv5EPayload(pPacket);
 }
 
 //1.10f: D2Client.0x6FAB3E70
 //  Row 0x92: a unit's items. A tail jump.
-void __fastcall SCMD_HandleSrv92(D2GSPacketSrv92 *pPacket)
+void __fastcall SCMD_HandleSrv92_RefreshInventory(D2GSPacketSrv92 *pPacket)
 {
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
     if (pUnit)
@@ -2143,7 +2143,7 @@ void __fastcall SCMD_HandleSrv92(D2GSPacketSrv92 *pPacket)
 
 //1.10f: D2Client.0x6FAB3E90
 //  Row 0x5F: the local player's portal flags.
-void __fastcall SCMD_HandleSrv5F(D2GSPacketSrv5F *pPacket)
+void __fastcall SCMD_HandleSrv5F_PortalFlags(D2GSPacketSrv5F *pPacket)
 {
     const int32_t nPortalFlags = (int32_t)pPacket->dwPortalFlags;
     D2UnitStrc *pPlayer = CUNIT_GetPlayer();
@@ -2171,7 +2171,7 @@ void __fastcall SCMD_HandleSrv60_TownPortalState(D2GSPacketSrv60 *pPacket)
 
 //1.10f: D2Client.0x6FAB3F20
 //  Row 0x61: the cinematic, then the resolution reloaded by tail jump.
-void __fastcall SCMD_HandleSrv61(D2GSPacketSrv61 *pPacket)
+void __fastcall SCMD_HandleSrv61_PlayCinematic(D2GSPacketSrv61 *pPacket)
 {
     QUESTS_PlayCinematicFromPacket(pPacket);
     MINIPANEL_LoadResolutionFromRegistry();
@@ -2179,7 +2179,7 @@ void __fastcall SCMD_HandleSrv61(D2GSPacketSrv61 *pPacket)
 
 //1.10f: D2Client.0x6FAB3F30
 //  Row 0x63: the waypoint panel, from a 24-byte stack copy.
-void __fastcall SCMD_HandleSrv63(D2GSPacketSrv63 *pPacket)
+void __fastcall SCMD_HandleSrv63_WaypointMenu(D2GSPacketSrv63 *pPacket)
 {
     uint8_t tPacket[24];
     memcpy(tPacket, pPacket, sizeof(D2GSPacketSrv63));
@@ -2263,7 +2263,7 @@ static_assert(offsetof(D2GSPacketSrv8B, nUnitGUID) == 1 && offsetof(D2GSPacketSr
 //  SEED_RollLimitedRandomNumber at the end, the LCG step included; ours calls SEED_RollLimitedRandomNumberInline (Shared.cpp).
 //  DIFFERENCE: ours calls SEED_RollRandomNumber where the bytes inline the LCG step; it computes the same `lo * 0x6AC690C5 + hi` over the same
 //  two dwords and stores both halves, the high one first where 0x73 stores the low one first.
-void __fastcall SCMD_HandleSrv73(D2GSPacketSrv73 *pPacket)
+void __fastcall SCMD_HandleSrv73_SpawnMissile(D2GSPacketSrv73 *pPacket)
 {
     const int32_t nX = pPacket->nX;
     const int32_t nY = pPacket->nY;
@@ -2302,7 +2302,7 @@ void __fastcall SCMD_HandleSrv73(D2GSPacketSrv73 *pPacket)
 
 //1.10f: D2Client.0x6FAB40C0
 //  Row 0x74: PLAYER_AssignCorpse (Player.cpp), from a twelve-byte stack copy (the packet's 10 bytes rounded up to four).
-void __fastcall SCMD_HandleSrv74(D2GSPacketSrv74 *pPacket)
+void __fastcall SCMD_HandleSrv74_AssignCorpse(D2GSPacketSrv74 *pPacket)
 {
     uint8_t tPacket[12];
     memcpy(tPacket, pPacket, sizeof(D2GSPacketSrv74));
@@ -2313,21 +2313,21 @@ void __fastcall SCMD_HandleSrv74(D2GSPacketSrv74 *pPacket)
 //  Row 0x75: ROSTER_UpdatePartyState. Its fourth argument is never read: nFlags, pushed from the same edx as nPartyId, lands in the second stack
 //  slot, and the callee never loads that slot. nPartyId is in dx over the router's edx; the callee's one use of edx before reloading it is
 //  `mov [esi+22h], dx` (0x6FAAF0CF).
-void __fastcall SCMD_HandleSrv75(D2GSPacketSrv75 *pPacket)
+void __fastcall SCMD_HandleSrv75_PartyRosterUpdate(D2GSPacketSrv75 *pPacket)
 {
     ROSTER_UpdatePartyState(pPacket->nUnitGUID, (int16_t)pPacket->nPartyId, (int16_t)pPacket->nLevel, (int16_t)pPacket->nFlags, (D2C_PartyButtons)pPacket->unk0x0B);
 }
 
 //1.10f: D2Client.0x6FAB4110
 //  Row 0x77: a jump to trade.cpp's TRADE_HandleStateMessage.
-void __fastcall SCMD_HandleSrv77(D2GSPacketSrv77 *pPacket)
+void __fastcall SCMD_HandleSrv77_TradeState(D2GSPacketSrv77 *pPacket)
 {
     TRADE_HandleStateMessage(&pPacket->nHeader);
 }
 
 //1.10f: D2Client.0x6FAB4120
 //  Row 0x78: trade.cpp's TRADE_SetPartnerFromPacket78, from a 24-byte stack copy (the packet's 21 bytes rounded up to four).
-void __fastcall SCMD_HandleSrv78(D2GSPacketSrv78 *pPacket)
+void __fastcall SCMD_HandleSrv78_TradePartner(D2GSPacketSrv78 *pPacket)
 {
     uint8_t tPacket[24];
     memcpy(tPacket, pPacket, sizeof(D2GSPacketSrv78));
@@ -2336,7 +2336,7 @@ void __fastcall SCMD_HandleSrv78(D2GSPacketSrv78 *pPacket)
 
 //1.10f: D2Client.0x6FAB4150
 //  Row 0x79: a jump to trade.cpp's TRADE_SetGold; bSelf is passed in dl, which is all TRADE_SetGold tests.
-void __fastcall SCMD_HandleSrv79(D2GSPacketSrv79 *pPacket)
+void __fastcall SCMD_HandleSrv79_TradeGold(D2GSPacketSrv79 *pPacket)
 {
     TRADE_SetGold((int32_t)pPacket->dwGold, (uint8_t)pPacket->bSelf);
 }
@@ -2353,7 +2353,7 @@ void __fastcall SCMD_HandleSrv7A_RosterPetsOnPetPacket(D2GSPacketSrv7A *pPacket)
 
 //1.10f: D2Client.0x6FAB4190
 //  Row 0x81: ROSTERPETS_OnPetPacket81, with the dwords at +0x0C and +0x10 and a zero as a three-dword array.
-void __fastcall SCMD_HandleSrv81(D2GSPacketSrv81 *pPacket)
+void __fastcall SCMD_HandleSrv81_AddPet(D2GSPacketSrv81 *pPacket)
 {
     uint32_t tPetInfo[3];
     tPetInfo[0] = pPacket->unk0x0C;
@@ -2364,7 +2364,7 @@ void __fastcall SCMD_HandleSrv81(D2GSPacketSrv81 *pPacket)
 
 //1.10f: D2Client.0x6FAB41D0
 //  Row 0x7B: a hotkey slot: the low twelve bits of the word at +2 are the skill, bit 15 the mode. Two defects of the original, below.
-void __fastcall SCMD_HandleSrv7B(D2GSPacketSrv7B *pPacket)
+void __fastcall SCMD_HandleSrv7B_AssignSkillHotkey(D2GSPacketSrv7B *pPacket)
 {
     //  the skill is the low twelve bits and the hand bit 15, read as the bytes read them: the word, then `and eax, 0FFFh` and `and esi, 8000h`;
     //  a bit-field's position is the compiler's to choose, the masks are not
@@ -2385,7 +2385,7 @@ void __fastcall SCMD_HandleSrv7B(D2GSPacketSrv7B *pPacket)
 
 //1.10f: D2Client.0x6FAB4220
 //  Row 0x7C: ITEM_OnItemRefPacket7C, from an eight-byte stack copy (the packet's 6 bytes rounded up to four).
-void __fastcall SCMD_HandleSrv7C(D2GSPacketSrv7C *pPacket)
+void __fastcall SCMD_HandleSrv7C_ReleaseItemLock(D2GSPacketSrv7C *pPacket)
 {
     uint8_t tPacket[8];
     memcpy(tPacket, pPacket, sizeof(D2GSPacketSrv7C));
@@ -2394,7 +2394,7 @@ void __fastcall SCMD_HandleSrv7C(D2GSPacketSrv7C *pPacket)
 
 //1.10f: D2Client.0x6FAB4240
 //  Row 0x7D: ITEM_OnItemPairPacket7D, from a twenty-byte stack copy (the packet's 18 bytes rounded up to four).
-void __fastcall SCMD_HandleSrv7D(D2GSPacketSrv7D *pPacket)
+void __fastcall SCMD_HandleSrv7D_ItemBreakRepair(D2GSPacketSrv7D *pPacket)
 {
     uint8_t tPacket[20];
     memcpy(tPacket, pPacket, sizeof(D2GSPacketSrv7D));
@@ -2404,7 +2404,7 @@ void __fastcall SCMD_HandleSrv7D(D2GSPacketSrv7D *pPacket)
 //1.10f: D2Client.0x6FAB4280
 //  Row 0x7E: GFX_LoadActCofData by jump, for the act of the level the player stands in. Nothing of the packet is read. The act is passed in cl;
 //  GFX_LoadActCofData's second instruction is `and ecx, 0FFh` (0x6FB5C9E6).
-void __fastcall SCMD_HandleSrv7E(D2GSPacketSrv7E *pPacket)
+void __fastcall SCMD_HandleSrv7E_LoadActCofData(D2GSPacketSrv7E *pPacket)
 {
     //  BUG: CUNIT_GetPlayer()'s answer reaches D2Common's UNITS_GetRoom untested, which asserts "ptUnit" and exits on a null unit. Reachable only if
     //  0x7E arrives before the player's unit exists.
@@ -2416,7 +2416,7 @@ void __fastcall SCMD_HandleSrv7E(D2GSPacketSrv7E *pPacket)
 //1.10f: D2Client.0x6FAB42A0
 //  Row 0x7F: a life percentage and a level id, to the roster, or to the pet list when the byte at +1 is zero. nLevelId is pushed from si over
 //  the router's esi; both callees mask it (`and eax, 0FFFFh`, 0x6FAB08C4 and 0x6FAB1A65).
-void __fastcall SCMD_HandleSrv7F(D2GSPacketSrv7F *pPacket)
+void __fastcall SCMD_HandleSrv7F_PartyLifeUpdate(D2GSPacketSrv7F *pPacket)
 {
     if (pPacket->bIsPlayer)
         ROSTER_UpdateLifeAndLevel(pPacket->nUnitGUID, pPacket->nLifePercentage, pPacket->nLevelId);
@@ -2426,7 +2426,7 @@ void __fastcall SCMD_HandleSrv7F(D2GSPacketSrv7F *pPacket)
 
 //1.10f: D2Client.0x6FAB42D0
 //  Row 0x90: ROSTER_SetEntryPosition.
-void __fastcall SCMD_HandleSrv90(D2GSPacketSrv90 *pPacket)
+void __fastcall SCMD_HandleSrv90_PartyPosition(D2GSPacketSrv90 *pPacket)
 {
     ROSTER_SetEntryPosition(pPacket->dwGUID, (int32_t)pPacket->dwPosX, (int32_t)pPacket->dwPosY);
 }
@@ -2434,7 +2434,7 @@ void __fastcall SCMD_HandleSrv90(D2GSPacketSrv90 *pPacket)
 //1.10f: D2Client.0x6FAB42E0
 //  Row 0x82: the owner name on each portal object this client holds, and the roster's two portal GUIDs when the second is not -1, whether or not
 //  either object was found.
-void __fastcall SCMD_HandleSrv82(D2GSPacketSrv82 *pPacket)
+void __fastcall SCMD_HandleSrv82_PortalOwner(D2GSPacketSrv82 *pPacket)
 {
     const uint32_t dwPortalGUID0 = pPacket->dwPortalGUID[0];
     const uint32_t dwOwnerGUID = pPacket->dwOwnerGUID;
@@ -2455,28 +2455,28 @@ void __fastcall SCMD_HandleSrv82(D2GSPacketSrv82 *pPacket)
 
 //1.10f: D2Client.0x6FAB4340
 //  Row 0x89: a jump to QUESTSFX_FireTrigger, which reads the byte at +1.
-void __fastcall SCMD_HandleSrv89(D2GSPacketSrv89 *pPacket)
+void __fastcall SCMD_HandleSrv89_QuestTrigger(D2GSPacketSrv89 *pPacket)
 {
     QUESTSFX_FireTrigger(pPacket);
 }
 
 //1.10f: D2Client.0x6FAB4370
 //  Row 0x8B: a jump to ROSTER_SetPartyButton; the byte at +5 is passed in dl and masked there (`and edx, 0FFh`, 0x6FAB0FE3).
-void __fastcall SCMD_HandleSrv8B(D2GSPacketSrv8B *pPacket)
+void __fastcall SCMD_HandleSrv8B_SetPartyButton(D2GSPacketSrv8B *pPacket)
 {
     ROSTER_SetPartyButton(pPacket->nUnitGUID, pPacket->bParty);
 }
 
 //1.10f: D2Client.0x6FAB4380
 //  Row 0x8C: ROSTER_ApplyInfoFlags, the word pushed over a dirty eax; the callee masks it (`and eax, 0FFFFh`, 0x6FAB104A).
-void __fastcall SCMD_HandleSrv8C(D2GSPacketSrv8C *pPacket)
+void __fastcall SCMD_HandleSrv8C_PlayerRelation(D2GSPacketSrv8C *pPacket)
 {
     ROSTER_ApplyInfoFlags(pPacket->dwPlayerGUID[0], pPacket->dwPlayerGUID[1], pPacket->nFlags);
 }
 
 //1.10f: D2Client.0x6FAB43A0
 //  Row 0x8D: a jump to ROSTER_SetPartyId; nPartyGUID is passed in dx.
-void __fastcall SCMD_HandleSrv8D(D2GSPacketSrv8D *pPacket)
+void __fastcall SCMD_HandleSrv8D_SetPartyId(D2GSPacketSrv8D *pPacket)
 {
     ROSTER_SetPartyId((int32_t)pPacket->dwPlayerGUID, (int16_t)pPacket->nPartyGUID);
 }
@@ -2506,7 +2506,7 @@ void __fastcall SCMD_HandleSrv97_WeaponSwitch(D2GSPacketSrv97 *pPacket)
 
 //1.10f: D2Client.0x6FAB4410
 //  Row 0x8F: a jump to GAME_OnPongUpdateLatency.
-void __fastcall SCMD_HandleSrv8F(D2GSPacketSrv8F *pPacket)
+void __fastcall SCMD_HandleSrv8F_Pong(D2GSPacketSrv8F *pPacket)
 {
     GAME_OnPongUpdateLatency(&pPacket->nHeader);
 }
@@ -2684,7 +2684,7 @@ void __fastcall SCMD_HandleSrv9D_ItemEquip(D2GSPacketSrv9D *pPacket)
 //1.10f: D2Client.0x6FAB46E0
 //  Row 0xA6: a runes.txt record added or changed, DATATBLS_AddOrChangeRunesTxtRecord with the word at +4 and the 288 bytes from +6, when the
 //  byte at +1 is zero.
-void __fastcall SCMD_HandleSrvA6(D2GSPacketSrvA6 *pPacket)
+void __fastcall SCMD_HandleSrvA6_RunesRecord(D2GSPacketSrvA6 *pPacket)
 {
     if (!pPacket->unk0x01)
         D2COMMON_DATATBLS_AddOrChangeRunesTxtRecord(pPacket->nRecordId, &pPacket->tRecord);
@@ -2693,7 +2693,7 @@ void __fastcall SCMD_HandleSrvA6(D2GSPacketSrvA6 *pPacket)
 //1.10f: D2Client.0x6FAB4700
 //  Row 0xA7: a state on: STATES_ToggleStateWithSound, then PLRSKILLS_StatesRunStateSetFunc by tail jump. A missing unit is a FOG_Trace
 //  ("sSCmd_UnitStateOnEx") and a return.
-void __fastcall SCMD_HandleSrvA7(D2GSPacketSrvA7 *pPacket)
+void __fastcall SCMD_HandleSrvA7_StateOn(D2GSPacketSrvA7 *pPacket)
 {
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType((uint32_t)pPacket->nUnitId, (D2C_UnitTypes)pPacket->nUnitType);
     if (!pUnit)
@@ -2711,7 +2711,7 @@ void __fastcall SCMD_HandleSrvA7(D2GSPacketSrvA7 *pPacket)
 //  Row 0xA8: a state on with its stats: after the toggle, a bit stream of 9-bit stat ids ending at 511, each with a layer of nSendParamBits and a
 //  value of nSendBits (signed when ItemStatCost's SIGNED flag is set and the width is below 32) into PLRSKILLS_SetStateStat. A missing unit, a
 //  stat id out of range or no send bits is a FOG_Trace ("sSCmd_UnitStateOnValEx") and a return.
-void __fastcall SCMD_HandleSrvA8(D2GSPacketSrvA8 *pPacket)
+void __fastcall SCMD_HandleSrvA8_StateOnWithStats(D2GSPacketSrvA8 *pPacket)
 {
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType((uint32_t)pPacket->nUnitId, (D2C_UnitTypes)pPacket->nUnitType);
     if (!pUnit)
@@ -2760,7 +2760,7 @@ void __fastcall SCMD_HandleSrvA8(D2GSPacketSrvA8 *pPacket)
 //1.10f: D2Client.0x6FAB4900
 //  Row 0xA9: a state off: PLRSKILLS_StatesRunStateRemFunc, then PLRSKILLS_EndStateAndSkill by tail jump. A missing unit is a FOG_Trace
 //  ("sSCmd_UnitStateOffEx") and a return.
-void __fastcall SCMD_HandleSrvA9(D2GSPacketSrvA9 *pPacket)
+void __fastcall SCMD_HandleSrvA9_StateOff(D2GSPacketSrvA9 *pPacket)
 {
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType((uint32_t)pPacket->nUnitId, (D2C_UnitTypes)pPacket->nUnitType);
     if (!pUnit)
@@ -2812,7 +2812,7 @@ static_assert(STAT_MAXHP == 7, "0xAC: push 7 at 0x6FAB4EB2, beside STAT_HITPOINT
 //1.10f: D2Client.0x6FAB4950
 //  Row 0xAA: a whole state list: 8-bit state ids ending at 255, each toggled with sound, each optionally followed by 0xA8's stat stream, each
 //  closed with PLRSKILLS_StatesRunStateSetFunc. A missing unit is a FOG_Trace ("sSCmd_UnitStateAllEx") and a return.
-void __fastcall SCMD_HandleSrvAA(D2GSPacketSrvAA *pPacket)
+void __fastcall SCMD_HandleSrvAA_AllStates(D2GSPacketSrvAA *pPacket)
 {
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType((uint32_t)pPacket->nUnitId, (D2C_UnitTypes)pPacket->nUnitType);
     if (!pUnit)
@@ -2871,7 +2871,7 @@ void __fastcall SCMD_HandleSrvAA(D2GSPacketSrvAA *pPacket)
 //  Row 0xAB: a health byte: for a UNIT_MONSTER it becomes STAT_HITPOINTS as `nLife << 8`, for anything else the party roster's percentage,
 //  `100 * nLife / 128`, by tail jump. The local player and any unit with dwFlags bit 9 are skipped. A missing unit is a FOG_Trace
 //  ("sSCmd_HealthUpdate").
-void __fastcall SCMD_HandleSrvAB(D2GSPacketSrvAB *pPacket)
+void __fastcall SCMD_HandleSrvAB_UnitHealth(D2GSPacketSrvAB *pPacket)
 {
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
     if (!pUnit)
@@ -2900,7 +2900,7 @@ void __fastcall SCMD_HandleSrvAB(D2GSPacketSrvAB *pPacket)
 //  floor(log2(count - 1)) + 1; ours is `_BitScanReverse`, the original's `bsr`. The record is reached the long way and each step is a bound: the
 //  class id against nMonStatsTxtRecordCount, then monstats.txt's wMonStatsEx (+0x18, stride 424) against nMonStats2TxtRecordCount, then
 //  monstats2.txt's record (stride 308) and its sixteen counts at +0x15. Any failed bound returns: the monster is not created at all.
-void __fastcall SCMD_HandleSrvAC(D2GSPacketSrvAC *pPacket)
+void __fastcall SCMD_HandleSrvAC_SpawnMonster(D2GSPacketSrvAC *pPacket)
 {
     const uint32_t dwUnitGUID = pPacket->dwUnitGUID;
     const int16_t nMonsterClassId = (int16_t)pPacket->nUnitIndex;

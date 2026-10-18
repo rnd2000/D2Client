@@ -410,7 +410,7 @@ void __cdecl WAYPOINT_SendCloseOnce(void)
 
 //1.10f: D2Client.0x6FB26320
 //  Opens the panel from server packet 0x63, { uint8 nHeader; uint32 dwUnitId; uint16 pData[8] }: takes the GUID from +1 and hands +5 to
-//  WAYPOINTS_CopyAndValidateWaypointData, whose argument is a D2WaypointDataStrc of uint16 nFlags[8]. Called from SCMD_HandleSrv63.
+//  WAYPOINTS_CopyAndValidateWaypointData, whose argument is a D2WaypointDataStrc of uint16 nFlags[8]. Called from SCMD_HandleSrv63_WaypointMenu.
 //  Everything is gated on UI_SetUIToggle(UI_WAYPOINT, UI_TURNON, 1) answering 1, so a panel that is already up is not reinitialised and the
 //  packet is dropped. The act tab comes from the player's own room (room, level id, act) and falls back to act 0 if any step fails.
 //  WAYPOINT_BuildActWaypointList is called before the copy and again after it. The first pass fills gWaypointList from the previous

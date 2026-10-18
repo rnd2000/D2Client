@@ -1204,9 +1204,9 @@ void __fastcall SPELLSEL_SkillsSelectHotkeySlot(int32_t nSlot)
 }
 
 //1.10f: D2Client.0x6FB1A200
-//  Stores one hotkey slot sent by the server: skill id, mode and owner into the three sixteen-entry arrays. SCMD_HandleSrv7B (packet 0x7B) is the
-//  one caller; SPELLSEL_BindHoveredSkillToSlot sends the other direction. There is no bound on nSlot. void: eax at the `retn 8` holds nMode only
-//  because it was loaded to be stored, and the caller tail-returns it.
+//  Stores one hotkey slot sent by the server: skill id, mode and owner into the three sixteen-entry arrays. SCMD_HandleSrv7B_AssignSkillHotkey
+//  (packet 0x7B) is the one caller; SPELLSEL_BindHoveredSkillToSlot sends the other direction. There is no bound on nSlot. void: eax at the `retn 8`
+//  holds nMode only because it was loaded to be stored, and the caller tail-returns it.
 void __fastcall SPELLSEL_SetHotkeySlot(int32_t nSlot, int32_t nSkillId, int32_t nMode, D2UnitGUID nOwnerGUID)
 {
     gnSpellSelSkillIds[nSlot] = nSkillId;

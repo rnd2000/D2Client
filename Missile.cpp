@@ -9641,7 +9641,7 @@ static_assert(MISSILESPAWN_ATTACKBONUS == 0x1000, "D2MOO's server only: STAT_TOH
 static_assert(MISSILESPAWN_RANDOMDIR == 0x2000, "a random direction of 64");
 static_assert(MISSILESPAWN_NOLIGHT == 0x4000, "`test ah, 40h`, 0x6FB3EA26");
 static_assert(MISSILESPAWN_RANGE == 0x8000, "nRange is the range");
-static_assert(MISSILESPAWN_FROMSERVER == 0x40000000, "SCMD_HandleSrv73's `mov [esp+80h+pParams], 40000001h`, 0x6FAB3FD2");
+static_assert(MISSILESPAWN_FROMSERVER == 0x40000000, "SCMD_HandleSrv73_SpawnMissile's `mov [esp+80h+pParams], 40000001h`, 0x6FAB3FD2");
 
 
 //1.10f: D2Client.0x6FB3E070

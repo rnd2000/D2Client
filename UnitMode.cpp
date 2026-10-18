@@ -121,11 +121,11 @@ int32_t __fastcall UNITMODE_StartMoveToLocation(D2UnitStrc *pUnit, int32_t nX, i
 //  table, a switch with nine case labels.
 //
 //  A difference on either axis past the tolerance (absolute value, compared signed) asks for a warp. It is called off when nToleranceMode is 0,
-//  nNextX is positive (signed), the server's point is within ten subtiles (squared distance under 100) and the point (nNextX, nNextY) is nearer
-//  the unit than the server's point is (PATH_ComputeSquaredDistance twice, both compares signed). The callers that pass a next point are
-//  SCMD_HandleSrv18_PlayerAttributes, SCMD_HandleSrv95 and SCMD_HandleSrv96, all for the local player, and theirs is the server's point plus the
-//  step the packet carries: when the server's unit, one step on, comes nearer to where the client has it, the two are converging and nothing is
-//  corrected.
+//  nNextX is positive (signed), the server's point is within ten subtiles (squared distance under 100) and the point (nNextX, nNextY) is nearer the
+//  unit than the server's point is (PATH_ComputeSquaredDistance twice, both compares signed). The callers that pass a next point are
+//  SCMD_HandleSrv18_PlayerAttributes, SCMD_HandleSrv95_LifeManaUpdate and SCMD_HandleSrv96_WalkVerify, all for the local player, and theirs is the
+//  server's point plus the step the packet carries: when the server's unit, one step on, comes nearer to where the client has it, the two are
+//  converging and nothing is corrected.
 //
 //  Within the tolerance the unit warps only when neither end is on the screen: both coordinates differ from the current ones (either equal is
 //  enough to stay), and GFXUTIL_IsUnitCelOnScreen answers 0 for the current client position and for the server's point converted to client

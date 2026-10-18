@@ -559,7 +559,8 @@ int32_t __fastcall ITEM_SetChargedSkillCharges(D2UnitStrc *pUnit, int32_t nSkill
 
 
 //1.10f: D2Client.0x6FB2E780
-//  Applies a single stat change to an item. Its caller SCMD_HandleSrv3E unpacks a buffer into (nStatId, nValue) pairs and calls this once per pair.
+//  Applies a single stat change to an item. Its caller SCMD_HandleSrv3E_ItemStatUpdate unpacks a buffer into (nStatId, nValue) pairs and calls this
+//  once per pair.
 //      204  item_charged_skill: unpack the layer into a skill id and a level and hand it to ITEM_SetChargedSkillCharges; the stat is not set
 //           here, the charge search writes it
 //      70   clears IFLAG_TARGETING and IFLAG_NOEQUIP when the new value is positive, each behind its own ITEMS_CheckItemFlag

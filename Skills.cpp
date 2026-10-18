@@ -44,23 +44,21 @@ int32_t __fastcall SKILLS_CltDoFunc85(D2UnitStrc *pUnit, D2C_Skills nSkillId, in
 
 
 //1.10f: D2Client.0x6FABA610
-//  Replays a cast the server reported and leaves the unit as it was. pUnit is in ecx, nSkillId in edx, the five other arguments are on the stack.
-//  Its callers are SKILLS_ClientCastAtUnit and SKILLS_ClientCastAtPosition, called by SCMD_HandleSrv99 and SCMD_HandleSrv9A (the server's
-//  0x99/0x9A are the 0x4C/0x4D "unit uses a skill" packets with their flag set). The third argument is the skill level.
-//  The shape is save, point, run, put back. The unit's path target, its path's first point and bit 6 of dwFlags (UNITFLAG_SKSRVDOFUNC) are saved;
-//  the unit is pointed at pTarget or at (nX, nY); the effect runs; and on every way out the target (the saved unit if there was one, else the
-//  saved point) and the bit are put back. The bit is written back through the whole dword read fresh (0x6FABA7B8).
-//  The gate is ItemCltCheckStart (Skills.txt flag 34, SKILLSFLAG2_ITEMCLTCHECKSTART), not a corpse flag: `mov al, [edx+8] / mov dl, [ecx+8] /
-//  test dl, al` tests the low byte of dwFlags[1] against gdwBitMasks[2]. Only with it set does the client run the skill's start function
-//  (SKILLS_RunCltStFuncSwapped, owner GUID -1) first, and a start that answers 0 cancels the cast and returns 0. Around that start, a dead target
-//  that carries STATE_CORPSE_NOSELECT has the state switched off, so that the start can accept the corpse, and switched on again after.
-//  BUG: pUnit->pDynamicPath goes to D2Common untested (#10175, #10176 and #10170, from 0x6FABA660) for whatever unit type the packet named; for a
-//  static unit the slot holds its static path. LATENT: the server sends 0x99 and 0x9A only for item-skill casts, whose server side has already
-//  passed the same caster's pDynamicPath to #10175 and #10176.
-//  The cues are the ItemCast columns wItemCastSound and wItemCastOverlay, each read as a signed word (`test ax, ax / jl`, then `movsx`), the
-//  overlay bounded by nOverlayTxtRecordCount with `jge`. The fourth argument of SKILLS_RunClientDoFunc is nParam zero-extended (`and edx, 0FFFFh`);
-//  the callers push the whole dword of their word slot, so the mask is what makes it a word.
-//  The original inlines DATATBLS_GetSkillsTxtRecordById here.
+//  Replays a cast the server reported and leaves the unit as it was. pUnit is in ecx, nSkillId in edx, the five other arguments are on the stack. Its
+//  callers are SKILLS_ClientCastAtUnit and SKILLS_ClientCastAtPosition, called by SCMD_HandleSrv99_CastAtUnit and SCMD_HandleSrv9A_CastAtXY (the
+//  server's 0x99/0x9A are the 0x4C/0x4D "unit uses a skill" packets with their flag set). The third argument is the skill level. The shape is save,
+//  point, run, put back. The unit's path target, its path's first point and bit 6 of dwFlags (UNITFLAG_SKSRVDOFUNC) are saved; the unit is pointed at
+//  pTarget or at (nX, nY); the effect runs; and on every way out the target (the saved unit if there was one, else the saved point) and the bit are
+//  put back. The bit is written back through the whole dword read fresh (0x6FABA7B8). The gate is ItemCltCheckStart (Skills.txt flag 34,
+//  SKILLSFLAG2_ITEMCLTCHECKSTART), not a corpse flag: `mov al, [edx+8] / mov dl, [ecx+8] / test dl, al` tests the low byte of dwFlags[1] against
+//  gdwBitMasks[2]. Only with it set does the client run the skill's start function (SKILLS_RunCltStFuncSwapped, owner GUID -1) first, and a start
+//  that answers 0 cancels the cast and returns 0. Around that start, a dead target that carries STATE_CORPSE_NOSELECT has the state switched off, so
+//  that the start can accept the corpse, and switched on again after. BUG: pUnit->pDynamicPath goes to D2Common untested (#10175, #10176 and #10170,
+//  from 0x6FABA660) for whatever unit type the packet named; for a static unit the slot holds its static path. LATENT: the server sends 0x99 and 0x9A
+//  only for item-skill casts, whose server side has already passed the same caster's pDynamicPath to #10175 and #10176. The cues are the ItemCast
+//  columns wItemCastSound and wItemCastOverlay, each read as a signed word (`test ax, ax / jl`, then `movsx`), the overlay bounded by
+//  nOverlayTxtRecordCount with `jge`. The fourth argument of SKILLS_RunClientDoFunc is nParam zero-extended (`and edx, 0FFFFh`); the callers push the
+//  whole dword of their word slot, so the mask is what makes it a word. The original inlines DATATBLS_GetSkillsTxtRecordById here.
 int32_t __fastcall SKILLS_ClientCastAtTarget(D2UnitStrc *pUnit, D2C_Skills nSkillId, int32_t nSkillLevel, D2UnitStrc *pTarget, int32_t nX, int32_t nY, uint16_t nParam)
 {
     D2SkillsTxt *pSkillsTxt;
@@ -146,7 +144,7 @@ int32_t __fastcall SKILLS_ClientCastAtTarget(D2UnitStrc *pUnit, D2C_Skills nSkil
 
 
 //1.10f: D2Client.0x6FABA7F0
-//  The cast at a unit: SCMD_HandleSrv99's one call. A NULL unit or a NULL target answers 0 and casts nothing; otherwise it calls
+//  The cast at a unit: SCMD_HandleSrv99_CastAtUnit's one call. A NULL unit or a NULL target answers 0 and casts nothing; otherwise it calls
 //  SKILLS_ClientCastAtTarget with no coordinates. nParam goes on as the whole dword of its slot (0x6FABA7FD), which the callee masks to a word.
 int32_t __fastcall SKILLS_ClientCastAtUnit(D2UnitStrc *pUnit, D2C_Skills nSkillId, int32_t nSkillLevel, D2UnitStrc *pTarget, uint16_t nParam)
 {
@@ -158,8 +156,8 @@ int32_t __fastcall SKILLS_ClientCastAtUnit(D2UnitStrc *pUnit, D2C_Skills nSkillI
 
 
 //1.10f: D2Client.0x6FABA820
-//  The cast at a point: SCMD_HandleSrv9A's one call. The guard is `nX && nY`: a point with either coordinate 0 is refused, as a NULL unit is,
-//  and answers 0.
+//  The cast at a point: SCMD_HandleSrv9A_CastAtXY's one call. The guard is `nX && nY`: a point with either coordinate 0 is refused, as a NULL unit
+//  is, and answers 0.
 int32_t __fastcall SKILLS_ClientCastAtPosition(D2UnitStrc *pUnit, D2C_Skills nSkillId, int32_t nSkillLevel, int32_t nX, int32_t nY, uint16_t nParam)
 {
     if (pUnit && nX && nY)
@@ -1818,10 +1816,9 @@ int32_t __fastcall SKILLS_CltStartSkillAtCoords(D2UnitStrc *pUnit, int32_t *pPar
 
 
 //  Server packet 0xA3 has two halves, SKILLS_ApplyClientSkillEffectNonProgressive and SKILLS_ApplyClientSkillEffect (the progressive one).
-//  SCMD_HandleSrvA3 picks one by the skill's PROGRESSIVE flag and hands both the same seven arguments, the last the packet's byte at +1. The six
-//  PROGRESSIVE rows of the stock Skills.txt are all the assassin's.
-//  The seed: with nX set and nY 0 both halves store nX into the unit's dwInitSeed for the length of the effect, and the non-progressive half,
-//  given a target or a point, stores the byte there first.
+//  SCMD_HandleSrvA3_SkillEffect picks one by the skill's PROGRESSIVE flag and hands both the same seven arguments, the last the packet's byte at +1.
+//  The six PROGRESSIVE rows of the stock Skills.txt are all the assassin's. The seed: with nX set and nY 0 both halves store nX into the unit's
+//  dwInitSeed for the length of the effect, and the non-progressive half, given a target or a point, stores the byte there first.
 
 static_assert(offsetof(D2SkillsTxt, nAuraState) == 0x80 && offsetof(D2SkillsTxt, wCltPrgFunc) == 0xF6
                   && sizeof(D2SkillsTxt::wCltPrgFunc) == 6
@@ -1846,10 +1843,9 @@ static_assert(offsetof(D2DataTablesStrc, nStatesTxtRecordCount) == 0xC4 && SKILL
 //       the unit and `tgtsound` and `tgtoverlay` on the path target, as in SKILLS_RunClientDoFunc.
 //    4  put back: the dynamic target read just before step 2; with none, the path target set to step 1's point; and dwInitSeed.
 //
-//  The byte arrives with a pointer's upper bytes: SCMD_HandleSrvA3 loads it with `mov al, [esi+1]` (0x6FAB2DFD) into an eax whose upper three
-//  bytes are the Skills.txt row's address, and this function masks it (`and ecx, 0FFh` at 0x6FABCC40, `and eax, 0FFh` at 0x6FABCC62), so the
-//  parameter is a byte.
-//  The original inlines DATATBLS_GetSkillsTxtRecordById and SKILLS_GetPathTargetPos here.
+//  The byte arrives with a pointer's upper bytes: SCMD_HandleSrvA3_SkillEffect loads it with `mov al, [esi+1]` (0x6FAB2DFD) into an eax whose upper
+//  three bytes are the Skills.txt row's address, and this function masks it (`and ecx, 0FFh` at 0x6FABCC40, `and eax, 0FFh` at 0x6FABCC62), so the
+//  parameter is a byte. The original inlines DATATBLS_GetSkillsTxtRecordById and SKILLS_GetPathTargetPos here.
 void __fastcall SKILLS_ApplyClientSkillEffectNonProgressive(D2UnitStrc *pUnit, D2UnitStrc *pTarget, D2C_Skills nSkillId, int32_t nSkillLevel, int32_t nX, int32_t nY, uint8_t nSeed)
 {
     D2SkillsTxt *pSkillsTxt;
@@ -1944,15 +1940,13 @@ void __fastcall SKILLS_ApplyClientSkillEffectNonProgressive(D2UnitStrc *pUnit, D
 //       with none); dwInitSeed only when step 3 overwrote it.
 //
 //  BUG: nCharges indexes the three `cltprgfunc` columns with no bound, and the PrgStack columns index gpSkillCltDoFuncs with no bound. LATENT: the
-//  one sender of a progressive skill clamps the count to 1..3, and the three stock PrgStack rows (Fists of Fire, Claws of Thunder, Blades of
-//  Ice) carry `cltprgfunc` values 9, 10 and 11 or none. nCharges comes from the packet as 0..255 (SCMD_HandleSrvA3 zero-extends it, `xor eax, eax /
-//  mov al, [esi+1]`, 0x6FAB2DDD); nCharges 0 reads the column at -1, wCltDoFunc at +0F4h, and 4 reads wStSound at +0FCh, each as a table index.
-//  The C reads the columns as the bytes do, a word at +0F6h plus twice the index from the row, so an index past the three stays a defined read
-//  of the table.
-//  DIFFERENCE: the original indexes gpSkillCltDoFuncs with the value read, past the table's end if need be; ours goes through
-//  SKILLS_GetCltDoFuncOrNull, which answers NULL there.
-//  pUnit's dwFlags are written with no NULL test, and need none: the entry has tested it (0x6FABCD78).
-//  The original inlines DATATBLS_GetSkillsTxtRecordById and SKILLS_GetPathTargetPos (three times) here.
+//  one sender of a progressive skill clamps the count to 1..3, and the three stock PrgStack rows (Fists of Fire, Claws of Thunder, Blades of Ice)
+//  carry `cltprgfunc` values 9, 10 and 11 or none. nCharges comes from the packet as 0..255 (SCMD_HandleSrvA3_SkillEffect zero-extends it, `xor eax,
+//  eax / mov al, [esi+1]`, 0x6FAB2DDD); nCharges 0 reads the column at -1, wCltDoFunc at +0F4h, and 4 reads wStSound at +0FCh, each as a table index.
+//  The C reads the columns as the bytes do, a word at +0F6h plus twice the index from the row, so an index past the three stays a defined read of the
+//  table. DIFFERENCE: the original indexes gpSkillCltDoFuncs with the value read, past the table's end if need be; ours goes through
+//  SKILLS_GetCltDoFuncOrNull, which answers NULL there. pUnit's dwFlags are written with no NULL test, and need none: the entry has tested it
+//  (0x6FABCD78). The original inlines DATATBLS_GetSkillsTxtRecordById and SKILLS_GetPathTargetPos (three times) here.
 void __fastcall SKILLS_ApplyClientSkillEffect(D2UnitStrc *pUnit, D2UnitStrc *pTarget, D2C_Skills nSkillId, int32_t nSkillLevel, int32_t nX, int32_t nY, int32_t nCharges)
 {
     D2SkillsTxt *pSkillsTxt;
@@ -2622,19 +2616,18 @@ void __fastcall SKILLS_StatRemoveCallback_EndMoveSkill(D2UnitStrc *pUnit, int32_
 
 //1.10f: D2Client.0x6FABDE30
 //  Adds levels to a page of the unit's skills: pUnit is in ecx and nDelta in edx; nElement and nSkillPage are on the stack. Server packet 0x93's
-//  handler, SCMD_HandleSrv93, is its one caller, with a signed delta, the element and the page from the packet. Three asserts first ("hUnit" at
-//  2409, "nDelta != 0" at 2410, "hSkillInfo" (the unit's skill list) at 2412), then every skill of the list that has a level above 0, is
-//  enhanceable, has the element when one is given (Skills.txt `EType`), is on the page (its skilldesc.txt row's page is nSkillPage + 1, or
-//  nSkillPage is 4, every page) and is the unit's own (owner GUID -1) gets nDelta added through D2Common #11031, which adds it to the skill's level
-//  bonus (SKILLS_AddSkillLevelBonus); one left at level 0 is removed. Then the passives are refreshed.
-//  BUG: the walk stops advancing at six of its exits, and loops forever. The next skill is taken at the top (0x6FABDEBE) and moved into ebx only at
-//  0x6FABDFCB; the id's two bounds, the skills.txt row's NULL test, the skilldesc id's two bounds and its row's NULL test all jump to 0x6FABDFCF,
-//  past that move, where `test ebx, ebx / jnz` goes round again with the same skill (0x6FABDEDB, 0x6FABDEEE, 0x6FABDF07, 0x6FABDF16, 0x6FABDF22,
-//  0x6FABDF38). So one skill in the list whose id is outside skills.txt or whose `skilldesc` is empty or out of range hangs the client. The C
-//  keeps the shape with `continue` in a do-while, which goes to the loop's test with the skill unchanged. LATENT: SCMD_HandleSrv93 looks the unit
-//  up as a player only, and a player's list holds its class's skills and the skills of its items, all of which name a skilldesc row in the stock
-//  data.
-//  The original inlines DATATBLS_GetSkillsTxtRecordById here, and the skilldesc.txt record lookup is written in place.
+//  handler, SCMD_HandleSrv93_SkillPageLevels, is its one caller, with a signed delta, the element and the page from the packet. Three asserts first
+//  ("hUnit" at 2409, "nDelta != 0" at 2410, "hSkillInfo" (the unit's skill list) at 2412), then every skill of the list that has a level above 0, is
+//  enhanceable, has the element when one is given (Skills.txt `EType`), is on the page (its skilldesc.txt row's page is nSkillPage + 1, or nSkillPage
+//  is 4, every page) and is the unit's own (owner GUID -1) gets nDelta added through D2Common #11031, which adds it to the skill's level bonus
+//  (SKILLS_AddSkillLevelBonus); one left at level 0 is removed. Then the passives are refreshed. BUG: the walk stops advancing at six of its exits,
+//  and loops forever. The next skill is taken at the top (0x6FABDEBE) and moved into ebx only at 0x6FABDFCB; the id's two bounds, the skills.txt
+//  row's NULL test, the skilldesc id's two bounds and its row's NULL test all jump to 0x6FABDFCF, past that move, where `test ebx, ebx / jnz` goes
+//  round again with the same skill (0x6FABDEDB, 0x6FABDEEE, 0x6FABDF07, 0x6FABDF16, 0x6FABDF22, 0x6FABDF38). So one skill in the list whose id is
+//  outside skills.txt or whose `skilldesc` is empty or out of range hangs the client. The C keeps the shape with `continue` in a do-while, which goes
+//  to the loop's test with the skill unchanged. LATENT: SCMD_HandleSrv93_SkillPageLevels looks the unit up as a player only, and a player's list
+//  holds its class's skills and the skills of its items, all of which name a skilldesc row in the stock data. The original inlines
+//  DATATBLS_GetSkillsTxtRecordById here, and the skilldesc.txt record lookup is written in place.
 void __fastcall SKILLS_AddLevelsToSkillPage(D2UnitStrc *pUnit, int32_t nDelta, int32_t nElement, uint8_t nSkillPage)
 {
     D2SkillStrc *pSkill;

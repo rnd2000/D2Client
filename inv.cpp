@@ -1979,8 +1979,7 @@ void __stdcall INV_NpcShopOnDismissKey(SMSGHANDLER_PARAMS *pMsg)
 }
 
 //1.10f: D2Client.0x6FAEA080
-//  Cursor moved over the shop. The mode test is five values written as four comparisons, (unsigned)sgInventoryMode < 2 || == 3 || == 2 || == 4,
-//  i.e. modes 0 to 4; the == 2 is reached only after < 2 has failed.
+//  Cursor moved over the shop. The mode test is five equalities, modes 0, 1, 3, 2 and 4 in that order.
 //  The hover is suppressed while an item is on the cursor: CURSOR_GetHeldUnit() non-null with the cursor inside the shop rect skips the whole
 //  body and writes nothing, so dragging an item across the vendor's stock leaves the description alone.
 //  nInvPage is gInvNpcShopRect.nLeft with its low byte replaced by gnVendorPage (the partial store noted at the head of the shop handlers);
@@ -1994,7 +1993,7 @@ void __stdcall INV_NpcShopOnMouseMove(SMSGHANDLER_PARAMS *pMsg)
     D2UnitStrc *pNpc;
     D2InventoryStrc *pInventory;
 
-    if ((uint32_t)sgInventoryMode >= 2 && sgInventoryMode != 3 && sgInventoryMode != 2 && sgInventoryMode != 4)
+    if (sgInventoryMode != 0 && sgInventoryMode != 1 && sgInventoryMode != 3 && sgInventoryMode != 2 && sgInventoryMode != 4)
     {
         return;
     }
@@ -2085,14 +2084,14 @@ void __stdcall INV_NpcShopOnLButtonDown(SMSGHANDLER_PARAMS *pMsg)
     nXpos = pMsg->nXpos;
     nYpos = pMsg->nYpos;
 
-    if ((uint32_t)sgInventoryMode >= 2 && sgInventoryMode != 3 && sgInventoryMode != 2 && sgInventoryMode != 4)
+    if (sgInventoryMode != 0 && sgInventoryMode != 1 && sgInventoryMode != 3 && sgInventoryMode != 2 && sgInventoryMode != 4)
     {
         goto CONSUME;
     }
 
     //  the panel close button, with the mode test again as the last conjunct
     if (!PANEL_BeltHitTestPanel(pMsg) && nXpos >= gnScreenWidth - gnBorderXDifference - 302 && nXpos <= gnScreenWidth - gnBorderXDifference - 270 && nYpos >= gnBorderYDifference + gnScreenHeight - 96
-        && nYpos <= gnBorderYDifference + gnScreenHeight - 64 && ((uint32_t)sgInventoryMode < 2 || sgInventoryMode == 3 || sgInventoryMode == 2 || sgInventoryMode == 4))
+        && nYpos <= gnBorderYDifference + gnScreenHeight - 64 && (sgInventoryMode == 0 || sgInventoryMode == 1 || sgInventoryMode == 3 || sgInventoryMode == 2 || sgInventoryMode == 4))
     {
         gbInvCloseBtnArmed = 1;
         pMsg->bReturn = 1;
@@ -8048,7 +8047,8 @@ void __fastcall INV_AppendSpellDescText(D2UnitStrc *pItem, Unicode *wszOut, D2It
         Unicode wszValue[10];
 
         nValue = D2COMMON_ITEMMODS_EvaluateItemFormula(pPlayer, pItem, pItemsTxt->dwCalc[0]);
-        switch (pItemsTxt->wStat[0])
+        //  the original reads the field sign-extended
+        switch ((int16_t)pItemsTxt->wStat[0])
         {
         case STAT_HITPOINTS:
         case STAT_HPREGEN:
@@ -10079,14 +10079,13 @@ void __fastcall INV_AppendPriceFooterText(const Unicode *pwszIn, Unicode *pwszOu
 //      21  mindamage   the whole damage range, "min-max"
 //      31  armorclass  UNITS_GetDefense rather than the stat, colour 3 under the ArmBlue state mask
 //      39 41 43 45     the resistances, with the difficulty's penalty
-//  BUG: the life floor cannot fire: if (!dead && nLife < 0) nLife = 1 (test ebp, ebp / jge at 0x6FAEDB3A) tests < 0, but storing 1 makes sense
-//  only as a floor for a living hireling and nothing the test sees is negative (the roster percent is a zero-extended word, SCMD_HandleSrv7F at
-//  0x6FAB42B2, and the max life is positive). REACHABLE: the server's percent is 100 * hp / maxhp in integer division, so a hireling under 1%
-//  of its life reads "0 / <max>" while it is alive. Reproduced.
-//  The damage row: the row's own value is the hireling's MINDAMAGE, with MAXDAMAGE read beside it. A two-handed weapon in the right hand has its
-//  own pair taken off both and the hireling's SECONDARY pair added. The percentage is DAMAGEPERCENT plus the weapon's strength and dexterity
-//  bonuses as a percentage of the hireling's own stats, plus the weapon mastery or, with no weapon, plus the whole strength (the dexterity for
-//  monster 271, the Act 1 rogue). Clamped at -90, then
+//  BUG: the life floor cannot fire: if (!dead && nLife < 0) nLife = 1 (test ebp, ebp / jge at 0x6FAEDB3A) tests < 0, but storing 1 makes sense only
+//  as a floor for a living hireling and nothing the test sees is negative (the roster percent is a zero-extended word,
+//  SCMD_HandleSrv7F_PartyLifeUpdate at 0x6FAB42B2, and the max life is positive). REACHABLE: the server's percent is 100 * hp / maxhp in integer
+//  division, so a hireling under 1% of its life reads "0 / <max>" while it is alive. Reproduced. The damage row: the row's own value is the
+//  hireling's MINDAMAGE, with MAXDAMAGE read beside it. A two-handed weapon in the right hand has its own pair taken off both and the hireling's
+//  SECONDARY pair added. The percentage is DAMAGEPERCENT plus the weapon's strength and dexterity bonuses as a percentage of the hireling's own
+//  stats, plus the weapon mastery or, with no weapon, plus the whole strength (the dexterity for monster 271, the Act 1 rogue). Clamped at -90, then
 //      min = normaldamage + min * (minpct + pct + 100) / 100
 //      max = normaldamage + max * (maxpct + pct + 100) / 100
 //  and four elemental pairs from a table the function builds on its stack, twelve dwords of {min stat, max stat, colour}: fire 1, lightning 9,

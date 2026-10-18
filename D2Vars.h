@@ -1243,7 +1243,7 @@
 // OURS, QuestLog.h: D2VAR(D2CLIENT, gQuestLogInvPsImage, D2CellFileStrc *, 0x116011)
 // OURS, QuestLog.h: D2VAR(D2CLIENT, gQuestListPacketCopy, uint8_t, 0x116015)
 // OURS, QuestLog.h: D2VAR(D2CLIENT, gQuestLogEntryFlags, char, 0x116016)   // [41]
-// OURS, QuestLog.h: D2VAR(D2CLIENT, gQuestLogEntryColours, char, 0x116040)   // [41]
+// OURS, QuestLog.h: D2VAR(D2CLIENT, gQuestLogEntryColours, uint8_t, 0x116040)   // [41]
 // OURS, QuestLog.h: D2VAR(D2CLIENT, gQuestLogEntries, D2QuestLogEntryStrc, 0x116069)   // [6]
 // OURS, QuestLog.h: D2VAR(D2CLIENT, gnQuestLogIconFrame, int32_t, 0x116EE5)   // [6]
 // OURS, QuestLog.h: D2VAR(D2CLIENT, gnQuestLogIconLastTick, int32_t, 0x116EFD)   // [6]

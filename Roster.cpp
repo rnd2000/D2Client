@@ -60,17 +60,15 @@ static_assert(PARTYBUTTON_NONE == 1,
               "ROSTER_EntryGetPartyButton answers `mov eax, 1` for NULL");
 
 //1.10f: D2Client.0x6FAAEC80
-//  Packet 0x5B: a player added to the roster. Its caller SCMD_HandleSrv5B hands on the packet's fields: +3 the GUID in ecx, +7 the class
-//  zero-extended into edx, then +8 the name, the words at +0x18, +0x1A, +0x1C, +0x1E and +0x20, the guild tag at +0x22 and the guild name after
-//  its terminator. `retn 20h`: eight stack arguments; nUnused is never read here.
-//  The server stores +0x1C and +0x1E as 0 and +0x20 as the guild flags, so a new player's button is PARTYBUTTON_INVITE until a 0x75 says
-//  otherwise, and +0x44 holds the guild's flags.
-//  An entry already on the roster is found by id or by name (the inlined strcmp at 0x6FAAECD0) and rewritten in place, id included. Otherwise the
-//  pending list -- entries ROSTER_FindCorpseEntry made for a GUID it did not know, to hang a corpse on -- is searched by id only, and a hit is
-//  unlinked and reused with its corpses; a miss allocates a zeroed entry. Either way the entry gets a fresh info list (ROSTER_FindCorpseEntry
-//  leaves +0x34 NULL, so nothing is lost) and goes to the head of gpPartyEntries. Then the rebuild; the two paths differ in step 3 only,
-//  inlined on the first.
-//  The original inlines ROSTER_FindEntryByUnitOrCorpse (step 1) on both paths and ROSTER_ResortAllGroups on the first.
+//  Packet 0x5B: a player added to the roster. Its caller SCMD_HandleSrv5B_RosterAddPlayer hands on the packet's fields: +3 the GUID in ecx, +7 the
+//  class zero-extended into edx, then +8 the name, the words at +0x18, +0x1A, +0x1C, +0x1E and +0x20, the guild tag at +0x22 and the guild name after
+//  its terminator. `retn 20h`: eight stack arguments; nUnused is never read here. The server stores +0x1C and +0x1E as 0 and +0x20 as the guild
+//  flags, so a new player's button is PARTYBUTTON_INVITE until a 0x75 says otherwise, and +0x44 holds the guild's flags. An entry already on the
+//  roster is found by id or by name (the inlined strcmp at 0x6FAAECD0) and rewritten in place, id included. Otherwise the pending list -- entries
+//  ROSTER_FindCorpseEntry made for a GUID it did not know, to hang a corpse on -- is searched by id only, and a hit is unlinked and reused with its
+//  corpses; a miss allocates a zeroed entry. Either way the entry gets a fresh info list (ROSTER_FindCorpseEntry leaves +0x34 NULL, so nothing is
+//  lost) and goes to the head of gpPartyEntries. Then the rebuild; the two paths differ in step 3 only, inlined on the first. The original inlines
+//  ROSTER_FindEntryByUnitOrCorpse (step 1) on both paths and ROSTER_ResortAllGroups on the first.
 void __fastcall ROSTER_AddPlayer(uint32_t dwUnitGUID, int32_t nClass, const char *szName, int16_t nLevel, int16_t nPartyId, int16_t nUnused, D2C_PartyButtons eButton, int16_t nGuildFlags, const char *szGuildTag, const char *szGuildName)
 {
     D2RosterUnitStrc *pEntry;
@@ -267,15 +265,13 @@ int32_t __fastcall ROSTER_EntryHasCorpse(D2RosterUnitStrc *pRosterEntry, uint32_
 }
 
 //1.10f: D2Client.0x6FAAF070
-//  Packet 0x75: a player's party, level and button. Its caller is SCMD_HandleSrv75. `retn 0Ch` is three stack arguments and the body loads
-//  two: the first as a word (`mov ax, [esp+0Ch]`, 0x6FAAF0C5) and the third (`mov ecx, [esp+14h]`, 0x6FAAF0CA); the second, the packet's +9,
-//  is never read.
-//  The update only happens for an entry matched by its own id. The search is ROSTER_FindEntryByUnitOrCorpse's, which also answers the entry
-//  whose corpse list holds the GUID, and the corpse walk right after it returns on that same hit. So a corpse's GUID finds the owner and changes
-//  nothing. Then the rebuild.
-//  BUG: an entry whose own id is also one of its corpses' ids would be skipped too. UNREACHABLE with a stock server: every 0x8E pairs a player
-//  with a different unit, and a new unit takes the next GUID of its type.
-//  The original inlines ROSTER_FindEntryByUnitOrCorpse, ROSTER_EntryHasCorpse, ROSTER_ResortAllGroups, ROSTER_MoveListNodeAndEntryToFront and
+//  Packet 0x75: a player's party, level and button. Its caller is SCMD_HandleSrv75_PartyRosterUpdate. `retn 0Ch` is three stack arguments and the
+//  body loads two: the first as a word (`mov ax, [esp+0Ch]`, 0x6FAAF0C5) and the third (`mov ecx, [esp+14h]`, 0x6FAAF0CA); the second, the packet's
+//  +9, is never read. The update only happens for an entry matched by its own id. The search is ROSTER_FindEntryByUnitOrCorpse's, which also answers
+//  the entry whose corpse list holds the GUID, and the corpse walk right after it returns on that same hit. So a corpse's GUID finds the owner and
+//  changes nothing. Then the rebuild. BUG: an entry whose own id is also one of its corpses' ids would be skipped too. UNREACHABLE with a stock
+//  server: every 0x8E pairs a player with a different unit, and a new unit takes the next GUID of its type. The original inlines
+//  ROSTER_FindEntryByUnitOrCorpse, ROSTER_EntryHasCorpse, ROSTER_ResortAllGroups, ROSTER_MoveListNodeAndEntryToFront and
 //  ROSTER_FlattenGroupsIntoEntryList here (rebuild steps 1, 3, 4 and 5a).
 void __fastcall ROSTER_UpdatePartyState(D2UnitGUID dwUnitId, int16_t nPartyId, int16_t nLevel, int16_t nUnusedFlags, D2C_PartyButtons eButton)
 {
@@ -346,11 +342,10 @@ void __fastcall ROSTER_UpdatePartyState(D2UnitGUID dwUnitId, int16_t nPartyId, i
 }
 
 //1.10f: D2Client.0x6FAAF260
-//  Packet 0x5C: a player removed from the roster. Its only code reference is SCMD_HandleSrv5C's tail jump, and it ends in one of its own, to
-//  PARTY_BuildRowList.
-//  An invalid GUID is a warning, not a halt (FOG_DisplayWarning, with no exit after it), and the function goes on: the search then finds nothing
-//  (ROSTER_AddPlayer refuses that GUID) and the rebuild runs regardless. An entry that is found is unlinked and freed with its info list and
-//  corpses. The original inlines the corpse-list free and the rebuild steps 1, 2 (ROSTER_FindOrAddListNode), 3, 4 and 5 here.
+//  Packet 0x5C: a player removed from the roster. Its only code reference is SCMD_HandleSrv5C_RosterRemovePlayer's tail jump, and it ends in one of
+//  its own, to PARTY_BuildRowList. An invalid GUID is a warning, not a halt (FOG_DisplayWarning, with no exit after it), and the function goes on:
+//  the search then finds nothing (ROSTER_AddPlayer refuses that GUID) and the rebuild runs regardless. An entry that is found is unlinked and freed
+//  with its info list and corpses. The original inlines the corpse-list free and the rebuild steps 1, 2 (ROSTER_FindOrAddListNode), 3, 4 and 5 here.
 void __fastcall ROSTER_RemovePlayer(uint32_t dwPlayerGUID)
 {
     D2RosterUnitStrc *pEntry;
@@ -1621,11 +1616,11 @@ static_assert(offsetof(D2RosterUnitStrc, dwSrcPortalGUID) == 0x3C
               "`cmp [eax+40h], ecx` (0x6FAB0D09, 0x6FAB0D0E)");
 
 //1.10f: D2Client.0x6FAB0880
-//  Packet 0x7F: a party member's life and area. Its caller is SCMD_HandleSrv7F. The entry is found by the GUID or by one of its corpses; a miss
-//  returns before anything is written (0x6FAB08BA). dwPartyLife takes nLifePercentage and dwLevelId takes the word nLevelId, zero-extended
-//  (`and eax, 0FFFFh`, 0x6FAB08C4). Then the whole roster is rebuilt. `retn 4` purges nLevelId, the one stack argument.
-//  The original inlines ROSTER_FindEntryByUnitOrCorpse and rebuild steps 1, 2 (ROSTER_FindOrAddListNode), 3, 4 and 5a here, and calls
-//  ROSTER_FreeList, ROSTER_MoveEntryToFront and PARTY_BuildRowList.
+//  Packet 0x7F: a party member's life and area. Its caller is SCMD_HandleSrv7F_PartyLifeUpdate. The entry is found by the GUID or by one of its
+//  corpses; a miss returns before anything is written (0x6FAB08BA). dwPartyLife takes nLifePercentage and dwLevelId takes the word nLevelId,
+//  zero-extended (`and eax, 0FFFFh`, 0x6FAB08C4). Then the whole roster is rebuilt. `retn 4` purges nLevelId, the one stack argument. The original
+//  inlines ROSTER_FindEntryByUnitOrCorpse and rebuild steps 1, 2 (ROSTER_FindOrAddListNode), 3, 4 and 5a here, and calls ROSTER_FreeList,
+//  ROSTER_MoveEntryToFront and PARTY_BuildRowList.
 void __fastcall ROSTER_UpdateLifeAndLevel(int32_t dwUnitGUID, int32_t nLifePercentage, uint16_t nLevelId)
 {
     D2RosterUnitStrc *pEntry;
@@ -1825,9 +1820,9 @@ char *__fastcall ROSTER_GetPlayerDisplayName(D2UnitStrc *pUnit)
 }
 
 //1.10f: D2Client.0x6FAB0CB0
-//  Packet 0x82: the two GUIDs of a player's town portal, into dwSrcPortalGUID and dwDstPortalGUID. Its caller is SCMD_HandleSrv82. The entry is
-//  found by the owner's GUID or a corpse's; a miss writes nothing. `retn 4` purges dwDstPortalGUID.
-//  The original inlines ROSTER_FindEntryByUnitOrCorpse here.
+//  Packet 0x82: the two GUIDs of a player's town portal, into dwSrcPortalGUID and dwDstPortalGUID. Its caller is SCMD_HandleSrv82_PortalOwner. The
+//  entry is found by the owner's GUID or a corpse's; a miss writes nothing. `retn 4` purges dwDstPortalGUID. The original inlines
+//  ROSTER_FindEntryByUnitOrCorpse here.
 void __fastcall ROSTER_SetEntryPortalGuids(uint32_t dwUnitId, uint32_t dwSrcPortalGUID, uint32_t dwDstPortalGUID)
 {
     D2RosterUnitStrc *pEntry;
@@ -1901,13 +1896,12 @@ D2RosterInfoStrc **__fastcall ROSTER_GetInfoListByUnitOrCorpse(uint32_t dwUnitId
 }
 
 //1.10f: D2Client.0x6FAB0DC0
-//  Packet 0x8D: a player's party. Its caller is SCMD_HandleSrv8D. The entry is found by the GUID or by one of its corpses; a miss returns before
-//  anything is written (0x6FAB0DF2). The found entry takes the word nPartyGUID (`mov [esi+22h], dx`, 0x6FAB0DF6) before step 1 looks up the
-//  local player, so when the entry is the local player's own, the rebuild sorts by the new party. Both arguments are in registers and the
-//  `retn` is bare.
-//  The rebuild is ROSTER_UpdateLifeAndLevel's, step for step (the original inlines ROSTER_FindEntryByUnitOrCorpse and steps 1, 2
-//  (ROSTER_FindOrAddListNode), 3, 4 and 5a, and calls ROSTER_FreeList and ROSTER_MoveEntryToFront), except that PARTY_BuildRowList is a tail
-//  jump here (0x6FAB0FAB).
+//  Packet 0x8D: a player's party. Its caller is SCMD_HandleSrv8D_SetPartyId. The entry is found by the GUID or by one of its corpses; a miss returns
+//  before anything is written (0x6FAB0DF2). The found entry takes the word nPartyGUID (`mov [esi+22h], dx`, 0x6FAB0DF6) before step 1 looks up the
+//  local player, so when the entry is the local player's own, the rebuild sorts by the new party. Both arguments are in registers and the `retn` is
+//  bare. The rebuild is ROSTER_UpdateLifeAndLevel's, step for step (the original inlines ROSTER_FindEntryByUnitOrCorpse and steps 1, 2
+//  (ROSTER_FindOrAddListNode), 3, 4 and 5a, and calls ROSTER_FreeList and ROSTER_MoveEntryToFront), except that PARTY_BuildRowList is a tail jump
+//  here (0x6FAB0FAB).
 void __fastcall ROSTER_SetPartyId(int32_t dwPlayerGUID, int16_t nPartyGUID)
 {
     D2RosterUnitStrc *pEntry;
@@ -1976,8 +1970,8 @@ void __fastcall ROSTER_SetPartyId(int32_t dwPlayerGUID, int16_t nPartyGUID)
 }
 
 //1.10f: D2Client.0x6FAB0FB0
-//  Packet 0x8B: a player's party button. Its caller SCMD_HandleSrv8B reaches it by a tail jump (0x6FAB4376). The byte is zero-extended into
-//  eButton (`and edx, 0FFh`, 0x6FAB0FE3), and the party panel's rows are rebuilt by a tail jump to PARTY_BuildRowList (0x6FAB0FED); nothing is
+//  Packet 0x8B: a player's party button. Its caller SCMD_HandleSrv8B_SetPartyButton reaches it by a tail jump (0x6FAB4376). The byte is zero-extended
+//  into eButton (`and edx, 0FFh`, 0x6FAB0FE3), and the party panel's rows are rebuilt by a tail jump to PARTY_BuildRowList (0x6FAB0FED); nothing is
 //  re-sorted. A miss does neither. The original inlines ROSTER_FindEntryByUnitOrCorpse here.
 void __fastcall ROSTER_SetPartyButton(int32_t nUnitId, uint8_t eButton)
 {
@@ -1993,12 +1987,12 @@ void __fastcall ROSTER_SetPartyButton(int32_t nUnitId, uint8_t eButton)
 }
 
 //1.10f: D2Client.0x6FAB1000
-//  Packet 0x8C: the info flags dwPlayerGUID holds on dwTargetGUID, replaced by nFlags. Its caller is SCMD_HandleSrv8C. The lookup only checks
-//  that dwPlayerGUID (or a corpse of it) is on the roster; the entry found is not used, and a miss does nothing (0x6FAB1036). Then
-//  PLAYERLIST_RosterGetOrAddInfoEntry makes the record if it is missing, PLAYERLIST_RosterReplaceInfoFlags writes the word nFlags,
-//  zero-extended (`and eax, 0FFFFh`, 0x6FAB104A), and the rows are rebuilt -- before the last step: when the target is the local player,
-//  ROSTERPETS_UpdateRaisedUndead runs for dwPlayerGUID (0x6FAB1073). `retn 4` purges nFlags.
-//  The original inlines ROSTER_FindEntryByUnitOrCorpse here.
+//  Packet 0x8C: the info flags dwPlayerGUID holds on dwTargetGUID, replaced by nFlags. Its caller is SCMD_HandleSrv8C_PlayerRelation. The lookup only
+//  checks that dwPlayerGUID (or a corpse of it) is on the roster; the entry found is not used, and a miss does nothing (0x6FAB1036). Then
+//  PLAYERLIST_RosterGetOrAddInfoEntry makes the record if it is missing, PLAYERLIST_RosterReplaceInfoFlags writes the word nFlags, zero-extended
+//  (`and eax, 0FFFFh`, 0x6FAB104A), and the rows are rebuilt -- before the last step: when the target is the local player,
+//  ROSTERPETS_UpdateRaisedUndead runs for dwPlayerGUID (0x6FAB1073). `retn 4` purges nFlags. The original inlines ROSTER_FindEntryByUnitOrCorpse
+//  here.
 void __fastcall ROSTER_ApplyInfoFlags(D2UnitGUID dwPlayerGUID, D2UnitGUID dwTargetGUID, uint16_t nFlags)
 {
     D2RosterUnitStrc *pEntry;
@@ -2307,7 +2301,7 @@ BOOL __fastcall ROSTER_EntryIsMale(D2RosterUnitStrc *pRosterEntry)
 
 //1.10f: D2Client.0x6FAB1420
 //  dwPartyLife from a byte, zero-extended (`and edx, 0FFh`, 0x6FAB1453), for a GUID or a corpse's; a miss writes nothing. Callers:
-//  SCMD_HandleSrvAB, which passes `100 * nLife / 128`, and SCMD_HandleSrv0D_ActionAtXY.
+//  SCMD_HandleSrvAB_UnitHealth, which passes `100 * nLife / 128`, and SCMD_HandleSrv0D_ActionAtXY.
 //  The original inlines ROSTER_FindEntryByUnitOrCorpse here.
 void __fastcall ROSTER_SetPartyLife(uint32_t dwUnitId, uint8_t nLife)
 {

@@ -1591,8 +1591,7 @@ BY_STATE_INDEX:
             pEntry->wTitleStringId = pTextBlock->wTitleStringId;
             Unicode::strncpy((Unicode *)pEntry->wszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices) (&pTextBlock->wDescStringId)[2 * nStateIndex]), 300);
             pEntry->wszText[299] = 0;
-            pEntry->nFlag0x263 = nStateIndex != (uint8_t)
-                                   gQuestLogEntryColours[nEntry];
+            pEntry->nFlag0x263 = nStateIndex != gQuestLogEntryColours[nEntry];
             pEntry->wTailStringId = (&pTextBlock->wStateIndex)[2 * nStateIndex];
             gQuestLogEntryColours[nEntry] = nStateIndex;
             pEntry->nState = 3;
@@ -2512,8 +2511,8 @@ void __fastcall QUESTLOG_QuestOnQuestLogStateCmd(uint8_t *ptCmd)
 
 //1.10f: D2Client.0x6FB06900
 //
-//  Server packet 0x5D, the quest state message, six bytes. Sole caller SCMD_HandleSrv5D (0x6FAB3E1B), which copies the packet to its own stack
-//  and calls with ecx = 1; the first parameter is a constant no line here reads, hence `nUnused`.
+//  Server packet 0x5D, the quest state message, six bytes. Sole caller SCMD_HandleSrv5D_QuestState (0x6FAB3E1B), which copies the packet to its own
+//  stack and calls with ecx = 1; the first parameter is a constant no line here reads, hence `nUnused`.
 //
 //  Four ways in by `nFlags`:
 //

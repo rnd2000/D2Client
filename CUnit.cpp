@@ -835,7 +835,7 @@ static_assert(OVERLAY_MEPHISTO == 122 && OVERLAY_LIGHT_CAST_2 == 186
 
 
 //1.10f: D2Client.0x6FB27630
-//  A monster, built from an assign block. Callers: SCMD_HandleSrvAC, which parses the server's 0xAC packet into the block, and
+//  A monster, built from an assign block. Callers: SCMD_HandleSrvAC_SpawnMonster, which parses the server's 0xAC packet into the block, and
 //  CUNIT_CreateClientOnlyUnit, which builds one for a monster the server never sees.
 //
 //  The assign block is seven dwords:

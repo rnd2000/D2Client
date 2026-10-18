@@ -1610,8 +1610,8 @@ char *__fastcall OBJECT_GetPortalOwnerName(D2UnitStrc *pObject)
 
 //1.10f: D2Client.0x6FB48560
 //  Sets it: STORM_SStrCopy into szOwner, bounded by 10h, the field's 16 bytes, and the copy's answer returned (call then retn, eax left as Storm's).
-//  Two call sites, both in SCMD_HandleSrv82, one for each portal GUID, and neither reads the answer, so the bytes cannot tell int from void and the
-//  int stays.
+//  Two call sites, both in SCMD_HandleSrv82_PortalOwner, one for each portal GUID, and neither reads the answer, so the bytes cannot tell int from
+//  void and the int stays.
 int32_t __fastcall OBJECT_SetPortalOwnerName(D2UnitStrc *pObject, const char *pszName)
 {
     return (int32_t)STORM_SStrCopy(pObject->pObjectData->szOwner, pszName, sizeof(pObject->pObjectData->szOwner));

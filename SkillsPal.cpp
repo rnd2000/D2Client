@@ -756,7 +756,7 @@ int32_t __fastcall SKILLS_CltDoFunc37(D2UnitStrc *pUnit, D2C_Skills nSkillId, in
 //  Charge's end: pUnit in ecx and nSkillId in edx, no stack argument. The unit's highest-level copy of the skill (D2Common's
 //  SKILLS_GetHighestLevelSkillFromUnitAndId, ecx and edx passed on as they came); a charging one (flags bit 0, test al, 1) gets bit 1 as well (or
 //  al, 2 on the dword), which the next do reads as the charge told to end; and STATE_UNINTERRUPTABLE goes off (STATES_ToggleState).
-//  Its callers end a skill whose `srvdofunc` is 67 (Charge and SerpentCharge): SCMD_HandleSrvA5, a skill's end from the server, and
+//  Its callers end a skill whose `srvdofunc` is 67 (Charge and SerpentCharge): SCMD_HandleSrvA5_EndSkillMove, a skill's end from the server, and
 //  SKILLS_StatRemoveCallback_EndMoveSkill, the stat SKILLS_PostSkillStatWithRemoveCallback posted running out. A NULL skill costs nothing:
 //  D2Common's SKILLS_GetFlags answers 0 for it.
 void __fastcall SKILLS_EndUninterruptableSkill(D2UnitStrc *pUnit, D2C_Skills nSkillId)

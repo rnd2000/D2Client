@@ -1531,9 +1531,9 @@ void __fastcall UIPANELS_DrawUnitNameLabel(D2UnitStrc *pUnit)
         //  through it with nothing in between (xor edi, edi at 0x6FB20D4A, then mov al, [edi+0Dh] at 0x6FB20D73), so an out-of-range class id
         //  faults at address 0x0D. The other inlined copy, in the 417/418 arm (0x6FB21151), honours the null (cmp eax, ebx / jz). NOT ESTABLISHED:
         //  it needs a dwClassId outside [0, 704) (stock monstats.txt has 704 records) on a live UNIT_MONSTER, which nothing in this function can
-        //  produce; the packet handler SCMD_HandleSrvAC (0x6FAB4BD0) reads the id as a signed 16-bit field and its bounds check sits inside a
-        //  branch (0x6FAB4C37) that can be skipped, and what the rest of unit creation does with such an id has not been read. Not reachable in
-        //  normal play either way; the open question is a malformed server.
+        //  produce; the packet handler SCMD_HandleSrvAC_SpawnMonster (0x6FAB4BD0) reads the id as a signed 16-bit field and its bounds check
+        //  sits inside a branch (0x6FAB4C37) that can be skipped, and what the rest of unit creation does with such an id has not been read.
+        //  Not reachable in normal play either way; the open question is a malformed server.
         if (nClassId < 0 || nClassId >= sgptDataTables->nMonStatsTxtRecordCount)
         {
             pMonStatsRec = NULL;

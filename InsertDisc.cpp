@@ -266,15 +266,14 @@ void __stdcall INSERTDISC_OnEnter(SMSGHANDLER_PARAMS *pMsg)
 }
 
 //1.10f: D2Client.0x6FADC6D0
-//  Escape: one store and retn 4. It clears gbDiscPromptDone, which the Show function cleared on entry and which is 1 only between an OK or
-//  Enter and the pump's next idle call (the pump idles only when no message is waiting), so it cancels nothing; at most it takes back an OK
-//  given in the same pass of the pump, and the prompt stays.
-//  BUG: it neither sets bReturn nor breaks the handler chain, so Storm passes the key on to whatever is registered under the prompt. Storm
-//  dispatches WM_KEYDOWN's MESSAGE list before its KEY list, and in a game the MESSAGE list holds CMDTBL_OnKeyDown (a prompt comes up in
-//  one through SCMD_HandleSrv61 -> QUESTS_PlayCinematicFromPacket -> VIDEO_PlayCinematic, which turns no key handler off), so with the keys
-//  hooked for commands (gnKeyHookMode 1), ESC's command, CMDTBL_ActionEscMenu, has already closed the game menu, or the open panels, or
-//  opened the menu (nothing under an NPC dialog or a popup) before this record is reached, and every other bound key runs its command too.
-//  REACHABLE: what that leaves on screen is drawn when the prompt ends.
+//  Escape: one store and retn 4. It clears gbDiscPromptDone, which the Show function cleared on entry and which is 1 only between an OK or Enter and
+//  the pump's next idle call (the pump idles only when no message is waiting), so it cancels nothing; at most it takes back an OK given in the same
+//  pass of the pump, and the prompt stays. BUG: it neither sets bReturn nor breaks the handler chain, so Storm passes the key on to whatever is
+//  registered under the prompt. Storm dispatches WM_KEYDOWN's MESSAGE list before its KEY list, and in a game the MESSAGE list holds CMDTBL_OnKeyDown
+//  (a prompt comes up in one through SCMD_HandleSrv61_PlayCinematic -> QUESTS_PlayCinematicFromPacket -> VIDEO_PlayCinematic, which turns no key
+//  handler off), so with the keys hooked for commands (gnKeyHookMode 1), ESC's command, CMDTBL_ActionEscMenu, has already closed the game menu, or
+//  the open panels, or opened the menu (nothing under an NPC dialog or a popup) before this record is reached, and every other bound key runs its
+//  command too. REACHABLE: what that leaves on screen is drawn when the prompt ends.
 void __stdcall INSERTDISC_OnEscape(SMSGHANDLER_PARAMS *pMsg)
 {
     UNREFERENCED_PARAMETER(pMsg);

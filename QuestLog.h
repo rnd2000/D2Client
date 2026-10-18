@@ -941,7 +941,7 @@ static_assert(sizeof(gQuestLogEntryFlags) == 41, "gQuestLogEntryFlags: the item'
 //  D2Client 0x6FBB6040
 //  41 bytes, the colour QUESTLOG_BuildQuestDisplayInfo last decided for each entry (11 for a previous-difficulty completion, 13 for a completion
 //  in this one). Written when the info block is built; its readers are in QUESTLOG_BuildQuestDisplayInfo (QUESTLOG_Draw does not read it).
-inline char gQuestLogEntryColours[41];
+inline uint8_t gQuestLogEntryColours[41];
 static_assert(sizeof(gQuestLogEntryColours) == 41, "gQuestLogEntryColours: the item's 41 bytes in the .i64");
 
 //  D2Client 0x6FBB6069

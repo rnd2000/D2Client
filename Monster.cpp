@@ -1239,13 +1239,12 @@ int32_t *__fastcall MONSTER_GetClientTimerPtr(D2UnitStrc *pUnit)
 
 
 //1.10f: D2Client.0x6FB40AF0
-//  A hireling's owner, pMonsterData +0x3C: the player's unit id, or -1 for NULL, a unit that is not a monster, or one with no monster data --
-//  the same -1 the field holds for a monster with no player owner, so a caller cannot tell the two apart. The one writer is
-//  MONSTER_SetHirelingOwnerGUID, from CUNIT_CreateMonsterUnit's assign record (pAssign[5]), which SCMD_HandleSrvAC fills with -1 and, when
-//  packet 0xAC's last flag bit is set, with the 32 bits after it. A client-only monster holds 0, not -1.
-//  The one reader is NPCMENU_ShowNpcAlert: 534 act5pow, the caged soldiers of Act 5, plays wussie_help_me when this answers -1 and
-//  wussie_cheer_1 otherwise. Whether 1.10's server ever sends a caged soldier an owner -- and so whether the cheer can play -- is not
-//  established.
+//  A hireling's owner, pMonsterData +0x3C: the player's unit id, or -1 for NULL, a unit that is not a monster, or one with no monster data -- the
+//  same -1 the field holds for a monster with no player owner, so a caller cannot tell the two apart. The one writer is MONSTER_SetHirelingOwnerGUID,
+//  from CUNIT_CreateMonsterUnit's assign record (pAssign[5]), which SCMD_HandleSrvAC_SpawnMonster fills with -1 and, when packet 0xAC's last flag bit
+//  is set, with the 32 bits after it. A client-only monster holds 0, not -1. The one reader is NPCMENU_ShowNpcAlert: 534 act5pow, the caged soldiers
+//  of Act 5, plays wussie_help_me when this answers -1 and wussie_cheer_1 otherwise. Whether 1.10's server ever sends a caged soldier an owner -- and
+//  so whether the cheer can play -- is not established.
 int32_t __fastcall MONSTER_GetHirelingOwnerGUID(D2UnitStrc *pUnit)
 {
     D2MonsterDataStrc *pMonsterData;
@@ -3870,10 +3869,10 @@ BOOL __fastcall MONSTER_CanBeRevived(D2UnitStrc *pUnit)
 
 
 //1.10f: D2Client.0x6FB44880
-//  Packet 0x98: the class an evil hut spawns. The one caller is SCMD_HandleSrv98, with its stack copy of the seven bytes. The word at +5 is
-//  the class of the monster the hut spawns, 0xFFFF for -1, stored on the hut at pMonsterData +0x40; the slot is a union with the life
-//  percentage the server keeps there, and the store below names the client's arm. The dword store is -1 or the zero-extended word
-//  (`or ecx, 0FFFFFFFFh` / `and ecx, 0FFFFh`). No reader of it was found in D2Client.
+//  Packet 0x98: the class an evil hut spawns. The one caller is SCMD_HandleSrv98_MinionSpawnClass, with its stack copy of the seven bytes. The word
+//  at +5 is the class of the monster the hut spawns, 0xFFFF for -1, stored on the hut at pMonsterData +0x40; the slot is a union with the life
+//  percentage the server keeps there, and the store below names the client's arm. The dword store is -1 or the zero-extended word (`or ecx,
+//  0FFFFFFFFh` / `and ecx, 0FFFFh`). No reader of it was found in D2Client.
 void __fastcall MONSTER_SetMinionSpawnClassId(const D2GSPacketSrv98 *pPacket)
 {
     D2UnitStrc *pMonster;
@@ -3930,7 +3929,7 @@ int32_t __fastcall MONSTER_GetBaseId(int32_t nMonClassId)
 
 
 //1.10f: D2Client.0x6FB44950
-//  The address of the ten monumod.txt ids at +0x1C. Callers: CUNIT_CreateMonsterUnit and SCMD_HandleSrv57. This and the monster-data
+//  The address of the ten monumod.txt ids at +0x1C. Callers: CUNIT_CreateMonsterUnit and SCMD_HandleSrv57_MonsterEnchants. This and the monster-data
 //  accessors below have one shape: a NULL unit, one that is not UNIT_MONSTER or one with no pMonsterData gets nothing (a getter answers 0
 //  or NULL); any other, one field. dwUnitType is the discriminant of the unit's data union, and the C takes the arm the test selects,
 //  pMonsterData.
@@ -3944,7 +3943,7 @@ uint8_t *__fastcall MONSTER_GetMonUmodArray(D2UnitStrc *pUnit)
 
 
 //1.10f: D2Client.0x6FB44970
-//  The name seed at +0x14 (`mov [ecx+14h], dx`). Callers: CUNIT_CreateMonsterUnit and SCMD_HandleSrv57.
+//  The name seed at +0x14 (`mov [ecx+14h], dx`). Callers: CUNIT_CreateMonsterUnit and SCMD_HandleSrv57_MonsterEnchants.
 void __fastcall MONSTER_SetNameSeed(D2UnitStrc *pUnit, uint16_t wNameSeed)
 {
     if (pUnit && pUnit->dwUnitType == UNIT_MONSTER && pUnit->pMonsterData)
@@ -3990,7 +3989,7 @@ BOOL __fastcall MONSTER_TestTypeFlag(D2UnitStrc *pUnit, D2C_MonTypeFlags wMask)
 
 //1.10f: D2Client.0x6FB44A00
 //  Sets or clears bits of the same word (`or [eax+16h], dx` / `not edx / and [eax+16h], dx`); `retn 4`, bSet on the stack. Callers:
-//  CUNIT_CreateMonsterUnit (bSet 1 and the packet's flag word) and SCMD_HandleSrv57.
+//  CUNIT_CreateMonsterUnit (bSet 1 and the packet's flag word) and SCMD_HandleSrv57_MonsterEnchants.
 void __fastcall MONSTER_SetTypeFlag(D2UnitStrc *pUnit, D2C_MonTypeFlags wMask, int32_t bSet)
 {
     if (pUnit && pUnit->dwUnitType == UNIT_MONSTER && pUnit->pMonsterData)

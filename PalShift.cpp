@@ -126,21 +126,18 @@ void __cdecl PALSHIFT_Shutdown()
 
 
 //1.10f: D2Client.0x6FAAE030
-//  Loads a monster class's palshift.dat once and hangs it on the class. Called when a monster is assigned (SCMD_HandleSrvAC). void: the product is
-//  the cache record and the pointer in gpMonPalShift[class].
-//  The original compiles this function without optimisation (an ebp frame, every local in memory, each test a jnz over a jmp to the epilogue).
-//  The shape is close to the source's, so the C returns early three times, as the bytes do. It calls DATATBLS_GetMonStatsTxtRecord and
-//  PALSHIFT_GetMonStatsRecordCount out of line, where the unit's optimised functions write them in place.
-//  The directory is monstats.txt's Code column, a space turned into a NUL. The bytes build three characters (+0x10 into szCode[0], +0x11 into
+//  Loads a monster class's palshift.dat once and hangs it on the class. Called when a monster is assigned (SCMD_HandleSrvAC_SpawnMonster). void: the
+//  product is the cache record and the pointer in gpMonPalShift[class]. The original compiles this function without optimisation (an ebp frame, every
+//  local in memory, each test a jnz over a jmp to the epilogue). The shape is close to the source's, so the C returns early three times, as the bytes
+//  do. It calls DATATBLS_GetMonStatsTxtRecord and PALSHIFT_GetMonStatsRecordCount out of line, where the unit's optimised functions write them in
+//  place. The directory is monstats.txt's Code column, a space turned into a NUL. The bytes build three characters (+0x10 into szCode[0], +0x11 into
 //  szCode[1], +0x12 into szCode[2]) and then store 0 into szCode[3] and 0 into szCode[2] again (0x6FAAE102, 0x6FAAE109), so the path carries two
-//  characters and the third is read and thrown away. Written as the bytes have it.
-//  The path "Data\Global\Monsters\" is copied byte by byte (an unoptimised string copy), szCode is appended and the tail "\Cof\palshift.dat"
-//  added; the library calls are written.
-//  The record: FOG_Alloc(0x1008, PalShift.cpp:244), zeroed by rep stosd of 402h dwords; the file's 0x800 bytes go into nShift at +4;
-//  PALSHIFT_ApplyGreenBlood builds nGreenShift; then the class id at +0, and the record is pushed onto the front of gpMonPalShiftCache.
-//  BUG: FOG_Alloc's answer is untested. LATENT.
-//  The insert is a scan for an index it already has: it walks every monstats.txt row comparing the row number with the record's class id to write
-//  one slot, calling PALSHIFT_GetMonStatsRecordCount on every pass (0x6FAAE2A8) and comparing signed (jge). Correct and wasteful; reproduced.
+//  characters and the third is read and thrown away. Written as the bytes have it. The path "Data\Global\Monsters\" is copied byte by byte (an
+//  unoptimised string copy), szCode is appended and the tail "\Cof\palshift.dat" added; the library calls are written. The record: FOG_Alloc(0x1008,
+//  PalShift.cpp:244), zeroed by rep stosd of 402h dwords; the file's 0x800 bytes go into nShift at +4; PALSHIFT_ApplyGreenBlood builds nGreenShift;
+//  then the class id at +0, and the record is pushed onto the front of gpMonPalShiftCache. BUG: FOG_Alloc's answer is untested. LATENT. The insert is
+//  a scan for an index it already has: it walks every monstats.txt row comparing the row number with the record's class id to write one slot, calling
+//  PALSHIFT_GetMonStatsRecordCount on every pass (0x6FAAE2A8) and comparing signed (jge). Correct and wasteful; reproduced.
 void __fastcall PALSHIFT_EnsureMonsterPalette(D2C_MonsterIds nMonsterClassId)
 {
     D2MonStatsTxt *pMonStats;
