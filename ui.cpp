@@ -1280,7 +1280,7 @@ void __fastcall UI_OpenGoldEntryDialog(int32_t nGoldDialogMode)
     DIALOG_AddControl(gpGoldDialog, pControl, 0, 0);
 
     pThis = STORM_SMemAlloc(0xC, szNew, -1, 0);
-    pSpinner = pThis ? EDITBOX_UiCtrlProxyConstructEditbox((uint32_t *)pThis, 0, 258, 228, 100, 1, nStatValue, 0xA, (void *)USEITEM_NpcMenuWaitDialogRefuseClose, 1)
+    pSpinner = pThis ? EDITBOX_UiCtrlProxyConstructEditbox((uint32_t *)pThis, 0, 258, 228, 100, 1, nStatValue, 0xA, (void *)USEITEM_NullCallback, 1)
                      : NULL;
     gpGoldDialogSpinner = (int32_t)pSpinner;
     DIALOG_AddControl(gpGoldDialog, pSpinner, 0, 0);

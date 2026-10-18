@@ -313,7 +313,7 @@ int32_t __fastcall USEITEM_AnvilOnPanelClick(int32_t nMouseX, int32_t nMouseY)
             else if (gnAnvilState == 2)
             {
                 SOUNDINST_PlaySound(SOUND_CURSOR_SELECT, NULL, 0, 0, 0);
-                gpAnvilDialog = DIALOG_Create(150, 130, (DIALOGCALLBACK)USEITEM_NpcMenuWaitDialogRefuseClose, NULL, 1, 0, 1, 0, 0, 0, 1);
+                gpAnvilDialog = DIALOG_Create(150, 130, (DIALOGCALLBACK)USEITEM_NullCallback, NULL, 1, 0, 1, 0, 0, 0, 1);
                 DIALOG_SetHighlight(gpAnvilDialog, 0);
                 pwszResult = D2LANG_GetStringFromTblIndex(STR_IDX_3353_TransactionResults1);
                 DIALOG_AddLine(gpAnvilDialog, pwszResult, 15, 0, 0, 1, NULL, 0);
@@ -341,11 +341,10 @@ int32_t __fastcall USEITEM_AnvilOnPanelClick(int32_t nMouseX, int32_t nMouseY)
 }
 
 //1.10f: D2Client.0x6FB24F70
-//  The wait dialog's dismiss callback, its answer never read: `xor eax, eax; retn`, three bytes, a bare retn that purges nothing. It has no code
-//  caller: it is registered as a pfnCallback of DIALOG_Create by the NPC menu, the gold entry dialog and the anvil panel, through a DIALOGCALLBACK
-//  cast. It is typed int __cdecl() as the original is. DIALOG_Create's pfnCallback is called with nothing pushed, so there is nothing to purge,
-//  although the DIALOGCALLBACK typedef is __stdcall.
-int32_t __cdecl USEITEM_NpcMenuWaitDialogRefuseClose(void)
+//  Does nothing: `xor eax, eax; retn`, three bytes, a bare retn that purges nothing. No code calls it: the NPC menu and the anvil panel
+//  register it as DIALOG_Create's dismiss callback, the gold entry dialog as its edit box's Enter/Escape callback, and none of them pushes an
+//  argument or reads the 0. It is typed int __cdecl() as the original is, although the DIALOGCALLBACK typedef is __stdcall.
+int32_t __cdecl USEITEM_NullCallback(void)
 {
     return 0;
 }

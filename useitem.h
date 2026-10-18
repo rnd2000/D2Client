@@ -97,7 +97,7 @@ static_assert(sizeof(gnAnvilSlotUnitId) == 4, "gnAnvilSlotUnitId: the item's 4 b
 
 //  D2Client 0x6FBBA98C
 //  The panel's current dialog, from DIALOG_Create. USEITEM_AnvilOnPanelClick stores the handle after building the wait dialog (callback
-//  USEITEM_NpcMenuWaitDialogRefuseClose); the close paths close it and clear it. A non-null value means a dialog is up and owned by this panel.
+//  USEITEM_NullCallback); the close paths close it and clear it. A non-null value means a dialog is up and owned by this panel.
 inline D2ClientDialogStrc *gpAnvilDialog;
 static_assert(sizeof(gpAnvilDialog) == 4, "gpAnvilDialog: the item's 4 bytes in the .i64");
 

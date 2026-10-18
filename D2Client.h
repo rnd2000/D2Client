@@ -2118,7 +2118,7 @@ void __cdecl WAYPOINT_SendCloseOnce(void);                               // wayp
 void __fastcall WAYPOINT_OnOpenPacket(D2GSPacketSrv63 *pPacket);         // waypoint.cpp
 void __fastcall WAYPOINT_ClampActTab(int32_t nAct);                          // waypoint.cpp
 void __stdcall WAYPOINT_BuildActWaypointList(void);                      // waypoint.cpp
-int32_t __cdecl USEITEM_NpcMenuWaitDialogRefuseClose(void);                         // useitem.cpp
+int32_t __cdecl USEITEM_NullCallback(void);                         // useitem.cpp
 
 //  ---- dialog.cpp ----
 void __stdcall DIALOG_OnMouseMove(SMSGHANDLER_PARAMS *pMsg);             // dialog.cpp

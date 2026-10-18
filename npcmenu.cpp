@@ -2699,7 +2699,7 @@ void __cdecl NPCMENU_ConfirmHireMercenary(void)
         if (tClientCoords.nY < 20)
             tClientCoords.nY = 20;
     }
-    sgUIState.hDialogWaiting = DIALOG_Create(tClientCoords.nX, tClientCoords.nY, (DIALOGCALLBACK)USEITEM_NpcMenuWaitDialogRefuseClose, NULL, 0, 0, 1, 0, 0, 0, 1);
+    sgUIState.hDialogWaiting = DIALOG_Create(tClientCoords.nX, tClientCoords.nY, (DIALOGCALLBACK)USEITEM_NullCallback, NULL, 0, 0, 1, 0, 0, 0, 1);
     sgUIState.nTransactionTimeoutTick = GetTickCount() + 60000;
     sgUIState.nNextItemActionTick = 0;
     DIALOG_SetHighlight(sgUIState.hDialogWaiting, 0);
@@ -2791,7 +2791,7 @@ int32_t __fastcall NPCMENU_ToggleResurrectMercRow(int32_t nDescriptorIndex, int3
 //  packet 0x62. ShowTransactionResult sets five row counts to 2, which drops Identify Items, because the Cain records ship with 3 and
 //  BuildMainMenu shows nRows - 1 rows before its 'cancel'.
 //  Written out rather than as a call:
-//   * the waiting box: the NPC position, DIALOG_Create with USEITEM_NpcMenuWaitDialogRefuseClose, the deadline and tbl 3353 are the same
+//   * the waiting box: the NPC position, DIALOG_Create with USEITEM_NullCallback, the deadline and tbl 3353 are the same
 //     instructions in SendTransactionAndWait, OnIdentifyClicked, OnResurrectMercClicked and ConfirmHireMercenary, and nothing holds them alone.
 //     The free-box assert beside them is in two of the four, at two lines (4352 and 2491), so it is not one function's either;
 //   * the result strings: the switch from result code to tbl id is in both result functions, over two jump tables, with no copy of its own.
@@ -2955,7 +2955,7 @@ void __fastcall NPCMENU_SendTransactionAndWait(int32_t bSkippedVerify, int32_t n
         if (tClientCoords.nY < 20)
             tClientCoords.nY = 20;
     }
-    sgUIState.hDialogWaiting = DIALOG_Create(tClientCoords.nX, tClientCoords.nY, (DIALOGCALLBACK)USEITEM_NpcMenuWaitDialogRefuseClose, NULL, 0, 0, 1, 0, 0, 0, 1);
+    sgUIState.hDialogWaiting = DIALOG_Create(tClientCoords.nX, tClientCoords.nY, (DIALOGCALLBACK)USEITEM_NullCallback, NULL, 0, 0, 1, 0, 0, 0, 1);
     sgUIState.nTransactionTimeoutTick = GetTickCount() + 60000;
     sgUIState.nNextItemActionTick = 0;
     DIALOG_SetHighlight(sgUIState.hDialogWaiting, 0);
@@ -3001,7 +3001,7 @@ int32_t __cdecl NPCMENU_OnIdentifyClicked(void)
         if (tClientCoords.nY < 20)
             tClientCoords.nY = 20;
     }
-    sgUIState.hDialogWaiting = DIALOG_Create(tClientCoords.nX, tClientCoords.nY, (DIALOGCALLBACK)USEITEM_NpcMenuWaitDialogRefuseClose, NULL, 0, 0, 1, 0, 0, 0, 1);
+    sgUIState.hDialogWaiting = DIALOG_Create(tClientCoords.nX, tClientCoords.nY, (DIALOGCALLBACK)USEITEM_NullCallback, NULL, 0, 0, 1, 0, 0, 0, 1);
     sgUIState.nTransactionTimeoutTick = GetTickCount() + 60000;
     sgUIState.nNextItemActionTick = 0;
     DIALOG_SetHighlight(sgUIState.hDialogWaiting, 0);
@@ -3048,7 +3048,7 @@ int32_t __cdecl NPCMENU_OnResurrectMercClicked(void)
         if (tClientCoords.nY < 20)
             tClientCoords.nY = 20;
     }
-    sgUIState.hDialogWaiting = DIALOG_Create(tClientCoords.nX, tClientCoords.nY, (DIALOGCALLBACK)USEITEM_NpcMenuWaitDialogRefuseClose, NULL, 0, 0, 1, 0, 0, 0, 1);
+    sgUIState.hDialogWaiting = DIALOG_Create(tClientCoords.nX, tClientCoords.nY, (DIALOGCALLBACK)USEITEM_NullCallback, NULL, 0, 0, 1, 0, 0, 0, 1);
     sgUIState.nTransactionTimeoutTick = GetTickCount() + 60000;
     sgUIState.nNextItemActionTick = 0;
     DIALOG_SetHighlight(sgUIState.hDialogWaiting, 0);
