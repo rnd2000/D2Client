@@ -829,7 +829,6 @@ void __fastcall QUESTSFX_OnTyrael3Created(D2UnitStrc *pMonster)
 //      any other: gnQuestFxLightRed/Green/Blue and gnQuestFxIntensity, as QUESTSFX_TickScreenFade left them
 //
 //  The cosine is FOG #10083's, which answers on the x87 stack; the original multiplies it by the 4-byte float gfConst80 (80.0) and truncates.
-//  Here it is a double times that float, truncated by the cast (SSE2); the two agree whenever FOG's answer has at most 24 significant bits.
 //  Arguments: ecx, edx and two stack slots (retn 8).
 int32_t __fastcall QUESTSFX_GetQuestLightOverride(D2ActiveRoomStrc *pRoom, uint8_t *pnRed, uint8_t *pnGreen, uint8_t *pnBlue)
 {
@@ -964,8 +963,7 @@ static_assert(offsetof(D2ActiveRoomStrc, pRoomNext) == 0x7C,
 //  advances; the block is cleared once the frame passes the total or the player's level is no longer the one the fade started on.
 //  Then the two tint timers, whether or not a fade runs: the Den of Evil pulse counts up to 30, then latches gbDenOfEvilLightDone and spawns the
 //  ambient lights in every level-8 room of the act; the Diablo tint counts up to 30, then clears itself back to -1.
-//  The intensity is FOG #10083's answer times the int intensity, truncated: a double product here (the original uses x87 `fimul`), equal while FOG's
-//  answer has at most 24 significant bits and the intensity is below 2^29.
+//  The intensity is FOG #10083's answer times the int intensity, truncated.
 //  The shifts of a frame count are written on an unsigned copy: the same bits, without C's undefined left shift of a negative int.
 void __cdecl QUESTSFX_TickScreenFade()
 {

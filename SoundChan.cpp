@@ -426,8 +426,8 @@ void __cdecl SOUNDCHAN_StopAllAndDetach()
 //  channel its reverb mix and volume; the cache takes the position, the mixed volume -- before the distance -- and the reverb mix.
 //
 //  The floats: the range and the falloff are stored as floats; the distance is used as SOUNDSONG_Distance leaves it (a double); the attenuation
-//  is ((falloff - distance) * volume) / (falloff - range), truncated to 64 bits and taken low, which is (int)(__int64) here; under 53-bit
-//  precision control that is the double arithmetic below. The three positions are a float times a float rounded once to float, the same in SSE2.
+//  is ((falloff - distance) * volume) / (falloff - range), truncated to 64 bits and taken low, which is (int)(__int64) here.
+//  The three positions are a float times a float rounded once to float.
 //
 //  #10057 writes both its outputs and reads neither. #10017 is __thiscall with three stack arguments, written as __fastcall with an unused second
 //  parameter (D2Imports.h); the original leaves the scaled z in edx, which nothing reads, and ours passes 0. Its three coordinates are floats in

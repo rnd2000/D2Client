@@ -352,7 +352,6 @@ int32_t __fastcall SOUNDINST_PlaySound(D2C_Sounds nSoundId, D2UnitStrc *pUnit, i
 //      y     = _ftol((a - proj * -2.0f) + pY)
 //  The constants are floats, promoted where the x87 loads them; _ftol truncates and its low dword is kept, which (int)(__int64) spells for every
 //  input. retn 4: pOut on the stack.
-//  DIFFERENCE: the intermediates are doubles here and extended there; the difference shows only under the x87's 64-bit precision control.
 void __fastcall SOUNDINST_GetUnitSoundPosition(D2UnitStrc *pUnit, D2C_Sounds nSoundId, float *pOut)
 {
     D2CoordStrc tPlayerCoords;
@@ -756,7 +755,6 @@ D2C_Sounds __fastcall SOUNDINST_GetSoundIdFromHandle(int32_t hInstance)
 //  loop, and otherwise left in state 0 at volume 0, which the pass never starts again unless something sets its volume. NOT ESTABLISHED: it is
 //  not shown that the start can fail there.
 //  BUG: the speech conflict test replaces the group conflict's answer, so a group conflict is dropped when the speech test finds none. INERT.
-//  DIFFERENCE: the intermediates are doubles here and extended there; the difference shows only under the x87's 64-bit precision control.
 void __fastcall SOUNDINST_ServiceInstances(uint32_t nTick)
 {
     D2SoundListNodeStrc *pNode;

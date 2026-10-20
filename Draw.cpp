@@ -84,8 +84,8 @@ BOOL __cdecl DRAW_IsDisplayType3D()
 //  in the text is formatted again: the tile line's "%3.2f%%" leaves "12.34%, Misses" in szLine, and "%," is then formatted with no argument behind
 //  it. REACHABLE: by typing /framerate. Reproduced.
 //  The arithmetic is the x87's: fild of a qword whose high dword is 0 (the byte counts, unsigned), fmul by gfOneOver1024 and gfPercentDivisor,
-//  fild and fidiv of the tile misses and accesses as signed ints (misses times 100, then the division). The x87 keeps the intermediate at extended
-//  precision where this build rounds to double; two decimals are printed.
+//  fild and fidiv of the tile misses and accesses as signed ints (misses times 100, then the division); two decimals
+//  are printed.
 void __cdecl DRAW_GameDrawDebugOverlay()
 {
     uint32_t dwNow;

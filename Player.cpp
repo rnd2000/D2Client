@@ -2045,9 +2045,6 @@ void __fastcall PLAYER_InteractOrApproachTarget(D2ClientClickStrc *pClick, int32
 //  The throttle: the frame count (GAME_GetFrameCount) is stamped into gnLastClickRepeatFrame and the answer is 1 -- except for a PLAYER on a
 //  held click in mode 2, 3 or 6 (PLRMODE_WALK, RUN, TOWNWALK; unsigned compares) fewer than 7 frames after the last stamp, the difference taken
 //  unsigned, which answers 0 and stamps nothing. A held click while standing is never throttled.
-//
-//  Under the SSE2 build the scale is a double division and each product a truncating conversion -- the x87 answer under 53- and 64-bit
-//  precision.
 int32_t __fastcall PLAYER_ClampClickTargetAndThrottle(D2UnitStrc *pUnit, D2ClientClickStrc *pClick)
 {
     uint32_t nClickFlags;

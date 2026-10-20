@@ -247,9 +247,6 @@ void __fastcall ESCMENU_OpenConfigPanel(D2ClientEscMenuItemStrc *pItem, SMSGHAND
 //  The + 1 is what makes the round trip land: 0.01f is 0.0099999998, so 20 * 100 * 0.01f is 19.9999996 and would truncate to 19. With it, the
 //  5n a step writes reads back as step n for every n in 0..20. A stored value one short of a multiple of five still reads a step low (4
 //  reads 0), and only a writer other than these rows could store one.
-//  The original computes on the x87 stack and this build in SSE2 doubles; for these three sliders that cannot change a result: the quotient
-//  is exactly 5, and over every stored value 0..100 the refresh product stays at least 2.2e-8 from an integer, where a double's rounding is
-//  below 1e-15. The video page's sliders are where the two can differ.
 //
 //  NPC speech: OnChange hands the raw choice to D2Sound (#10053), then re-reads the row and switches (`sub eax, 0 / jz / dec / jz / dec / jnz`,
 //  MSVC's form for a dense three-case switch):
@@ -489,14 +486,6 @@ void __fastcall ESCMENU_NpcSpeechRefresh(D2ClientEscMenuItemStrc *pItem, int32_t
 //  every step reads back as itself. Contrast re-saves on every game: the stored value goes to a step and back and is written, so a value off
 //  the grid snaps to it; the step it applies as D2Gfx option 11 is the raw step, while the registry gets the rescaled one, and with 100 steps
 //  the two differ only at the top, 99 against 100.
-//
-//  DIFFERENCE: the original evaluates the slider expressions of the sound and video pages on the x87 stack, this build in SSE2 doubles. At
-//  64-bit and 53-bit x87 precision (53 bits is what Windows and the MSVC runtime give a thread) the results are identical on every input the
-//  rows can hold. At 24-bit precision, where Direct3D applications of that era commonly ran the FPU, they differ on boundary inputs: the
-//  original saves 99 where this build saves 100 at Contrast's top step, and a Contrast refresh of the default 100 saves 99 where this build
-//  saves 100. The sound and gamma differences are all at stored values no row writes. Whether D2's Direct3D renderer leaves D2Client's code at
-//  24 bits is NOT ESTABLISHED. SSE2 is kept, since no processor still in use lacks it; only compiling the float code as x87 (/arch:IA32)
-//  would close the difference.
 //
 //  LightQualityOnChange saves the choice and switches as ESCMENU_NpcSpeechOnChange does, over D2GFX_SetLowQuality and MISSILE_EnvSetLightQuality:
 //

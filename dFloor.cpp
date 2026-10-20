@@ -284,8 +284,6 @@ static_assert(offsetof(D2UnitStrc, pSeed) == 0x20,
 //  eight copies, and the top and bottom sides' second copy stays written out, its subtile y + 5 taken from the copy before it.
 //  The context: D2Gfx's low-quality and perspective flags; the weather's particle intensity times gfConst1000 (1000.0f), truncated by `__ftol`;
 //  the UI shift and the view. DrawEdges is levels.txt's byte for the player's level, and only with no panel open at 800x600 (`cmp eax, 2`).
-//  DIFFERENCE: the original's x87 holds the particle product at extended precision where this build rounds it to double first, which differs
-//  for the rare value whose extended product sits just under an integer that double rounds up to.
 //  BUG: the levels record is read untested there and asserted (`ptLvlData`, line 304) only further down. LATENT: the level is the player's
 //  room's. The bounds are seeded inverted, 0x7FFFFFFF and 0x80000000, and the screen offsets are the view origin's (80 - x, -80 - y).
 //  The context also holds the splash and bubble clocks. nLastSplashFrame (+0x14) and nLastBubbleFrame (+0x18) hold the frame of the last

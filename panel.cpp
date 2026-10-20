@@ -585,8 +585,7 @@ static_assert(STR_IDX_4165_panelhealth == 0x1045 && STR_IDX_4166_panelmana == 0x
 //  A change smaller than max/8 keeps the old start frame and the old start value -- unless the new value is the maximum, which starts from itself --
 //  so small ticks ride the animation already running. A change of max/8 or more restarts from the current value at the current frame.
 //  The lerp is x87 in the original (fild (nFramesElapsed + 1), fidiv nSpanFrames, fimul nSpanValue, then __ftol, which truncates toward zero as a C
-//  cast does) and doubles here. The span is clamped to 7..15 frames, so an orb takes between seven and fifteen frames however far it has to travel.
-//  On operands this size 53-bit x87 and SSE2 doubles compute the same value.
+//  cast does). The span is clamped to 7..15 frames, so an orb takes between seven and fifteen frames however far it has to travel.
 int32_t __fastcall PANEL_GetSmoothedStatValue(int32_t nStatId)
 {
     D2UnitStrc *pPlayer;
