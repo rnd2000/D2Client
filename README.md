@@ -50,6 +50,8 @@ copy of the game is needed; nothing of Blizzard's is in this repository.
   for many enum, structure and function names.
 * [D2Template](https://github.com/olivier-verville/D2Template) by Olivier Verville, which `DLLmain.cpp` and `DLLmain.h`
   come from (Apache License 2.0).
+* Dav92, the author of D2ExpRes, the high-resolution patch for Diablo II 1.10; the `D2ExpRes:` comments in the source
+  mark the places its detours land on.
 
 ## License
 
