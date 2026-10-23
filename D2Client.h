@@ -1837,7 +1837,7 @@ void __fastcall TEXT_TickStaticInfoPanel(D2ClientViewStrc *pView);              
 //  The hover text over a unit, the popup's own draw, and packet 0x76. High is the player path and Low the monster-and-object one -- 646 bytes
 //  against 346, and the difference is three features, not an offset.
 void __fastcall TEXT_DrawUnitHoverTextHigh(D2UnitStrc *pUnit);           // text.cpp
-int32_t __fastcall TEXT_PlaceHoverMsg(D2UnitStrc *pUnit, D2HoverTextStrc *pHoverMsg, Unicode *wszText, int32_t *pnPos);  // text.cpp
+void __fastcall TEXT_PlaceHoverMsg(D2UnitStrc *pUnit, D2HoverTextStrc *pHoverMsg, Unicode *wszText, int32_t *pnPos);  // text.cpp
 int32_t __fastcall TEXT_DrawHoverMsgIfNotCovered(D2ClientPopupStrc *pPopup, LONG *pnCoords);  // text.cpp
 void __fastcall TEXT_DrawUnitHoverTextLow(D2UnitStrc *pUnit);            // text.cpp
 BOOL __fastcall TEXT_DrawPopup(D2ClientPopupStrc *pPopup);               // text.cpp
@@ -2140,7 +2140,7 @@ uint32_t *__fastcall DIALOG_AddControl(D2ClientDialogStrc *pDialog, void *pContr
 D2ClientDialogStrc *__fastcall DIALOG_CreateFromImage(int32_t nCenterX, int32_t nCenterY, DIALOGCALLBACK pfnCallback, DIALOGCALLBACK pfnCallback2, int32_t nImageIndex, int32_t nInputMode);  // dialog.cpp
 D2ClientDialogStrc *__fastcall DIALOG_Create(int32_t nCenterX, int32_t nCenterY, DIALOGCALLBACK pfnCallback, DIALOGCALLBACK pfnCallback2, int32_t nInputMode, int32_t bVAlignByStaticLines,
     int32_t bAutoSize, int32_t nWidth, int32_t nHeight, int32_t bIgnoreCancelKey, int32_t bGrabsKeyboard);  // dialog.cpp
-int32_t __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog);                // dialog.cpp
+void __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog);                   // dialog.cpp
 int32_t __fastcall DIALOG_Draw(D2ClientDialogStrc *pDialog);                 // dialog.cpp
 void __fastcall DIALOG_SetSelectedLine(D2ClientDialogStrc *pDialog, int32_t nIndex);  // dialog.cpp
 void __fastcall DIALOG_SetHighlight(D2ClientDialogStrc *pDialog, int32_t eHighlight);  // dialog.cpp
@@ -3353,7 +3353,7 @@ void __fastcall OBJECT_InitClientUnit(D2UnitStrc *pObject, D2ActiveRoomStrc *pRo
 void __fastcall OBJECT_AddIdleOverlay(D2UnitStrc *pObject);
 //  D2Client.0x6FB46D10 .. 0x6FB470C8, UNIT\Object.cpp -- freeing an object, and a frame of its animation: the general one, the door's, and the
 //  door's end.
-int32_t __fastcall OBJECT_FreeClientUnit(D2UnitStrc *pObject);
+void __fastcall OBJECT_FreeClientUnit(D2UnitStrc *pObject);
 void __fastcall OBJECT_AdvanceAnim(D2UnitStrc *pUnit);
 void __fastcall OBJECT_AdvanceDoorAnim(D2UnitStrc *pUnit);
 void __fastcall OBJECT_FinishDoorAnim(D2UnitStrc *pUnit);

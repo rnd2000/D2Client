@@ -7,6 +7,7 @@
   "named": 3941,
   "with_prototype": 3939,
   "with_source_file": 540,
+  "tail_chunks": 28,
   "exports": 4,
   "globals": 1621,
   "types": 2667
@@ -1949,7 +1950,13 @@
    ],
    "size": 408,
    "callers": 2,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C0A0",
+     95
+    ]
+   ]
   },
   {
    "ea": "0x6FAA8B10",
@@ -3307,7 +3314,13 @@
    "asserts": null,
    "size": 296,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C100",
+     78
+    ]
+   ]
   },
   {
    "ea": "0x6FAAC450",
@@ -3362,7 +3375,13 @@
    ],
    "size": 376,
    "callers": 5,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C150",
+     43
+    ]
+   ]
   },
   {
    "ea": "0x6FAAC6A0",
@@ -3433,7 +3452,13 @@
    ],
    "size": 397,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C180",
+     95
+    ]
+   ]
   },
   {
    "ea": "0x6FAAC9A0",
@@ -3461,7 +3486,13 @@
    ],
    "size": 161,
    "callers": 5,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C1E0",
+     21
+    ]
+   ]
   },
   {
    "ea": "0x6FAACA80",
@@ -3542,7 +3573,13 @@
    ],
    "size": 347,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C200",
+     62
+    ]
+   ]
   },
   {
    "ea": "0x6FAACE10",
@@ -11347,7 +11384,13 @@
    "asserts": null,
    "size": 182,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C240",
+     18
+    ]
+   ]
   },
   {
    "ea": "0x6FACF990",
@@ -11433,7 +11476,13 @@
    "asserts": null,
    "size": 87,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C260",
+     18
+    ]
+   ]
   },
   {
    "ea": "0x6FACFC20",
@@ -11459,7 +11508,13 @@
    "asserts": null,
    "size": 128,
    "callers": 2,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C280",
+     29
+    ]
+   ]
   },
   {
    "ea": "0x6FACFCD0",
@@ -13173,7 +13228,7 @@
    "ordinal": null,
    "name": "DIALOG_Close",
    "demangled": null,
-   "prototype": "int32_t __fastcall(D2ClientDialogStrc *hDialog)",
+   "prototype": "void __fastcall(D2ClientDialogStrc *hDialog)",
    "source_file": "dialog.cpp",
    "asserts": null,
    "size": 240,
@@ -13293,7 +13348,13 @@
    ],
    "size": 495,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C2A0",
+     21
+    ]
+   ]
   },
   {
    "ea": "0x6FAD7730",
@@ -13319,7 +13380,13 @@
    "asserts": null,
    "size": 144,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C2C0",
+     18
+    ]
+   ]
   },
   {
    "ea": "0x6FAD77F0",
@@ -13511,7 +13578,13 @@
    "asserts": null,
    "size": 87,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C2E0",
+     18
+    ]
+   ]
   },
   {
    "ea": "0x6FAD8030",
@@ -13537,7 +13610,13 @@
    "asserts": null,
    "size": 148,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C300",
+     29
+    ]
+   ]
   },
   {
    "ea": "0x6FAD8100",
@@ -16208,7 +16287,13 @@
    "asserts": null,
    "size": 607,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C320",
+     18
+    ]
+   ]
   },
   {
    "ea": "0x6FAEFD00",
@@ -16450,7 +16535,13 @@
    "asserts": null,
    "size": 78,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C340",
+     18
+    ]
+   ]
   },
   {
    "ea": "0x6FAF1100",
@@ -16476,7 +16567,13 @@
    "asserts": null,
    "size": 156,
    "callers": 2,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C360",
+     29
+    ]
+   ]
   },
   {
    "ea": "0x6FAF11D0",
@@ -16890,7 +16987,13 @@
    "asserts": null,
    "size": 1920,
    "callers": 6,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C380",
+     24
+    ]
+   ]
   },
   {
    "ea": "0x6FAF55B0",
@@ -22374,7 +22477,13 @@
    ],
    "size": 284,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C3A0",
+     21
+    ]
+   ]
   },
   {
    "ea": "0x6FB1A340",
@@ -22400,7 +22509,13 @@
    "asserts": null,
    "size": 82,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C3C0",
+     18
+    ]
+   ]
   },
   {
    "ea": "0x6FB1A3D0",
@@ -22484,7 +22599,13 @@
    "asserts": null,
    "size": 87,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C3E0",
+     18
+    ]
+   ]
   },
   {
    "ea": "0x6FB1A6D0",
@@ -22510,7 +22631,13 @@
    "asserts": null,
    "size": 128,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C400",
+     29
+    ]
+   ]
   },
   {
    "ea": "0x6FB1A780",
@@ -22757,7 +22884,7 @@
    "ordinal": null,
    "name": "TEXT_PlaceHoverMsg",
    "demangled": null,
-   "prototype": "int32_t __fastcall(D2UnitStrc *pUnit, D2HoverTextStrc *pHoverMsg, Unicode *wszText, int32_t *pnPos)",
+   "prototype": "void __fastcall(D2UnitStrc *pUnit, D2HoverTextStrc *pHoverMsg, Unicode *wszText, int32_t *pnPos)",
    "source_file": "text.cpp",
    "asserts": null,
    "size": 807,
@@ -23204,7 +23331,13 @@
    "asserts": null,
    "size": 395,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C420",
+     21
+    ]
+   ]
   },
   {
    "ea": "0x6FB1F140",
@@ -24137,7 +24270,13 @@
    "asserts": null,
    "size": 1022,
    "callers": 5,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C440",
+     66
+    ]
+   ]
   },
   {
    "ea": "0x6FB23F60",
@@ -24835,7 +24974,13 @@
    ],
    "size": 404,
    "callers": 4,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB27219",
+     75
+    ]
+   ]
   },
   {
    "ea": "0x6FB27280",
@@ -29456,7 +29601,7 @@
    "ordinal": null,
    "name": "OBJECT_FreeClientUnit",
    "demangled": null,
-   "prototype": "int32_t __fastcall(D2UnitStrc *pObject)",
+   "prototype": "void __fastcall(D2UnitStrc *pObject)",
    "source_file": "Object.cpp",
    "asserts": null,
    "size": 58,
@@ -35952,7 +36097,13 @@
    "asserts": null,
    "size": 97,
    "callers": 8,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB67B33",
+     23
+    ]
+   ]
   },
   {
    "ea": "0x6FB629C9",
@@ -35964,7 +36115,13 @@
    "asserts": null,
    "size": 86,
    "callers": 8,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB67B33",
+     23
+    ]
+   ]
   },
   {
    "ea": "0x6FB62A1F",
@@ -37826,7 +37983,13 @@
    "asserts": null,
    "size": 188,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB69560",
+     5
+    ]
+   ]
   },
   {
    "ea": "0x6FB69630",
@@ -47580,7 +47743,13 @@
    "asserts": null,
    "size": 51,
    "callers": 1,
-   "placeholder": false
+   "placeholder": false,
+   "tails": [
+    [
+     "0x6FB6C484",
+     21
+    ]
+   ]
   },
   {
    "ea": "0x6FB6BB88",

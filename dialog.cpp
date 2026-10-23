@@ -1235,16 +1235,14 @@ D2ClientDialogStrc *__fastcall DIALOG_Create(int32_t nCenterX, int32_t nCenterY,
 //  It undoes the constructor in order: the automap gets its input back, the handlers come off, hover is re-enabled, the click region is
 //  cleared, the control nodes are freed one at a time, and an owned image is unloaded. The control objects are not freed, only their nodes;
 //  whoever called DIALOG_AddControl owns the object.
-//  It returns FOG_Free's answer, which no caller reads: the value is the last call's leftover.
 //  It is handed the dialog in ecx and does not read it: the body writes ecx (`mov ecx, 1` for UI_AutomapSetInputEnabled) before it reads it
 //  and closes gpDialogList's head whatever was passed. __fastcall is this module's spelling for a free function with one ecx argument.
-int32_t __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog)
+void __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog)
 {
     D2ClientDialogStrc *pDialog;
     uint32_t *pControl;
     uint32_t *pNextControl;
     D2ClientDialogStrc *pNext;
-    int32_t nFreeResult;
 
     if (--gnDialogNestDepth)
     {
@@ -1285,9 +1283,8 @@ int32_t __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog)
     }
 
     pNext = pDialog->pNext;
-    nFreeResult = FOG_Free(pDialog, szDialogCpp, 1083, 0);
+    FOG_Free(pDialog, szDialogCpp, 1083, 0);
     gpDialogList = pNext;
-    return nFreeResult;
 }
 
 //1.10f: D2Client.0x6FAD6EB0

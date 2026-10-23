@@ -1791,7 +1791,7 @@ void __fastcall TEXT_DrawUnitHoverTextHigh(D2UnitStrc *pUnit)
 //  The expiry frees the message and carries on: nothing below reads pHoverMsg again (the text comes in through wszText), so the expired
 //  message is drawn once more this frame and is gone by the next.
 //  The original inlines the popup header free here.
-int32_t __fastcall TEXT_PlaceHoverMsg(D2UnitStrc *pUnit, D2HoverTextStrc *pHoverMsg, Unicode *wszText, int32_t *pnPos)
+void __fastcall TEXT_PlaceHoverMsg(D2UnitStrc *pUnit, D2HoverTextStrc *pHoverMsg, Unicode *wszText, int32_t *pnPos)
 {
     //  Unsigned (`jbe`): the callee returns uint32_t. The cast is explicit because C's usual conversions do this silently and MSVC then
     //  warns (C4018); it changes no instruction.
@@ -1934,7 +1934,8 @@ int32_t __fastcall TEXT_PlaceHoverMsg(D2UnitStrc *pUnit, D2HoverTextStrc *pHover
                 //  BUG: the font is not restored (every other exit ends with D2Win_10127_SetFont(nPrevFont)), so font 13 stays set for
                 //  whoever draws next.
                 TEXT_FreeParsedLines(pMsg->pLines);
-                return FOG_Free(pMsg, szTextCpp, 1674, 0);
+                FOG_Free(pMsg, szTextCpp, 1674, 0);
+                return;
             }
         }
     }
@@ -1943,7 +1944,7 @@ int32_t __fastcall TEXT_PlaceHoverMsg(D2UnitStrc *pUnit, D2HoverTextStrc *pHover
     TEXT_DrawHoverMsgIfNotCovered(pMsg, &rcBox.left);
     TEXT_FreeParsedLines(pMsg->pLines);
     FOG_Free(pMsg, szTextCpp, 1674, 0);
-    return (int32_t)D2WIN_10127_SetFont(ePrevFont);
+    D2WIN_10127_SetFont(ePrevFont);
 }
 
 

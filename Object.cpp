@@ -484,9 +484,7 @@ static_assert(OBJECT_ROGUEFOUNTAIN == 12 && OBJECT_CAINPORTAL == 189
 //1.10f: D2Client.0x6FB46D10
 //  Frees a client object. The gfx info goes first and always; the collision path, the room membership and the light map only while *gpAct is set
 //  (0x6FB46D18), and the object data last (Object.cpp:250). Why those three need the act is not established.
-//  The answer is FOG_Free's own (its body ends mov eax, 1); the one caller, CUNIT_DestroyUnit, discards it, so the int the bytes return is kept
-//  and read by nobody.
-int32_t __fastcall OBJECT_FreeClientUnit(D2UnitStrc *pObject)
+void __fastcall OBJECT_FreeClientUnit(D2UnitStrc *pObject)
 {
     GFX_FreeUnitGfxInfo(pObject);
     if (gpAct)
@@ -495,7 +493,7 @@ int32_t __fastcall OBJECT_FreeClientUnit(D2UnitStrc *pObject)
         D2COMMON_UNITROOM_RemoveUnitFromRoom(pObject);
         CUNIT_GfxFreeUnitLightMap(pObject);
     }
-    return FOG_Free(pObject->pObjectData, szObjectCpp, 250, 0);
+    FOG_Free(pObject->pObjectData, szObjectCpp, 250, 0);
 }
 
 //1.10f: D2Client.0x6FB46D50
