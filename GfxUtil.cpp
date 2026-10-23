@@ -128,7 +128,7 @@ void __cdecl GFXUTIL_CacheTokens(void)
         pCompositTxt = D2COMMON_DATATBLS_GetCompositTxtRecord((int32_t)nIndex);
         if (!pCompositTxt)
         {
-            FOG_DisplayAssert((uint32_t)"ptToken", (uint32_t)szGfxUtilCpp, 54);
+            FOG_DisplayAssert("ptToken", szGfxUtilCpp, 54);
             exit(-1);
         }
 
@@ -143,7 +143,7 @@ void __cdecl GFXUTIL_CacheTokens(void)
         pPlrModeTxt = D2COMMON_DATATBLS_GetPlrModeTypeTxtRecord((int32_t)nIndex, TRUE);
         if (!pPlrModeTxt)
         {
-            FOG_DisplayAssert((uint32_t)"ptToken", (uint32_t)szGfxUtilCpp, 63);
+            FOG_DisplayAssert("ptToken", szGfxUtilCpp, 63);
             exit(-1);
         }
 
@@ -158,7 +158,7 @@ void __cdecl GFXUTIL_CacheTokens(void)
         pMonModeTxt = D2COMMON_DATATBLS_GetMonModeTxtRecord((int32_t)nIndex, TRUE);
         if (!pMonModeTxt)
         {
-            FOG_DisplayAssert((uint32_t)"ptToken", (uint32_t)szGfxUtilCpp, 72);
+            FOG_DisplayAssert("ptToken", szGfxUtilCpp, 72);
             exit(-1);
         }
 
@@ -173,7 +173,7 @@ void __cdecl GFXUTIL_CacheTokens(void)
         pObjModeTxt = D2COMMON_DATATBLS_GetObjModeTypeTxtRecord((int32_t)nIndex, TRUE);
         if (!pObjModeTxt)
         {
-            FOG_DisplayAssert((uint32_t)"ptToken", (uint32_t)szGfxUtilCpp, 81);
+            FOG_DisplayAssert("ptToken", szGfxUtilCpp, 81);
             exit(-1);
         }
 
@@ -188,7 +188,7 @@ void __cdecl GFXUTIL_CacheTokens(void)
         pArmTypeTxt = D2COMMON_DATATBLS_GetArmTypeTxtRecord((int32_t)nIndex);
         if (!pArmTypeTxt)
         {
-            FOG_DisplayAssert((uint32_t)"ptToken", (uint32_t)szGfxUtilCpp, 90);
+            FOG_DisplayAssert("ptToken", szGfxUtilCpp, 90);
             exit(-1);
         }
 
@@ -891,13 +891,13 @@ int32_t __fastcall GFXUTIL_FillCelContextTokens(D2GfxDataStrc *pGfxData, int32_t
     pGfxData->nComponent = (uint8_t)nComponent;
     if (!dwWClass)
     {
-        FOG_DisplayAssert((uint32_t)"dwWClass", (uint32_t)szGfxUtilCpp, 994);
+        FOG_DisplayAssert("dwWClass", szGfxUtilCpp, 994);
         exit(-1);
     }
 
     if (!pCofNode)
     {
-        FOG_DisplayAssert((uint32_t)"ptCofData", (uint32_t)szGfxUtilCpp, 995);
+        FOG_DisplayAssert("ptCofData", szGfxUtilCpp, 995);
         exit(-1);
     }
 
@@ -911,7 +911,7 @@ int32_t __fastcall GFXUTIL_FillCelContextTokens(D2GfxDataStrc *pGfxData, int32_t
     pCofData = (uint8_t *)pCofNode->pData;
     if (!pCofData)
     {
-        FOG_DisplayAssert((uint32_t)"lpbCofData", (uint32_t)szGfxUtilCpp, 1008);
+        FOG_DisplayAssert("lpbCofData", szGfxUtilCpp, 1008);
         exit(-1);
     }
 
@@ -925,7 +925,7 @@ int32_t __fastcall GFXUTIL_FillCelContextTokens(D2GfxDataStrc *pGfxData, int32_t
     {
         if (pLayer[0] >= NUM_COMPONENTS)
         {
-            FOG_DisplayAssert((uint32_t)"ptCofActionData->bComponent < NUM_COMPONENTS", (uint32_t)szGfxUtilCpp, 1019);
+            FOG_DisplayAssert("ptCofActionData->bComponent < NUM_COMPONENTS", szGfxUtilCpp, 1019);
             exit(-1);
         }
 
@@ -955,19 +955,19 @@ int32_t __fastcall GFXUTIL_FillCelContextTokens(D2GfxDataStrc *pGfxData, int32_t
     pGfxData->dwName[4] = dwWClassToken;
     if (!pGfxData->dwName[1])
     {
-        FOG_DisplayAssert((uint32_t)"ptCelContext->tUnitInfo.dwComponentToken", (uint32_t)szGfxUtilCpp, 1061);
+        FOG_DisplayAssert("ptCelContext->tUnitInfo.dwComponentToken", szGfxUtilCpp, 1061);
         exit(-1);
     }
 
     if (!pGfxData->dwName[0])
     {
-        FOG_DisplayAssert((uint32_t)"ptCelContext->tUnitInfo.dwUnitToken", (uint32_t)szGfxUtilCpp, 1062);
+        FOG_DisplayAssert("ptCelContext->tUnitInfo.dwUnitToken", szGfxUtilCpp, 1062);
         exit(-1);
     }
 
     if (!dwWClassToken)
     {
-        FOG_DisplayAssert((uint32_t)"ptCelContext->tUnitInfo.dwWClassToken", (uint32_t)szGfxUtilCpp, 1063);
+        FOG_DisplayAssert("ptCelContext->tUnitInfo.dwWClassToken", szGfxUtilCpp, 1063);
         exit(-1);
     }
 
@@ -1289,7 +1289,7 @@ int32_t __fastcall GFXUTIL_MeasureLayersBottomY(D2UnitStrc *pUnit, uint8_t *pCof
         nComponent = pLayerOrder[iLayer];
         if (nComponent >= (int32_t)NUM_COMPONENTS)
         {
-            FOG_DisplayAssert((uint32_t)szComponentAssert, (uint32_t)szGfxUtilCpp, 1437);
+            FOG_DisplayAssert(szComponentAssert, szGfxUtilCpp, 1437);
             exit(-1);
         }
 

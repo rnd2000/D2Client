@@ -2227,7 +2227,7 @@ D2UnitStrc *__fastcall SKILLS_SpawnMissileArray(int32_t nMissiles, D2MissileStrc
     nRemaining = nMissiles - 1;
     if (nRemaining / 5 > 7)
     {
-        FOG_DisplayAssert((uint32_t)"(nMissiles - 1) / 5 <= MISSILEARRAY_TABLE_LENGTH", (uint32_t)szSkillsCpp, 2120);
+        FOG_DisplayAssert("(nMissiles - 1) / 5 <= MISSILEARRAY_TABLE_LENGTH", szSkillsCpp, 2120);
         exit(-1);
     }
 
@@ -2640,19 +2640,19 @@ void __fastcall SKILLS_AddLevelsToSkillPage(D2UnitStrc *pUnit, int32_t nDelta, i
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"hUnit", (uint32_t)szSkillsCpp, 2409);
+        FOG_DisplayAssert("hUnit", szSkillsCpp, 2409);
         exit(-1);
     }
 
     if (!nDelta)
     {
-        FOG_DisplayAssert((uint32_t)"nDelta != 0", (uint32_t)szSkillsCpp, 2410);
+        FOG_DisplayAssert("nDelta != 0", szSkillsCpp, 2410);
         exit(-1);
     }
 
     if (!pUnit->pSkills)
     {
-        FOG_DisplayAssert((uint32_t)"hSkillInfo", (uint32_t)szSkillsCpp, 2412);
+        FOG_DisplayAssert("hSkillInfo", szSkillsCpp, 2412);
         exit(-1);
     }
 
@@ -2720,7 +2720,7 @@ BOOL __fastcall SKILLS_CanMissileLandAtAimPoint(D2UnitStrc *pUnit, D2C_MissilesH
     pRoom = D2COMMON_UNITS_GetRoom(pUnit);
     if (!ptStats)
     {
-        FOG_DisplayAssert((uint32_t)"ptStats", (uint32_t)szSkillsCpp, 2494);
+        FOG_DisplayAssert("ptStats", szSkillsCpp, 2494);
         exit(-1);
     }
 

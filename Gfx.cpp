@@ -156,7 +156,7 @@ BOOL __fastcall GFX_HasOverlay(D2UnitStrc *pUnit, int32_t nOverlayId)
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 492);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 492);
         exit(-1);
     }
 
@@ -283,7 +283,7 @@ void __fastcall GFX_TickUnitOverlays(D2UnitStrc *pUnit)
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 768);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 768);
         exit(-1);
     }
 
@@ -519,7 +519,7 @@ void __fastcall GFX_RemoveGfxEntry(D2UnitStrc *pUnit, D2ClientGfxEntryStrc *pEnt
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 449);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 449);
         exit(-1);
     }
 
@@ -544,7 +544,7 @@ void __fastcall GFX_RemoveGfxEntry(D2UnitStrc *pUnit, D2ClientGfxEntryStrc *pEnt
     if (pCur->nKind == OVERLAYTYPE_AURA)
         GFX_CycleAuraOverlay(pUnit, pGfxInfo, pCur);
 
-    FOG_Free((uint32_t)pCur, (uint32_t)szGfxCpp, 483, 0);
+    FOG_Free(pCur, szGfxCpp, 483, 0);
 }
 
 
@@ -587,7 +587,7 @@ D2ClientCofNodeStrc *__fastcall GFX_GetUnitAnimNode(D2UnitStrc *pUnit, int32_t n
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 942);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 942);
         exit(-1);
     }
 
@@ -769,7 +769,7 @@ void *__fastcall GFX_GetUnitCofNode(D2UnitStrc *pUnit, void **ppReplacedCofData,
     pGfxInfo2 = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo2)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 1010);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 1010);
         exit(-1);
     }
 
@@ -802,15 +802,15 @@ void *__fastcall GFX_GetUnitCofNode(D2UnitStrc *pUnit, void **ppReplacedCofData,
             *ppReplacedCofData = GFX_GetUnitCofData(pUnit, nMode);
             if (!GFX_FreeUnitAnimNodeByCof(pUnit, pNode->pCofFile))
             {
-                FOG_DisplayAssert((uint32_t)"0", (uint32_t)szGfxCpp, 1032);
+                FOG_DisplayAssert("0", szGfxCpp, 1032);
                 exit(-1);
             }
         }
 
-        pNewNode = (D2ClientCofNodeStrc *)FOG_Alloc(sizeof(D2ClientCofNodeStrc), (uint32_t)szGfxCpp, 1078, 0);
+        pNewNode = (D2ClientCofNodeStrc *)FOG_Alloc(sizeof(D2ClientCofNodeStrc), szGfxCpp, 1078, 0);
         if (!pNewNode)
         {
-            FOG_DisplayAssert((uint32_t)"ptUnitCofNode", (uint32_t)szGfxCpp, 1079);
+            FOG_DisplayAssert("ptUnitCofNode", szGfxCpp, 1079);
             exit(-1);
         }
 
@@ -945,7 +945,7 @@ D2ClientCofCacheNodeStrc *__fastcall GFX_LoadCofFile(D2ClientCofCacheStrc *pCach
             return NULL;
     }
 
-    pNode = (D2ClientCofCacheNodeStrc *)FOG_Alloc(sizeof(D2ClientCofCacheNodeStrc), (uint32_t)szGfxCpp, 219, 0);
+    pNode = (D2ClientCofCacheNodeStrc *)FOG_Alloc(sizeof(D2ClientCofCacheNodeStrc), szGfxCpp, 219, 0);
     memset(pNode, 0, sizeof(D2ClientCofCacheNodeStrc));
     pNode->dwFlags |= 1;
     strcpy(pNode->szName, szTitle);
@@ -956,7 +956,7 @@ D2ClientCofCacheNodeStrc *__fastcall GFX_LoadCofFile(D2ClientCofCacheStrc *pCach
     pCofData = (uint8_t *)pNode->pData;
     if (pCofData[2] > 64)
     {
-        FOG_DisplayAssert((uint32_t)"swapCofHeader->bNumDirections <= 64", (uint32_t)szGfxCpp, 238);
+        FOG_DisplayAssert("swapCofHeader->bNumDirections <= 64", szGfxCpp, 238);
         exit(-1);
     }
 
@@ -982,7 +982,7 @@ BOOL __fastcall GFX_FreeUnitAnimNodeByCof(D2UnitStrc *pUnit, D2ClientCofCacheNod
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 970);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 970);
         exit(-1);
     }
 
@@ -994,7 +994,7 @@ BOOL __fastcall GFX_FreeUnitAnimNodeByCof(D2UnitStrc *pUnit, D2ClientCofCacheNod
         return FALSE;
 
     pNext = pNode->pNext;
-    FOG_Free((uint32_t)pNode, (uint32_t)szGfxCpp, 978, 0);
+    FOG_Free(pNode, szGfxCpp, 978, 0);
     if (pPrev)
         pPrev->pNext = pNext;
     else
@@ -1028,7 +1028,7 @@ void __fastcall GFX_LoadMonsterModeGfx(D2UnitStrc *pUnit, int32_t nMode)
     pMonStats2Txt = DATATBLS_GetMonStats2TxtRecord(nClass);
     if (!pMonStats2Txt || !(gdwBitMasks[nMode & 7] & pMonStats2Txt->nModeFlags[nMode >> 3]))
     {
-        FOG_DisplayHalt((const char *)FOG_csprintf((uint32_t)szMessage, "[GFX.CPP] Mode (%i) is not used by monster (%i)", nMode, nClass), szGfxCpp, 1158);
+        FOG_DisplayHalt((const char *)FOG_csprintf(szMessage, "[GFX.CPP] Mode (%i) is not used by monster (%i)", nMode, nClass), szGfxCpp, 1158);
         exit(-1);
     }
 
@@ -1064,13 +1064,13 @@ void __fastcall GFX_LoadObjectModeGfx(D2UnitStrc *pUnit, int32_t nMode)
     pObjectsTxt = D2COMMON_DATATBLS_GetObjectsTxtRecord(nClass);
     if (!pObjectsTxt)
     {
-        FOG_DisplayAssert((uint32_t)"ptStats", (uint32_t)szGfxCpp, 1217);
+        FOG_DisplayAssert("ptStats", szGfxCpp, 1217);
         exit(-1);
     }
 
     if (pObjectsTxt->nMode[nMode] != 1)
     {
-        FOG_DisplayHalt((const char *)FOG_csprintf((uint32_t)szMessage, "[GFX.CPP] Mode (%i) is not used by object (%i)", nMode, nClass), szGfxCpp, 1243);
+        FOG_DisplayHalt((const char *)FOG_csprintf(szMessage, "[GFX.CPP] Mode (%i) is not used by object (%i)", nMode, nClass), szGfxCpp, 1243);
         exit(-1);
     }
 
@@ -1079,7 +1079,7 @@ void __fastcall GFX_LoadObjectModeGfx(D2UnitStrc *pUnit, int32_t nMode)
 
     if (!GFX_GetUnitCofNode(pUnit, &pReplacedCofData, nMode))
     {
-        FOG_DisplayAssert((uint32_t)"lpbCofData", (uint32_t)szGfxCpp, 1235);
+        FOG_DisplayAssert("lpbCofData", szGfxCpp, 1235);
         exit(-1);
     }
 
@@ -1105,7 +1105,7 @@ void __fastcall GFX_InitCelCache(int32_t nCofMemoryBudget)
     memset(gaPlayerPreloadTable, 0, sizeof(gaPlayerPreloadTable));
     gdwPreloadThrottleTick = 0;
     nSize = sizeof(D2ClientModePreloadStrc) * sgptDataTables->nMonStatsTxtRecordCount;
-    gpMonsterPreloadTable = (D2ClientModePreloadStrc *)FOG_AllocPool(0, nSize, (uint32_t)szGfxCpp, 2009, 0);
+    gpMonsterPreloadTable = (D2ClientModePreloadStrc *)FOG_AllocPool(0, nSize, szGfxCpp, 2009, 0);
     memset(gpMonsterPreloadTable, 0, nSize);
     gbPreloadRequired = D2WIN_10185();
     GFXUTIL_CacheTokens();
@@ -1134,15 +1134,15 @@ void __cdecl GFX_FreeCelCache(void)
             if (pNode->dwFlags & 1)
             {
                 gnCofMemoryUsed += -(int32_t)sizeof(D2ClientCofCacheNodeStrc) - pNode->nSize;
-                FOG_Free((uint32_t)pNode->pData, (uint32_t)szGfxCpp, 3632, 0);
-                FOG_Free((uint32_t)pNode, (uint32_t)szGfxCpp, 3633, 0);
+                FOG_Free(pNode->pData, szGfxCpp, 3632, 0);
+                FOG_Free(pNode, szGfxCpp, 3633, 0);
             }
         }
     }
 
     gnCofMemoryUsed -= pCache->nBlockSize;
     if (pCache->pBlock)
-        FOG_Free((uint32_t)pCache->pBlock, (uint32_t)szGfxCpp, 3652, 0);
+        FOG_Free(pCache->pBlock, szGfxCpp, 3652, 0);
 
     memset(pCache, 0, sizeof(D2ClientCofCacheStrc));
 
@@ -1163,10 +1163,10 @@ D2ClientUnitGfxInfoStrc *__cdecl GFX_AllocUnitGfxInfo(void)
 {
     D2ClientUnitGfxInfoStrc *pGfxInfo;
 
-    pGfxInfo = (D2ClientUnitGfxInfoStrc *)FOG_Alloc(sizeof(D2ClientUnitGfxInfoStrc), (uint32_t)szGfxCpp, 2044, 0);
+    pGfxInfo = (D2ClientUnitGfxInfoStrc *)FOG_Alloc(sizeof(D2ClientUnitGfxInfoStrc), szGfxCpp, 2044, 0);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 2045);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 2045);
         exit(-1);
     }
 
@@ -1194,14 +1194,14 @@ void __fastcall GFX_FreeUnitGfxInfo(D2UnitStrc *pUnit)
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 2060);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 2060);
         exit(-1);
     }
 
     for (pNode = pGfxInfo->pAnimList; pNode; pNode = pNextNode)
     {
         pNextNode = pNode->pNext;
-        FOG_Free((uint32_t)pNode, (uint32_t)szGfxCpp, 2066, 0);
+        FOG_Free(pNode, szGfxCpp, 2066, 0);
     }
 
     for (pEntry = pGfxInfo->pOverlayList; pEntry; pEntry = pNextEntry)
@@ -1211,10 +1211,10 @@ void __fastcall GFX_FreeUnitGfxInfo(D2UnitStrc *pUnit)
         if (pLight)
             DLIGHTMAP_RemoveLight(pLight);
 
-        FOG_Free((uint32_t)pEntry, (uint32_t)szGfxCpp, 1676, 0);
+        FOG_Free(pEntry, szGfxCpp, 1676, 0);
     }
 
-    FOG_Free((uint32_t)pGfxInfo, (uint32_t)szGfxCpp, 2072, 0);
+    FOG_Free(pGfxInfo, szGfxCpp, 2072, 0);
 }
 
 
@@ -1230,14 +1230,14 @@ void __fastcall GFX_FreeUnitAnimList(D2UnitStrc *pUnit)
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 2082);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 2082);
         exit(-1);
     }
 
     for (pNode = pGfxInfo->pAnimList; pNode; pNode = pNext)
     {
         pNext = pNode->pNext;
-        FOG_Free((uint32_t)pNode, (uint32_t)szGfxCpp, 2088, 0);
+        FOG_Free(pNode, szGfxCpp, 2088, 0);
     }
 
     pGfxInfo->pAnimList = NULL;
@@ -1258,7 +1258,7 @@ void __fastcall GFX_FreeUnitAnimListButDeath(D2UnitStrc *pUnit)
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 2101);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 2101);
         exit(-1);
     }
 
@@ -1272,7 +1272,7 @@ void __fastcall GFX_FreeUnitAnimListButDeath(D2UnitStrc *pUnit)
             continue;
         }
 
-        FOG_Free((uint32_t)pNode, (uint32_t)szGfxCpp, 2111, 0);
+        FOG_Free(pNode, szGfxCpp, 2111, 0);
         if (pPrev)
             pPrev->pNext = pNext;
         else
@@ -1338,7 +1338,7 @@ void __fastcall GFX_DrawUnitCelShadow(D2UnitStrc *pUnit)
         pObjectsTxt = D2COMMON_DATATBLS_GetObjectsTxtRecord(nClass);
         if (!pObjectsTxt)
         {
-            FOG_DisplayAssert((uint32_t)"ptStats", (uint32_t)szGfxCpp, 2162);
+            FOG_DisplayAssert("ptStats", szGfxCpp, 2162);
             exit(-1);
         }
 
@@ -1567,7 +1567,7 @@ void __fastcall GFX_DrawUnitShadow(D2UnitStrc *pUnit)
     pLayerOrder = GFXUTIL_GetCofLayerOrder(pCofData, nCelDirection, nFrame);
     if (!pLayerOrder)
     {
-        FOG_DisplayAssert((uint32_t)"lpbCompByte", (uint32_t)szGfxCpp, 2372);
+        FOG_DisplayAssert("lpbCompByte", szGfxCpp, 2372);
         exit(-1);
     }
 
@@ -1584,7 +1584,7 @@ void __fastcall GFX_DrawUnitShadow(D2UnitStrc *pUnit)
         nComponent = pLayerOrder[iLayer];
         if (nComponent >= (int32_t)NUM_COMPONENTS)
         {
-            FOG_DisplayAssert((uint32_t)"eComponent < NUM_COMPONENTS", (uint32_t)szGfxCpp, 2390);
+            FOG_DisplayAssert("eComponent < NUM_COMPONENTS", szGfxCpp, 2390);
             exit(-1);
         }
 
@@ -1642,7 +1642,7 @@ void __fastcall GFX_DrawUnitCelHilight(D2UnitStrc *pUnit)
         pObjectsTxt = D2COMMON_DATATBLS_GetObjectsTxtRecord(nClass);
         if (!pObjectsTxt)
         {
-            FOG_DisplayAssert((uint32_t)"ptStats", (uint32_t)szGfxCpp, 2484);
+            FOG_DisplayAssert("ptStats", szGfxCpp, 2484);
             exit(-1);
         }
 
@@ -1856,7 +1856,7 @@ void __fastcall GFX_DrawUnitHilight(D2UnitStrc *pUnit)
     pLayerOrder = GFXUTIL_GetCofLayerOrder(pCofData, nCelDirection, nFrame);
     if (!pLayerOrder)
     {
-        FOG_DisplayAssert((uint32_t)"lpbCompByte", (uint32_t)szGfxCpp, 2634);
+        FOG_DisplayAssert("lpbCompByte", szGfxCpp, 2634);
         exit(-1);
     }
 
@@ -1970,7 +1970,7 @@ void __fastcall GFX_DrawUnitOverlays(D2UnitStrc *pUnit, uint32_t nColor, int32_t
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 627);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 627);
         exit(-1);
     }
 
@@ -2036,7 +2036,7 @@ void __fastcall GFX_DrawUnitOverlays(D2UnitStrc *pUnit, uint32_t nColor, int32_t
         pOverlayTxt = GFXUTIL_GetOverlayTxtRecord(pEntry->nOverlayId);
         if (!pOverlayTxt)
         {
-            FOG_DisplayAssert((uint32_t)"ptStats", (uint32_t)szGfxCpp, 723);
+            FOG_DisplayAssert("ptStats", szGfxCpp, 723);
             exit(-1);
         }
 
@@ -2176,7 +2176,7 @@ int32_t __fastcall GFX_DrawUnitCels(D2UnitStrc *pUnit, int32_t nColor, int32_t n
         pObjectsTxt = D2COMMON_DATATBLS_GetObjectsTxtRecord(nClass);
         if (!pObjectsTxt)
         {
-            FOG_DisplayAssert((uint32_t)"ptStats", (uint32_t)szGfxCpp, 2801);
+            FOG_DisplayAssert("ptStats", szGfxCpp, 2801);
             exit(-1);
         }
 
@@ -2288,7 +2288,7 @@ int32_t __fastcall GFX_DrawUnitCels(D2UnitStrc *pUnit, int32_t nColor, int32_t n
         pLayerOrder = GFXUTIL_GetCofLayerOrder(pCofData, nCelDirection, nFrame);
         if (!pLayerOrder)
         {
-            FOG_DisplayAssert((uint32_t)"lpbCompByte", (uint32_t)szGfxCpp, 1418);
+            FOG_DisplayAssert("lpbCompByte", szGfxCpp, 1418);
             exit(-1);
         }
 
@@ -2524,7 +2524,7 @@ void __fastcall GFX_ResetUnitGfx(D2UnitStrc *pUnit)
     {
         if (eComponent >= (int32_t)NUM_COMPONENTS)
         {
-            FOG_DisplayAssert((uint32_t)"eComponent < NUM_COMPONENTS", (uint32_t)szGfxCpp, 1627);
+            FOG_DisplayAssert("eComponent < NUM_COMPONENTS", szGfxCpp, 1627);
             exit(-1);
         }
 
@@ -2535,14 +2535,14 @@ void __fastcall GFX_ResetUnitGfx(D2UnitStrc *pUnit)
         pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
         if (!pGfxInfo)
         {
-            FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 1636);
+            FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 1636);
             exit(-1);
         }
 
         for (pNode = pGfxInfo->pAnimList; pNode; pNode = pNext)
         {
             pNext = pNode->pNext;
-            FOG_Free((uint32_t)pNode, (uint32_t)szGfxCpp, 1641, 0);
+            FOG_Free(pNode, szGfxCpp, 1641, 0);
         }
 
         pGfxInfo->pAnimList = NULL;
@@ -2563,7 +2563,7 @@ void __fastcall GFX_SetAllUnitModesLoaded(D2UnitStrc *pUnit, uint8_t bLoaded)
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 2990);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 2990);
         exit(-1);
     }
 
@@ -2714,7 +2714,7 @@ int32_t __fastcall GFX_AsyncLoadBlock(D2UnitStrc *pUnit, int32_t nAnimMode, int3
     pCof = (uint8_t *)GFXUTIL_ReturnArg(pCofData);
     if (!pCof)
     {
-        FOG_DisplayAssert((uint32_t)"ptCofHeader", (uint32_t)szGfxCpp, 1723);
+        FOG_DisplayAssert("ptCofHeader", szGfxCpp, 1723);
         exit(-1);
     }
 
@@ -2728,7 +2728,7 @@ int32_t __fastcall GFX_AsyncLoadBlock(D2UnitStrc *pUnit, int32_t nAnimMode, int3
     pLayerOrder = GFXUTIL_GetCofLayerOrder((uint8_t *)pCofData, nCelDirection, 0);
     if (!pLayerOrder)
     {
-        FOG_DisplayAssert((uint32_t)"lpbCompByte", (uint32_t)szGfxCpp, 1742);
+        FOG_DisplayAssert("lpbCompByte", szGfxCpp, 1742);
         exit(-1);
     }
 
@@ -2737,7 +2737,7 @@ int32_t __fastcall GFX_AsyncLoadBlock(D2UnitStrc *pUnit, int32_t nAnimMode, int3
         nComponent = pLayerOrder[iLayer];
         if (nComponent >= (int32_t)NUM_COMPONENTS)
         {
-            FOG_DisplayAssert((uint32_t)"eComponent < NUM_COMPONENTS", (uint32_t)szGfxCpp, 1749);
+            FOG_DisplayAssert("eComponent < NUM_COMPONENTS", szGfxCpp, 1749);
             exit(-1);
         }
 
@@ -2894,10 +2894,10 @@ void __fastcall GFX_AddOverlay(D2UnitStrc *pUnit, D2_OverlayIds nOverlayId, D2C_
         GFX_RemoveOverlay(pUnit, pOverlayTxt->nPreDraw, nOverlayId);
     }
 
-    pEntry = (D2ClientGfxEntryStrc *)FOG_Alloc(sizeof(D2ClientGfxEntryStrc), (uint32_t)szGfxCpp, 3132, 0);
+    pEntry = (D2ClientGfxEntryStrc *)FOG_Alloc(sizeof(D2ClientGfxEntryStrc), szGfxCpp, 3132, 0);
     if (!pEntry)
     {
-        FOG_DisplayAssert((uint32_t)"ptOverlay", (uint32_t)szGfxCpp, 3133);
+        FOG_DisplayAssert("ptOverlay", szGfxCpp, 3133);
         exit(-1);
     }
 
@@ -2951,7 +2951,7 @@ void __fastcall GFX_AddOverlay(D2UnitStrc *pUnit, D2_OverlayIds nOverlayId, D2C_
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 3182);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 3182);
         exit(-1);
     }
 
@@ -3038,7 +3038,7 @@ void __fastcall GFX_RemoveOverlay(D2UnitStrc *pUnit, int32_t nUnused, D2_Overlay
 
     if (!GFXUTIL_GetOverlayTxtRecord(nOverlayId))
     {
-        FOG_DisplayAssert((uint32_t)"ptStats", (uint32_t)szGfxCpp, 3229);
+        FOG_DisplayAssert("ptStats", szGfxCpp, 3229);
         exit(-1);
     }
 
@@ -3066,7 +3066,7 @@ void __fastcall GFX_RemoveAllOverlays(D2UnitStrc *pUnit)
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
     if (!pGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptGfxInfo", (uint32_t)szGfxCpp, 3267);
+        FOG_DisplayAssert("ptGfxInfo", szGfxCpp, 3267);
         exit(-1);
     }
 
@@ -3086,7 +3086,7 @@ void __fastcall GFX_SetPaletteShift1(D2ClientUnitGfxInfoStrc *pGfxData, int32_t 
 {
     if (!pGfxData)
     {
-        FOG_DisplayAssert((uint32_t)"ptInfo", (uint32_t)szGfxCpp, 3288);
+        FOG_DisplayAssert("ptInfo", szGfxCpp, 3288);
         exit(-1);
     }
 
@@ -3101,7 +3101,7 @@ int32_t __fastcall GFX_GetPaletteShift1(D2ClientUnitGfxInfoStrc *ptInfo)
 {
     if (!ptInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptInfo", (uint32_t)szGfxCpp, 3301);
+        FOG_DisplayAssert("ptInfo", szGfxCpp, 3301);
         exit(-1);
     }
 
@@ -3115,7 +3115,7 @@ void __fastcall GFX_SetPaletteShift2(D2ClientUnitGfxInfoStrc *pGfxData, int32_t 
 {
     if (!pGfxData)
     {
-        FOG_DisplayAssert((uint32_t)"ptInfo", (uint32_t)szGfxCpp, 3313);
+        FOG_DisplayAssert("ptInfo", szGfxCpp, 3313);
         exit(-1);
     }
 
@@ -3130,7 +3130,7 @@ int32_t __fastcall GFX_GetPaletteShift2(D2ClientUnitGfxInfoStrc *ptInfo)
 {
     if (!ptInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptInfo", (uint32_t)szGfxCpp, 3326);
+        FOG_DisplayAssert("ptInfo", szGfxCpp, 3326);
         exit(-1);
     }
 
@@ -3214,7 +3214,7 @@ void __fastcall GFX_RebuildUnitAnimForMode(D2UnitStrc *pUnit, int32_t nUnused)
         return;
 
     default:
-        FOG_DisplayAssert((uint32_t)"0", (uint32_t)szGfxCpp, 3354);
+        FOG_DisplayAssert("0", szGfxCpp, 3354);
         exit(-1);
     }
 }
@@ -3275,7 +3275,7 @@ void __fastcall GFX_ClearUnitModesLoaded(D2UnitStrc *pUnit, D2Composits nCompone
         return;
 
     default:
-        FOG_DisplayAssert((uint32_t)"0", (uint32_t)szGfxCpp, 3378);
+        FOG_DisplayAssert("0", szGfxCpp, 3378);
         exit(-1);
     }
 }
@@ -3335,7 +3335,7 @@ void __fastcall GFX_GetUnitCel(D2UnitStrc *pUnit, D2Composits nComponent, int32_
 
     if (!tCelContext.pCurrentCell)
     {
-        FOG_DisplayAssert((uint32_t)"tCelContext.hCel", (uint32_t)szGfxCpp, 3436);
+        FOG_DisplayAssert("tCelContext.hCel", szGfxCpp, 3436);
         exit(-1);
     }
 
@@ -3384,7 +3384,7 @@ BOOL __fastcall GFX_HitTestUnitCof(D2UnitStrc *pUnit, int32_t nX, int32_t nY, in
     pCofHeader = (D2CofHeaderStrc *)GFXUTIL_ReturnArg(pCofData);
     if (!pCofHeader)
     {
-        FOG_DisplayAssert((uint32_t)"ptCofHeader", (uint32_t)szGfxCpp, 3478);
+        FOG_DisplayAssert("ptCofHeader", szGfxCpp, 3478);
         exit(-1);
     }
 
@@ -3436,7 +3436,7 @@ BOOL __fastcall GFX_IsUnitCofOnScreen(D2UnitStrc *pUnit, int32_t nX, int32_t nY,
     pCofHeader = (D2CofHeaderStrc *)GFXUTIL_ReturnArg(pCofData);
     if (!pCofHeader)
     {
-        FOG_DisplayAssert((uint32_t)"ptCofHeader", (uint32_t)szGfxCpp, 3527);
+        FOG_DisplayAssert("ptCofHeader", szGfxCpp, 3527);
         exit(-1);
     }
 
@@ -3490,7 +3490,7 @@ void __fastcall GFX_LoadActCofData(uint8_t nActIndex)
     pCache->pBlock = ARCHIVE_LoadFile(D2WIN_GetArchive(), szFilename, (uint32_t *)&pCache->nBlockSize, szGfxCpp, 269);
     if (!pCache->pBlock)
     {
-        FOG_DisplayAssert((uint32_t)"ptHash->lpbFileData", (uint32_t)szGfxCpp, 270);
+        FOG_DisplayAssert("ptHash->lpbFileData", szGfxCpp, 270);
         exit(-1);
     }
 
@@ -3505,7 +3505,7 @@ void __fastcall GFX_LoadActCofData(uint8_t nActIndex)
 
         if (((D2CofHeaderStrc *)&pNode->unk0x18)->nDirections > 64)
         {
-            FOG_DisplayAssert((uint32_t)"swapCofHeader->bNumDirections <= 64", (uint32_t)szGfxCpp, 296);
+            FOG_DisplayAssert("swapCofHeader->bNumDirections <= 64", szGfxCpp, 296);
             exit(-1);
         }
 
@@ -3543,15 +3543,15 @@ void __cdecl GFX_FreeCofCache(void)
             if (pNode->dwFlags & 1)
             {
                 gnCofMemoryUsed += -(int32_t)sizeof(D2ClientCofCacheNodeStrc) - pNode->nSize;
-                FOG_Free((uint32_t)pNode->pData, (uint32_t)szGfxCpp, 3632, 0);
-                FOG_Free((uint32_t)pNode, (uint32_t)szGfxCpp, 3633, 0);
+                FOG_Free(pNode->pData, szGfxCpp, 3632, 0);
+                FOG_Free(pNode, szGfxCpp, 3633, 0);
             }
         }
     }
 
     gnCofMemoryUsed -= pCache->nBlockSize;
     if (pCache->pBlock)
-        FOG_Free((uint32_t)pCache->pBlock, (uint32_t)szGfxCpp, 3669, 0);
+        FOG_Free(pCache->pBlock, szGfxCpp, 3669, 0);
 
     memset(pCache, 0, sizeof(D2ClientCofCacheStrc));
 }
@@ -3640,7 +3640,7 @@ void __fastcall GFX_AddMonsterCofFiles(int32_t nMonsterId, BOOL bValidateSprites
             pCofFile = GFX_LoadCofFile(pCache, szCofPath);
             if (!pCofFile)
             {
-                FOG_DisplayHalt((const char *)FOG_csprintf((uint32_t)szTitle, "Could not add cof file: %s", szCofPath), szGfxCpp, 3767);
+                FOG_DisplayHalt((const char *)FOG_csprintf(szTitle, "Could not add cof file: %s", szCofPath), szGfxCpp, 3767);
                 exit(-1);
             }
         }
@@ -3648,21 +3648,21 @@ void __fastcall GFX_AddMonsterCofFiles(int32_t nMonsterId, BOOL bValidateSprites
         pCofData = (uint8_t *)pCofFile->pData;
         if (!pCofData)
         {
-            FOG_DisplayAssert((uint32_t)"lpbCofData", (uint32_t)szGfxCpp, 3772);
+            FOG_DisplayAssert("lpbCofData", szGfxCpp, 3772);
             exit(-1);
         }
 
         pCofHeader = (D2CofHeaderStrc *)GFXUTIL_ReturnArg(pCofData);
         if (!pCofHeader)
         {
-            FOG_DisplayAssert((uint32_t)"ptCofHeader", (uint32_t)szGfxCpp, 3774);
+            FOG_DisplayAssert("ptCofHeader", szGfxCpp, 3774);
             exit(-1);
         }
 
         pLayerOrder = GFXUTIL_GetCofLayerOrder(pCofData, 0, 0);
         if (!pLayerOrder)
         {
-            FOG_DisplayAssert((uint32_t)"lpbCompByte", (uint32_t)szGfxCpp, 3779);
+            FOG_DisplayAssert("lpbCompByte", szGfxCpp, 3779);
             exit(-1);
         }
 
@@ -3672,7 +3672,7 @@ void __fastcall GFX_AddMonsterCofFiles(int32_t nMonsterId, BOOL bValidateSprites
             nComponent = pLayerOrder[iLayer];
             if (nComponent >= (int32_t)NUM_COMPONENTS)
             {
-                FOG_DisplayAssert((uint32_t)"eComponent < NUM_COMPONENTS", (uint32_t)szGfxCpp, 3786);
+                FOG_DisplayAssert("eComponent < NUM_COMPONENTS", szGfxCpp, 3786);
                 exit(-1);
             }
 
@@ -3732,7 +3732,7 @@ uint32_t __fastcall GFX_HashCofName(const char *pszFileName)
 
     if (strlen(pszFileName) >= 8)
     {
-        FOG_DisplayAssert((uint32_t)"strlen(pszFileName) < MAX_COFDATA_FILENAME", (uint32_t)szGfxCpp, 121);
+        FOG_DisplayAssert("strlen(pszFileName) < MAX_COFDATA_FILENAME", szGfxCpp, 121);
         exit(-1);
     }
 
@@ -3782,7 +3782,7 @@ void __fastcall GFX_BuildMonsterCofName(D2MonStatsTxt *pMonStatsTxt, int32_t nMo
     pMonModeTxt = D2COMMON_DATATBLS_GetMonModeTxtRecord(nMonModeIndex, 1);
     if (!pMonModeTxt)
     {
-        FOG_DisplayAssert((uint32_t)"ptToken", (uint32_t)szGfxCpp, 3706);
+        FOG_DisplayAssert("ptToken", szGfxCpp, 3706);
         exit(-1);
     }
 

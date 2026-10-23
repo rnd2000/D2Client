@@ -1436,7 +1436,7 @@ void __cdecl PANEL_DrawBeltItemHint()
     nClassId = gpBeltHoverItem ? (int32_t)gpBeltHoverItem->dwClassId : -1;
     if (!D2COMMON_DATATBLS_GetItemsTxtRecord(nClassId))
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szPtItemStats, (uint32_t)(UINT_PTR)szPanelCpp, 1556);
+        FOG_DisplayAssert(szPtItemStats, szPanelCpp, 1556);
         exit(-1);
     }
 
@@ -1710,7 +1710,7 @@ void __cdecl PANEL_DrawBelt()
             nBeltType = D2COMMON_UNITS_GetBeltType(pBeltUnit);
             if (nBeltType < 0)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertBeltFrame, (uint32_t)(UINT_PTR)szPanelCpp, 2788);
+                FOG_DisplayAssert(szAssertBeltFrame, szPanelCpp, 2788);
                 exit(-1);
             }
             gnBeltsTxtIndex = nBeltType;
@@ -2145,7 +2145,7 @@ void __fastcall PANEL_BeltUseItemInSlot(D2UnitStrc *pUnit, D2InventoryStrc *pInv
     pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(pBeltItem->dwClassId);
     if (!pItemsTxt)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szPtItemStats, (uint32_t)(UINT_PTR)szPanelCpp, 2633);
+        FOG_DisplayAssert(szPtItemStats, szPanelCpp, 2633);
         exit(-1);
     }
 

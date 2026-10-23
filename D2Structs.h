@@ -30,9 +30,9 @@
  *
  *  GENERATED -- do not edit by hand; regenerate instead.
  *
- *    python tools/d2client/sweep/bridge.py --run D2Client \
- *           tools/d2client/sweep/ida_dump_structs.py DS_OUT=<dump>.json
- *    python tools/d2client/sweep/gen_structs_header.py \
+ *    python <Tools>/sweep/bridge.py --run D2Client \
+ *           <Tools>/sweep/ida_dump_structs.py DS_OUT=<dump>.json
+ *    python <Tools>/sweep/gen_structs_header.py \
  *           GS_DUMP=<dump>.json GS_APPLY=1
  *
  *  Source: the D2Client IDA database of the d2client-sweep repository, which
@@ -80,6 +80,9 @@ typedef unsigned int        _BOOL4;
 
 /* ---- forward declarations ---- */
 struct HD2ARCHIVE__;
+struct AsyncData;
+struct AsyncDataEventSlot;
+struct AsyncDataLoadFileCallback;
 struct BnClientInterface;
 // struct ClientPacketSaveHeaderPart;
 struct CursorDescStrc;
@@ -342,6 +345,7 @@ struct D2FP32_16WordsStrc;
 // struct D2FallenShamanAiCallbackArgStrc;
 struct D2FieldStrc;
 struct D2FloorDrawCtxStrc;
+struct D2FogSystemInfoStrc;
 // struct D2FontCacheStrc;
 // struct D2FontStrc;
 // struct D2GSPacketClt01;
@@ -994,6 +998,7 @@ struct TSExplicitListArray;
 struct TSLink;
 // struct TanToDirectionLutEntryStrc;
 struct Unicode;
+// struct _OVERLAPPED;
 // union anon_127762106345282DF2C438C51804D07A;
 // struct anon_14587F979C641006F380FCBF23CEC161;
 // struct anon_17EA52B533BA0577390A0A91F2834258;
@@ -1045,6 +1050,36 @@ typedef void (__fastcall *ACTCALLBACKFN)(D2ActiveRoomStrc *);
 typedef int32_t (__stdcall *ARCHIVE_ShowMessageFunctionPtr)();
 
 typedef void (__stdcall *AUTOMAPFN)(D2ActiveRoomStrc *);
+
+struct AsyncDataLoadFileCallback
+{
+uint32_t (__stdcall *callback)(void *pFileData, uint32_t nDataLength, struct AsyncDataLoadFileCallback *pCallbackData);
+uint32_t userData[4];
+void *pData;
+uint32_t nFileSize;
+};
+
+struct AsyncData
+{
+void *hFile;
+void *pMemPool;
+OVERLAPPED tOverlapped;
+struct AsyncDataLoadFileCallback pAsyncOpDesc;
+struct AsyncDataEventSlot *pEventSlot;
+void *pBuffer;
+uint32_t nFileSize;
+uint32_t nPriority;
+uint32_t nFlags;
+uint32_t nPreviousPriority;
+struct AsyncData *pNextPostponedPriorityChange;
+};
+
+struct AsyncDataEventSlot
+{
+void *hEvent;
+uint32_t bSlotAvailable;
+struct AsyncData *pAsyncOp;
+};
 
 struct CursorDescStrc
 {
@@ -3407,6 +3442,13 @@ int32_t nMaxY;
 int32_t nScreenOffsetX;
 int32_t nScreenOffsetY;
 int32_t field_44;
+};
+
+struct D2FogSystemInfoStrc
+{
+uint32_t bInitialized;
+uint8_t unknown_04[8];
+uint32_t dwTotalPhysicalBytes;
 };
 
 struct D2GSPacketClt15
@@ -7305,7 +7347,7 @@ int32_t nPcmSize;
 int32_t nCacheStamp;
 uint8_t nBlockCount;
 uint8_t bLoadFailed;
-uint32_t hAsyncData;
+AsyncData *hAsyncData;
 int32_t eDataState;
 uint32_t dwRefCount;
 };
@@ -9887,6 +9929,23 @@ int32_t bCopyToUnitBuffer;
 // };
 // static_assert(sizeof(TanToDirectionLutEntryStrc) == 12, "TanToDirectionLutEntryStrc: layout differs from the database");
 
+// struct _OVERLAPPED
+// {
+// ULONG_PTR Internal;
+// ULONG_PTR InternalHigh;
+// union
+// {
+// struct
+// {
+// DWORD Offset;
+// DWORD OffsetHigh;
+// };
+// PVOID Pointer;
+// };
+// HANDLE hEvent;
+// };
+// static_assert(sizeof(_OVERLAPPED) == 20, "_OVERLAPPED: layout differs from the database");
+
 // union anon_127762106345282DF2C438C51804D07A
 // {
 // struct
@@ -10222,6 +10281,9 @@ int32_t bCopyToUnitBuffer;
 #  define D2STRUCTS_LANG 0L
 #endif
 #if D2STRUCTS_LANG >= 201103L
+static_assert(sizeof(AsyncDataLoadFileCallback) == 28, "AsyncDataLoadFileCallback: layout differs from the database");
+static_assert(sizeof(AsyncData) == 84, "AsyncData: layout differs from the database");
+static_assert(sizeof(AsyncDataEventSlot) == 12, "AsyncDataEventSlot: layout differs from the database");
 static_assert(sizeof(CursorDescStrc) == 28, "CursorDescStrc: layout differs from the database");
 static_assert(sizeof(D2DrlgCoordsStrc) == 32, "D2DrlgCoordsStrc: layout differs from the database");
 static_assert(sizeof(D2SeedStrc) == 8, "D2SeedStrc: layout differs from the database");
@@ -10399,6 +10461,7 @@ static_assert(sizeof(D2FP32_16PrecisionStrc) == 8, "D2FP32_16PrecisionStrc: layo
 static_assert(sizeof(D2FP32_16WordsStrc) == 8, "D2FP32_16WordsStrc: layout differs from the database");
 static_assert(sizeof(D2FieldStrc) == 8, "D2FieldStrc: layout differs from the database");
 static_assert(sizeof(D2FloorDrawCtxStrc) == 72, "D2FloorDrawCtxStrc: layout differs from the database");
+static_assert(sizeof(D2FogSystemInfoStrc) == 16, "D2FogSystemInfoStrc: layout differs from the database");
 static_assert(sizeof(D2GSPacketClt15) == 275, "D2GSPacketClt15: layout differs from the database");
 static_assert(sizeof(D2GSPacketClt5D) == 7, "D2GSPacketClt5D: layout differs from the database");
 static_assert(sizeof(D2GSPacketClt5E) == 6, "D2GSPacketClt5E: layout differs from the database");

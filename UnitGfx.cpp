@@ -32,7 +32,7 @@ void __fastcall UNITGFX_UnitInitGfx(D2UnitStrc *pUnit)
     pUnit->pGfxData = pUnitGfxInfo;
     if (!pUnitGfxInfo)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptUnit->uGfx.hGFX", (uint32_t)(UINT_PTR)szUnitGfxCpp, 22);
+        FOG_DisplayAssert("ptUnit->uGfx.hGFX", szUnitGfxCpp, 22);
         exit(-1);
     }
 

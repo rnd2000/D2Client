@@ -2379,7 +2379,7 @@ void __stdcall INV_NpcShopOnLButtonUp(SMSGHANDLER_PARAMS *pMsg)
                 sgInventoryMode = nAction;
                 if (gnVendorMaxPage >= 5u)
                 {
-                    FOG_DisplayAssert((uint32_t)szNpcMaxPagesAssert, (uint32_t)szInvCpp, 8870);
+                    FOG_DisplayAssert(szNpcMaxPagesAssert, szInvCpp, 8870);
                     exit(-1);
                 }
 
@@ -3240,7 +3240,7 @@ void __cdecl INV_NpcShopLeaveVerifyMode(void)
 {
     if (sgInventoryMode != 5)
     {
-        FOG_DisplayAssert((uint32_t)szVerifyModeAssert, (uint32_t)szInvCpp, 7783);
+        FOG_DisplayAssert(szVerifyModeAssert, szInvCpp, 7783);
         exit(-1);
     }
 
@@ -3310,7 +3310,7 @@ void __cdecl INV_NpcShopCloseAndRestoreCursor(void)
 {
     if (sgInventoryMode != 7)
     {
-        FOG_DisplayAssert((uint32_t)szResultsModeAssert, (uint32_t)szInvCpp, 7833);
+        FOG_DisplayAssert(szResultsModeAssert, szInvCpp, 7833);
         exit(-1);
     }
 
@@ -7021,7 +7021,7 @@ int32_t __fastcall INV_OnGridLeftClick(D2UnitStrc *pUnit, D2InventoryStrc *pInve
                 pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(pCursorItem->dwClassId);
                 if (!pItemsTxt)
                 {
-                    FOG_DisplayAssert((uint32_t)szPtItemStatsAssert, (uint32_t)szInvCpp, 5655);
+                    FOG_DisplayAssert(szPtItemStatsAssert, szInvCpp, 5655);
                     exit(-1);
                 }
                 if (pItemsTxt->dwCode == 544763746)
@@ -8154,7 +8154,7 @@ static const Unicode *__fastcall INV_GetPlayerClassName(int32_t nClass)
 {
     if (!(nClass >= PCLASS_AMAZON && nClass < NUMBER_OF_PLAYERCLASSES))
     {
-        FOG_DisplayAssert((uint32_t)szPlayerClassAssert, (uint32_t)szInvCpp, 1690);
+        FOG_DisplayAssert(szPlayerClassAssert, szInvCpp, 1690);
         exit(-1);
     }
 
@@ -8295,7 +8295,7 @@ void __fastcall INV_BuildItemNameText(D2UnitStrc *pItem, Unicode *wszOut, int32_
     pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(pItem->dwClassId);
     if (!pItemsTxt)
     {
-        FOG_DisplayAssert((uint32_t)szPtItemStatsAssert, (uint32_t)szInvCpp, 1840);
+        FOG_DisplayAssert(szPtItemStatsAssert, szInvCpp, 1840);
         exit(-1);
     }
 
@@ -8520,7 +8520,7 @@ void __fastcall INV_BuildItemNameText(D2UnitStrc *pItem, Unicode *wszOut, int32_
 
             if ((int32_t)(nTotalLen + Unicode::strlen(D2LANG_GetStringFromTblIndex((D2C_StringIndices)pItemsTxt->wNameStr)) + 3) >= nMaxLen)
             {
-                FOG_DisplayAssert((uint32_t)szLenMaxLenAssert, (uint32_t)szInvCpp, 2243);
+                FOG_DisplayAssert(szLenMaxLenAssert, szInvCpp, 2243);
                 exit(-1);
             }
 
@@ -8634,7 +8634,7 @@ void __fastcall INV_BuildItemNameText(D2UnitStrc *pItem, Unicode *wszOut, int32_
 
             if ((int32_t)(nTotalLen + Unicode::strlen(D2LANG_GetStringFromTblIndex((D2C_StringIndices)pItemsTxt->wNameStr)) + 3) >= nMaxLen)
             {
-                FOG_DisplayAssert((uint32_t)szLenMaxLenAssert, (uint32_t)szInvCpp, 2080);
+                FOG_DisplayAssert(szLenMaxLenAssert, szInvCpp, 2080);
                 exit(-1);
             }
 
@@ -8711,7 +8711,7 @@ void __fastcall INV_BuildItemNameText(D2UnitStrc *pItem, Unicode *wszOut, int32_
         }
 
         default:
-            FOG_DisplayAssert((uint32_t)szAssertZero, (uint32_t)szInvCpp, 2252);
+            FOG_DisplayAssert(szAssertZero, szInvCpp, 2252);
             exit(-1);
         }
     }
@@ -8781,7 +8781,7 @@ static void __fastcall INV_AppendSocketFillerText(Unicode *wszOut)
     pwszNewline = D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
     if (!D2COMMON_ITEMS_CheckItemTypeId(gpHoverItem, ITEMTYPE_SOCKET_FILLER))
     {
-        FOG_DisplayAssert((uint32_t)szSocketFillerAssert, (uint32_t)szInvCpp, 3137);
+        FOG_DisplayAssert(szSocketFillerAssert, szInvCpp, 3137);
         exit(-1);
     }
 
@@ -8806,14 +8806,14 @@ static void __fastcall INV_DrawBookDescription(void)
     pwszNewline = D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
     if (!gpHoverItem || D2COMMON_ITEMS_GetItemType(gpHoverItem) != ITEMTYPE_BOOK)
     {
-        FOG_DisplayAssert((uint32_t)szSelItemBookAssert, (uint32_t)szInvCpp, 3308);
+        FOG_DisplayAssert(szSelItemBookAssert, szInvCpp, 3308);
         exit(-1);
     }
 
     pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(gpHoverItem ? gpHoverItem->dwClassId : -1);
     if (!pItemsTxt)
     {
-        FOG_DisplayAssert((uint32_t)szPtItemStatsAssert, (uint32_t)szInvCpp, 3312);
+        FOG_DisplayAssert(szPtItemStatsAssert, szInvCpp, 3312);
         exit(-1);
     }
 
@@ -8929,7 +8929,7 @@ static void __fastcall INV_DrawSetItemDescription(D2UnitStrc *pUnit)
     pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(gpHoverItem ? gpHoverItem->dwClassId : -1);
     if (!pItemsTxt)
     {
-        FOG_DisplayAssert((uint32_t)szPtItemStatsAssert, (uint32_t)szInvCpp, 3409);
+        FOG_DisplayAssert(szPtItemStatsAssert, szInvCpp, 3409);
         exit(-1);
     }
 
@@ -9159,7 +9159,7 @@ static void __fastcall INV_DrawTransmogrifyDescription(void)
     pOldItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(gpHoverItem ? gpHoverItem->dwClassId : -1);
     if (!pOldItemsTxt)
     {
-        FOG_DisplayAssert((uint32_t)szPtOldItemStatsAssert, (uint32_t)szInvCpp, 3676);
+        FOG_DisplayAssert(szPtOldItemStatsAssert, szInvCpp, 3676);
         exit(-1);
     }
 
@@ -9167,7 +9167,7 @@ static void __fastcall INV_DrawTransmogrifyDescription(void)
     pNewItemsTxt = D2COMMON_DATATBLS_GetItemRecordFromItemCode(pOldItemsTxt->dwTransmogrifyType, &nNewItemId);
     if (!pNewItemsTxt)
     {
-        FOG_DisplayAssert((uint32_t)szPtNewItemStatsAssert, (uint32_t)szInvCpp, 3679);
+        FOG_DisplayAssert(szPtNewItemStatsAssert, szInvCpp, 3679);
         exit(-1);
     }
 
@@ -9493,7 +9493,7 @@ void __fastcall INV_DrawItemDescription(D2UnitStrc *pUnit, BOOL bVendorUnit)
     pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(gpHoverItem ? gpHoverItem->dwClassId : -1);
     if (!pItemsTxt)
     {
-        FOG_DisplayAssert((uint32_t)szPtItemStatsAssert, (uint32_t)szInvCpp, 4029);
+        FOG_DisplayAssert(szPtItemStatsAssert, szInvCpp, 4029);
         exit(-1);
     }
 

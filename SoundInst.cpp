@@ -96,7 +96,7 @@ void __fastcall SOUNDINST_DetachFromUnit(int32_t hInstance, D2UnitStrc *pUnit, i
 
     if (!hInstance || !pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"hInst && hUnit", (uint32_t)szSoundInstCpp, 206);
+        FOG_DisplayAssert("hInst && hUnit", szSoundInstCpp, 206);
         exit(-1);
     }
 
@@ -490,7 +490,7 @@ void __fastcall SOUNDINST_UpdateForUnit(int32_t hInstance, int32_t nVolume, uint
 
     if (dwFadeBeginDelay)
     {
-        FOG_DisplayAssert((uint32_t)"!dwFadeBeginDelay", (uint32_t)szSoundInstCpp, 604);
+        FOG_DisplayAssert("!dwFadeBeginDelay", szSoundInstCpp, 604);
         exit(-1);
     }
     SOUNDINST_SetVolumeByHandle(hInstance, nVolume);
@@ -847,7 +847,7 @@ void __fastcall SOUNDINST_ServiceInstances(uint32_t nTick)
             SOUNDCHAN_StopAndDetach(pInstance->ptChannel);
             if (pInstance->ptChannel)
             {
-                FOG_DisplayAssert((uint32_t)"!ptInst->hChannel", (uint32_t)szSoundInstCpp, 147);
+                FOG_DisplayAssert("!ptInst->hChannel", szSoundInstCpp, 147);
                 exit(-1);
             }
         }
@@ -866,7 +866,7 @@ void __fastcall SOUNDINST_ServiceInstances(uint32_t nTick)
         {
             if (pInstance->ptChannel)
             {
-                FOG_DisplayAssert((uint32_t)"!ptInst->hChannel", (uint32_t)szSoundInstCpp, 841);
+                FOG_DisplayAssert("!ptInst->hChannel", szSoundInstCpp, 841);
                 exit(-1);
             }
             if (pRecord->bLoop && !pRecord->nDuration && !pInstance->bStarted)
@@ -902,7 +902,7 @@ void __fastcall SOUNDINST_ServiceInstances(uint32_t nTick)
                 pUnit = (D2UnitStrc *)(UINT_PTR)pUnitNode->nValue;
                 if (!pUnit)
                 {
-                    FOG_DisplayAssert((uint32_t)"hUnit", (uint32_t)szSoundInstCpp, 876);
+                    FOG_DisplayAssert("hUnit", szSoundInstCpp, 876);
                     exit(-1);
                 }
                 SOUNDINST_GetUnitSoundPosition(pUnit, pInstance->nSoundId, tOut);
@@ -983,7 +983,7 @@ void __fastcall SOUNDINST_ServiceInstances(uint32_t nTick)
             {
                 if (pInstance->ptChannel)
                 {
-                    FOG_DisplayAssert((uint32_t)"!ptInst->hChannel", (uint32_t)szSoundInstCpp, 929);
+                    FOG_DisplayAssert("!ptInst->hChannel", szSoundInstCpp, 929);
                     exit(-1);
                 }
 
@@ -1085,7 +1085,7 @@ void __fastcall SOUNDINST_ServiceInstances(uint32_t nTick)
         {
             if (!pInstance->ptChannel)
             {
-                FOG_DisplayAssert((uint32_t)"ptInst->hChannel", (uint32_t)szSoundInstCpp, 1011);
+                FOG_DisplayAssert("ptInst->hChannel", szSoundInstCpp, 1011);
                 exit(-1);
             }
             if (pRecord->nDuration && nTick - pInstance->dwStartTick > pRecord->nDuration)
@@ -1093,7 +1093,7 @@ void __fastcall SOUNDINST_ServiceInstances(uint32_t nTick)
                 SOUNDCHAN_StopAndDetach(pInstance->ptChannel);
                 if (pInstance->ptChannel)
                 {
-                    FOG_DisplayAssert((uint32_t)"!ptInst->hChannel", (uint32_t)szSoundInstCpp, 147);
+                    FOG_DisplayAssert("!ptInst->hChannel", szSoundInstCpp, 147);
                     exit(-1);
                 }
             }
@@ -1108,7 +1108,7 @@ void __fastcall SOUNDINST_ServiceInstances(uint32_t nTick)
                 SOUNDCHAN_StopAndDetach(pInstance->ptChannel);
                 if (pInstance->ptChannel)
                 {
-                    FOG_DisplayAssert((uint32_t)"!ptInst->hChannel", (uint32_t)szSoundInstCpp, 147);
+                    FOG_DisplayAssert("!ptInst->hChannel", szSoundInstCpp, 147);
                     exit(-1);
                 }
             }
@@ -1128,7 +1128,7 @@ void __fastcall SOUNDINST_ServiceInstances(uint32_t nTick)
             SOUNDCHAN_StopAndDetach(pInstance->ptChannel);
         if (pInstance->ptChannel)
         {
-            FOG_DisplayAssert((uint32_t)"!ptInst->hChannel", (uint32_t)szSoundInstCpp, 147);
+            FOG_DisplayAssert("!ptInst->hChannel", szSoundInstCpp, 147);
             exit(-1);
         }
         pInstance->nInUse = 0;
@@ -1233,7 +1233,7 @@ void __stdcall SOUNDINST_FreeAllInstances()
             SOUNDCHAN_StopAndDetach(pInstance->ptChannel);
         if (pInstance->ptChannel)
         {
-            FOG_DisplayAssert((uint32_t)"!ptInst->hChannel", (uint32_t)szSoundInstCpp, 147);
+            FOG_DisplayAssert("!ptInst->hChannel", szSoundInstCpp, 147);
             exit(-1);
         }
         pInstance->nInUse = 0;
@@ -1268,7 +1268,7 @@ int32_t __fastcall SOUNDINST_GetPlayPosition(int32_t hInstance)
     pChannel = pInstance->ptChannel;
     if (!pChannel)
     {
-        FOG_DisplayAssert((uint32_t)"ptInst->hChannel", (uint32_t)szSoundInstCpp, 1114);
+        FOG_DisplayAssert("ptInst->hChannel", szSoundInstCpp, 1114);
         exit(-1);
     }
     return SOUNDCHAN_GetStreamPosition(pChannel);

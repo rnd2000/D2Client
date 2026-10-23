@@ -273,7 +273,7 @@ void __fastcall TRADE_HandleStateMessage(uint8_t *pMessage)
         gnTradeState = 1;
         if (gpTradeWaitDialog)
         {
-            FOG_DisplayAssert((uint32_t)szWaitDialogNullAssert, (uint32_t)szTradeCpp, 317);
+            FOG_DisplayAssert(szWaitDialogNullAssert, szTradeCpp, 317);
             exit(-1);
         }
         gpTradeWaitDialog = DIALOG_Create(320, 100, (DIALOGCALLBACK)TRADE_SendCancelEarlyStamp, (DIALOGCALLBACK)TRADE_SendCancelEarlyStamp, 0, 1, 1, 0, 0, 0, 1);

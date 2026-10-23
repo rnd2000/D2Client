@@ -64,5 +64,5 @@ void __fastcall ARCHIVE_CellFileFree(D2CellFileStrc *pCellFile)
 {
     D2CMP_CelFileFreeHardware(pCellFile);
     if (pCellFile)
-        FOG_Free((uint32_t)(UINT_PTR)pCellFile, (uint32_t)(UINT_PTR)szSrcFile, 122, 0);
+        FOG_Free(pCellFile, szSrcFile, 122, 0);
 }

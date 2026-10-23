@@ -229,7 +229,7 @@ static void RegisterMessageHandler(HWND hWnd, D2WindowProcCallbackType nKind, ui
     case D2_WINPROC_MESSAGE:
         if (uMessage == WM_COMMAND)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "id != WM_COMMAND", (uint32_t)(UINT_PTR)szSourceFile, 314);
+            FOG_DisplayAssert("id != WM_COMMAND", szSourceFile, 314);
             exit(-1);
         }
         STORM_SMsgRegisterMessage(hWnd, uMessage, pfnHandler);
@@ -261,7 +261,7 @@ void __fastcall WNDPROC_RegisterMessageHandlers(HWND hWnd, const D2WinCommandReg
 {
     if (!hWnd)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "hWnd", (uint32_t)(UINT_PTR)szSourceFile, 377);
+        FOG_DisplayAssert("hWnd", szSourceFile, 377);
         exit(-1);
     }
 
@@ -280,7 +280,7 @@ static void UnregisterMessageHandler(HWND hWnd, D2WindowProcCallbackType nKind, 
     case D2_WINPROC_MESSAGE:
         if (uMessage == WM_COMMAND)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "id != WM_COMMAND", (uint32_t)(UINT_PTR)szSourceFile, 347);
+            FOG_DisplayAssert("id != WM_COMMAND", szSourceFile, 347);
             exit(-1);
         }
         STORM_SMsgUnregisterMessage(hWnd, uMessage, pfnHandler);
@@ -310,7 +310,7 @@ void __fastcall WNDPROC_UnregisterMessageHandlers(HWND hWnd, const D2WinCommandR
 {
     if (!hWnd)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "hWnd", (uint32_t)(UINT_PTR)szSourceFile, 396);
+        FOG_DisplayAssert("hWnd", szSourceFile, 396);
         exit(-1);
     }
 

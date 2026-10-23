@@ -343,7 +343,7 @@ void __fastcall MSG_Send_D2CLTSYS_OPENCHAR(int32_t bShowLoadingScreen)
 
     if (!gLocalPlayerName[0])
     {
-        FOG_DisplayAssert((uint32_t)"gszPlrName[0] != '\\0'", (uint32_t)szMsgCpp, 401);
+        FOG_DisplayAssert("gszPlrName[0] != '\\0'", szMsgCpp, 401);
         exit(-1);
     }
 
@@ -365,7 +365,7 @@ void __fastcall MSG_Send_D2CLTSYS_OPENCHAR(int32_t bShowLoadingScreen)
         {
             nFileSize = ftell(pStream);
             fseek(pStream, 0, SEEK_SET);
-            pbData = (void *)FOG_Alloc(nFileSize, (uint32_t)szMsgCpp, 421, 0);
+            pbData = (void *)FOG_Alloc(nFileSize, szMsgCpp, 421, 0);
             fread(pbData, nFileSize, 1, pStream);
             fclose(pStream);
         }
@@ -373,7 +373,7 @@ void __fastcall MSG_Send_D2CLTSYS_OPENCHAR(int32_t bShowLoadingScreen)
 
     if (!pbData)
     {
-        FOG_DisplayAssert((uint32_t)"pbData", (uint32_t)szMsgCpp, 472);
+        FOG_DisplayAssert("pbData", szMsgCpp, 472);
         exit(-1);
     }
 
@@ -449,7 +449,7 @@ void __fastcall MSG_Send_D2CLTSYS_OPENCHAR(int32_t bShowLoadingScreen)
     gPacketAllSize += nTailBytes + 7;
     ++gPacketCounter;
 
-    FOG_Free((uint32_t)pbData, (uint32_t)szMsgCpp, 520, 0);
+    FOG_Free(pbData, szMsgCpp, 520, 0);
 
     if (nFullChunks)
         gnLoadProgressRatio = (nFullChunks << 8) / nFullChunks;
@@ -608,7 +608,7 @@ void __fastcall MSG_SendPacketToServer(uint8_t *pPacket, int32_t nLen)
 
     if (nLen >= 512)
     {
-        FOG_DisplayAssert((uint32_t)"nLen < (D2NET_MAX_MESSAGE_SIZE )", (uint32_t)szMsgCpp, 531);
+        FOG_DisplayAssert("nLen < (D2NET_MAX_MESSAGE_SIZE )", szMsgCpp, 531);
         exit(-1);
     }
 

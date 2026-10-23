@@ -59,14 +59,14 @@ void __fastcall UNITMODE_ClearStaleTargetUnit(D2UnitStrc *pUnit)
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"hUnit", (uint32_t)szUnitModeCpp, 38);
+        FOG_DisplayAssert("hUnit", szUnitModeCpp, 38);
         exit(-1);
     }
 
     hPath = pUnit->pDynamicPath;
     if (!hPath)
     {
-        FOG_DisplayAssert((uint32_t)"hPath", (uint32_t)szUnitModeCpp, 42);
+        FOG_DisplayAssert("hPath", szUnitModeCpp, 42);
         exit(-1);
     }
 
@@ -731,7 +731,7 @@ void __fastcall UNITMODE_PerformClientCommand(int32_t nClientCmd, D2UnitStrc *pU
         break;
 
     default:
-        FOG_DisplayAssert((uint32_t)"0", (uint32_t)szUnitModeCpp, 919);
+        FOG_DisplayAssert("0", szUnitModeCpp, 919);
         exit(-1);
     }
 

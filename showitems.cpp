@@ -113,7 +113,7 @@ int32_t __fastcall SHOWITEMS_FitLabelRect(int32_t *pnLeft, int32_t *pnTop, int32
 
     if (gnNumShowItems >= MAX_SHOW_ITEMS)
     {
-        FOG_DisplayAssert((uint32_t)szAssertNumShowItems, (uint32_t)szShowItemsCpp, 71);
+        FOG_DisplayAssert(szAssertNumShowItems, szShowItemsCpp, 71);
         exit(-1);
     }
 

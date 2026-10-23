@@ -292,12 +292,12 @@ void __cdecl SOUNDHDR_LoadSoundsTxt()
 
     if (gpSoundHeaders)
     {
-        FOG_DisplayAssert((uint32_t)"sgptSoundHeaderTable == NULL", (uint32_t)szSoundHdrCpp, 252);
+        FOG_DisplayAssert("sgptSoundHeaderTable == NULL", szSoundHdrCpp, 252);
         exit(-1);
     }
     if (gpSoundEnvironTxt)
     {
-        FOG_DisplayAssert((uint32_t)"sgptSoundEnvironTable == NULL", (uint32_t)szSoundHdrCpp, 253);
+        FOG_DisplayAssert("sgptSoundEnvironTable == NULL", szSoundHdrCpp, 253);
         exit(-1);
     }
 
@@ -306,7 +306,7 @@ void __cdecl SOUNDHDR_LoadSoundsTxt()
     pFileData = ARCHIVE_LoadFile(D2WIN_GetArchive(), szFilename, &dwFileSize, szSoundHdrCpp, 257);
     pBinFile = (D2BinFileStrc *)FOG_CreateBinFile((uint32_t)pFileData, dwFileSize);
     gnSoundHeaderCount = FOG_GetRecordCountFromBinFile((uint32_t)pBinFile);
-    gpSoundHeaders = (D2SoundsTxt *)FOG_Alloc(sizeof(D2SoundsTxt) * gnSoundHeaderCount, (uint32_t)szSoundHdrCpp, 262, 0);
+    gpSoundHeaders = (D2SoundsTxt *)FOG_Alloc(sizeof(D2SoundsTxt) * gnSoundHeaderCount, szSoundHdrCpp, 262, 0);
     memset(gpSoundHeaders, 0, sizeof(D2SoundsTxt) * gnSoundHeaderCount);
     FOG_10207((uint32_t)pBinFile, (uint32_t)aSoundsTxtFields, (uint32_t)gpSoundHeaders, gnSoundHeaderCount, sizeof(D2SoundsTxt));
     FOG_FreeBinFile((uint32_t)pBinFile);
@@ -316,7 +316,7 @@ void __cdecl SOUNDHDR_LoadSoundsTxt()
     pFileData = ARCHIVE_LoadFile(D2WIN_GetArchive(), szFilename, &dwFileSize, szSoundHdrCpp, 269);
     pBinFile = (D2BinFileStrc *)FOG_CreateBinFile((uint32_t)pFileData, dwFileSize);
     gnSoundEnvironTxtRecordCount = FOG_GetRecordCountFromBinFile((uint32_t)pBinFile);
-    gpSoundEnvironTxt = (D2SoundEnvironTxt *)FOG_Alloc(sizeof(D2SoundEnvironTxt) * gnSoundEnvironTxtRecordCount, (uint32_t)szSoundHdrCpp, 274, 0);
+    gpSoundEnvironTxt = (D2SoundEnvironTxt *)FOG_Alloc(sizeof(D2SoundEnvironTxt) * gnSoundEnvironTxtRecordCount, szSoundHdrCpp, 274, 0);
     memset(gpSoundEnvironTxt, 0, sizeof(D2SoundEnvironTxt) * gnSoundEnvironTxtRecordCount);
     FOG_10207((uint32_t)pBinFile, (uint32_t)aSoundEnvironFields, (uint32_t)gpSoundEnvironTxt, gnSoundEnvironTxtRecordCount, sizeof(D2SoundEnvironTxt));
     FOG_FreeBinFile((uint32_t)pBinFile);
@@ -377,7 +377,7 @@ void __cdecl SOUNDHDR_LoadSoundsTxt()
     }
 
     nLookupBytes = sizeof(int32_t) * (nLookupMax - nLookupMin + 1);
-    gpSoundEnvironLookup = (int32_t *)FOG_Alloc(nLookupBytes, (uint32_t)szSoundHdrCpp, 327, 0);
+    gpSoundEnvironLookup = (int32_t *)FOG_Alloc(nLookupBytes, szSoundHdrCpp, 327, 0);
     memset(gpSoundEnvironLookup, 0, nLookupBytes);
 }
 
@@ -404,7 +404,7 @@ void __cdecl SOUNDHDR_Shutdown()
 
     if (gpSoundEnvironTxt)
     {
-        FOG_Free((uint32_t)gpSoundEnvironTxt, (uint32_t)szSoundHdrCpp, 385, 0);
+        FOG_Free(gpSoundEnvironTxt, szSoundHdrCpp, 385, 0);
         gpSoundEnvironTxt = NULL;
         gnSoundEnvironTxtRecordCount = 0;
     }
@@ -416,7 +416,7 @@ void __cdecl SOUNDHDR_Shutdown()
             SOUNDHDR_FreeSoundData((D2C_Sounds)nSoundId);
         }
 
-        FOG_Free((uint32_t)gpSoundHeaders, (uint32_t)szSoundHdrCpp, 398, 0);
+        FOG_Free(gpSoundHeaders, szSoundHdrCpp, 398, 0);
         gpSoundHeaders = NULL;
         gnSoundHeaderCount = 0;
     }
@@ -455,7 +455,7 @@ void __fastcall SOUNDHDR_AdjustRefCount(D2C_Sounds nSoundId, int32_t nDelta)
             pMember = SOUNDHDR_GetRecord((D2C_Sounds)nMemberId);
             if (!(pMember->dwRefCount > 0 || nDelta != -1))
             {
-                FOG_DisplayAssert((uint32_t)"ptHeader->dwRefCount > 0 || nDelta != -1", (uint32_t)szSoundHdrCpp, 476);
+                FOG_DisplayAssert("ptHeader->dwRefCount > 0 || nDelta != -1", szSoundHdrCpp, 476);
                 exit(-1);
             }
             pMember->dwRefCount += nDelta;
@@ -526,15 +526,15 @@ void __fastcall SOUNDHDR_ServiceAsyncLoads(uint32_t dwTickCount)
             SOUNDHDR_LoadWaveData((D2C_Sounds)nSoundId, bForceLoad, 1);
         }
 
-        if (ptHeader->eDataState == 1 && FOG_AsyncDataTestLoaded((int32_t)ptHeader->hAsyncData))
+        if (ptHeader->eDataState == 1 && FOG_AsyncDataTestLoaded(ptHeader->hAsyncData))
         {
             if (ptHeader->eDataState != 1)
             {
-                FOG_DisplayAssert((uint32_t)"ptHeader->eDataState == ESOUNDDATASTATE_ASYNCLOADING", (uint32_t)szSoundHdrCpp, 64);
+                FOG_DisplayAssert("ptHeader->eDataState == ESOUNDDATASTATE_ASYNCLOADING", szSoundHdrCpp, 64);
                 exit(-1);
             }
-            ptHeader->pWaveData = (void *)(UINT_PTR)FOG_AsyncDataGetBuffer((void *)(UINT_PTR)ptHeader->hAsyncData);
-            ptHeader->nWaveSize = FOG_AsyncDataGetBufferSize((void *)(UINT_PTR)ptHeader->hAsyncData);
+            ptHeader->pWaveData = FOG_AsyncDataGetBuffer(ptHeader->hAsyncData);
+            ptHeader->nWaveSize = FOG_AsyncDataGetBufferSize(ptHeader->hAsyncData);
             ptHeader->eDataState = 2;
             SOUNDCHAN_PrepareWaveBuffer(ptHeader);
             --gnSoundAsyncLoadsInFlight;
@@ -599,7 +599,7 @@ void __fastcall SOUNDHDR_FreeSoundData(D2C_Sounds nSoundId)
 
     if (SOUNDCHAN_FindOldestPlaying(nSoundId))
     {
-        FOG_DisplayAssert((uint32_t)"!SoundChannelFind(eSound)", (uint32_t)szSoundHdrCpp, 601);
+        FOG_DisplayAssert("!SoundChannelFind(eSound)", szSoundHdrCpp, 601);
         exit(-1);
     }
 
@@ -608,12 +608,12 @@ void __fastcall SOUNDHDR_FreeSoundData(D2C_Sounds nSoundId)
     ptHeader->nCacheStamp = 0;
     if (ptHeader->hAsyncData)
     {
-        FOG_AsyncDataFree((void *)(UINT_PTR)ptHeader->hAsyncData);
+        FOG_AsyncDataFree(ptHeader->hAsyncData);
         ptHeader->hAsyncData = 0;
     }
     else
     {
-        FOG_Free((uint32_t)ptHeader->pWaveData, (uint32_t)szSoundHdrCpp, 626, 0);
+        FOG_Free(ptHeader->pWaveData, szSoundHdrCpp, 626, 0);
     }
     ptHeader->pWaveData = NULL;
     ptHeader->eDataState = 0;
@@ -650,8 +650,6 @@ static_assert(SOUND_AMAZON_CANTCARRY_1 == 2934 && SOUND_MONSTER_NIHLATHAK_TAUNT_
 //  in flight; a failed one leaves the row in state 0 for the next pass. Either way the size is added to gnSoundCacheUsed and the id moved to the
 //  list's tail with a fresh stamp (SOUNDHDR_TouchCacheEntry).
 //  The original inlines SOUNDHDR_GetRecord, SOUNDHDR_BuildSoundPath and SOUNDHDR_TouchCacheEntry (twice) here.
-//  The Fog file calls cast their arguments to D2Imports.h's _DWORD, because the imports carry stub types for FOpenFile, FGetFileSize,
-//  FCloseFile and AsyncDataLoadFileEx.
 void __fastcall SOUNDHDR_LoadWaveData(D2C_Sounds nSoundId, int32_t bForceLoad, int32_t bServicePass)
 {
     D2SoundsTxt *ptHeader;
@@ -678,8 +676,8 @@ void __fastcall SOUNDHDR_LoadWaveData(D2C_Sounds nSoundId, int32_t bForceLoad, i
         return;
     if (ptHeader->eDataState == 1 && bForceLoad)
     {
-        ptHeader->pWaveData = (void *)(UINT_PTR)FOG_AsyncDataGetBuffer((void *)(UINT_PTR)ptHeader->hAsyncData);
-        ptHeader->nWaveSize = FOG_AsyncDataGetBufferSize((void *)(UINT_PTR)ptHeader->hAsyncData);
+        ptHeader->pWaveData = FOG_AsyncDataGetBuffer(ptHeader->hAsyncData);
+        ptHeader->nWaveSize = FOG_AsyncDataGetBufferSize(ptHeader->hAsyncData);
         ptHeader->eDataState = 2;
         SOUNDCHAN_PrepareWaveBuffer(ptHeader);
         --gnSoundAsyncLoadsInFlight;
@@ -691,13 +689,13 @@ void __fastcall SOUNDHDR_LoadWaveData(D2C_Sounds nSoundId, int32_t bForceLoad, i
 
     SOUNDHDR_BuildSoundPath(nSoundId, szFilename);
 
-    if (!FOG_FOpenFile((uint32_t)szFilename, (uint32_t)&hFile))
+    if (!FOG_FOpenFile(szFilename, &hFile))
     {
         ptHeader->bLoadFailed = 1;
         return;
     }
-    nFileSize = FOG_FGetFileSize((uint32_t)hFile, 0);
-    FOG_FCloseFile((uint32_t)hFile);
+    nFileSize = FOG_FGetFileSize(hFile, 0);
+    FOG_FCloseFile(hFile);
 
     if (gnSoundCacheUsed + nFileSize > gnSoundCacheBudget)
     {
@@ -743,7 +741,7 @@ void __fastcall SOUNDHDR_LoadWaveData(D2C_Sounds nSoundId, int32_t bForceLoad, i
         ptHeader->pWaveData = ARCHIVE_LoadFile(D2WIN_GetArchive(), szFilename, &ptHeader->nWaveSize, szSoundHdrCpp, 769);
         if (!ptHeader->pWaveData || !ptHeader->nWaveSize)
         {
-            FOG_DisplayAssert((uint32_t)"ptHeader->pbWaveData && ptHeader->dwWaveSize", (uint32_t)szSoundHdrCpp, 770);
+            FOG_DisplayAssert("ptHeader->pbWaveData && ptHeader->dwWaveSize", szSoundHdrCpp, 770);
             exit(-1);
         }
         gnSoundCacheUsed += ptHeader->nWaveSize;
@@ -753,10 +751,10 @@ void __fastcall SOUNDHDR_LoadWaveData(D2C_Sounds nSoundId, int32_t bForceLoad, i
         return;
     }
 
-    ptHeader->hAsyncData = (uint32_t)FOG_AsyncDataLoadFileEx(0, (uint32_t)szFilename, 1, 0, (uint32_t)-1, 0, 0, (uint32_t)-2, (uint32_t)szSoundHdrCpp, 795);
+    ptHeader->hAsyncData = FOG_AsyncDataLoadFileEx(0, szFilename, 1, 0, (uint32_t)-1, 0, 0, (uint32_t)-2, szSoundHdrCpp, 795);
     if (!ptHeader->hAsyncData)
         return;
-    ptHeader->nWaveSize = FOG_AsyncDataGetBufferSize((void *)(UINT_PTR)ptHeader->hAsyncData);
+    ptHeader->nWaveSize = FOG_AsyncDataGetBufferSize(ptHeader->hAsyncData);
     gnSoundCacheUsed += ptHeader->nWaveSize;
     SOUNDHDR_TouchCacheEntry(nSoundId);
     ptHeader->eDataState = 1;
@@ -892,7 +890,7 @@ void __fastcall SOUNDHDR_BuildSoundPath(D2C_Sounds nSoundId, char *pszPath)
 
     if (strlen(pszPath) + strlen(ptHeader->szFileName) >= 80)
     {
-        FOG_DisplayAssert((uint32_t)"strlen(szFilename) + strlen(ptHeader->szFilename) < MAX_SOUND_PATH", (uint32_t)szSoundHdrCpp, 939);
+        FOG_DisplayAssert("strlen(szFilename) + strlen(ptHeader->szFilename) < MAX_SOUND_PATH", szSoundHdrCpp, 939);
         exit(-1);
     }
     strcat(pszPath, ptHeader->szFileName);

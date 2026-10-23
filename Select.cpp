@@ -155,7 +155,7 @@ void __fastcall SELECT_ApplySelectedUnit(D2UnitStrc *pUnit)
     {
         if (!CUNIT_HitTestUnit(pUnit, 0, 0, 0))
         {
-            FOG_DisplayWarning((uint32_t)(UINT_PTR)szUnitTestSelect, (uint32_t)(UINT_PTR)szSourceFile, 79);
+            FOG_DisplayWarning(szUnitTestSelect, szSourceFile, 79);
         }
 
         if (gbHasSelectedUnit && pUnit->dwUnitType == gnSelectedUnitType && pUnit->dwUnitId == gnSelectedUnitGUID)
@@ -449,7 +449,7 @@ void __cdecl SELECT_UpdateSelectedUnit()
 
             if (nUnitCount++ > 30000)
             {
-                FOG_DisplayWarning((uint32_t)(UINT_PTR)"Far too many units on screen", (uint32_t)(UINT_PTR)szSourceFile, 536);
+                FOG_DisplayWarning("Far too many units on screen", szSourceFile, 536);
                 break;
             }
 

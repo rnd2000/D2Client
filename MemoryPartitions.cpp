@@ -38,7 +38,7 @@ static_assert(0x1800000 == 24 * 1024 * 1024 && 0x4000000 == 64 * 1024 * 1024,
 
 void __fastcall MEMPART_InitMemoryPartitions(int32_t hPool, int32_t bInitTileCache)
 {
-    int32_t pSysInfo;
+    D2FogSystemInfoStrc *pSysInfo;
     uint32_t nPhysicalBytes;
     uint32_t nUsableBytes;
     uint32_t nRemainingBytes;
@@ -50,12 +50,11 @@ void __fastcall MEMPART_InitMemoryPartitions(int32_t hPool, int32_t bInitTileCac
     pSysInfo = FOG_GetSystemInfo();
     if (!pSysInfo)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "pSysInfo != NULL", (uint32_t)(UINT_PTR)szSourceFile, 48);
+        FOG_DisplayAssert("pSysInfo != NULL", szSourceFile, 48);
         exit(-1);
     }
 
-    //  +12 into what FOG_GetSystemInfo returns is the physical byte count; the struct is not typed.
-    nPhysicalBytes = *(uint32_t *)(UINT_PTR)(pSysInfo + 12);
+    nPhysicalBytes = pSysInfo->dwTotalPhysicalBytes;
     if (nPhysicalBytes < 0x167D000)
     {
         //  The product is taken in double: the original stores the count beside a zero dword and loads it with `fild qword ptr [esp+4]`

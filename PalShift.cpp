@@ -60,7 +60,7 @@ void __cdecl PALSHIFT_Init()
     void *hFile2;
 
     nPalShiftSize = 8 * sgptDataTables->nMonStatsTxtRecordCount;
-    gpMonPalShift = (D2ClientMonPalShiftStrc *)(UINT_PTR)FOG_Alloc(nPalShiftSize, (uint32_t)(UINT_PTR)szSourceFile, 99, 0);
+    gpMonPalShift = (D2ClientMonPalShiftStrc *)(UINT_PTR)FOG_Alloc(nPalShiftSize, szSourceFile, 99, 0);
     memset(gpMonPalShift, 0, nPalShiftSize);
 
     nMonStatsTxtRecordCount = sgptDataTables->nMonStatsTxtRecordCount;
@@ -80,7 +80,7 @@ void __cdecl PALSHIFT_Init()
 
     if (ARCHIVE_OpenFileOrTrace(0, "Data\\Global\\Monsters\\GreenBlood.dat", &hFile2, 1))
     {
-        gpGreenBloodRemap = (uint8_t *)(UINT_PTR)FOG_Alloc(256, (uint32_t)(UINT_PTR)szSourceFile, 82, 0);
+        gpGreenBloodRemap = (uint8_t *)(UINT_PTR)FOG_Alloc(256, szSourceFile, 82, 0);
         memset(gpGreenBloodRemap, 0, 0x100);
         ARCHIVE_ReadFile(NULL, hFile2, gpGreenBloodRemap, 0x100);
         ARCHIVE_CloseFile(NULL, hFile2);
@@ -104,7 +104,7 @@ void __cdecl PALSHIFT_Shutdown()
         do
         {
             pNext = pNode->pNext;
-            FOG_Free((uint32_t)(UINT_PTR)pNode, (uint32_t)(UINT_PTR)szSourceFile, 132, 0);
+            FOG_Free(pNode, szSourceFile, 132, 0);
             pNode = pNext;
             gpMonPalShiftCache = pNode;
         }
@@ -113,13 +113,13 @@ void __cdecl PALSHIFT_Shutdown()
 
     if (gpMonPalShift)
     {
-        FOG_Free((uint32_t)(UINT_PTR)gpMonPalShift, (uint32_t)(UINT_PTR)szSourceFile, 138, 0);
+        FOG_Free(gpMonPalShift, szSourceFile, 138, 0);
         gpMonPalShift = NULL;
     }
 
     if (gpGreenBloodRemap)
     {
-        FOG_Free((uint32_t)(UINT_PTR)gpGreenBloodRemap, (uint32_t)(UINT_PTR)szSourceFile, 144, 0);
+        FOG_Free(gpGreenBloodRemap, szSourceFile, 144, 0);
         gpGreenBloodRemap = NULL;
     }
 }
@@ -169,7 +169,7 @@ void __fastcall PALSHIFT_EnsureMonsterPalette(D2C_MonsterIds nMonsterClassId)
     if (!ARCHIVE_OpenFileOrTrace(0, szFileName, &hFile, 1))
         return;
 
-    pPalShift = (D2ClientPalShiftStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientPalShiftStrc), (uint32_t)(UINT_PTR)szSourceFile, 244, 0);
+    pPalShift = (D2ClientPalShiftStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientPalShiftStrc), szSourceFile, 244, 0);
     memset(pPalShift, 0, sizeof(D2ClientPalShiftStrc));
     ARCHIVE_ReadFile(NULL, hFile, pPalShift->nShift, 0x800);
     ARCHIVE_CloseFile(NULL, hFile);
@@ -303,7 +303,7 @@ uint8_t *__fastcall PALSHIFT_GetUnitShiftTable(D2UnitStrc *pUnit)
             nTransform = nShift - 8;
             if (!(nTransform >= 0 && nTransform < 30))
             {
-                FOG_DisplayAssert((uint32_t)"eTransform >= 0 && eTransform < NUM_RANDTABLES", (uint32_t)szSourceFile, 352);
+                FOG_DisplayAssert("eTransform >= 0 && eTransform < NUM_RANDTABLES", szSourceFile, 352);
                 exit(-1);
             }
             //  the row: shl eax, 8 / add eax, offset gRandTransformTables (0x6FAAE444, 0x6FAAE448)

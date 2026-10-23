@@ -126,7 +126,7 @@ D2CellFileStrc *__cdecl SKILLSTREE_LoadChartImage()
     szFileName = sgptPlayerSkillTreeChart[gnPlayerClass].szFileName;
     if (!szFileName)
     {
-        FOG_DisplayAssert((uint32_t)szAssertSkillTreeChart, (uint32_t)szSkillstreeCpp, 136);
+        FOG_DisplayAssert(szAssertSkillTreeChart, szSkillstreeCpp, 136);
         _exit(-1);
     }
     hChartImage = UI_LoadImageFromUiDir(szFileName);

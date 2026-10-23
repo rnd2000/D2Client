@@ -52,13 +52,12 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //
 //  GENERATED -- do not edit by hand; regenerate instead.
 //
-//    python tools/d2client/sweep/gen_ptrs_header.py \
+//    python <Tools>/sweep/gen_ptrs_header.py \
 //           GP_DB=<repo>/database/D2Client.json GP_APPLY=1
 //
-//  Source: database/D2Client.json, the export of the D2Client IDA database of
-//  the d2client-sweep repository -- Diablo II 1.10 D2Client.dll, image base
-//  0x6FAA0000. Names, prototypes and calling conventions are that database's,
-//  after the function-by-function sweep.
+//  Source: database/D2Client.json, the export of the D2Client IDA database --
+//  Diablo II 1.10 D2Client.dll, image base 0x6FAA0000. Names, prototypes and
+//  calling conventions are that database's.
 //
 //  THE SIGN OF THE LAST ARGUMENT IS NOT COSMETIC. GetDllOffset() in
 //  DLLmain.cpp reads a NEGATIVE value as an export ORDINAL and resolves it
@@ -82,9 +81,9 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  declare: bound by name, or a prototype that will not parse.
 //
 //  12 more are WINDOWS imports and are commented for a different reason:
-//  windows.h declares them and this rewrite calls Windows directly. Only
-//  twelve of the 109 Windows imports ever had a thunk to point at -- the
-//  other 97 go straight through the IAT and never had a row here.
+//  windows.h declares them and this rewrite calls Windows directly. Only a
+//  Windows import with a thunk of its own ever had a row here; the others go
+//  straight through the IAT.
 //
 //  309 functions have NO line here at all: the VC6 runtime the original was
 //  linked with, named CRT_ in the database. This rewrite does not write it and
@@ -2822,13 +2821,13 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 
 //D2FUNC(D2CLIENT, DllEntryPoint, BOOL, __stdcall, (HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpReserved), 0xC1C1D)
 
-//  D2FUNC(D2CLIENT, FOG_Free, int, __fastcall, (_DWORD, _DWORD, _DWORD, _DWORD), 0xCA6B0)   -- now FOG_Free
-//  D2FUNC(D2CLIENT, FOG_DisplayAssert, int, __cdecl, (_DWORD, _DWORD, _DWORD), 0xCA6B6)   -- now FOG_DisplayAssert
+//  D2FUNC(D2CLIENT, FOG_Free, int32_t, __fastcall, (void *pFree, const char *szFile, int32_t nLine, int32_t n0), 0xCA6B0)   -- now FOG_Free
+//  D2FUNC(D2CLIENT, FOG_DisplayAssert, void, __cdecl, (const char *szMsg, const char *szFile, int32_t nLine), 0xCA6B6)   -- now FOG_DisplayAssert
 //  D2FUNC(D2CLIENT, FOG_Trace, int, __cdecl, (const char *, ...), 0xCA6BC)   -- now FOG_Trace
-//  D2FUNC(D2CLIENT, FOG_GetSystemInfo, int, __cdecl, (), 0xCA6C2)   -- now FOG_GetSystemInfo
+//  D2FUNC(D2CLIENT, FOG_GetSystemInfo, D2FogSystemInfoStrc *, __cdecl, (), 0xCA6C2)   -- now FOG_GetSystemInfo
 //  D2FUNC(D2CLIENT, FOG_GetInstallPath, int, __fastcall, (_DWORD, _DWORD), 0xCA6C8)   -- now FOG_GetInstallPath
 //  D2FUNC(D2CLIENT, FOG_10191, int, __cdecl, (), 0xCA6CE)   -- now FOG_10191
-//  D2FUNC(D2CLIENT, FOG_Alloc, int, __fastcall, (_DWORD, _DWORD, _DWORD, _DWORD), 0xCA6D4)   -- now FOG_Alloc
+//  D2FUNC(D2CLIENT, FOG_Alloc, void *, __fastcall, (int32_t nSize, const char *szFile, int32_t nLine, int32_t n0), 0xCA6D4)   -- now FOG_Alloc
 //  D2FUNC(D2CLIENT, FOG_IsExpansion, int, __cdecl, (), 0xCA6DA)   -- now FOG_IsExpansion
 //  D2FUNC(D2CLIENT, FOG_SetMemoryPoolSystemMode, int, __cdecl, (_DWORD, _DWORD), 0xCA6E0)   -- now FOG_SetMemoryPoolSystemMode
 //  D2FUNC(D2CLIENT, FOG_10144, int, __cdecl, (_DWORD), 0xCA6E6)   -- now FOG_10144
@@ -2844,8 +2843,8 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, FOG_CreateNewPoolSystem, int, __cdecl, (_DWORD, _DWORD, _DWORD, _DWORD), 0xCA722)   -- now FOG_CreateNewPoolSystem
 //  D2FUNC(D2CLIENT, FOG_DestroyMemoryPoolSystem, int, __cdecl, (_DWORD), 0xCA728)   -- now FOG_DestroyMemoryPoolSystem
 //  D2FUNC(D2CLIENT, FOG_GetSavePath, int, __fastcall, (_DWORD, _DWORD), 0xCA72E)   -- now FOG_GetSavePath
-//  D2FUNC(D2CLIENT, FOG_DisplayWarning, int, __cdecl, (_DWORD, _DWORD, _DWORD), 0xCA734)   -- now FOG_DisplayWarning
-//  D2FUNC(D2CLIENT, FOG_DisplayHalt, int, __cdecl, (const char *pszMessage, const char *pszFile, int nLine), 0xCA73A)   -- now FOG_DisplayHalt
+//  D2FUNC(D2CLIENT, FOG_DisplayWarning, void, __cdecl, (const char *szMsg, const char *szFile, int32_t nLine), 0xCA734)   -- now FOG_DisplayWarning
+//  D2FUNC(D2CLIENT, FOG_DisplayHalt, void, __cdecl, (const char *szMsg, const char *szFile, int32_t nLine), 0xCA73A)   -- now FOG_DisplayHalt
 //  D2FUNC(D2CLIENT, FOG_BITMANIP_Read, uint32_t, __stdcall, (D2BitBufferStrc *pBuffer, int nBits), 0xCA740)   -- now FOG_BITMANIP_Read
 //  D2FUNC(D2CLIENT, FOG_BITMANIP_Initialize, void, __stdcall, (D2BitBufferStrc *pBuffer, uint8_t *pBitStream, size_t nSize), 0xCA746)   -- now FOG_BITMANIP_Initialize
 //  D2FUNC(D2CLIENT, FOG_BITMANIP_ReadSigned, int, __stdcall, (D2BitBufferStrc *pBuffer, int nBits), 0xCA74C)   -- now FOG_BITMANIP_ReadSigned
@@ -2858,22 +2857,22 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, FOG_CreateFileA, int, __fastcall, (_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD), 0xCA776)   -- now FOG_CreateFileA
 //  D2FUNC(D2CLIENT, FOG_CreatePathHierarchy, BOOL, __fastcall, (char *szPath), 0xCA77C)   -- now FOG_CreatePathHierarchy
 //  D2FUNC(D2CLIENT, FOG_GetHostIPAddress, const char *, __fastcall, (), 0xCA782)   -- now FOG_GetHostIPAddress
-//  D2FUNC(D2CLIENT, FOG_AllocPool, int, __fastcall, (_DWORD, _DWORD, _DWORD, _DWORD, _DWORD), 0xCA788)   -- now FOG_AllocPool
-//  D2FUNC(D2CLIENT, FOG_FreePool, int, __fastcall, (void *pMemPool, void *pMemory, const char *szFile, int nLine, int a5), 0xCA78E)   -- now FOG_FreePool
+//  D2FUNC(D2CLIENT, FOG_AllocPool, void *, __fastcall, (void *pPool, uint32_t dwSize, const char *szFile, int32_t nLine, int32_t nFlags), 0xCA788)   -- now FOG_AllocPool
+//  D2FUNC(D2CLIENT, FOG_FreePool, int32_t, __fastcall, (void *pPool, void *pData, const char *szFile, int32_t nLine, int32_t nFlags), 0xCA78E)   -- now FOG_FreePool
 //  D2FUNC(D2CLIENT, FOG_FreeBinFile, int, __stdcall, (_DWORD), 0xCA794)   -- now FOG_FreeBinFile
 //  D2FUNC(D2CLIENT, FOG_10207, int, __stdcall, (_DWORD, _DWORD, _DWORD, _DWORD, _DWORD), 0xCA79A)   -- now FOG_10207
 //  D2FUNC(D2CLIENT, FOG_GetRecordCountFromBinFile, int, __stdcall, (_DWORD), 0xCA7A0)   -- now FOG_GetRecordCountFromBinFile
 //  D2FUNC(D2CLIENT, FOG_CreateBinFile, int, __stdcall, (_DWORD, _DWORD), 0xCA7A6)   -- now FOG_CreateBinFile
-//  D2FUNC(D2CLIENT, FOG_AsyncDataFree, void, __fastcall, (void *a1), 0xCA7AC)   -- now FOG_AsyncDataFree
-//  D2FUNC(D2CLIENT, FOG_AsyncDataGetBufferSize, int, __fastcall, (void *pAsyncData), 0xCA7B2)   -- now FOG_AsyncDataGetBufferSize
-//  D2FUNC(D2CLIENT, FOG_AsyncDataGetBuffer, int, __fastcall, (void *pAsyncData), 0xCA7B8)   -- now FOG_AsyncDataGetBuffer
-//  D2FUNC(D2CLIENT, FOG_AsyncDataTestLoaded, int, __fastcall, (int pAsyncData), 0xCA7BE)   -- now FOG_AsyncDataTestLoaded
-//  D2FUNC(D2CLIENT, FOG_AsyncDataLoadFileEx, int, __fastcall, (_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD), 0xCA7C4)   -- now FOG_AsyncDataLoadFileEx
-//  D2FUNC(D2CLIENT, FOG_FCloseFile, int, __fastcall, (_DWORD), 0xCA7CA)   -- now FOG_FCloseFile
-//  D2FUNC(D2CLIENT, FOG_FGetFileSize, int, __fastcall, (_DWORD, _DWORD), 0xCA7D0)   -- now FOG_FGetFileSize
-//  D2FUNC(D2CLIENT, FOG_FOpenFile, int, __fastcall, (_DWORD, _DWORD), 0xCA7D6)   -- now FOG_FOpenFile
+//  D2FUNC(D2CLIENT, FOG_AsyncDataFree, int32_t, __fastcall, (AsyncData *pAsyncData), 0xCA7AC)   -- now FOG_AsyncDataFree
+//  D2FUNC(D2CLIENT, FOG_AsyncDataGetBufferSize, uint32_t, __fastcall, (AsyncData *pAsyncData), 0xCA7B2)   -- now FOG_AsyncDataGetBufferSize
+//  D2FUNC(D2CLIENT, FOG_AsyncDataGetBuffer, void *, __fastcall, (AsyncData *pAsyncData), 0xCA7B8)   -- now FOG_AsyncDataGetBuffer
+//  D2FUNC(D2CLIENT, FOG_AsyncDataTestLoaded, int32_t, __fastcall, (AsyncData *pAsyncData), 0xCA7BE)   -- now FOG_AsyncDataTestLoaded
+//  D2FUNC(D2CLIENT, FOG_AsyncDataLoadFileEx, AsyncData *, __fastcall, (void *pMemPool, const char *szFileName, int32_t bAllowAsync, int32_t nFileOffset, int32_t nFileSize, void *pBuffer, AsyncDataLoadFileCallback *pCallback, int32_t nPriority, const char *szSourceFile, int32_t nSourceLine), 0xCA7C4)   -- now FOG_AsyncDataLoadFileEx
+//  D2FUNC(D2CLIENT, FOG_FCloseFile, int32_t, __fastcall, (void *hFile), 0xCA7CA)   -- now FOG_FCloseFile
+//  D2FUNC(D2CLIENT, FOG_FGetFileSize, uint32_t, __fastcall, (void *hFile, uint32_t *pFileSizeHigh), 0xCA7D0)   -- now FOG_FGetFileSize
+//  D2FUNC(D2CLIENT, FOG_FOpenFile, int32_t, __fastcall, (const char *szFile, void **ppFileHandle), 0xCA7D6)   -- now FOG_FOpenFile
 //  D2FUNC(D2CLIENT, FOG_IsHandlingError, int, __cdecl, (), 0xCA7DC)   -- now FOG_IsHandlingError
-//  D2FUNC(D2CLIENT, FOG_csprintf, int, __cdecl, (_DWORD, const char *, ...), 0xCA7E2)   -- now FOG_csprintf
+//  D2FUNC(D2CLIENT, FOG_csprintf, const char *, __cdecl, (char *szDest, const char *szFormat, ...), 0xCA7E2)   -- now FOG_csprintf
 //  D2FUNC(D2CLIENT, RtlUnwind, void, __stdcall, (PVOID TargetFrame, PVOID TargetIp, PEXCEPTION_RECORD ExceptionRecord, PVOID ReturnValue), 0xCA7E8)   -- KERNEL32, called directly
 //  D2FUNC(D2CLIENT, ImmReleaseContext, BOOL, __stdcall, (HWND, HIMC), 0xCA7EE)   -- IMM32, called directly
 //  D2FUNC(D2CLIENT, ImmGetOpenStatus, BOOL, __stdcall, (HIMC), 0xCA7F4)   -- IMM32, called directly
@@ -3733,8 +3732,8 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2WIN_10206, int, __stdcall, (), 0xCC02A)   -- now D2WIN_10206
 //  D2FUNC(D2CLIENT, D2WIN_10185, int, __stdcall, (), 0xCC030)   -- now D2WIN_10185
 //  D2FUNC(D2CLIENT, D2WIN_10175_GetPL2Shift, uint8_t *, __fastcall, (int nIndex), 0xCC036)   -- now D2WIN_10175_GetPL2Shift
-//  D2FUNC(D2CLIENT, FOG_DisplayError, int, __cdecl, (_DWORD, _DWORD, _DWORD, _DWORD), 0xCC03C)   -- now FOG_DisplayError
-//  D2FUNC(D2CLIENT, FOG_FReadFile, int, __fastcall, (_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD), 0xCC042)   -- now FOG_FReadFile
+//  D2FUNC(D2CLIENT, FOG_DisplayError, void, __cdecl, (int32_t nCategory, const char *szMsg, const char *szFile, int32_t nLine), 0xCC03C)   -- now FOG_DisplayError
+//  D2FUNC(D2CLIENT, FOG_FReadFile, int32_t, __fastcall, (void *hFile, void *pBuffer, uint32_t dwBytes, uint32_t *pBytesRead, uint32_t nUnknown0, uint32_t nUnknown1, uint32_t nUnknown2), 0xCC042)   -- now FOG_FReadFile
 
 ///////////////////////////////////////////////////////////////////////////////
 //

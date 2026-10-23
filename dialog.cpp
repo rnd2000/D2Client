@@ -194,7 +194,7 @@ void __stdcall DIALOG_OnMouseUp(SMSGHANDLER_PARAMS *pMsg)
 
     if (!pDialog)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 291);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 291);
         exit(-1);
     }
 
@@ -260,7 +260,7 @@ void __stdcall DIALOG_OnMouseDown(SMSGHANDLER_PARAMS *pMsg)
     pDialog = gpDialogList;
     if (!pDialog)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 347);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 347);
         exit(-1);
     }
 
@@ -337,7 +337,7 @@ HIT_TEST_LINES:
     pfnCallback = (void (*)(void))pDialog->pfnCallback;
     if (!pfnCallback)
     {
-        FOG_DisplayAssert((uint32_t)szZero, (uint32_t)szDialogCpp, 426);
+        FOG_DisplayAssert(szZero, szDialogCpp, 426);
         exit(-1);
     }
     pfnCallback();
@@ -378,7 +378,7 @@ void __stdcall DIALOG_OnCancelKey(SMSGHANDLER_PARAMS *pMsg)
 
     if (!gpDialogList)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 450);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 450);
         exit(-1);
     }
     if (gpDialogList->nFramesDrawn >= 5)
@@ -420,7 +420,7 @@ void __stdcall DIALOG_OnMouseWheel(SMSGHANDLER_PARAMS *pMsg)
     pDialog = gpDialogList;
     if (!pDialog)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 505);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 505);
         exit(-1);
     }
 
@@ -520,7 +520,7 @@ void __stdcall DIALOG_OnEscape(SMSGHANDLER_PARAMS *pMsg)
 
     if (!gpDialogList)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 450);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 450);
         exit(-1);
     }
     if (gpDialogList->nFramesDrawn >= 5)
@@ -566,7 +566,7 @@ void __stdcall DIALOG_OnArrowRight(SMSGHANDLER_PARAMS *pMsg)
     pDialog = gpDialogList;
     if (!pDialog)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 565);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 565);
         exit(-1);
     }
 
@@ -624,7 +624,7 @@ void __stdcall DIALOG_OnArrowLeft(SMSGHANDLER_PARAMS *pMsg)
     pDialog = gpDialogList;
     if (!pDialog)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 597);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 597);
         exit(-1);
     }
 
@@ -682,7 +682,7 @@ void __stdcall DIALOG_OnArrowUp(SMSGHANDLER_PARAMS *pMsg)
     pDialog = gpDialogList;
     if (!pDialog)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 626);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 626);
         exit(-1);
     }
 
@@ -740,7 +740,7 @@ void __stdcall DIALOG_OnArrowDown(SMSGHANDLER_PARAMS *pMsg)
     pDialog = gpDialogList;
     if (!pDialog)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 656);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 656);
         exit(-1);
     }
 
@@ -806,7 +806,7 @@ void __stdcall DIALOG_OnEnter(SMSGHANDLER_PARAMS *pMsg)
     pDialog = gpDialogList;
     if (!pDialog)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 712);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 712);
         exit(-1);
     }
 
@@ -871,7 +871,7 @@ void __stdcall DIALOG_OnChar(SMSGHANDLER_PARAMS *pMsg)
     pDialogAtEntry = gpDialogList;
     if (!pDialogAtEntry)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 750);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 750);
         exit(-1);
     }
 
@@ -927,7 +927,7 @@ CONSUME:
 
     if (!gpDialogList)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 450);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 450);
         exit(-1);
     }
     if (gpDialogList->nFramesDrawn >= 5)
@@ -978,7 +978,7 @@ void __cdecl DIALOG_Shutdown(void)
         do
         {
             pNext = pDialog->pNext;
-            FOG_Free((uint32_t)pDialog, (uint32_t)szDialogCpp, 822, 0);
+            FOG_Free(pDialog, szDialogCpp, 822, 0);
             pDialog = pNext;
         }
         while (pNext);
@@ -1009,12 +1009,12 @@ uint32_t *__fastcall DIALOG_AddControl(D2ClientDialogStrc *pDialog, void *pContr
 
     if (!pDialog)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 856);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 856);
         exit(-1);
     }
 
     pOldHead = pDialog->pControlList;
-    pNode = (uint32_t *)FOG_Alloc(8, (uint32_t)szDialogCpp, 860, 0);
+    pNode = (uint32_t *)FOG_Alloc(8, szDialogCpp, 860, 0);
     pDialog->pControlList = pNode;
     pNode[1] = (uint32_t)pOldHead;
     pStored = (uint32_t *)pDialog->pControlList;
@@ -1055,7 +1055,7 @@ D2ClientDialogStrc *__fastcall DIALOG_CreateFromImage(int32_t nCenterX, int32_t 
     }
 
     ++gnDialogNestDepth;
-    pDialog = (D2ClientDialogStrc *)FOG_Alloc(2832, (uint32_t)szDialogCpp, 921, 0);
+    pDialog = (D2ClientDialogStrc *)FOG_Alloc(2832, szDialogCpp, 921, 0);
     memset(pDialog, 0, sizeof(D2ClientDialogStrc));
     //  BUG: the link is written between the two memsets and the second one erases it (it clears +0xB0C), so pNext is always nullptr. LATENT:
     //  nothing walks the chain while the nest-depth assert holds.
@@ -1093,7 +1093,7 @@ D2ClientDialogStrc *__fastcall DIALOG_CreateFromImage(int32_t nCenterX, int32_t 
     pCel = D2CMP_CelGetHandle(&gfxRequest);
     if (!pCel)
     {
-        FOG_DisplayAssert((uint32_t)szHCel, (uint32_t)szDialogCpp, 950);
+        FOG_DisplayAssert(szHCel, szDialogCpp, 950);
         exit(-1);
     }
     pDialog->nWidth = D2CMP_CelGetWidth(pCel);
@@ -1131,7 +1131,7 @@ D2ClientDialogStrc *__fastcall DIALOG_CreateFromImage(int32_t nCenterX, int32_t 
 
     if (gnDialogNestDepth != 1)
     {
-        FOG_DisplayAssert((uint32_t)szZero, (uint32_t)szDialogCpp, 974);
+        FOG_DisplayAssert(szZero, szDialogCpp, 974);
         exit(-1);
     }
     return pDialog;
@@ -1162,7 +1162,7 @@ D2ClientDialogStrc *__fastcall DIALOG_Create(int32_t nCenterX, int32_t nCenterY,
     }
 
     ++gnDialogNestDepth;
-    pDialog = (D2ClientDialogStrc *)FOG_Alloc(2832, (uint32_t)szDialogCpp, 1005, 0);
+    pDialog = (D2ClientDialogStrc *)FOG_Alloc(2832, szDialogCpp, 1005, 0);
     memset(pDialog, 0, sizeof(D2ClientDialogStrc));
     //  BUG: the link is written between the two memsets and the second one erases it (it clears +0xB0C), so pNext is always nullptr. LATENT:
     //  nothing walks the chain while the nest-depth assert holds.
@@ -1223,7 +1223,7 @@ D2ClientDialogStrc *__fastcall DIALOG_Create(int32_t nCenterX, int32_t nCenterY,
 
     if (gnDialogNestDepth != 1)
     {
-        FOG_DisplayAssert((uint32_t)szZero, (uint32_t)szDialogCpp, 1040);
+        FOG_DisplayAssert(szZero, szDialogCpp, 1040);
         exit(-1);
     }
     return pDialog;
@@ -1248,7 +1248,7 @@ int32_t __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog)
 
     if (--gnDialogNestDepth)
     {
-        FOG_DisplayAssert((uint32_t)szZero, (uint32_t)szDialogCpp, 1089);
+        FOG_DisplayAssert(szZero, szDialogCpp, 1089);
         exit(-1);
     }
 
@@ -1270,7 +1270,7 @@ int32_t __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog)
         do
         {
             pNextControl = (uint32_t *)pControl[1];
-            FOG_Free((uint32_t)pControl, (uint32_t)szDialogCpp, 1072, 0);
+            FOG_Free(pControl, szDialogCpp, 1072, 0);
             pControl = pNextControl;
         }
         while (pNextControl);
@@ -1285,7 +1285,7 @@ int32_t __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog)
     }
 
     pNext = pDialog->pNext;
-    nFreeResult = FOG_Free((uint32_t)pDialog, (uint32_t)szDialogCpp, 1083, 0);
+    nFreeResult = FOG_Free(pDialog, szDialogCpp, 1083, 0);
     gpDialogList = pNext;
     return nFreeResult;
 }
@@ -1326,7 +1326,7 @@ int32_t __fastcall DIALOG_Draw(D2ClientDialogStrc *pDialog)
 
     if (!pDialog)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 1177);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 1177);
         exit(-1);
     }
 
@@ -1423,14 +1423,14 @@ void __fastcall DIALOG_SetSelectedLine(D2ClientDialogStrc *pDialog, int32_t nInd
 
     if (!pDialog)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 1266);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 1266);
         exit(-1);
     }
 
     nNumLines = pDialog->NumLines;
     if (nIndex >= nNumLines)
     {
-        FOG_DisplayAssert((uint32_t)szIndexLtNumLines, (uint32_t)szDialogCpp, 1272);
+        FOG_DisplayAssert(szIndexLtNumLines, szDialogCpp, 1272);
         exit(-1);
     }
 
@@ -1443,7 +1443,7 @@ void __fastcall DIALOG_SetSelectedLine(D2ClientDialogStrc *pDialog, int32_t nInd
     iLine = 0;
     if (nNumLines <= 0)
     {
-        FOG_DisplayAssert((uint32_t)szZero, (uint32_t)szDialogCpp, 1310);
+        FOG_DisplayAssert(szZero, szDialogCpp, 1310);
         exit(-1);
     }
     while (nIndex != iLine)
@@ -1451,13 +1451,13 @@ void __fastcall DIALOG_SetSelectedLine(D2ClientDialogStrc *pDialog, int32_t nInd
         ++iLine;
         if (iLine >= nNumLines)
         {
-            FOG_DisplayAssert((uint32_t)szZero, (uint32_t)szDialogCpp, 1310);
+            FOG_DisplayAssert(szZero, szDialogCpp, 1310);
             exit(-1);
         }
     }
     if (!pDialog->Lines[iLine].bSelectable)
     {
-        FOG_DisplayAssert((uint32_t)szLineIdxSelectable, (uint32_t)szDialogCpp, 1306);
+        FOG_DisplayAssert(szLineIdxSelectable, szDialogCpp, 1306);
         exit(-1);
     }
     pDialog->nSelectedLine = nIndex;
@@ -1469,7 +1469,7 @@ void __fastcall DIALOG_SetHighlight(D2ClientDialogStrc *pDialog, int32_t eHighli
 {
     if (!pDialog)
     {
-        FOG_DisplayAssert((uint32_t)szPDialogNull, (uint32_t)szDialogCpp, 1321);
+        FOG_DisplayAssert(szPDialogNull, szDialogCpp, 1321);
         exit(-1);
     }
     pDialog->eHighlight = eHighlight;
@@ -1502,7 +1502,7 @@ void __fastcall DIALOG_AddLine(D2ClientDialogStrc *pDialog, const Unicode *wszTe
     nIndex = pDialog->NumLines;
     if (nIndex >= 10)
     {
-        FOG_DisplayAssert((uint32_t)szNumLinesLtMax, (uint32_t)szDialogCpp, 1373);
+        FOG_DisplayAssert(szNumLinesLtMax, szDialogCpp, 1373);
         exit(-1);
     }
     pDialog->NumLines = nIndex + 1;
@@ -1514,7 +1514,7 @@ void __fastcall DIALOG_AddLine(D2ClientDialogStrc *pDialog, const Unicode *wszTe
 
     if (nBaseColor == 3 && pDialog->eHighlight == 1)
     {
-        FOG_DisplayAssert((uint32_t)szBaseColorVsHighlight, (uint32_t)szDialogCpp, 1385);
+        FOG_DisplayAssert(szBaseColorVsHighlight, szDialogCpp, 1385);
         exit(-1);
     }
 
@@ -1610,7 +1610,7 @@ void __fastcall DIALOG_AutoSize(D2ClientDialogStrc *pDialog)
 
     if (!pDialog->bAutoSize)
     {
-        FOG_DisplayAssert((uint32_t)szAutoSizeTrue, (uint32_t)szDialogCpp, 1450);
+        FOG_DisplayAssert(szAutoSizeTrue, szDialogCpp, 1450);
         exit(-1);
     }
 
@@ -1652,13 +1652,13 @@ void __fastcall DIALOG_AutoSize(D2ClientDialogStrc *pDialog)
 
     if (MaxWidth > gnScreenWidth - 80)
     {
-        FOG_DisplayAssert((uint32_t)szMaxWidth, (uint32_t)szDialogCpp, 1501);
+        FOG_DisplayAssert(szMaxWidth, szDialogCpp, 1501);
         exit(-1);
     }
     nScreenHeight = gnScreenHeight;
     if (MaxHeight > gnScreenHeight - 98)
     {
-        FOG_DisplayAssert((uint32_t)szMaxHeight, (uint32_t)szDialogCpp, 1506);
+        FOG_DisplayAssert(szMaxHeight, szDialogCpp, 1506);
         exit(-1);
     }
 

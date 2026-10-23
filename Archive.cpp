@@ -31,7 +31,7 @@ int32_t __fastcall ARCHIVE_OpenFileOrTrace(int32_t nUnused, const char *pszFileN
 
     UNREFERENCED_PARAMETER(nUnused);
 
-    if (FOG_FOpenFile((uint32_t)pszFileName, (uint32_t)phFile))
+    if (FOG_FOpenFile(pszFileName, phFile))
         return 1;
 
     dwLastError = GetLastError();
@@ -51,11 +51,11 @@ int32_t __fastcall ARCHIVE_CloseFile(void *hArchive, void *hFile)
 
     if (!hFile)
     {
-        FOG_DisplayAssert((uint32_t)"hFile", (uint32_t)szArchiveCpp, 73);
+        FOG_DisplayAssert("hFile", szArchiveCpp, 73);
         exit(-1);
     }
 
-    return FOG_FCloseFile((uint32_t)hFile);
+    return FOG_FCloseFile(hFile);
 }
 
 
@@ -74,15 +74,15 @@ uint32_t __fastcall ARCHIVE_GetFileSize(void *hArchive, void *hFile, uint32_t *p
 
     if (!hFile)
     {
-        FOG_DisplayAssert((uint32_t)"hFile", (uint32_t)szArchiveCpp, 89);
+        FOG_DisplayAssert("hFile", szArchiveCpp, 89);
         exit(-1);
     }
 
-    dwFileSize = (uint32_t)FOG_FGetFileSize((uint32_t)hFile, (uint32_t)pdwSizeHigh);
+    dwFileSize = (uint32_t)FOG_FGetFileSize(hFile, pdwSizeHigh);
     if (!dwFileSize)
     {
         STORM_SFileGetFileName(hFile, szFileName, 260);
-        FOG_DisplayError(3, (uint32_t)szFileName, (uint32_t)szArchiveCpp, 95);
+        FOG_DisplayError(3, szFileName, szArchiveCpp, 95);
         exit(-1);
     }
 
@@ -110,22 +110,22 @@ int32_t __fastcall ARCHIVE_ReadFile(void *hArchive, void *hFile, void *pBuffer, 
 
     if (!hFile)
     {
-        FOG_DisplayAssert((uint32_t)"hFile", (uint32_t)szArchiveCpp, 135);
+        FOG_DisplayAssert("hFile", szArchiveCpp, 135);
         exit(-1);
     }
 
     dwBytesRequested = dwBytesToRead;
-    bReadOk = FOG_FReadFile((uint32_t)hFile, (uint32_t)pBuffer, (uint32_t)dwBytesToRead, (uint32_t)&dwBytesToRead, 0, 0, 0);
+    bReadOk = FOG_FReadFile(hFile, pBuffer, (uint32_t)dwBytesToRead, &dwBytesToRead, 0, 0, 0);
     if (!bReadOk)
     {
         STORM_SFileGetFileName(hFile, szFileName, 260);
-        FOG_DisplayError(3, (uint32_t)szFileName, (uint32_t)szArchiveCpp, 143);
+        FOG_DisplayError(3, szFileName, szArchiveCpp, 143);
         exit(-1);
     }
 
     if (dwBytesRequested != dwBytesToRead)
     {
-        FOG_DisplayAssert((uint32_t)"dwBytesToRead == dwBytes", (uint32_t)szArchiveCpp, 146);
+        FOG_DisplayAssert("dwBytesToRead == dwBytes", szArchiveCpp, 146);
         exit(-1);
     }
 
@@ -159,7 +159,7 @@ void *__fastcall ARCHIVE_LoadFile(void *hArchive, const char *szFilename, uint32
 
     dwFileSize = ARCHIVE_GetFileSize(hArchive, hFile, &dwSizeHigh);
 
-    pBuffer = (void *)FOG_Alloc(dwFileSize + 800, (uint32_t)szSrcFile, (uint32_t)nSrcLine, 0);
+    pBuffer = (void *)FOG_Alloc(dwFileSize + 800, szSrcFile, (uint32_t)nSrcLine, 0);
     if (!pBuffer)
         return NULL;
 

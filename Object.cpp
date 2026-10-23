@@ -291,7 +291,7 @@ int32_t __fastcall OBJECT_ApplyDayNightMode(D2UnitStrc *pObject, int32_t bSkipAn
     {
         if (nPeriodOfDay <= 0 || nPeriodOfDay > 3)
         {
-            FOG_DisplayWarning((uint32_t)(UINT_PTR)"0", (uint32_t)(UINT_PTR)szObjectCpp, 98);
+            FOG_DisplayWarning("0", szObjectCpp, 98);
             return 0;
         }
 
@@ -369,7 +369,7 @@ void __fastcall OBJECT_InitClientUnit(D2UnitStrc *pObject, D2ActiveRoomStrc *pRo
     pObject->pLight = NULL;
     pObject->dwAnimMode = (D2C_ObjModes)nMode;
 
-    D2ObjectDataStrc *pObjectData = (D2ObjectDataStrc *)FOG_Alloc(sizeof(D2ObjectDataStrc), (uint32_t)(UINT_PTR)szObjectCpp, 114, 0);
+    D2ObjectDataStrc *pObjectData = (D2ObjectDataStrc *)FOG_Alloc(sizeof(D2ObjectDataStrc), szObjectCpp, 114, 0);
     pObject->pObjectData = pObjectData;
     memset(pObjectData, 0, sizeof(D2ObjectDataStrc));
     pObjectData->bPermanent = 0;
@@ -411,7 +411,7 @@ void __fastcall OBJECT_InitClientUnit(D2UnitStrc *pObject, D2ActiveRoomStrc *pRo
         int32_t nTownLevelId = D2COMMON_DUNGEON_GetTownLevelIdFromActNo(nAct);
         if (nTownLevelId > 255)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)"eLevelId <= 255", (uint32_t)(UINT_PTR)szObjectCpp, 145);
+            FOG_DisplayAssert("eLevelId <= 255", szObjectCpp, 145);
             exit(-1);
         }
         pObjectData->InteractType = (uint8_t)nTownLevelId;
@@ -495,7 +495,7 @@ int32_t __fastcall OBJECT_FreeClientUnit(D2UnitStrc *pObject)
         D2COMMON_UNITROOM_RemoveUnitFromRoom(pObject);
         CUNIT_GfxFreeUnitLightMap(pObject);
     }
-    return FOG_Free((uint32_t)(UINT_PTR)pObject->pObjectData, (uint32_t)(UINT_PTR)szObjectCpp, 250, 0);
+    return FOG_Free(pObject->pObjectData, szObjectCpp, 250, 0);
 }
 
 //1.10f: D2Client.0x6FB46D50
@@ -641,7 +641,7 @@ void __fastcall OBJECT_AdvanceDoorAnim(D2UnitStrc *pUnit)
         return;
     }
 
-    FOG_DisplayWarning((uint32_t)(UINT_PTR)"0", (uint32_t)(UINT_PTR)szObjectCpp, 337);
+    FOG_DisplayWarning("0", szObjectCpp, 337);
 }
 
 //1.10f: D2Client.0x6FB47030
@@ -672,7 +672,7 @@ void __fastcall OBJECT_FinishDoorAnim(D2UnitStrc *pUnit)
     }
     else
     {
-        FOG_DisplayWarning((uint32_t)(UINT_PTR)"0", (uint32_t)(UINT_PTR)szObjectCpp, 283);
+        FOG_DisplayWarning("0", szObjectCpp, 283);
     }
 
     if (pUnit->pObjectData->pObjectTxt->nSelectable[pUnit->dwAnimMode])
@@ -855,7 +855,7 @@ void __fastcall OBJECT_ApplyShrineOverlays(D2UnitStrc *pObject, D2ShrinesTxt *pt
     int32_t nCode = ptShrineData->nCode;
     if (nCode >= gnShrineChartSize)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)"ptShrineData->bCode < sgnShrineChartSize", (uint32_t)(UINT_PTR)szObjectCpp, 819);
+        FOG_DisplayAssert("ptShrineData->bCode < sgnShrineChartSize", szObjectCpp, 819);
         exit(-1);
     }
 
@@ -888,12 +888,12 @@ void __fastcall OBJECT_InitShrine(D2UnitStrc *pUnit)
     D2ShrinesTxt *ptShrineData = D2COMMON_UNITS_GetShrineTxtRecordFromObject(pUnit);
     if (!ptShrineData)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)"ptShrineData", (uint32_t)(UINT_PTR)szObjectCpp, 886);
+        FOG_DisplayAssert("ptShrineData", szObjectCpp, 886);
         exit(-1);
     }
     if ((int32_t)ptShrineData->nCode >= gnShrineChartSize)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)"ptShrineData->bCode < sgnShrineChartSize", (uint32_t)(UINT_PTR)szObjectCpp, 887);
+        FOG_DisplayAssert("ptShrineData->bCode < sgnShrineChartSize", szObjectCpp, 887);
         exit(-1);
     }
 
@@ -977,12 +977,12 @@ void __fastcall OBJECT_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pUn
             D2ShrinesTxt *ptShrineData = D2COMMON_UNITS_GetShrineTxtRecordFromObject(pUnit);
             if (!ptShrineData)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)"ptShrineData", (uint32_t)(UINT_PTR)szObjectCpp, 886);
+                FOG_DisplayAssert("ptShrineData", szObjectCpp, 886);
                 exit(-1);
             }
             if ((int32_t)ptShrineData->nCode >= gnShrineChartSize)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)"ptShrineData->bCode < sgnShrineChartSize", (uint32_t)(UINT_PTR)szObjectCpp, 887);
+                FOG_DisplayAssert("ptShrineData->bCode < sgnShrineChartSize", szObjectCpp, 887);
                 exit(-1);
             }
 
@@ -995,7 +995,7 @@ void __fastcall OBJECT_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pUn
 
     if (nAction != CLTACTION_SKILL_XY)
     {
-        FOG_DisplayWarning((uint32_t)(UINT_PTR)"0", (uint32_t)(UINT_PTR)szObjectCpp, 920);
+        FOG_DisplayWarning("0", szObjectCpp, 920);
         return;
     }
 
@@ -1045,7 +1045,7 @@ void __fastcall OBJECT_SetClientMode(D2UnitStrc *pObject, int32_t bSelectable, i
     D2ObjectsTxt *pObjectTxt = pObject->pObjectData->pObjectTxt;
     if (nMode >= NUM_OBJECTMODES)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)"nParam2 < NUM_OBJECTMODES", (uint32_t)(UINT_PTR)szObjectCpp, 524);
+        FOG_DisplayAssert("nParam2 < NUM_OBJECTMODES", szObjectCpp, 524);
         exit(-1);
     }
 
@@ -1108,13 +1108,13 @@ void __fastcall OBJECT_PlayShrineSound(D2UnitStrc *pObject, D2UnitStrc *pSourceU
     D2ShrinesTxt *ptShrineData = D2COMMON_UNITS_GetShrineTxtRecordFromObject(pObject);
     if (!ptShrineData)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)"ptShrineData", (uint32_t)(UINT_PTR)szObjectCpp, 841);
+        FOG_DisplayAssert("ptShrineData", szObjectCpp, 841);
         exit(-1);
     }
     int32_t nCode = ptShrineData->nCode;
     if (nCode >= gnShrineChartSize)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)"ptShrineData->bCode < sgnShrineChartSize", (uint32_t)(UINT_PTR)szObjectCpp, 842);
+        FOG_DisplayAssert("ptShrineData->bCode < sgnShrineChartSize", szObjectCpp, 842);
         exit(-1);
     }
 
@@ -1535,7 +1535,7 @@ uint8_t __fastcall OBJECT_ClientProcess(D2UnitStrc *pUnit)
     uint8_t nClientFn = D2COMMON_DATATBLS_GetObjectsTxtRecord((int32_t)pUnit->dwClassId)->nClientFn;
     if (nClientFn >= 19)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)"ptTypeData->bClientProcessFunction < sizeof( sgpfnProcessFunctions ) / sizeof( ptClientObjectProcess )", (uint32_t)(UINT_PTR)szObjectCpp, 1346);
+        FOG_DisplayAssert("ptTypeData->bClientProcessFunction < sizeof( sgpfnProcessFunctions ) / sizeof( ptClientObjectProcess )", szObjectCpp, 1346);
         exit(-1);
     }
     if (!nClientFn)
@@ -1569,7 +1569,7 @@ void __fastcall OBJECT_ApplyPortalState(D2GSPacketSrv60 *ptCmd)
 {
     if (!ptCmd)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)"ptCmd", (uint32_t)(UINT_PTR)szObjectCpp, 1362);
+        FOG_DisplayAssert("ptCmd", szObjectCpp, 1362);
         exit(-1);
     }
 
@@ -1580,13 +1580,13 @@ void __fastcall OBJECT_ApplyPortalState(D2GSPacketSrv60 *ptCmd)
     const D2Objects nClassId = (D2Objects)pPortal->dwClassId;
     if (nClassId != OBJECT_TOWN_PORTAL && nClassId != OBJECT_PERMANENT_TOWN_PORTAL)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)"UnitGetClass(hSrcPortal) == OBJECTCLASS_TOWNPORTAL || UnitGetClass(hSrcPortal) == OBJECTCLASS_PORTALPERMANENT", (uint32_t)(UINT_PTR)szObjectCpp, 1372);
+        FOG_DisplayAssert("UnitGetClass(hSrcPortal) == OBJECTCLASS_TOWNPORTAL || UnitGetClass(hSrcPortal) == OBJECTCLASS_PORTALPERMANENT", szObjectCpp, 1372);
         exit(-1);
     }
     const uint8_t nLevel = ptCmd->nLevel;
     if (nLevel > 255)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)"ptCmd->bLevelId <= 255", (uint32_t)(UINT_PTR)szObjectCpp, 1374);
+        FOG_DisplayAssert("ptCmd->bLevelId <= 255", szObjectCpp, 1374);
         exit(-1);
     }
     pPortal->pObjectData->InteractType = nLevel;

@@ -878,7 +878,7 @@ const Unicode *__fastcall UIPANELS_TextStripColorCodes(Unicode *pszText)
 
     if ((int32_t)Unicode::strlen(pszText) >= 500)
     {
-        FOG_DisplayAssert((uint32_t)"Unicode::strlen(pszSrc) < 500", (uint32_t)szUiCppFile, 895);
+        FOG_DisplayAssert("Unicode::strlen(pszSrc) < 500", szUiCppFile, 895);
         exit(-1);
     }
 
@@ -1278,7 +1278,7 @@ void __fastcall UIPANELS_BuildItemLabelText(D2UnitStrc *pUnit, Unicode *pszOut, 
         UI_AddColorCodeToWstring((wchar_t *)wszText, nTextColor);
         if (Unicode::strlen(wszText) >= nSize)
         {
-            FOG_DisplayAssert((uint32_t)"Unicode::strlen(szString) < nSize", (uint32_t)szUiCppFile, 1473);
+            FOG_DisplayAssert("Unicode::strlen(szString) < nSize", szUiCppFile, 1473);
             exit(-1);
         }
         Unicode::strcpy(pszOut, wszText);
@@ -1307,7 +1307,7 @@ void __fastcall UIPANELS_BuildItemLabelText(D2UnitStrc *pUnit, Unicode *pszOut, 
     UI_AddColorCodeToWstring((wchar_t *)wszName, nTextColor);
     if (Unicode::strlen(wszName) >= nSize)
     {
-        FOG_DisplayAssert((uint32_t)"Unicode::strlen(szItemName) < nSize", (uint32_t)szUiCppFile, 1484);
+        FOG_DisplayAssert("Unicode::strlen(szItemName) < nSize", szUiCppFile, 1484);
         exit(-1);
     }
     Unicode::strcpy(pszOut, wszName);

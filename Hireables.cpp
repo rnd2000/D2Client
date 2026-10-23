@@ -112,7 +112,7 @@ void __cdecl HIREABLES_PanelLoadHirelingIcons()
     }
 
     nPetIconBytes = sgptDataTables->nPetTypeTxtRecordCount * sizeof(D2ClientPetIconCacheStrc);
-    gpPetIconCache = (D2ClientPetIconCacheStrc *)FOG_AllocPool(0, nPetIconBytes, (uint32_t)szHireablesCpp, 150, 0);
+    gpPetIconCache = (D2ClientPetIconCacheStrc *)FOG_AllocPool(0, nPetIconBytes, szHireablesCpp, 150, 0);
     //  BUG: the allocation is cleared untested; FOG_AllocPool reports a failure and returns NULL, so a failed allocation faults here. LATENT:
     //  only a failed 400-byte allocation (the stock table's 20 rows) reaches it.
     memset(gpPetIconCache, 0, nPetIconBytes);

@@ -74,7 +74,7 @@ void __fastcall QUESTSFX_StartScreenFade(int32_t nFadeOut, int32_t nDarkHold, in
     gbQuestFxFadeActive = 1;
     if (!nFadeOut)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "nFadeOut", (uint32_t)(UINT_PTR)szSourceFile, 103);
+        FOG_DisplayAssert("nFadeOut", szSourceFile, 103);
         exit(-1);
     }
     nFadeInFrames = nFadeIn;
@@ -472,12 +472,12 @@ void __fastcall QUESTSFX_FireTriggerById(int32_t eTrigger)
 
     if (eTrigger >= 32)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "eTrigger < 32", (uint32_t)(UINT_PTR)szSourceFile, 473);
+        FOG_DisplayAssert("eTrigger < 32", szSourceFile, 473);
         exit(-1);
     }
     if (eTrigger >= 20)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "eTrigger < NUM_QUEST_TRIGGERS", (uint32_t)(UINT_PTR)szSourceFile, 474);
+        FOG_DisplayAssert("eTrigger < NUM_QUEST_TRIGGERS", szSourceFile, 474);
         exit(-1);
     }
     dwTriggerBit = (uint32_t)1 << eTrigger;
@@ -871,7 +871,7 @@ void __fastcall QUESTSFX_OnRoomActivated(D2ActiveRoomStrc *pRoom)
 {
     if (!pRoom)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "hRoom", (uint32_t)(UINT_PTR)szSourceFile, 836);
+        FOG_DisplayAssert("hRoom", szSourceFile, 836);
         exit(-1);
     }
     if (D2COMMON_DUNGEON_GetLevelIdFromRoom(pRoom) != 8)

@@ -66,7 +66,7 @@ D2UnitStrc *__fastcall CUNIT_FindUnitByGuidAndType(uint32_t dwUnitGUID, D2C_Unit
             //  the assert's own condition, re-read at 0x6FB26A25
             if (pUnit->dwUnitType != nUnitType)
             {
-                FOG_DisplayAssert((uint32_t)"ptUnit->eType == eTOU", (uint32_t)szCUnitCpp, 88);
+                FOG_DisplayAssert("ptUnit->eType == eTOU", szCUnitCpp, 88);
                 exit(-1);
             }
             //  unreachable: FOG_DisplayAssert never returns here
@@ -104,7 +104,7 @@ D2UnitStrc *__fastcall CUNIT_FindUnitByClientIdAndType(int32_t nUnitId, D2C_Unit
 
             if (ptUnit->dwUnitType != nUnitType)
             {
-                FOG_DisplayAssert((uint32_t)"ptUnit->eType == eTOU", (uint32_t)szCUnitCpp, 88);
+                FOG_DisplayAssert("ptUnit->eType == eTOU", szCUnitCpp, 88);
                 exit(-1);
             }
         }
@@ -128,7 +128,7 @@ D2UnitStrc *__fastcall CUNIT_GetOwnerUnit(D2UnitStrc *pUnit)
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szCUnitCpp, 129);
+        FOG_DisplayAssert("ptUnit", szCUnitCpp, 129);
         exit(-1);
     }
 
@@ -273,8 +273,8 @@ D2ActiveRoomStrc *__fastcall CUNIT_FindRoomForCoords(int32_t nX, int32_t nY)
     if (!pFound)
     {
         STORM_SStrPrintf(szScratch, 0x200, "Unable to find room for unit...  hControlUnit:%8x  hUnitRoom:%8x  ghAct:%8x  nX:%d  nY:%d", pPlayerUnit, pRoom, gpAct, nX, nY);
-        FOG_DisplayWarning((uint32_t)szScratch, (uint32_t)szCUnitCpp, 314);
-        FOG_DisplayAssert((uint32_t)"hFindRoom", (uint32_t)szCUnitCpp, 315);
+        FOG_DisplayWarning(szScratch, szCUnitCpp, 314);
+        FOG_DisplayAssert("hFindRoom", szCUnitCpp, 315);
         exit(-1);
     }
 
@@ -327,13 +327,13 @@ void __fastcall CUNIT_WarpUnit(D2UnitStrc *pUnit, int32_t nX, int32_t nY, int32_
     pDynamicPath = pUnit->pDynamicPath;
     if (!pDynamicPath)
     {
-        FOG_DisplayAssert((uint32_t)"hPath", (uint32_t)szCUnitCpp, 356);
+        FOG_DisplayAssert("hPath", szCUnitCpp, 356);
         exit(-1);
     }
 
     if (nX && nY && !pDestRoom)
     {
-        FOG_DisplayAssert((uint32_t)"Tried to warp to a room we didn't know about", (uint32_t)szCUnitCpp, 358);
+        FOG_DisplayAssert("Tried to warp to a room we didn't know about", szCUnitCpp, 358);
         exit(-1);
     }
 
@@ -370,7 +370,7 @@ void __fastcall CUNIT_WarpUnit(D2UnitStrc *pUnit, int32_t nX, int32_t nY, int32_
             {
                 if (pUnit->dwUnitType != UNIT_PLAYER)
                 {
-                    FOG_DisplayAssert((uint32_t)"UnitGetType(hUnit) == UNIT_PLAYER", (uint32_t)szCUnitCpp, 379);
+                    FOG_DisplayAssert("UnitGetType(hUnit) == UNIT_PLAYER", szCUnitCpp, 379);
                     exit(-1);
                 }
                 DLIGHTMAP_StartWarpFlash();
@@ -406,7 +406,7 @@ void __fastcall CUNIT_WarpUnit(D2UnitStrc *pUnit, int32_t nX, int32_t nY, int32_
 
         if (!D2COMMON_10231(pDynamicPath, pUnit, pDestRoom, (uint16_t)tSpawnPoint.nX, (uint16_t)tSpawnPoint.nY))
         {
-            FOG_DisplayAssert((uint32_t)"fRet", (uint32_t)szCUnitCpp, 423);
+            FOG_DisplayAssert("fRet", szCUnitCpp, 423);
             exit(-1);
         }
     }
@@ -511,7 +511,7 @@ D2UnitStrc *__fastcall CUNIT_InitUnit(D2UnitStrc *pUnit, uint32_t dwUnitId, int3
         break;
 
     case UNIT_MONSTER:
-        FOG_DisplayAssert((uint32_t)"eTOU != UNIT_MONSTER", (uint32_t)szCUnitCpp, 512);
+        FOG_DisplayAssert("eTOU != UNIT_MONSTER", szCUnitCpp, 512);
         exit(-1);
 
     case UNIT_OBJECT:
@@ -589,7 +589,7 @@ D2UnitStrc *__fastcall CUNIT_RegisterUnit(D2UnitStrc *pUnit)
 
     if (pExisting == pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"hToRemove != (HUNIT) ptUnit", (uint32_t)szCUnitCpp, 452);
+        FOG_DisplayAssert("hToRemove != (HUNIT) ptUnit", szCUnitCpp, 452);
         exit(-1);
     }
 
@@ -634,7 +634,7 @@ D2UnitStrc *__fastcall CUNIT_FindUnitInTable(D2UnitStrc **pTable, int32_t nBucke
 
             if (ptUnit->dwUnitType != (uint32_t)nUnitType)
             {
-                FOG_DisplayAssert((uint32_t)"ptUnit->eType == eTOU", (uint32_t)szCUnitCpp, 88);
+                FOG_DisplayAssert("ptUnit->eType == eTOU", szCUnitCpp, 88);
                 exit(-1);
             }
         }
@@ -676,7 +676,7 @@ int32_t __fastcall CUNIT_AddUnitToTable(D2UnitStrc *pUnit)
 
         if (CUNIT_FindUnitInTable(gpUnitTableByClientId[pUnit->dwUnitType], pUnit->dwUnitId & 0x7F, pUnit->dwUnitId, (D2C_UnitTypes)pUnit->dwUnitType))
         {
-            FOG_DisplayAssert((uint32_t)"!UnitGetFromClientId(ptUnit->dwId, ptUnit->eType)", (uint32_t)szCUnitCpp, 154);
+            FOG_DisplayAssert("!UnitGetFromClientId(ptUnit->dwId, ptUnit->eType)", szCUnitCpp, 154);
             exit(-1);
         }
     }
@@ -689,7 +689,7 @@ int32_t __fastcall CUNIT_AddUnitToTable(D2UnitStrc *pUnit)
 
         if (CUNIT_FindUnitByGuidAndType(pUnit->dwUnitId, pUnit->dwUnitType))
         {
-            FOG_DisplayAssert((uint32_t)"!UnitGetFromId(ptUnit->dwId, ptUnit->eType)", (uint32_t)szCUnitCpp, 163);
+            FOG_DisplayAssert("!UnitGetFromId(ptUnit->dwId, ptUnit->eType)", szCUnitCpp, 163);
             exit(-1);
         }
     }
@@ -1859,7 +1859,7 @@ void __fastcall CUNIT_SetUnitPaletteShift1(D2UnitStrc *pUnit, int32_t nShift)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"hUnit", (uint32_t)szCUnitCpp, 1377);
+        FOG_DisplayAssert("hUnit", szCUnitCpp, 1377);
         exit(-1);
     }
 
@@ -1873,7 +1873,7 @@ int32_t __fastcall CUNIT_GetUnitPaletteShift1(D2UnitStrc *pUnit)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"hUnit", (uint32_t)szCUnitCpp, 1386);
+        FOG_DisplayAssert("hUnit", szCUnitCpp, 1386);
         exit(-1);
     }
 
@@ -1887,7 +1887,7 @@ void __fastcall CUNIT_SetUnitPaletteShift2(D2UnitStrc *pUnit, int32_t nShift)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"hUnit", (uint32_t)szCUnitCpp, 1395);
+        FOG_DisplayAssert("hUnit", szCUnitCpp, 1395);
         exit(-1);
     }
 
@@ -1901,7 +1901,7 @@ int32_t __fastcall CUNIT_GetUnitPaletteShift2(D2UnitStrc *pUnit)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"hUnit", (uint32_t)szCUnitCpp, 1404);
+        FOG_DisplayAssert("hUnit", szCUnitCpp, 1404);
         exit(-1);
     }
 
@@ -1932,7 +1932,7 @@ BOOL __fastcall CUNIT_IsPointInWarpSelectBox(D2UnitStrc *pWarp, int32_t nScreenX
 
     if (pWarp->dwUnitType != UNIT_TILE)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit->eType == UNIT_ROOMTILE", (uint32_t)szCUnitCpp, 1417);
+        FOG_DisplayAssert("ptUnit->eType == UNIT_ROOMTILE", szCUnitCpp, 1417);
         exit(-1);
     }
 
@@ -2338,7 +2338,7 @@ BOOL __fastcall CUNIT_HitTestUnit(D2UnitStrc *pUnit, int32_t nScreenX, int32_t n
     {
         if (!pObjectsTxt)
         {
-            FOG_DisplayAssert((uint32_t)"ptObjectData", (uint32_t)szCUnitCpp, 1855);
+            FOG_DisplayAssert("ptObjectData", szCUnitCpp, 1855);
             exit(-1);
         }
 
@@ -2449,7 +2449,7 @@ BOOL __fastcall CUNIT_GetComponentScreenBox(D2UnitStrc *pUnit, int32_t nUnused1,
 
     if ((uint32_t)nAnimFrame > (uint32_t)tParams.nMaxFrames)
     {
-        FOG_DisplayAssert((uint32_t)"(UINT)nAnimFrame <= tCelContext.dwCelsPerDirection", (uint32_t)szCUnitCpp, 1501);
+        FOG_DisplayAssert("(UINT)nAnimFrame <= tCelContext.dwCelsPerDirection", szCUnitCpp, 1501);
         exit(-1);
     }
 
@@ -2566,7 +2566,7 @@ void __fastcall CUNIT_FaceUnitAtPathTarget(D2UnitStrc *pUnit, int32_t bSnap)
     hPath = pUnit->pDynamicPath;
     if (!hPath)
     {
-        FOG_DisplayAssert((uint32_t)"hPath != NULL", (uint32_t)szCUnitCpp, 2016);
+        FOG_DisplayAssert("hPath != NULL", szCUnitCpp, 2016);
         exit(-1);
     }
 
@@ -2595,7 +2595,7 @@ void __fastcall CUNIT_TurnUnitToFacePlayer(D2UnitStrc *pUnit)
     pPlayer = gpPlayerUnit;
     if (!hPath)
     {
-        FOG_DisplayAssert((uint32_t)"hPath != NULL", (uint32_t)szCUnitCpp, 2033);
+        FOG_DisplayAssert("hPath != NULL", szCUnitCpp, 2033);
         exit(-1);
     }
 
@@ -2640,7 +2640,7 @@ void __fastcall CUNIT_TurnPlayerToFaceUnit(D2UnitStrc *pUnit)
     hPath = pPlayer->pDynamicPath;
     if (!hPath)
     {
-        FOG_DisplayAssert((uint32_t)"hPath != NULL", (uint32_t)szCUnitCpp, 2048);
+        FOG_DisplayAssert("hPath != NULL", szCUnitCpp, 2048);
         exit(-1);
     }
 
@@ -2797,7 +2797,7 @@ void __cdecl CUNIT_RefreshObjectsOnDayNightChange()
             pNext = pObject->pListNext;
             if (pObject->dwUnitType != UNIT_OBJECT)
             {
-                FOG_DisplayAssert((uint32_t)"ptUnit->eType == UNIT_OBJECT", (uint32_t)szCUnitCpp, 2186);
+                FOG_DisplayAssert("ptUnit->eType == UNIT_OBJECT", szCUnitCpp, 2186);
                 exit(-1);
             }
 
@@ -2814,7 +2814,7 @@ void __cdecl CUNIT_RefreshObjectsOnDayNightChange()
             pNext = pObject->pListNext;
             if (pObject->dwUnitType != UNIT_OBJECT)
             {
-                FOG_DisplayAssert((uint32_t)"ptUnit->eType == UNIT_OBJECT", (uint32_t)szCUnitCpp, 2196);
+                FOG_DisplayAssert("ptUnit->eType == UNIT_OBJECT", szCUnitCpp, 2196);
                 exit(-1);
             }
 
@@ -2831,7 +2831,7 @@ D2PacketListStrc *__fastcall CUNIT_GetUnitPacketQueue(D2UnitStrc *pUnit)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szCUnitCpp, 2211);
+        FOG_DisplayAssert("ptUnit", szCUnitCpp, 2211);
         exit(-1);
     }
 
@@ -2845,7 +2845,7 @@ void __fastcall CUNIT_SetUnitPacketQueue(D2UnitStrc *pUnit, D2PacketListStrc *pQ
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szCUnitCpp, 2221);
+        FOG_DisplayAssert("ptUnit", szCUnitCpp, 2221);
         exit(-1);
     }
 
@@ -2999,7 +2999,7 @@ D2UnitStrc *__fastcall CUNIT_GetPathTargetUnit(D2UnitStrc *pUnit)
     hPath = pUnit->pDynamicPath;
     if (!hPath)
     {
-        FOG_DisplayAssert((uint32_t)"hPath", (uint32_t)szCUnitCpp, 2372);
+        FOG_DisplayAssert("hPath", szCUnitCpp, 2372);
         exit(-1);
     }
 
@@ -3034,7 +3034,7 @@ void __fastcall CUNIT_ForEachPlayerUnit(void (__fastcall *pfnUnitFunction)(D2Uni
 
     if (!pfnUnitFunction)
     {
-        FOG_DisplayAssert((uint32_t)"pfnUnitFunction", (uint32_t)szCUnitCpp, 2399);
+        FOG_DisplayAssert("pfnUnitFunction", szCUnitCpp, 2399);
         exit(-1);
     }
 
@@ -3061,7 +3061,7 @@ void __fastcall CUNIT_ForEachMonsterUnit(void (__fastcall *pfnUnitFunction)(D2Un
 
     if (!pfnUnitFunction)
     {
-        FOG_DisplayAssert((uint32_t)"pfnUnitFunction", (uint32_t)szCUnitCpp, 2410);
+        FOG_DisplayAssert("pfnUnitFunction", szCUnitCpp, 2410);
         exit(-1);
     }
 
@@ -3088,7 +3088,7 @@ void __fastcall CUNIT_ForEachObjectUnit(void (__fastcall *pfnUnitFunction)(D2Uni
 
     if (!pfnUnitFunction)
     {
-        FOG_DisplayAssert((uint32_t)"pfnUnitFunction", (uint32_t)szCUnitCpp, 2421);
+        FOG_DisplayAssert("pfnUnitFunction", szCUnitCpp, 2421);
         exit(-1);
     }
 
@@ -3164,7 +3164,7 @@ Unicode *__fastcall CUNIT_GetUnitName(D2UnitStrc *pUnit)
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szCUnitCpp, 2459);
+        FOG_DisplayAssert("ptUnit", szCUnitCpp, 2459);
         exit(-1);
     }
 
@@ -3287,7 +3287,7 @@ BOOL __fastcall CUNIT_ShouldDrawUnitComponents(D2UnitStrc *pUnit)
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szCUnitCpp, 2583);
+        FOG_DisplayAssert("ptUnit", szCUnitCpp, 2583);
         exit(-1);
     }
 
@@ -3306,7 +3306,7 @@ void __fastcall CUNIT_SetUnitComponentDrawCount(D2UnitStrc *pUnit)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szCUnitCpp, 2610);
+        FOG_DisplayAssert("ptUnit", szCUnitCpp, 2610);
         exit(-1);
     }
 
@@ -3321,7 +3321,7 @@ void __fastcall CUNIT_SetUnitStartLight(D2UnitStrc *pUnit, int32_t nStartLight)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szCUnitCpp, 2632);
+        FOG_DisplayAssert("ptUnit", szCUnitCpp, 2632);
         exit(-1);
     }
 
@@ -3358,7 +3358,7 @@ void __fastcall CUNIT_FreeUnitInventory(D2UnitStrc *pUnit, int32_t bKeepItemsHel
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"hUnit", (uint32_t)szCUnitCpp, 2686);
+        FOG_DisplayAssert("hUnit", szCUnitCpp, 2686);
         exit(-1);
     }
 
@@ -3394,7 +3394,7 @@ void __fastcall CUNIT_FreeUnitInventory(D2UnitStrc *pUnit, int32_t bKeepItemsHel
                                 hItem = D2COMMON_INVENTORY_UnitIsItem(pOtherInvItem);
                                 if (!hItem)
                                 {
-                                    FOG_DisplayAssert((uint32_t)"hItem", (uint32_t)szCUnitCpp, 2649);
+                                    FOG_DisplayAssert("hItem", szCUnitCpp, 2649);
                                     exit(-1);
                                 }
 
@@ -3415,7 +3415,7 @@ void __fastcall CUNIT_FreeUnitInventory(D2UnitStrc *pUnit, int32_t bKeepItemsHel
                 ITEM_DetachItemFromUnit(pItemUnit, pUnit, FALSE, FALSE);
                 if (!D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pItemUnit))
                 {
-                    FOG_DisplayAssert((uint32_t)"hRemovedItem", (uint32_t)szCUnitCpp, 2704);
+                    FOG_DisplayAssert("hRemovedItem", szCUnitCpp, 2704);
                     exit(-1);
                 }
 
@@ -3423,7 +3423,7 @@ void __fastcall CUNIT_FreeUnitInventory(D2UnitStrc *pUnit, int32_t bKeepItemsHel
             }
             else if (!D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pItemUnit))
             {
-                FOG_DisplayAssert((uint32_t)"hRemovedItem", (uint32_t)szCUnitCpp, 2708);
+                FOG_DisplayAssert("hRemovedItem", szCUnitCpp, 2708);
                 exit(-1);
             }
         }
@@ -3836,7 +3836,7 @@ void __fastcall CUNIT_ResyncUnitFromServer(D2UnitStrc *pUnit)
 
     if (gnGameType != GAMETYPE_SINGLEPLAYER)
     {
-        FOG_DisplayAssert((uint32_t)"gnGameType == GT_SINGLE_PLAYER", (uint32_t)szCUnitCpp, 2984);
+        FOG_DisplayAssert("gnGameType == GT_SINGLE_PLAYER", szCUnitCpp, 2984);
         exit(-1);
     }
 

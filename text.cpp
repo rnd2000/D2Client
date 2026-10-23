@@ -238,8 +238,8 @@ void __fastcall TEXT_FreeParsedLines(D2ClientTextLineStrc *pFirstLine)
         do
         {
             pNext = pLine->pNext;
-            FOG_Free((uint32_t)(UINT_PTR)pLine->pszText, (uint32_t)(UINT_PTR)szTextCpp, 1547, 0);
-            FOG_Free((uint32_t)(UINT_PTR)pLine, (uint32_t)(UINT_PTR)szTextCpp, 1548, 0);
+            FOG_Free(pLine->pszText, szTextCpp, 1547, 0);
+            FOG_Free(pLine, szTextCpp, 1548, 0);
             pLine = pNext;
         } while (pNext);
     }
@@ -255,7 +255,7 @@ void __stdcall TEXT_FreeParsedText(void **ppParsedText)
     {
         D2ClientTextLineStrc *pLine = (D2ClientTextLineStrc *)*ppParsedText;
         TEXT_FreeParsedLines(pLine);
-        FOG_Free((uint32_t)(UINT_PTR)ppParsedText, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+        FOG_Free(ppParsedText, szTextCpp, 1674, 0);
     }
 }
 
@@ -278,9 +278,9 @@ void __fastcall TEXT_FreeMessageList(D2TextDisplayListStrc *pList)
             {
                 Unicode *pLine = pNodeToFree->pLines[i];
                 if (pLine)
-                    FOG_Free((uint32_t)(UINT_PTR)pLine, (uint32_t)(UINT_PTR)szTextCpp, 1711, 0);
+                    FOG_Free(pLine, szTextCpp, 1711, 0);
             }
-            FOG_Free((uint32_t)(UINT_PTR)pNodeToFree, (uint32_t)(UINT_PTR)szTextCpp, 1714, 0);
+            FOG_Free(pNodeToFree, szTextCpp, 1714, 0);
             ++wCountDeleted;
         } while (pNode);
         pList->pHead = nullptr;
@@ -288,7 +288,7 @@ void __fastcall TEXT_FreeMessageList(D2TextDisplayListStrc *pList)
 
     if (wCountDeleted != (int16_t)pList->wCount)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertMsgCount, (uint32_t)(UINT_PTR)szTextCpp, 1737);
+        FOG_DisplayAssert(szAssertMsgCount, szTextCpp, 1737);
         exit(-1);
     }
     pList->wCount = 0;
@@ -401,7 +401,7 @@ void __fastcall TEXT_FreeUnitHoverMsg(D2HoverTextStrc *pHoverMsg)
     {
         D2ClientTextLineStrc *pLine = *ppParsedText;
         TEXT_FreeParsedLines(pLine);
-        FOG_Free((uint32_t)(UINT_PTR)ppParsedText, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+        FOG_Free(ppParsedText, szTextCpp, 1674, 0);
         D2COMMON_CHAT_SetUsedInHoverMsg(pHoverMsg, 0);
     }
 
@@ -463,7 +463,7 @@ void __cdecl TEXT_ClearMessages()
         D2ClientTextLineStrc *pLines = gPopupTextList->pLines;
         D2ClientPopupStrc *pPopup = gPopupTextList;
         TEXT_FreeParsedLines(pLines);
-        FOG_Free((uint32_t)(UINT_PTR)pPopup, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+        FOG_Free(pPopup, szTextCpp, 1674, 0);
         gPopupTextList = nullptr;
     }
 
@@ -516,7 +516,7 @@ void __cdecl TEXT_Shutdown()
         D2ClientTextLineStrc *pLines = gPopupTextList->pLines;
         D2ClientPopupStrc *pPopup = gPopupTextList;
         TEXT_FreeParsedLines(pLines);
-        FOG_Free((uint32_t)(UINT_PTR)pPopup, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+        FOG_Free(pPopup, szTextCpp, 1674, 0);
         gPopupTextList = nullptr;
     }
 
@@ -525,8 +525,8 @@ void __cdecl TEXT_Shutdown()
         D2ClientTextLineStrc *pLine = sgPopup.pParsedText->pLines;
         D2ClientPopupStrc *pActiveTextPopup = sgPopup.pParsedText;
         TEXT_FreeParsedLines(pLine);
-        FOG_Free((uint32_t)(UINT_PTR)pActiveTextPopup, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
-        FOG_Free((uint32_t)(UINT_PTR)sgPopup.pParsedText, (uint32_t)(UINT_PTR)szTextCpp, 1760, 0);
+        FOG_Free(pActiveTextPopup, szTextCpp, 1674, 0);
+        FOG_Free(sgPopup.pParsedText, szTextCpp, 1760, 0);
         sgPopup.pParsedText = nullptr;
     }
 
@@ -661,7 +661,7 @@ void __cdecl TEXT_ClosePopup()
         D2ClientTextLineStrc *pLines = gPopupTextList->pLines;
         D2ClientPopupStrc *pPopup = gPopupTextList;
         TEXT_FreeParsedLines(pLines);
-        FOG_Free((uint32_t)(UINT_PTR)pPopup, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+        FOG_Free(pPopup, szTextCpp, 1674, 0);
         gPopupTextList = nullptr;
     }
 
@@ -714,7 +714,7 @@ int32_t __cdecl TEXT_OnPopupDismissed()
             {
                 D2ClientPopupStrc *pTextList = gPopupTextList;
                 TEXT_FreeParsedLines(gPopupTextList->pLines);
-                FOG_Free((uint32_t)(UINT_PTR)pTextList, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+                FOG_Free(pTextList, szTextCpp, 1674, 0);
                 gPopupTextList = nullptr;
             }
             if (gnPopupSpeechSoundId)
@@ -757,7 +757,7 @@ int32_t __cdecl TEXT_OnPopupDismissed()
                 {
                     D2ClientPopupStrc *pTextList2 = gPopupTextList;
                     TEXT_FreeParsedLines(gPopupTextList->pLines);
-                    FOG_Free((uint32_t)(UINT_PTR)pTextList2, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+                    FOG_Free(pTextList2, szTextCpp, 1674, 0);
                     gPopupTextList = nullptr;
                 }
                 if (gnPopupSpeechSoundId)
@@ -812,7 +812,7 @@ int32_t __cdecl TEXT_OnPopupDismissed()
 
     if (!sgPopup.pParsedText)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPopupParsed, (uint32_t)(UINT_PTR)szTextCpp, 2371);
+        FOG_DisplayAssert(szAssertPopupParsed, szTextCpp, 2371);
         exit(-1);
     }
 
@@ -820,8 +820,8 @@ int32_t __cdecl TEXT_OnPopupDismissed()
         D2ClientTextLineStrc *pLines = sgPopup.pParsedText->pLines;
         D2ClientPopupStrc *pActiveTextPopup = sgPopup.pParsedText;
         TEXT_FreeParsedLines(pLines);
-        FOG_Free((uint32_t)(UINT_PTR)pActiveTextPopup, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
-        FOG_Free((uint32_t)(UINT_PTR)sgPopup.pParsedText, (uint32_t)(UINT_PTR)szTextCpp, 2373, 0);
+        FOG_Free(pActiveTextPopup, szTextCpp, 1674, 0);
+        FOG_Free(sgPopup.pParsedText, szTextCpp, 2373, 0);
         sgPopup.pParsedText = nullptr;
     }
 
@@ -1117,7 +1117,7 @@ struct Unicode **__fastcall TEXT_ParseLinesAndScrollRate(Unicode *pwszText, int3
 
     LINE_READY:
         {
-            struct Unicode **pNode = (struct Unicode **)(UINT_PTR)FOG_Alloc(8, (uint32_t)(UINT_PTR)szTextCpp, 1460, 0);
+            struct Unicode **pNode = (struct Unicode **)(UINT_PTR)FOG_Alloc(8, szTextCpp, 1460, 0);
 
             if (bFirstLine == 1)
             {
@@ -1160,7 +1160,7 @@ struct Unicode **__fastcall TEXT_ParseLinesAndScrollRate(Unicode *pwszText, int3
                 if (D2WIN_10121_GetTextWidth(wszText) >= 308)
                     wsprintfA(szWarnTooLong2, szWarnLineTooLong, *pnLineCount);
 
-                struct Unicode *pDest = (struct Unicode *)(UINT_PTR)FOG_Alloc(2 * nTextLen + 2, (uint32_t)(UINT_PTR)szTextCpp, 1511, 0);
+                struct Unicode *pDest = (struct Unicode *)(UINT_PTR)FOG_Alloc(2 * nTextLen + 2, szTextCpp, 1511, 0);
                 *pNode = pDest;
                 Unicode::strcpy(pDest, wszText);
                 pNode[1] = nullptr;
@@ -1230,7 +1230,7 @@ void __fastcall TEXT_ShowSpeechPopup(D2UnitStrc *pNpc, int16_t nTblStringId, int
                 D2ClientTextLineStrc *pLines = sgPopup.pParsedText->pLines;
                 D2ClientPopupStrc *pActiveTextPopup = sgPopup.pParsedText;
                 TEXT_FreeParsedLines(pLines);
-                FOG_Free((uint32_t)(UINT_PTR)pActiveTextPopup, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+                FOG_Free(pActiveTextPopup, szTextCpp, 1674, 0);
                 sgPopup.pParsedText = nullptr;
             }
             sgTextState.bKeepNpcInteraction = 0;
@@ -1258,7 +1258,7 @@ void __fastcall TEXT_ShowSpeechPopup(D2UnitStrc *pNpc, int16_t nTblStringId, int
     sgTextState.bPopupDismissed = 0;
     const enum Font eFontOuter = D2WIN_10127_SetFont(D2FONT_FONTFORMAL11);
     Unicode *pwszText = (Unicode *)D2LANG_GetStringFromTblIndex(wTblStringId);
-    D2ClientPopupStrc *pPopup = (D2ClientPopupStrc *)(UINT_PTR)FOG_Alloc(44, (uint32_t)(UINT_PTR)szTextCpp, 1625, 0);
+    D2ClientPopupStrc *pPopup = (D2ClientPopupStrc *)(UINT_PTR)FOG_Alloc(44, szTextCpp, 1625, 0);
     const enum Font eFontInner = D2WIN_10127_SetFont(D2FONT_FONTFORMAL11);
 
     pPopup->pLines = (struct D2ClientTextLineStrc *)TEXT_ParseLinesAndScrollRate(pwszText, &pPopup->nLineCount, (int16_t *)&pPopup->wScrollRate);
@@ -1374,7 +1374,7 @@ void __fastcall TEXT_ShowQuestScrollingText(int32_t nTblStringId, int16_t bIsQue
     //  The two font saves are nested the other way round from the speech popup's: inner set first, restored last. Both restore what they saved.
     const enum Font eFontInner = D2WIN_10127_SetFont(D2FONT_FONTFORMAL11);
     Unicode *pwszText = (Unicode *)D2LANG_GetStringFromTblIndex(wTblStringId);
-    D2ClientPopupStrc *pPopup = (D2ClientPopupStrc *)(UINT_PTR)FOG_Alloc(44, (uint32_t)(UINT_PTR)szTextCpp, 1625, 0);
+    D2ClientPopupStrc *pPopup = (D2ClientPopupStrc *)(UINT_PTR)FOG_Alloc(44, szTextCpp, 1625, 0);
     const enum Font eFontOuter = D2WIN_10127_SetFont(D2FONT_FONTFORMAL11);
 
     pPopup->pLines = (struct D2ClientTextLineStrc *)TEXT_ParseLinesAndScrollRate(pwszText, &pPopup->nLineCount, (int16_t *)&pPopup->wScrollRate);
@@ -1496,7 +1496,7 @@ void __fastcall TEXT_TickStaticInfoPanel(D2ClientViewStrc *pView)
                 {
                     D2ClientPopupStrc *pPopupToFree = gPopupTextList;
                     TEXT_FreeParsedLines(gPopupTextList->pLines);
-                    FOG_Free((uint32_t)(UINT_PTR)pPopupToFree, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+                    FOG_Free(pPopupToFree, szTextCpp, 1674, 0);
                     gPopupTextList = nullptr;
                     SELECT_SetClickRegion(nullptr);
                 }
@@ -1567,7 +1567,7 @@ void __fastcall TEXT_TickStaticInfoPanel(D2ClientViewStrc *pView)
     {
         if (!sgTextState.bDisplayingStaticInfo)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertStaticInfo, (uint32_t)(UINT_PTR)szTextCpp, 3326);
+            FOG_DisplayAssert(szAssertStaticInfo, szTextCpp, 3326);
             exit(-1);
         }
 
@@ -1579,7 +1579,7 @@ void __fastcall TEXT_TickStaticInfoPanel(D2ClientViewStrc *pView)
             {
                 D2ClientPopupStrc *pActiveTextPopup = sgPopup.pParsedText;
                 TEXT_FreeParsedLines(sgPopup.pParsedText->pLines);
-                FOG_Free((uint32_t)(UINT_PTR)pActiveTextPopup, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+                FOG_Free(pActiveTextPopup, szTextCpp, 1674, 0);
                 sgPopup.pParsedText = nullptr;
             }
             sgTextState.bKeepNpcInteraction = 0;
@@ -1804,7 +1804,7 @@ int32_t __fastcall TEXT_PlaceHoverMsg(D2UnitStrc *pUnit, D2HoverTextStrc *pHover
 
     int32_t nMaxTextWidth = 0;
     const enum Font ePrevFont = D2WIN_10127_SetFont(D2FONT_FONTINGAMECHAT);
-    D2ClientPopupStrc *pMsg = (D2ClientPopupStrc *)(UINT_PTR)FOG_Alloc(44, (uint32_t)(UINT_PTR)szTextCpp, 1625, 0);
+    D2ClientPopupStrc *pMsg = (D2ClientPopupStrc *)(UINT_PTR)FOG_Alloc(44, szTextCpp, 1625, 0);
 
     //  D2Win's own name for the 8-byte node is D2SplittedTextStrc; D2Client calls the same layout D2ClientTextLineStrc.
     D2ClientTextLineStrc *pSplitText = (D2ClientTextLineStrc *)D2WIN_10199(wszText, &pMsg->nLineCount, 180);
@@ -1934,7 +1934,7 @@ int32_t __fastcall TEXT_PlaceHoverMsg(D2UnitStrc *pUnit, D2HoverTextStrc *pHover
                 //  BUG: the font is not restored (every other exit ends with D2Win_10127_SetFont(nPrevFont)), so font 13 stays set for
                 //  whoever draws next.
                 TEXT_FreeParsedLines(pMsg->pLines);
-                return FOG_Free((uint32_t)(UINT_PTR)pMsg, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+                return FOG_Free(pMsg, szTextCpp, 1674, 0);
             }
         }
     }
@@ -1942,7 +1942,7 @@ int32_t __fastcall TEXT_PlaceHoverMsg(D2UnitStrc *pUnit, D2HoverTextStrc *pHover
     sgTextState.nHoverMsgCount = nHoverMsgCount + 1;
     TEXT_DrawHoverMsgIfNotCovered(pMsg, &rcBox.left);
     TEXT_FreeParsedLines(pMsg->pLines);
-    FOG_Free((uint32_t)(UINT_PTR)pMsg, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+    FOG_Free(pMsg, szTextCpp, 1674, 0);
     return (int32_t)D2WIN_10127_SetFont(ePrevFont);
 }
 
@@ -2053,7 +2053,7 @@ BOOL __fastcall TEXT_DrawPopup(D2ClientPopupStrc *pPopup)
 {
     if (!pPopup)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertTextNode, (uint32_t)(UINT_PTR)szTextCpp, 1801);
+        FOG_DisplayAssert(szAssertTextNode, szTextCpp, 1801);
         exit(-1);
     }
 
@@ -2339,8 +2339,8 @@ void __cdecl TEXT_DrawChatMessages()
                             nY += 15;
                             ++nRowsDrawnNext;
                         }
-                        FOG_Free((uint32_t)(UINT_PTR)pSplitText->wszLine, (uint32_t)(UINT_PTR)szTextCpp, 2627, 0);
-                        FOG_Free((uint32_t)(UINT_PTR)pSplitText, (uint32_t)(UINT_PTR)szTextCpp, 2628, 0);
+                        FOG_Free(pSplitText->wszLine, szTextCpp, 2627, 0);
+                        FOG_Free(pSplitText, szTextCpp, 2628, 0);
                         pSplitText = pSplitNext;
                     } while (pSplitNext);
                     nRowsDrawn = nRowsDrawnNext;
@@ -2382,9 +2382,9 @@ void __cdecl TEXT_DrawChatMessages()
             {
                 Unicode *pLineToFree = pMsg->pLines[j];
                 if (pLineToFree)
-                    FOG_Free((uint32_t)(UINT_PTR)pLineToFree, (uint32_t)(UINT_PTR)szTextCpp, 1711, 0);
+                    FOG_Free(pLineToFree, szTextCpp, 1711, 0);
             }
-            FOG_Free((uint32_t)(UINT_PTR)pMsg, (uint32_t)(UINT_PTR)szTextCpp, 1714, 0);
+            FOG_Free(pMsg, szTextCpp, 1714, 0);
             if (pPrevMsg)
                 pPrevMsg->pNext = pNext;
             pMsg = pNext;
@@ -2458,9 +2458,9 @@ void __cdecl TEXT_DrawQuickMessages()
             {
                 Unicode *pLineToFree = pMsgSweep->pLines[j];
                 if (pLineToFree)
-                    FOG_Free((uint32_t)(UINT_PTR)pLineToFree, (uint32_t)(UINT_PTR)szTextCpp, 1711, 0);
+                    FOG_Free(pLineToFree, szTextCpp, 1711, 0);
             }
-            FOG_Free((uint32_t)(UINT_PTR)pMsgSweep, (uint32_t)(UINT_PTR)szTextCpp, 1714, 0);
+            FOG_Free(pMsgSweep, szTextCpp, 1714, 0);
             if (pPrevMsg)
                 pPrevMsg->pNext = pNext;
             pMsgSweep = pNext;
@@ -2478,7 +2478,7 @@ void __cdecl TEXT_DrawQuickMessages()
 //  The original inlines TEXT_FreeMessageList's node free and the message-log listbox refresh here.
 int32_t __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
 {
-    D2ClientTextNodeStrc *pMessage = (D2ClientTextNodeStrc *)(UINT_PTR)FOG_Alloc(38, (uint32_t)(UINT_PTR)szTextCpp, 3394, 0);
+    D2ClientTextNodeStrc *pMessage = (D2ClientTextNodeStrc *)(UINT_PTR)FOG_Alloc(38, szTextCpp, 3394, 0);
 
     //  36 + 2 = 38: MSVC emits the whole-record clear as a dword run and a two-byte tail, and the tail lands inside pNext at +0x22.
     memset(pMessage, 0, sizeof(D2ClientTextNodeStrc));
@@ -2498,12 +2498,12 @@ int32_t __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
         {
             //  Past the sixth the split line is freed instead of kept.
             if (iLine >= pMessage->wLineCount)
-                FOG_Free((uint32_t)(UINT_PTR)pSplitText->wszLine, (uint32_t)(UINT_PTR)szTextCpp, 3414, 0);
+                FOG_Free(pSplitText->wszLine, szTextCpp, 3414, 0);
             else
                 pMessage->pLines[iLine] = pSplitText->wszLine;
 
             D2SplittedTextStrc *pSplitNext = pSplitText->pNextLine;
-            FOG_Free((uint32_t)(UINT_PTR)pSplitText, (uint32_t)(UINT_PTR)szTextCpp, 3417, 0);
+            FOG_Free(pSplitText, szTextCpp, 3417, 0);
             ++iLine;
             pSplitText = pSplitNext;
         } while (iLine < nLines);
@@ -2521,7 +2521,7 @@ int32_t __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
         }
         if (wWalked != (uint16_t)(sgTextState.GlobalMessageDisplayList.wCount - 1))
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertGlobalCount, (uint32_t)(UINT_PTR)szTextCpp, 3432);
+            FOG_DisplayAssert(szAssertGlobalCount, szTextCpp, 3432);
             exit(-1);
         }
         pTail->pNext = pMessage;
@@ -2555,9 +2555,9 @@ int32_t __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
             {
                 Unicode *pLineToFree = pOldest->pLines[j];
                 if (pLineToFree)
-                    FOG_Free((uint32_t)(UINT_PTR)pLineToFree, (uint32_t)(UINT_PTR)szTextCpp, 1711, 0);
+                    FOG_Free(pLineToFree, szTextCpp, 1711, 0);
             }
-            FOG_Free((uint32_t)(UINT_PTR)pOldest, (uint32_t)(UINT_PTR)szTextCpp, 1714, 0);
+            FOG_Free(pOldest, szTextCpp, 1714, 0);
         }
     }
 
@@ -2586,7 +2586,7 @@ int32_t __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
 //  The original inlines TEXT_FreeMessageList's node free here.
 void __fastcall TEXT_PushMessageLogEntry(D2ClientTextNodeStrc *pSrcMessage)
 {
-    D2ClientTextNodeStrc *pLogEntry = (D2ClientTextNodeStrc *)(UINT_PTR)FOG_Alloc(38, (uint32_t)(UINT_PTR)szTextCpp, 2508, 0);
+    D2ClientTextNodeStrc *pLogEntry = (D2ClientTextNodeStrc *)(UINT_PTR)FOG_Alloc(38, szTextCpp, 2508, 0);
     memset(pLogEntry, 0, sizeof(D2ClientTextNodeStrc));
     pLogEntry->pNext = nullptr;
 
@@ -2596,7 +2596,7 @@ void __fastcall TEXT_PushMessageLogEntry(D2ClientTextNodeStrc *pSrcMessage)
         do
         {
             const int32_t nLineLen = Unicode::strlen(pSrcMessage->pLines[iLine]);
-            Unicode *pCopy = (Unicode *)(UINT_PTR)FOG_Alloc(2 * nLineLen + 2, (uint32_t)(UINT_PTR)szTextCpp, 2512, 0);
+            Unicode *pCopy = (Unicode *)(UINT_PTR)FOG_Alloc(2 * nLineLen + 2, szTextCpp, 2512, 0);
             pLogEntry->pLines[iLine] = pCopy;
             Unicode::strcpy(pCopy, pSrcMessage->pLines[iLine]);
             ++iLine;
@@ -2621,9 +2621,9 @@ void __fastcall TEXT_PushMessageLogEntry(D2ClientTextNodeStrc *pSrcMessage)
             {
                 Unicode *pLineText = pHead->pLines[j];
                 if (pLineText)
-                    FOG_Free((uint32_t)(UINT_PTR)pLineText, (uint32_t)(UINT_PTR)szTextCpp, 1711, 0);
+                    FOG_Free(pLineText, szTextCpp, 1711, 0);
             }
-            FOG_Free((uint32_t)(UINT_PTR)pHead, (uint32_t)(UINT_PTR)szTextCpp, 1714, 0);
+            FOG_Free(pHead, szTextCpp, 1714, 0);
 
             //  BUG: with exactly one node the walk never ran, pPrev is null, and nothing clears MessageLogDisplayList.pHead, which still points
             //  at the node just freed; the re-read below picks it straight back up. It needs wCount >= 0x80 while the list holds one node.
@@ -2654,7 +2654,7 @@ int32_t __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
 {
     const enum Font ePrevFont = D2WIN_10127_SetFont(D2FONT_FONTINGAMECHAT);
 
-    D2ClientTextNodeStrc *pMessage = (D2ClientTextNodeStrc *)(UINT_PTR)FOG_Alloc(38, (uint32_t)(UINT_PTR)szTextCpp, 3483, 0);
+    D2ClientTextNodeStrc *pMessage = (D2ClientTextNodeStrc *)(UINT_PTR)FOG_Alloc(38, szTextCpp, 3483, 0);
     memset(pMessage, 0, sizeof(D2ClientTextNodeStrc));
     pMessage->pNext = nullptr;
     pMessage->dwExpireTick = GetTickCount() + 10000;
@@ -2696,7 +2696,7 @@ int32_t __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
         if (pMessage->wLineCount >= 6u)
             break;
 
-        pMessage->pLines[pMessage->wLineCount] = (Unicode *)(UINT_PTR)FOG_Alloc(2 * nLen + 2, (uint32_t)(UINT_PTR)szTextCpp, 3525, 0);
+        pMessage->pLines[pMessage->wLineCount] = (Unicode *)(UINT_PTR)FOG_Alloc(2 * nLen + 2, szTextCpp, 3525, 0);
         memset(pMessage->pLines[pMessage->wLineCount], 0, 2 * nLen + 2);
         Unicode::strncpy(pMessage->pLines[pMessage->wLineCount], pSrc, nLen);
         ++pMessage->wLineCount;
@@ -2721,7 +2721,7 @@ int32_t __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
         }
         if (wWalked != (uint16_t)(sgTextState.QuickMessageDisplayList.wCount - 1))
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertQuickCount, (uint32_t)(UINT_PTR)szTextCpp, 3551);
+            FOG_DisplayAssert(szAssertQuickCount, szTextCpp, 3551);
             exit(-1);
         }
         pTail->pNext = pMessage;
@@ -2743,9 +2743,9 @@ int32_t __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
         {
             Unicode *pLineToFree = pOldest->pLines[iLine];
             if (pLineToFree)
-                FOG_Free((uint32_t)(UINT_PTR)pLineToFree, (uint32_t)(UINT_PTR)szTextCpp, 1711, 0);
+                FOG_Free(pLineToFree, szTextCpp, 1711, 0);
         }
-        FOG_Free((uint32_t)(UINT_PTR)pOldest, (uint32_t)(UINT_PTR)szTextCpp, 1714, 0);
+        FOG_Free(pOldest, szTextCpp, 1714, 0);
         --sgTextState.QuickMessageDisplayList.wCount;
     }
 
@@ -2981,7 +2981,7 @@ void __fastcall TEXT_DrawQuestScrollFrame(int32_t bAnimate)
             continue;
         if (wStoneIndex >= 5)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertRunePos, (uint32_t)(UINT_PTR)szTextCpp, 5703);
+            FOG_DisplayAssert(szAssertRunePos, szTextCpp, 5703);
             exit(-1);
         }
 
@@ -3265,7 +3265,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
     case 0:
         if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3639_sysmsg1)) >= 260)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertLenDropped1, (uint32_t)(UINT_PTR)szTextCpp, 4410);
+            FOG_DisplayAssert(szAssertLenDropped1, szTextCpp, 4410);
             exit(-1);
         }
         Unicode::win2Unicode(src, pPacket->szText, 16);
@@ -3276,7 +3276,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
     case 1:
         if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3640_sysmsg2)) >= 260)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertLenDropped2, (uint32_t)(UINT_PTR)szTextCpp, 4416);
+            FOG_DisplayAssert(szAssertLenDropped2, szTextCpp, 4416);
             exit(-1);
         }
         Unicode::win2Unicode(src, pPacket->szText, 16);
@@ -3292,7 +3292,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
         }
         if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3641_sysmsg3)) >= 260)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertLenJoined, (uint32_t)(UINT_PTR)szTextCpp, 4426);
+            FOG_DisplayAssert(szAssertLenJoined, szTextCpp, 4426);
             exit(-1);
         }
         Unicode::win2Unicode(src, pszName1, 16);
@@ -3312,7 +3312,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
     case 3:
         if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3642_sysmsg4)) >= 260)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertLenQuit, (uint32_t)(UINT_PTR)szTextCpp, 4440);
+            FOG_DisplayAssert(szAssertLenQuit, szTextCpp, 4440);
             exit(-1);
         }
         Unicode::win2Unicode(src, pszName1, 16);
@@ -3331,7 +3331,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
     case 4:
         if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3645_sysmsg5)) >= 260)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertLenNotInGame, (uint32_t)(UINT_PTR)szTextCpp, 4454);
+            FOG_DisplayAssert(szAssertLenNotInGame, szTextCpp, 4454);
             exit(-1);
         }
         Unicode::win2Unicode(src, pPacket->szText, 16);
@@ -3342,7 +3342,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
     case 5:
         if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3646_sysmsg6)) >= 260)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertLenNotInBattlenet, (uint32_t)(UINT_PTR)szTextCpp, 4466);
+            FOG_DisplayAssert(szAssertLenNotInBattlenet, szTextCpp, 4466);
             exit(-1);
         }
         Unicode::win2Unicode(src, pPacket->szText, 16);
@@ -3547,7 +3547,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
     case 13:
         if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3652_sysmsg12)) >= 260)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertLenNotListening, (uint32_t)(UINT_PTR)szTextCpp, 4460);
+            FOG_DisplayAssert(szAssertLenNotListening, szTextCpp, 4460);
             exit(-1);
         }
         Unicode::win2Unicode(src, pPacket->szText, 16);
@@ -3651,14 +3651,14 @@ void __fastcall TEXT_OnMessageListPacket(D2GSPacketSrv27 *pPacket)
         D2ClientTextLineStrc *pLine = sgPopup.pParsedText->pLines;
         D2ClientPopupStrc *pPopup = sgPopup.pParsedText;
         TEXT_FreeParsedLines(pLine);
-        FOG_Free((uint32_t)(UINT_PTR)pPopup, (uint32_t)(UINT_PTR)szTextCpp, 1674, 0);
+        FOG_Free(pPopup, szTextCpp, 1674, 0);
         sgPopup.pParsedText = nullptr;
     }
 
     const Unicode *pwszText = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStringId);
     const enum Font ePrevFont = D2WIN_10127_SetFont(D2FONT_FONTINGAMECHAT);
 
-    D2ClientPopupStrc *pMessage = (D2ClientPopupStrc *)FOG_Alloc(44, (uint32_t)(UINT_PTR)szTextCpp, 1625, 0);
+    D2ClientPopupStrc *pMessage = (D2ClientPopupStrc *)FOG_Alloc(44, szTextCpp, 1625, 0);
     pMessage->pLines = (D2ClientTextLineStrc *)D2WIN_10199(pwszText, &pMessage->nLineCount, 180);
     TEXT_MeasureMessageBox(pMessage);
     sgPopup.pParsedText = pMessage;

@@ -69,7 +69,7 @@ D2PacketListStrc *__fastcall SCMD_AllocUnitPacketQueue(D2UnitStrc *pUnit)
     D2PacketListStrc *pQueue = CUNIT_GetUnitPacketQueue(pUnit);
     if (!pQueue)
     {
-        pQueue = (D2PacketListStrc *)FOG_Alloc(sizeof(D2PacketListStrc), (uint32_t)(UINT_PTR)szFile, 4696, 0);
+        pQueue = (D2PacketListStrc *)FOG_Alloc(sizeof(D2PacketListStrc), szFile, 4696, 0);
         pQueue->nTotal = 0;
         pQueue->nUsed = 0;
         pQueue->unk0x08 = 0;
@@ -78,12 +78,12 @@ D2PacketListStrc *__fastcall SCMD_AllocUnitPacketQueue(D2UnitStrc *pUnit)
     }
 
     const int32_t nNewCapacity = pQueue->nTotal + 5;
-    uint8_t *pNewBuffer = (uint8_t *)FOG_Alloc(nNewCapacity * sgnMaxUnitPacketDataSize, (uint32_t)(UINT_PTR)szFile, 4701, 0);
+    uint8_t *pNewBuffer = (uint8_t *)FOG_Alloc(nNewCapacity * sgnMaxUnitPacketDataSize, szFile, 4701, 0);
     memset(pNewBuffer, 0, nNewCapacity * sgnMaxUnitPacketDataSize);
     if (pQueue->pPacketData)
     {
         memcpy(pNewBuffer, pQueue->pPacketData, sgnMaxUnitPacketDataSize * pQueue->nTotal);
-        FOG_Free((uint32_t)(UINT_PTR)pQueue->pPacketData, (uint32_t)(UINT_PTR)szFile, 4705, 0);
+        FOG_Free(pQueue->pPacketData, szFile, 4705, 0);
     }
     pQueue->nTotal = nNewCapacity;
     pQueue->pPacketData = pNewBuffer;
@@ -100,7 +100,7 @@ static void SCMD_AppendUnitPacket(D2UnitStrc *pUnit, uint8_t *pPacket, int32_t n
 
     if (nSize > sgnMaxUnitPacketDataSize)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertSlotSize, (uint32_t)(UINT_PTR)szFile, 4721);
+        FOG_DisplayAssert(szAssertSlotSize, szFile, 4721);
         exit(-1);
     }
 
@@ -143,7 +143,7 @@ void __fastcall SCMD_RouteServerPackets(uint8_t *pBuffer, int32_t nSize)
 
         if (bCmd >= NUM_SCMDS)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertCmdBound, (uint32_t)(UINT_PTR)szFile, 5186);
+            FOG_DisplayAssert(szAssertCmdBound, szFile, 5186);
             exit(-1);
         }
 
@@ -153,7 +153,7 @@ void __fastcall SCMD_RouteServerPackets(uint8_t *pBuffer, int32_t nSize)
         //  cannot fail once the first has passed.
         if (!((ptMsgStruct->nCmdSize == -1) || (packetSize == (ptMsgStruct->nCmdSize))))
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertRouteSize, (uint32_t)(UINT_PTR)szFile, 5193);
+            FOG_DisplayAssert(szAssertRouteSize, szFile, 5193);
             exit(-1);
         }
 
@@ -262,8 +262,8 @@ void __fastcall SCMD_FreeUnitPacketQueue(D2UnitStrc *pUnit)
     D2PacketListStrc *pQueue = CUNIT_GetUnitPacketQueue(pUnit);
     if (pQueue)
     {
-        FOG_Free((uint32_t)(UINT_PTR)pQueue->pPacketData, (uint32_t)(UINT_PTR)szFile, 5391, 0);
-        FOG_Free((uint32_t)(UINT_PTR)pQueue, (uint32_t)(UINT_PTR)szFile, 5392, 0);
+        FOG_Free(pQueue->pPacketData, szFile, 5391, 0);
+        FOG_Free(pQueue, szFile, 5392, 0);
         CUNIT_SetUnitPacketQueue(pUnit, NULL);
     }
 }
@@ -279,7 +279,7 @@ void __fastcall SCMD_ProcessUnitPacketQueue(D2UnitStrc *pUnit)
 
     if (ptPacket->nUsed > ptPacket->nTotal)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertQueueUsed, (uint32_t)(UINT_PTR)szFile, 5406);
+        FOG_DisplayAssert(szAssertQueueUsed, szFile, 5406);
         exit(-1);
     }
 
@@ -296,7 +296,7 @@ void __fastcall SCMD_ProcessUnitPacketQueue(D2UnitStrc *pUnit)
         const uint8_t bCmd = pPacket[0];
         if (bCmd >= NUM_SCMDS)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertCmdBound, (uint32_t)(UINT_PTR)szFile, 5418);
+            FOG_DisplayAssert(szAssertCmdBound, szFile, 5418);
             exit(-1);
         }
 
@@ -304,13 +304,13 @@ void __fastcall SCMD_ProcessUnitPacketQueue(D2UnitStrc *pUnit)
         const uint16_t packetSize = (uint16_t)nSizeRead;
         if (!((ptMsgStruct->nCmdSize == -1) || (packetSize == ptMsgStruct->nCmdSize)))
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertDrainSize, (uint32_t)(UINT_PTR)szFile, 5421);
+            FOG_DisplayAssert(szAssertDrainSize, szFile, 5421);
             exit(-1);
         }
 
         if (!ptMsgStruct->pfProcessUnit)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertUnitHandler, (uint32_t)(UINT_PTR)szFile, 5423);
+            FOG_DisplayAssert(szAssertUnitHandler, szFile, 5423);
             exit(-1);
         }
 
@@ -552,7 +552,7 @@ void __fastcall SCMD_HandleSrv07_MapReveal(D2GSPacketSrv07 *pPacket)
     const uint16_t nY = pPacket->nY;
     if (!gpAct)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertGhAct, (uint32_t)(UINT_PTR)szFile, 1418);
+        FOG_DisplayAssert(szAssertGhAct, szFile, 1418);
         exit(-1);
     }
 
@@ -569,7 +569,7 @@ void __fastcall SCMD_HandleSrv08_MapHide(D2GSPacketSrv08 *pPacket)
     const uint16_t nY = pPacket->nY;
     if (!gpAct)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertGhAct, (uint32_t)(UINT_PTR)szFile, 1438);
+        FOG_DisplayAssert(szAssertGhAct, szFile, 1438);
         exit(-1);
     }
 
@@ -730,7 +730,7 @@ static void SCMD_WriteCharacterFile()
 
     if (!gLocalPlayerName[0])
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPlrName, (uint32_t)(UINT_PTR)szFile, 37);
+        FOG_DisplayAssert(szAssertPlrName, szFile, 37);
         exit(-1);
     }
 
@@ -800,12 +800,12 @@ void __fastcall SCMD_SaveCharacterFile(uint8_t *pBuffer, int32_t nLen)
     {
         if (gpScmdBuffer && pBuffer[2])
         {
-            FOG_Free((uint32_t)(UINT_PTR)gpScmdBuffer, (uint32_t)(UINT_PTR)szFile, 91, 0);
+            FOG_Free(gpScmdBuffer, szFile, 91, 0);
             gpScmdBuffer = NULL;
             gnScmdBufferSize = 0;
         }
         if (!gpScmdBuffer)
-            gpScmdBuffer = (void *)(UINT_PTR)FOG_Alloc(*(uint32_t *)(pBuffer + 3), (uint32_t)(UINT_PTR)szFile, 98, 0);
+            gpScmdBuffer = (void *)(UINT_PTR)FOG_Alloc(*(uint32_t *)(pBuffer + 3), szFile, 98, 0);
 
         //  BUG: nothing compares the copy with the allocation. The buffer is the size of the chunk that allocated it; a later chunk without the
         //  restart flag is copied at gnScmdBufferSize whatever its own total says, and the only test is the equality after the copy. Chunks that pass
@@ -820,7 +820,7 @@ void __fastcall SCMD_SaveCharacterFile(uint8_t *pBuffer, int32_t nLen)
 
         SCMD_WriteCharacterFile();
 
-        FOG_Free((uint32_t)(UINT_PTR)gpScmdBuffer, (uint32_t)(UINT_PTR)szFile, 113, 0);
+        FOG_Free(gpScmdBuffer, szFile, 113, 0);
         gpScmdBuffer = NULL;
         gnScmdBufferSize = 0;
         return;
@@ -1048,7 +1048,7 @@ void __fastcall SCMD_HandleSrv17_ApplyRemoteUnitAction(D2UnitStrc *pUnit, uint8_
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHUnit, (uint32_t)(UINT_PTR)szFile, 2113);
+        FOG_DisplayAssert(szAssertHUnit, szFile, 2113);
         exit(-1);
     }
 
@@ -1219,7 +1219,7 @@ void __fastcall SCMD_HandleSrv16_UnitsUpdate(D2GSPacketSrv16 *pPacket)
 {
     if (!pPacket->nNumUpdates)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertNumUpdates, (uint32_t)(UINT_PTR)szFile, 2133);
+        FOG_DisplayAssert(szAssertNumUpdates, szFile, 2133);
         exit(-1);
     }
 
@@ -1441,7 +1441,7 @@ void __fastcall SCMD_HandleSrv19_1F_AttributeUpdate(uint8_t *pPacket)
     D2UnitStrc *pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHUnit, (uint32_t)(UINT_PTR)szFile, 2474);
+        FOG_DisplayAssert(szAssertHUnit, szFile, 2474);
         exit(-1);
     }
 
@@ -1800,7 +1800,7 @@ void __fastcall SCMD_HandleSrv22_SetSkill(D2GSPacketSrv22 *pPacket)
     D2SkillStrc *pSkill = D2COMMON_SKILLS_GetSkillById(pUnit, (D2C_Skills)nSkillId, (D2UnitGUID)-1);
     if (!pSkill)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHSkill, (uint32_t)(UINT_PTR)szFile, 2774);
+        FOG_DisplayAssert(szAssertHSkill, szFile, 2774);
         exit(-1);
     }
     D2COMMON_SKILLS_SetQuantity(pSkill, pPacket->nQuantity);
@@ -2149,7 +2149,7 @@ void __fastcall SCMD_HandleSrv5F_PortalFlags(D2GSPacketSrv5F *pPacket)
     D2UnitStrc *pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHUnit, (uint32_t)(UINT_PTR)szFile, 3349);
+        FOG_DisplayAssert(szAssertHUnit, szFile, 3349);
         exit(-1);
     }
     D2COMMON_UNITS_SetPlayerPortalFlags(pPlayer, nPortalFlags);
@@ -2163,7 +2163,7 @@ void __fastcall SCMD_HandleSrv60_TownPortalState(D2GSPacketSrv60 *pPacket)
     memcpy(&tPacket, pPacket, sizeof(tPacket));
     if (!CUNIT_GetPlayer())
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertUnitGetControlUnit, (uint32_t)(UINT_PTR)szFile, 3361);
+        FOG_DisplayAssert(szAssertUnitGetControlUnit, szFile, 3361);
         exit(-1);
     }
     OBJECT_ApplyPortalState(&tPacket);
@@ -2498,7 +2498,7 @@ void __fastcall SCMD_HandleSrv97_WeaponSwitch(D2GSPacketSrv97 *pPacket)
 {
     if (pPacket->nHeader != 0x97)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertCmdWeaponSwap, (uint32_t)(UINT_PTR)szFile, 3910);
+        FOG_DisplayAssert(szAssertCmdWeaponSwap, szFile, 3910);
         exit(-1);
     }
     INV_ToggleWeaponSwapSet();
@@ -2586,7 +2586,7 @@ void __fastcall SCMD_HandleSrv9C_ItemDropPickup(D2GSPacketSrv9C *pPacket)
     case 0x15:
     case 0x16:
     case 0x17:
-        FOG_DisplayWarning((uint32_t)(UINT_PTR)gszAssertItemUnitExMsg, (uint32_t)(UINT_PTR)szFile, 3949);
+        FOG_DisplayWarning(gszAssertItemUnitExMsg, szFile, 3949);
         break;
     case 0x0A:
         ITEM_ItemMsg0A_UpdateItem(&tPacket);
@@ -2641,7 +2641,7 @@ void __fastcall SCMD_HandleSrv9D_ItemEquip(D2GSPacketSrv9D *pPacket)
     case 0x0F:
     case 0x10:
     case 0x12:
-        FOG_DisplayWarning((uint32_t)(UINT_PTR)szWarnItemExMsgs, (uint32_t)(UINT_PTR)szFile, 4023);
+        FOG_DisplayWarning(szWarnItemExMsgs, szFile, 4023);
         break;
     case 0x05:
         ITEM_ItemMsg05_ToInventoryGrid(ptPacket);

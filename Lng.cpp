@@ -90,7 +90,7 @@ int32_t __stdcall LNG_MessageSource(DWORD dwMessageId, LPSTR pszBuffer, int32_t 
 {
     if (!ghLangModule)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "sghLNGInstance", (uint32_t)(UINT_PTR)szLngCpp, 129);
+        FOG_DisplayAssert("sghLNGInstance", szLngCpp, 129);
         exit(-1);
     }
 

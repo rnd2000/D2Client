@@ -93,7 +93,7 @@ void __fastcall RECORD_LogEvent(uint32_t nEventId, WPARAM wParam, LPARAM lParam)
         pHolder = gpRecordBlock;
         if (pHolder->nRecordWriteCurr >= RECORDS_PER_HOLDER)
         {
-            pHolder = (D2ClientRecordHolderStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientRecordHolderStrc), (uint32_t)(UINT_PTR)szSourceFile, 53, 0);
+            pHolder = (D2ClientRecordHolderStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientRecordHolderStrc), szSourceFile, 53, 0);
             pHolder->nRecordWriteCurr = 0;
             pHolder->nRecordReadCurr = 0;
             gpRecordBlock->ptNext = pHolder;
@@ -120,7 +120,7 @@ void __fastcall RECORD_LogEvent(uint32_t nEventId, WPARAM wParam, LPARAM lParam)
         pHolder = gpRecordBlock;
         if (pHolder->nRecordWriteCurr >= RECORDS_PER_HOLDER)
         {
-            pHolder = (D2ClientRecordHolderStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientRecordHolderStrc), (uint32_t)(UINT_PTR)szSourceFile, 53, 0);
+            pHolder = (D2ClientRecordHolderStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientRecordHolderStrc), szSourceFile, 53, 0);
             pHolder->nRecordReadCurr = 0;
             pHolder->nRecordWriteCurr = 0;
             gpRecordBlock->ptNext = pHolder;
@@ -204,7 +204,7 @@ void __cdecl RECORD_FreeBufferList()
     {
         pFree = pHolder;
         pHolder = pHolder->ptNext;
-        FOG_Free((uint32_t)(UINT_PTR)pFree, (uint32_t)(UINT_PTR)szSourceFile, 288, 0);
+        FOG_Free(pFree, szSourceFile, 288, 0);
     }
 }
 
@@ -249,7 +249,7 @@ void __cdecl RECORD_Play()
         {
             if (iHolder)
             {
-                pHolder = (D2ClientRecordHolderStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientRecordHolderStrc), (uint32_t)(UINT_PTR)szSourceFile, 53, 0);
+                pHolder = (D2ClientRecordHolderStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientRecordHolderStrc), szSourceFile, 53, 0);
                 pHolder->nRecordWriteCurr = 0;
                 pHolder->nRecordReadCurr = 0;
                 gpRecordBlock->ptNext = pHolder;
@@ -276,7 +276,7 @@ void __cdecl RECORD_Play()
                 gRecordHolderFirst.nRecordWriteCurr = nEntries;
                 if (iHolder + 1 != gRecordFileHeader.nHolders)
                 {
-                    FOG_DisplayAssert((uint32_t)"i + 1 == sgtReadFileHeader.nHolders", (uint32_t)szSourceFile, 256);
+                    FOG_DisplayAssert("i + 1 == sgtReadFileHeader.nHolders", szSourceFile, 256);
                     exit(-1);
                 }
             }
@@ -416,7 +416,7 @@ void __cdecl RECORD_ReadNextForFrame()
     nReadCurr = pHolder->nRecordReadCurr;
     if (nReadCurr >= RECORDS_PER_HOLDER)
     {
-        FOG_DisplayAssert((uint32_t)"sgptHolderCurr->nRecordReadCurr < RECORDS_PER_HOLDER", (uint32_t)szSourceFile, 393);
+        FOG_DisplayAssert("sgptHolderCurr->nRecordReadCurr < RECORDS_PER_HOLDER", szSourceFile, 393);
         exit(-1);
     }
 
@@ -431,7 +431,7 @@ void __cdecl RECORD_ReadNextForFrame()
 
         if (pRecord->nFrame != (int32_t)GAME_GetFrameCount())
         {
-            FOG_DisplayAssert((uint32_t)"ptRecord->nFrame == (int)GameGetFrame ()", (uint32_t)szSourceFile, 298);
+            FOG_DisplayAssert("ptRecord->nFrame == (int)GameGetFrame ()", szSourceFile, 298);
             exit(-1);
         }
         STORM_SMsgDispatchMessage(D2GFX_WINDOW_GetWindow(), pRecord->nMsg, pRecord->nWParam, pRecord->nLParam, &bReturn, &lResult);

@@ -1217,17 +1217,17 @@ int32_t __fastcall LISTBOX_GetEntryUserData(uint32_t **pProxy, int32_t nEdxUnuse
     }
     if ((int32_t)pBody->wNumEntries >= LISTBOX_MAX_ENTRIES)
     {
-        FOG_DisplayAssert((uint32_t)"mNumEntries < LISTBOX_MAX_ENTRIES", (uint32_t)szListBoxCpp, 1132);
+        FOG_DisplayAssert("mNumEntries < LISTBOX_MAX_ENTRIES", szListBoxCpp, 1132);
         _exit(-1);
     }
     if ((int32_t)pBody->wNumEntries >= nEntryIndex)
     {
-        FOG_DisplayAssert((uint32_t)"mNumEntries < Selection", (uint32_t)szListBoxCpp, 1133);
+        FOG_DisplayAssert("mNumEntries < Selection", szListBoxCpp, 1133);
         _exit(-1);
     }
     if (nEntryIndex < 0)
     {
-        FOG_DisplayAssert((uint32_t)"Selection >= 0", (uint32_t)szListBoxCpp, 1134);
+        FOG_DisplayAssert("Selection >= 0", szListBoxCpp, 1134);
         _exit(-1);
     }
     return 0;

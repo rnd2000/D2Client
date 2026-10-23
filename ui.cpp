@@ -160,7 +160,7 @@ void __fastcall UI_DrawLoadingScreen(int32_t nProgress)
 
                 if (!sghLoadScreenProgress)
                 {
-                    FOG_DisplayAssert((uint32_t)"sghLoadScreenProgress", (uint32_t)szUiCpp, 6559);
+                    FOG_DisplayAssert("sghLoadScreenProgress", szUiCpp, 6559);
                     exit(-1);
                 }
             }
@@ -230,7 +230,7 @@ int32_t __fastcall UI_GetUiWindowState(D2C_UIvars nUIId)
 {
     if ((uint32_t)nUIId >= NUM_UI)
     {
-        FOG_DisplayAssert((uint32_t)"nUIId < NUM_UI", (uint32_t)szUiCpp, 3097);
+        FOG_DisplayAssert("nUIId < NUM_UI", szUiCpp, 3097);
         exit(-1);
     }
     return gUiWindowStates[nUIId];
@@ -314,12 +314,12 @@ int32_t __fastcall UI_SetUIToggle(D2C_UIvars nUIId, D2C_UiStates nUIState, int32
 
     if ((uint32_t)nUIId >= NUM_UI)
     {
-        FOG_DisplayAssert((uint32_t)"nUIId < NUM_UI", (uint32_t)szUiCpp, 5086);
+        FOG_DisplayAssert("nUIId < NUM_UI", szUiCpp, 5086);
         exit(-1);
     }
     if ((uint32_t)nUIState > UI_TOGGLE)
     {
-        FOG_DisplayAssert((uint32_t)"nUIState <= UI_TOGGLE", (uint32_t)szUiCpp, 5087);
+        FOG_DisplayAssert("nUIState <= UI_TOGGLE", szUiCpp, 5087);
         exit(-1);
     }
 
@@ -335,7 +335,7 @@ int32_t __fastcall UI_SetUIToggle(D2C_UIvars nUIId, D2C_UiStates nUIState, int32
     //  ui.cpp:4988: the line number says this assert is an inlined callee's
     if (sgNumStateTbl != NUM_UI)
     {
-        FOG_DisplayAssert((uint32_t)"sgNumStateTbl == NUM_UI", (uint32_t)szUiCpp, 4988);
+        FOG_DisplayAssert("sgNumStateTbl == NUM_UI", szUiCpp, 4988);
         exit(-1);
     }
 
@@ -413,7 +413,7 @@ int32_t __fastcall UI_SetUIToggle(D2C_UIvars nUIId, D2C_UiStates nUIState, int32
                 //  so that one is an assert rather than a trace.
                 if (nUIId == UI_GAME)
                 {
-                    FOG_DisplayAssert((uint32_t)"nUIId != UI_STATE_SHARE", (uint32_t)szUiCpp, 5067);
+                    FOG_DisplayAssert("nUIId != UI_STATE_SHARE", szUiCpp, 5067);
                     exit(-1);
                 }
                 FOG_Trace(" requested %d but %d says it's an error in ui.cpp\n", nUIId, nOpenId);
@@ -1266,8 +1266,8 @@ void __fastcall UI_OpenGoldEntryDialog(int32_t nGoldDialogMode)
         {
             DIALOG_AddLine(gpGoldDialog, pSplitText->wszLine, 24, 0, 4, 1, NULL, 0);
             pSplitNext = pSplitText->pNextLine;
-            FOG_Free((uint32_t)(UINT_PTR)pSplitText->wszLine, (uint32_t)(UINT_PTR)szUiCpp, 6148, 0);
-            FOG_Free((uint32_t)(UINT_PTR)pSplitText, (uint32_t)(UINT_PTR)szUiCpp, 6149, 0);
+            FOG_Free(pSplitText->wszLine, szUiCpp, 6148, 0);
+            FOG_Free(pSplitText, szUiCpp, 6149, 0);
             pSplitText = pSplitNext;
         }
         while (pSplitNext);

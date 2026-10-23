@@ -31,7 +31,7 @@ EXPORTS
     FOG_InitErrorMgr                               @10019  NONAME
     Fog_10020                                      @10020  NONAME
     FOG_SetLogPrefix                               @10021  NONAME
-    FOG_GetSystemInfo@0                            @10022  NONAME
+    FOG_GetSystemInfo                              @10022  NONAME
     FOG_DisplayAssert                              @10023  NONAME
     FOG_DisplayHalt                                @10024  NONAME
     FOG_DisplayWarning                             @10025  NONAME

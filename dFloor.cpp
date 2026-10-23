@@ -89,7 +89,7 @@ void __fastcall DFLOOR_DrawFloorTile(D2FloorDrawCtxStrc *pCtx, int32_t nEdxUnuse
 
     if ((UINT_PTR)pCtx->pView + offsetof(D2ClientViewStrc, rcClip) == 0)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptRect", (uint32_t)(UINT_PTR)szSourceFile, 118);
+        FOG_DisplayAssert("ptRect", szSourceFile, 118);
         exit(-1);
     }
     if (nXPos < pCtx->pView->rcClip.left || nXPos >= pCtx->pView->rcClip.right || nYPos < pCtx->pView->rcClip.top || nYPos >= pCtx->pView->rcClip.bottom)
@@ -239,7 +239,7 @@ void __fastcall DFLOOR_DrawEdgeTile(D2FloorDrawCtxStrc *pCtx, int32_t nEdxUnused
     nY += 40;
     if (!gpAct)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "ghAct", (uint32_t)(UINT_PTR)szSourceFile, 223);
+        FOG_DisplayAssert("ghAct", szSourceFile, 223);
         exit(-1);
     }
 
@@ -370,7 +370,7 @@ void __fastcall DFLOOR_DrawRoomFloors(D2FloorDrawCtxStrc *pCtx, int32_t nEdxUnus
     pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "0", (uint32_t)(UINT_PTR)szSourceFile, 286);
+        FOG_DisplayAssert("0", szSourceFile, 286);
         exit(-1);
     }
     pCtx->pSplashSeed = &pPlayer->pSeed;
@@ -383,7 +383,7 @@ void __fastcall DFLOOR_DrawRoomFloors(D2FloorDrawCtxStrc *pCtx, int32_t nEdxUnus
     pLevelsTxt = D2COMMON_DATATBLS_GetLevelsTxtRecord(D2COMMON_DUNGEON_GetLevelIdFromRoom(pRoom));
     if (!pLevelsTxt)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptLvlData", (uint32_t)(UINT_PTR)szSourceFile, 304);
+        FOG_DisplayAssert("ptLvlData", szSourceFile, 304);
         exit(-1);
     }
 
@@ -460,7 +460,7 @@ void __fastcall DFLOOR_DrawRoomFloors(D2FloorDrawCtxStrc *pCtx, int32_t nEdxUnus
         nY += 40;
         if (!gpAct)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "ghAct", (uint32_t)(UINT_PTR)szSourceFile, 223);
+            FOG_DisplayAssert("ghAct", szSourceFile, 223);
             exit(-1);
         }
         nX += pCtx->nScreenOffsetX;
@@ -488,7 +488,7 @@ void __fastcall DFLOOR_DrawRoomFloors(D2FloorDrawCtxStrc *pCtx, int32_t nEdxUnus
         nY += 40;
         if (!gpAct)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "ghAct", (uint32_t)(UINT_PTR)szSourceFile, 223);
+            FOG_DisplayAssert("ghAct", szSourceFile, 223);
             exit(-1);
         }
         nX += pCtx->nScreenOffsetX;
@@ -613,7 +613,7 @@ void __fastcall DFLOOR_DrawViewGridFloors(D2ClientViewStrc *pView)
                 nYPos = pTileData->nDrawY - pTileEntry->nRoofHeight + nOriginTop;
                 if ((UINT_PTR)pView + offsetof(D2ClientViewStrc, rcClip) == 0)
                 {
-                    FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptRect", (uint32_t)(UINT_PTR)szSourceFile, 118);
+                    FOG_DisplayAssert("ptRect", szSourceFile, 118);
                     exit(-1);
                 }
                 if (nXPos < pView->rcClip.left || nXPos >= pView->rcClip.right || nYPos < pView->rcClip.top || nYPos >= pView->rcClip.bottom)

@@ -739,7 +739,7 @@ void __cdecl CMDTBL_CallMouse3Down(void)
     {
         if (IsBadCodePtr(pfnHandler))
         {
-            FOG_DisplayAssert((uint32_t)szSgpfnMouse3DownFn, (uint32_t)szCmdTblCpp, 825);
+            FOG_DisplayAssert(szSgpfnMouse3DownFn, szCmdTblCpp, 825);
             exit(-1);
         }
         pfnHandler();
@@ -757,7 +757,7 @@ void __cdecl CMDTBL_CallMouse3Lift(void)
     {
         if (IsBadCodePtr(pfnHandler))
         {
-            FOG_DisplayAssert((uint32_t)szSgpfnMouse3LiftFn, (uint32_t)szCmdTblCpp, 837);
+            FOG_DisplayAssert(szSgpfnMouse3LiftFn, szCmdTblCpp, 837);
             exit(-1);
         }
         pfnHandler();
@@ -775,7 +775,7 @@ void __cdecl CMDTBL_CommandHandleMouse4Down(void)
     {
         if (IsBadCodePtr(pfnHandler))
         {
-            FOG_DisplayAssert((uint32_t)szSgpfnMouse4DownFn, (uint32_t)szCmdTblCpp, 848);
+            FOG_DisplayAssert(szSgpfnMouse4DownFn, szCmdTblCpp, 848);
             exit(-1);
         }
         pfnHandler();
@@ -793,7 +793,7 @@ void __cdecl CMDTBL_CommandHandleMouse4Lift(void)
     {
         if (IsBadCodePtr(pfnHandler))
         {
-            FOG_DisplayAssert((uint32_t)szSgpfnMouse4LiftFn, (uint32_t)szCmdTblCpp, 861);
+            FOG_DisplayAssert(szSgpfnMouse4LiftFn, szCmdTblCpp, 861);
             exit(-1);
         }
         pfnHandler();
@@ -811,7 +811,7 @@ void __cdecl CMDTBL_CommandHandleMouse5Down(void)
     {
         if (IsBadCodePtr(pfnHandler))
         {
-            FOG_DisplayAssert((uint32_t)szSgpfnMouse5DownFn, (uint32_t)szCmdTblCpp, 873);
+            FOG_DisplayAssert(szSgpfnMouse5DownFn, szCmdTblCpp, 873);
             exit(-1);
         }
         pfnHandler();
@@ -829,7 +829,7 @@ void __cdecl CMDTBL_CommandHandleMouse5Lift(void)
     {
         if (IsBadCodePtr(pfnHandler))
         {
-            FOG_DisplayAssert((uint32_t)szSgpfnMouse5LiftFn, (uint32_t)szCmdTblCpp, 885);
+            FOG_DisplayAssert(szSgpfnMouse5LiftFn, szCmdTblCpp, 885);
             exit(-1);
         }
         pfnHandler();
@@ -847,7 +847,7 @@ void __fastcall CMDTBL_CommandHandleMouseWheel(int32_t nDelta)
         {
             if (IsBadCodePtr(sgpfnMouseWheelDownFn))
             {
-                FOG_DisplayAssert((uint32_t)szSgpfnMouseWheelDownFn, (uint32_t)szCmdTblCpp, 907);
+                FOG_DisplayAssert(szSgpfnMouseWheelDownFn, szCmdTblCpp, 907);
                 exit(-1);
             }
             (sgpfnMouseWheelDownFn)();
@@ -857,7 +857,7 @@ void __fastcall CMDTBL_CommandHandleMouseWheel(int32_t nDelta)
     {
         if (IsBadCodePtr(sgpfnMouseWheelUpFn))
         {
-            FOG_DisplayAssert((uint32_t)szSgpfnMouseWheelUpFn, (uint32_t)szCmdTblCpp, 899);
+            FOG_DisplayAssert(szSgpfnMouseWheelUpFn, szCmdTblCpp, 899);
             exit(-1);
         }
         (sgpfnMouseWheelUpFn)();
@@ -1766,7 +1766,7 @@ void __stdcall CMDTBL_OnKeyDown(SMSGHANDLER_PARAMS *pMsg)
 
     if (IsBadCodePtr((FARPROC)sgtKeyFunctions[gKeyBindings[nSlot].eCmd].FKeyDown))
     {
-        FOG_DisplayAssert((uint32_t)szKeyFunctionsDown, (uint32_t)szCmdTblCpp, 2062);
+        FOG_DisplayAssert(szKeyFunctionsDown, szCmdTblCpp, 2062);
         exit(-1);
     }
     sgtKeyFunctions[gKeyBindings[nSlot].eCmd].FKeyDown();
@@ -1806,7 +1806,7 @@ void __stdcall CMDTBL_OnKeyUp(SMSGHANDLER_PARAMS *pMsg)
 
     if (IsBadCodePtr((FARPROC)sgtKeyFunctions[gKeyBindings[nSlot].eCmd].FKeyLift))
     {
-        FOG_DisplayAssert((uint32_t)szKeyFunctionsLift, (uint32_t)szCmdTblCpp, 2100);
+        FOG_DisplayAssert(szKeyFunctionsLift, szCmdTblCpp, 2100);
         exit(-1);
     }
     sgtKeyFunctions[gKeyBindings[nSlot].eCmd].FKeyLift();
@@ -2030,7 +2030,7 @@ int16_t __fastcall CMDTBL_CommandLoadDefaultKeyBindings(void *bTryDiskFile)
             FOG_CloseFile(hFile);
             if (nBytesRead == 1146)
             {
-                pFile = (uint16_t *)FOG_AllocPool(0, 1146, (uint32_t)szCmdTblCpp, 1319, 0);
+                pFile = (uint16_t *)FOG_AllocPool(0, 1146, szCmdTblCpp, 1319, 0);
                 memcpy(pFile, aReadBuffer, 1146);
             }
         }
@@ -2047,12 +2047,12 @@ int16_t __fastcall CMDTBL_CommandLoadDefaultKeyBindings(void *bTryDiskFile)
         if (pFile[0] == 21335 && pFile[1] == 37 && pFile[2] == 1146)
         {
             memcpy(gDefaultCommandTable, pFile + 3, 114 * sizeof(HotkeyMappingEntry));
-            FOG_Free((uint32_t)pFile, (uint32_t)szCmdTblCpp, 1348, 0);
+            FOG_Free(pFile, szCmdTblCpp, 1348, 0);
         }
         else
         {
             //  a bad file is dropped; the table keeps what it had
-            FOG_Free((uint32_t)pFile, (uint32_t)szCmdTblCpp, 1353, 0);
+            FOG_Free(pFile, szCmdTblCpp, 1353, 0);
         }
     }
 

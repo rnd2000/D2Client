@@ -109,13 +109,13 @@ extern "C" int32_t __stdcall QUESTS_GetQuestState(int32_t nUnused, D2Quests nQue
 
     if (!gbQuestStatesReceived)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "sgbInit", (uint32_t)(UINT_PTR)szSourceFile, 94);
+        FOG_DisplayAssert("sgbInit", szSourceFile, 94);
         exit(-1);
     }
     //  The compare is SIGNED, as the original's `jl` (0x6FAB8F1B) is; D2Quests' base is uint32_t, so the cast keeps a negative id passing the assert.
     if ((int32_t)nQuest >= 37)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "idx < QUEST_NUMCLASS", (uint32_t)(UINT_PTR)szSourceFile, 99);
+        FOG_DisplayAssert("idx < QUEST_NUMCLASS", szSourceFile, 99);
         exit(-1);
     }
     //  DIFFERENCE: for a negative id, which no caller passes, the original read below its own array; ours would read below ours, outside any

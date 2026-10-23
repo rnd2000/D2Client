@@ -315,7 +315,7 @@ void __fastcall CURSOR_DrawCurrent()
 
     if (gnCursors != NUM_CURSORS)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "NUM_CURSORS == nCursorTableSize", (uint32_t)(UINT_PTR)szSourceFile, 132);
+        FOG_DisplayAssert("NUM_CURSORS == nCursorTableSize", szSourceFile, 132);
         exit(-1);
     }
 
@@ -324,7 +324,7 @@ void __fastcall CURSOR_DrawCurrent()
     //  SIGNED, as the bytes compare it: cmp ecx, esi / jl (0x6FB577B4..0x6FB577BC, esi = 7).
     if (nCursorType >= (int32_t)NUM_CURSORS)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "Type < NUM_CURSORS", (uint32_t)(UINT_PTR)szSourceFile, 133);
+        FOG_DisplayAssert("Type < NUM_CURSORS", szSourceFile, 133);
         exit(-1);
     }
 
@@ -388,7 +388,7 @@ wrap_frame:
 
     if (gnCursorState != CURSORSTATE_ButtonPressed)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "0", (uint32_t)(UINT_PTR)szSourceFile, 487);
+        FOG_DisplayAssert("0", szSourceFile, 487);
         exit(-1);
     }
 
@@ -424,13 +424,13 @@ int32_t __fastcall CURSOR_GetCursorLoops(int32_t nCursorType)
 {
     if (gnCursors != NUM_CURSORS)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "NUM_CURSORS == nCursorTableSize", (uint32_t)(UINT_PTR)szSourceFile, 143);
+        FOG_DisplayAssert("NUM_CURSORS == nCursorTableSize", szSourceFile, 143);
         exit(-1);
     }
 
     if (nCursorType >= (int32_t)NUM_CURSORS)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "Type < NUM_CURSORS", (uint32_t)(UINT_PTR)szSourceFile, 144);
+        FOG_DisplayAssert("Type < NUM_CURSORS", szSourceFile, 144);
         exit(-1);
     }
 
@@ -446,13 +446,13 @@ int32_t __fastcall CURSOR_GetCursorFrameDuration(int32_t nCursorType)
 {
     if (gnCursors != NUM_CURSORS)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "NUM_CURSORS == nCursorTableSize", (uint32_t)(UINT_PTR)szSourceFile, 154);
+        FOG_DisplayAssert("NUM_CURSORS == nCursorTableSize", szSourceFile, 154);
         exit(-1);
     }
 
     if (nCursorType >= (int32_t)NUM_CURSORS)        //  SIGNED: cmp ecx, 7 / jl at 0x6FB57A27
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "Type < NUM_CURSORS", (uint32_t)(UINT_PTR)szSourceFile, 155);
+        FOG_DisplayAssert("Type < NUM_CURSORS", szSourceFile, 155);
         exit(-1);
     }
 
@@ -509,7 +509,7 @@ void __cdecl CURSOR_DrawCursorDefault()
         {
             if (!tCelContext.pCurrentCell)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR) "tCelContext.hCel", (uint32_t)(UINT_PTR)szSourceFile, 629);
+                FOG_DisplayAssert("tCelContext.hCel", szSourceFile, 629);
                 exit(-1);
             }
 
@@ -557,13 +557,13 @@ void __fastcall CURSOR_SetCursorPos(int32_t nX, int32_t nY)
 
     if (nX < 0)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "nX >= 0", (uint32_t)(UINT_PTR)szSourceFile, 775);
+        FOG_DisplayAssert("nX >= 0", szSourceFile, 775);
         exit(-1);
     }
 
     if (nY < 0)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "nY >= 0", (uint32_t)(UINT_PTR)szSourceFile, 776);
+        FOG_DisplayAssert("nY >= 0", szSourceFile, 776);
         exit(-1);
     }
 

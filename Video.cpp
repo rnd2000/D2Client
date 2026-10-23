@@ -184,7 +184,7 @@ void __fastcall VIDEO_PlayCinematic(int32_t nCinematicId)
 
     if (nCinematicId >= gnCinematicCount)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "VideoId < NumVideos", (uint32_t)(UINT_PTR)szSourceFile, 237);
+        FOG_DisplayAssert("VideoId < NumVideos", szSourceFile, 237);
         exit(-1);
     }
 

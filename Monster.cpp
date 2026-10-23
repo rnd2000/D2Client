@@ -1466,7 +1466,7 @@ void __fastcall MONSTER_InitClientUnit(D2UnitStrc *pUnit, D2ActiveRoomStrc *pRoo
     nDifficulty = GAME_GetDifficulty();
     if ((int32_t)nDifficulty >= (int32_t)NUM_DIFFICULTIES)
     {
-        FOG_DisplayAssert((uint32_t)"nDifficultyLevel < NUM_DIFFICULTY_LEVELS", (uint32_t)szMonsterCpp, 496);
+        FOG_DisplayAssert("nDifficultyLevel < NUM_DIFFICULTY_LEVELS", szMonsterCpp, 496);
         exit(-1);
     }
 
@@ -1674,7 +1674,7 @@ void __fastcall MONSTER_LinkOwnedUnits(D2UnitStrc *pUnit, D2C_MonsterIds nClassI
         nMissileIndex = (int32_t)((uint32_t)SEED_RollRandomNumber(&pUnit->pSeed) % scnCatapultMissiles);
         if (nMissileIndex >= scnCatapultMissiles)
         {
-            FOG_DisplayAssert((uint32_t)"nMissileIndex < scnCatapultMissiles", (uint32_t)szMonsterCpp, 372);
+            FOG_DisplayAssert("nMissileIndex < scnCatapultMissiles", szMonsterCpp, 372);
             exit(-1);
         }
 
@@ -1792,7 +1792,7 @@ void __fastcall MONSTER_FreeUnitData(D2UnitStrc *pUnit)
         pMonsterData = pUnit->pMonsterData;
         if (pMonsterData && pMonsterData->wszMonName)
         {
-            FOG_Free((uint32_t)pMonsterData->wszMonName, (uint32_t)szMonsterCpp, 102, 0);
+            FOG_Free(pMonsterData->wszMonName, szMonsterCpp, 102, 0);
             pMonsterData->wszMonName = NULL;
         }
     }
@@ -1866,7 +1866,7 @@ void __fastcall MONSTER_ChangeMonsterClass(D2UnitStrc *pUnit, D2C_MonsterIds nNe
         pMonsterData = pUnit->pMonsterData;
         if (pMonsterData && pMonsterData->wszMonName)
         {
-            FOG_Free((uint32_t)pMonsterData->wszMonName, (uint32_t)szMonsterCpp, 102, 0);
+            FOG_Free(pMonsterData->wszMonName, szMonsterCpp, 102, 0);
             pMonsterData->wszMonName = NULL;
         }
     }
@@ -2457,7 +2457,7 @@ void __fastcall MONSTER_SpawnAttackMissile(D2UnitStrc *pUnit)
         {
             if (pOwner->dwUnitType != UNIT_MISSILE)
             {
-                FOG_DisplayAssert((uint32_t)"UnitGetType (hMissile) == UNIT_MISSILE", (uint32_t)szMonsterCpp, 353);
+                FOG_DisplayAssert("UnitGetType (hMissile) == UNIT_MISSILE", szMonsterCpp, 353);
                 exit(-1);
             }
             MISSILE_ClientOnHit(pOwner, NULL, FALSE);
@@ -2466,7 +2466,7 @@ void __fastcall MONSTER_SpawnAttackMissile(D2UnitStrc *pUnit)
         nMissileIndex = (int32_t)((uint32_t)SEED_RollRandomNumber(&pUnit->pSeed) % scnCatapultMissiles);
         if (nMissileIndex >= scnCatapultMissiles)
         {
-            FOG_DisplayAssert((uint32_t)"nMissileIndex < scnCatapultMissiles", (uint32_t)szMonsterCpp, 372);
+            FOG_DisplayAssert("nMissileIndex < scnCatapultMissiles", szMonsterCpp, 372);
             exit(-1);
         }
 
@@ -2619,7 +2619,7 @@ void __fastcall MONSTER_DoClientSplEndEffect(D2UnitStrc *pMonster)
                 {
                     if (pOwner->dwUnitType != UNIT_MISSILE)
                     {
-                        FOG_DisplayAssert((uint32_t)"UnitGetType (hMissile) == UNIT_MISSILE", (uint32_t)szMonsterCpp, 353);
+                        FOG_DisplayAssert("UnitGetType (hMissile) == UNIT_MISSILE", szMonsterCpp, 353);
                         exit(-1);
                     }
                     MISSILE_ClientOnHit(pOwner, NULL, FALSE);
@@ -2628,7 +2628,7 @@ void __fastcall MONSTER_DoClientSplEndEffect(D2UnitStrc *pMonster)
                 nMissileIndex = (int32_t)((uint32_t)SEED_RollRandomNumber(&pMonster->pSeed) % scnCatapultMissiles);
                 if (nMissileIndex >= scnCatapultMissiles)
                 {
-                    FOG_DisplayAssert((uint32_t)"nMissileIndex < scnCatapultMissiles", (uint32_t)szMonsterCpp, 372);
+                    FOG_DisplayAssert("nMissileIndex < scnCatapultMissiles", szMonsterCpp, 372);
                     exit(-1);
                 }
 
@@ -2988,7 +2988,7 @@ void __fastcall MONSTER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pU
     case CLTACTION_RUNTOXY:
         if (!pParams)
         {
-            FOG_DisplayAssert((uint32_t)"ptParams", (uint32_t)szMonsterCpp, 1737);
+            FOG_DisplayAssert("ptParams", szMonsterCpp, 1737);
             exit(-1);
         }
 
@@ -3007,7 +3007,7 @@ void __fastcall MONSTER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pU
     case CLTACTION_RUNTOUNIT:
         if (!pParams)
         {
-            FOG_DisplayAssert((uint32_t)"ptParams", (uint32_t)szMonsterCpp, 1758);
+            FOG_DisplayAssert("ptParams", szMonsterCpp, 1758);
             exit(-1);
         }
 
@@ -3034,7 +3034,7 @@ void __fastcall MONSTER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pU
     case CLTACTION_MONSKILL4_UNIT:
         if (!pParams)
         {
-            FOG_DisplayAssert((uint32_t)"ptParams", (uint32_t)szMonsterCpp, 1782);
+            FOG_DisplayAssert("ptParams", szMonsterCpp, 1782);
             exit(-1);
         }
 
@@ -3095,7 +3095,7 @@ void __fastcall MONSTER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pU
     case CLTACTION_MONSKILL4_XY:
         if (!pParams)
         {
-            FOG_DisplayAssert((uint32_t)"ptParams", (uint32_t)szMonsterCpp, 1832);
+            FOG_DisplayAssert("ptParams", szMonsterCpp, 1832);
             exit(-1);
         }
 
@@ -3159,7 +3159,7 @@ void __fastcall MONSTER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pU
     case CLTACTION_HIT:
         if (!pParams)
         {
-            FOG_DisplayAssert((uint32_t)"ptParams", (uint32_t)szMonsterCpp, 1896);
+            FOG_DisplayAssert("ptParams", szMonsterCpp, 1896);
             exit(-1);
         }
 
@@ -3183,7 +3183,7 @@ void __fastcall MONSTER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pU
     case CLTACTION_KNOCKBACK:
         if (!pParams)
         {
-            FOG_DisplayAssert((uint32_t)"ptParams", (uint32_t)szMonsterCpp, 1921);
+            FOG_DisplayAssert("ptParams", szMonsterCpp, 1921);
             exit(-1);
         }
 
@@ -3204,7 +3204,7 @@ void __fastcall MONSTER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pU
     case CLTACTION_BLOCK:
         if (!pParams)
         {
-            FOG_DisplayAssert((uint32_t)"ptParams", (uint32_t)szMonsterCpp, 1943);
+            FOG_DisplayAssert("ptParams", szMonsterCpp, 1943);
             exit(-1);
         }
 
@@ -3588,7 +3588,7 @@ void __fastcall MONSTER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pU
     case CLTACTION_SKILL_UNIT:
         if (!pParams)
         {
-            FOG_DisplayAssert((uint32_t)"ptParams", (uint32_t)szMonsterCpp, 2296);
+            FOG_DisplayAssert("ptParams", szMonsterCpp, 2296);
             exit(-1);
         }
 
@@ -3618,7 +3618,7 @@ void __fastcall MONSTER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pU
     case CLTACTION_SKILL_XY:
         if (!pParams)
         {
-            FOG_DisplayAssert((uint32_t)"ptParams", (uint32_t)szMonsterCpp, 2315);
+            FOG_DisplayAssert("ptParams", szMonsterCpp, 2315);
             exit(-1);
         }
 

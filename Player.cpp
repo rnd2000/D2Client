@@ -931,7 +931,7 @@ BOOL __fastcall PLAYER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pUn
         return TRUE;
 
     default:
-        FOG_DisplayAssert((uint32_t)"0", (uint32_t)szPlayerCpp, 1074);
+        FOG_DisplayAssert("0", szPlayerCpp, 1074);
         exit(-1);
     }
 
@@ -994,7 +994,7 @@ BOOL __fastcall PLAYER_CanUseSkill(D2UnitStrc *pUnit, D2SkillStrc **ppSkill, int
 
     if (sgNumSnds <= nUseState)
     {
-        FOG_DisplayAssert((uint32_t)"sgNumSnds > eStatus", (uint32_t)szPlayerCpp, 715);
+        FOG_DisplayAssert("sgNumSnds > eStatus", szPlayerCpp, 715);
         exit(-1);
     }
 
@@ -1513,7 +1513,7 @@ TARGET:
 
                 if (!D2COMMON_DATATBLS_GetObjectsTxtRecord(pObject->dwClassId))
                 {
-                    FOG_DisplayAssert((uint32_t)"ptObjectData", (uint32_t)szPlayerCpp, 1220);
+                    FOG_DisplayAssert("ptObjectData", szPlayerCpp, 1220);
                     exit(-1);
                 }
 
@@ -1757,12 +1757,12 @@ void __fastcall PLAYER_DispatchSkillClick(D2ClientClickStrc *pClick, D2C_UnitTyp
             pTarget = pClick->pTarget;
             if (!pTarget)
             {
-                FOG_DisplayAssert((uint32_t)"ptMouse->hSelected", (uint32_t)szPlayerCpp, 1327);
+                FOG_DisplayAssert("ptMouse->hSelected", szPlayerCpp, 1327);
                 exit(-1);
             }
             if (!pClick->pUnit)
             {
-                FOG_DisplayAssert((uint32_t)"ptMouse->hUnit", (uint32_t)szPlayerCpp, 1328);
+                FOG_DisplayAssert("ptMouse->hUnit", szPlayerCpp, 1328);
                 exit(-1);
             }
 
@@ -1790,12 +1790,12 @@ void __fastcall PLAYER_DispatchSkillClick(D2ClientClickStrc *pClick, D2C_UnitTyp
             nApproach = nDistance - nRange;
             if (nApproach <= 0)
             {
-                FOG_DisplayAssert((uint32_t)"nDR > 0", (uint32_t)szPlayerCpp, 1352);
+                FOG_DisplayAssert("nDR > 0", szPlayerCpp, 1352);
                 exit(-1);
             }
             if (!nDistance)
             {
-                FOG_DisplayAssert((uint32_t)"nDist", (uint32_t)szPlayerCpp, 1353);
+                FOG_DisplayAssert("nDist", szPlayerCpp, 1353);
                 exit(-1);
             }
 
@@ -2270,7 +2270,7 @@ void __fastcall PLAYER_AssignCorpse(D2GSPacketSrv74 *ptCmd)
 
         if (!D2COMMON_10229(pBodyPath, pBody, D2COMMON_UNITS_GetRoom(pOwner), (uint32_t)nOwnerX, (uint32_t)nOwnerY))
         {
-            FOG_DisplayAssert((uint32_t)"fRet", (uint32_t)szPlayerCpp, 2746);
+            FOG_DisplayAssert("fRet", szPlayerCpp, 2746);
             exit(-1);
         }
 
@@ -2308,12 +2308,12 @@ void __fastcall PLAYER_AssignCorpse(D2GSPacketSrv74 *ptCmd)
             pRemoved = D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pInvItem);
             if (!pRemoved)
             {
-                FOG_DisplayAssert((uint32_t)"hRemove", (uint32_t)szPlayerCpp, 2760);
+                FOG_DisplayAssert("hRemove", szPlayerCpp, 2760);
                 exit(-1);
             }
             if (pRemoved != pInvItem)
             {
-                FOG_DisplayAssert((uint32_t)"hRemove == hItem", (uint32_t)szPlayerCpp, 2761);
+                FOG_DisplayAssert("hRemove == hItem", szPlayerCpp, 2761);
                 exit(-1);
             }
 

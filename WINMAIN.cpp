@@ -45,7 +45,7 @@ void __fastcall WINMAIN_AppModeEnqueue(D2C_AppMode nAppMode)
 {
     if (sgnLastAppmode >= APPMODE_STACK_SIZE)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "sgnLastAppmode < APPMODE_STACK_SIZE", (uint32_t)(UINT_PTR)szAssertFile, 166);
+        FOG_DisplayAssert("sgnLastAppmode < APPMODE_STACK_SIZE", szAssertFile, 166);
         exit(-1);
     }
 
@@ -64,7 +64,7 @@ D2C_AppMode __cdecl WINMAIN_AppModeDequeue()
 {
     if (!sgnLastAppmode)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "sgnLastAppmode", (uint32_t)(UINT_PTR)szAssertFile, 176);
+        FOG_DisplayAssert("sgnLastAppmode", szAssertFile, 176);
         exit(-1);
     }
 
@@ -137,11 +137,11 @@ int32_t __stdcall WINMAIN_CmdArgPreCache(void *pParam, int32_t nUnused)
     UINT_PTR nEnd;
     UINT_PTR nPage;
 
-    nCache = (UINT_PTR)FOG_Alloc((uint32_t)nPreCacheBytes, (uint32_t)(UINT_PTR)szAssertFile, 285, 0);
+    nCache = (UINT_PTR)FOG_Alloc((uint32_t)nPreCacheBytes, szAssertFile, 285, 0);
     nEnd = nCache + nPreCacheBytes;
     for (nPage = nCache; nPage < nEnd; nPage += nPreCachePageSize) *(char *)nPage = 0;
 
-    FOG_Free((uint32_t)nCache, (uint32_t)(UINT_PTR)szAssertFile, 288, 0);
+    FOG_Free((void *)nCache, szAssertFile, 288, 0);
     return 1;
 }
 
@@ -395,12 +395,12 @@ int32_t __stdcall WINMAIN_D2ClientEntrypoint(HMODULE hModule, D2ConfigStrc* pCon
         //  gpLaunchParamCategories still names Tyler, Path, Test and Composite, and `mov eax, 3` overwrites whatever -mode selected.
         if (nAppMode >= APPMODE_LAST)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)"gnAppMode < APPMODE_LAST", (uint32_t)(UINT_PTR)szAssertFile, 662);
+            FOG_DisplayAssert("gnAppMode < APPMODE_LAST", szAssertFile, 662);
             exit(-1);
         }
         if (nAppMode <= APPMODE_CONTINUE)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)"gnAppMode > APPMODE_CONTINUE", (uint32_t)(UINT_PTR)szAssertFile, 663);
+            FOG_DisplayAssert("gnAppMode > APPMODE_CONTINUE", szAssertFile, 663);
             exit(-1);
         }
     } while (nAppMode != APPMODE_SHOULDQUIT);

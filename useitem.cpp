@@ -475,7 +475,7 @@ void __cdecl USEITEM_AnvilTickPanel()
 
     if (!gnAnvilState)
     {
-        FOG_DisplayAssert((uint32_t)"0", (uint32_t)(UINT_PTR)szUseitemCpp, 797);
+        FOG_DisplayAssert("0", szUseitemCpp, 797);
         exit(-1);
     }
 
@@ -564,7 +564,7 @@ void __fastcall USEITEM_AnvilOnPanelPacket(D2GSPacketSrv58 *pPacket)
         break;
 
     default:
-        FOG_DisplayAssert((uint32_t)"0", (uint32_t)(UINT_PTR)szUseitemCpp, 852);
+        FOG_DisplayAssert("0", szUseitemCpp, 852);
         exit(-1);
     }
 }
@@ -787,8 +787,8 @@ int32_t __cdecl USEITEM_AnvilDrawPanel()
                     //  register beside it.
                     D2WIN_10117_DrawText(pSplitText->wszLine, 160 - nTextWidth / 2, nY, 4, 0);
                     pSplitNext = pSplitText->pNextLine;
-                    FOG_Free((uint32_t)(UINT_PTR)pSplitText->wszLine, (uint32_t)(UINT_PTR)szUseitemCpp, 707, 0);
-                    FOG_Free((uint32_t)(UINT_PTR)pSplitText, (uint32_t)(UINT_PTR)szUseitemCpp, 708, 0);
+                    FOG_Free(pSplitText->wszLine, szUseitemCpp, 707, 0);
+                    FOG_Free(pSplitText, szUseitemCpp, 708, 0);
                     nY += 20;
                     pSplitText = pSplitNext;
                 }

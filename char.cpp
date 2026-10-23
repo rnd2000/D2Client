@@ -593,7 +593,7 @@ void __cdecl CHAR_CharPanelDraw()
     nDifficulty = (uint8_t)GAME_GetDifficulty();
     if (nDifficulty >= NUM_DIFFICULTIES)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szDifficultyLevelAssert, (uint32_t)(UINT_PTR)szCharCpp, 470);
+        FOG_DisplayAssert(szDifficultyLevelAssert, szCharCpp, 470);
         exit(-1);
     }
 
@@ -703,7 +703,7 @@ void __cdecl CHAR_CharPanelDraw()
             nRefMonsterClass = SELECT_GetToHitRefMonster();
             if (nRefMonsterClass < 0 || nRefMonsterClass >= sgptDataTables->nMonStatsTxtRecordCount || (pNameMonStats = &sgptDataTables->pMonStatsTxt[nRefMonsterClass]) == NULL)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szPtStats, (uint32_t)(UINT_PTR)szCharCpp, 236);
+                FOG_DisplayAssert(szPtStats, szCharCpp, 236);
                 exit(-1);
             }
 
@@ -747,7 +747,7 @@ void __cdecl CHAR_CharPanelDraw()
             nRefMonsterClass = SELECT_GetToBeHitRefMonster();
             if (nRefMonsterClass < 0 || nRefMonsterClass >= sgptDataTables->nMonStatsTxtRecordCount || (pNameMonStats = &sgptDataTables->pMonStatsTxt[nRefMonsterClass]) == NULL)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szPtStats, (uint32_t)(UINT_PTR)szCharCpp, 348);
+                FOG_DisplayAssert(szPtStats, szCharCpp, 348);
                 exit(-1);
             }
 
@@ -1092,14 +1092,14 @@ int32_t __fastcall CHAR_CharPanelChanceToHitPercent(int32_t nAttackRating)
     nDifficulty = (uint8_t)GAME_GetDifficulty();
     if (nDifficulty >= 3)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szDifficultyLevelAssert, (uint32_t)(UINT_PTR)szCharCpp, 398);
+        FOG_DisplayAssert(szDifficultyLevelAssert, szCharCpp, 398);
         exit(-1);
     }
 
     nRefMonsterClass = SELECT_GetToHitRefMonster();
     if (nRefMonsterClass < 0 || nRefMonsterClass >= sgptDataTables->nMonStatsTxtRecordCount || (pMonStatsTxt = &sgptDataTables->pMonStatsTxt[nRefMonsterClass]) == NULL)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szPtStats, (uint32_t)(UINT_PTR)szCharCpp, 403);
+        FOG_DisplayAssert(szPtStats, szCharCpp, 403);
         exit(-1);
     }
 

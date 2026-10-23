@@ -25,10 +25,10 @@ D2RosterInfoStrc **__cdecl PLAYERLIST_RosterAllocPlayerInfoList(void)
 {
     D2RosterInfoStrc **ppInfoHead;
 
-    ppInfoHead = (D2RosterInfoStrc **)(UINT_PTR)FOG_Alloc(4, (uint32_t)(UINT_PTR)szPlayerListCpp, 37, 0);
+    ppInfoHead = (D2RosterInfoStrc **)(UINT_PTR)FOG_Alloc(4, szPlayerListCpp, 37, 0);
     if (!ppInfoHead)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptInfo", (uint32_t)(UINT_PTR)szPlayerListCpp, 39);
+        FOG_DisplayAssert("ptInfo", szPlayerListCpp, 39);
         exit(-1);
     }
 
@@ -50,10 +50,10 @@ void __fastcall PLAYERLIST_RosterFreePlayerInfoList(D2RosterInfoStrc **ppInfoHea
     for (pInfoEntry = *ppInfoHead; pInfoEntry; pInfoEntry = pNext)
     {
         pNext = pInfoEntry->pNext;
-        FOG_Free((uint32_t)(UINT_PTR)pInfoEntry, (uint32_t)(UINT_PTR)szPlayerListCpp, 60, 0);
+        FOG_Free(pInfoEntry, szPlayerListCpp, 60, 0);
     }
 
-    FOG_Free((uint32_t)(UINT_PTR)ppInfoHead, (uint32_t)(UINT_PTR)szPlayerListCpp, 64, 0);
+    FOG_Free(ppInfoHead, szPlayerListCpp, 64, 0);
 }
 
 //1.10f: D2Client.0x6FB4B840
@@ -84,7 +84,7 @@ void __fastcall PLAYERLIST_RosterGetOrAddInfoEntry(uint32_t dwPlayerGUID, uint32
         }
     }
 
-    pInfoEntry = (D2RosterInfoStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterInfoStrc), (uint32_t)(UINT_PTR)szPlayerListCpp, 116, 0);
+    pInfoEntry = (D2RosterInfoStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterInfoStrc), szPlayerListCpp, 116, 0);
     //  BUG: FOG_Alloc's answer is not tested before the stores. LATENT.
     pInfoEntry->dwUnitId = 0;
     pInfoEntry->dwPartyFlags = 0;

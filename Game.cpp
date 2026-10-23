@@ -820,7 +820,7 @@ void __cdecl GAME_InitGame()
     QUESTSFX_Reset();
 
     //  Eight bytes at Game.cpp line 1339; GAME_AppModeGame frees the same pointer at line 1422.
-    gpClientGameBlock = (void *)FOG_Alloc(8, (uint32_t)(UINT_PTR)szSourceFile, 1339, 0);
+    gpClientGameBlock = (void *)FOG_Alloc(8, szSourceFile, 1339, 0);
 
     CUNIT_ClearUnitTables();
     DLIGHTMAP_ClearAmbientLight();
@@ -907,7 +907,7 @@ void __fastcall GAME_DrawGameScene(int32_t bNoDefaultCursor)
         D2LevelsTxt *pLevel = D2COMMON_DATATBLS_GetLevelsTxtRecord(D2COMMON_DUNGEON_GetLevelIdFromRoom(pRoom));
         if (!pLevel)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptLevelData", (uint32_t)(UINT_PTR)szSourceFile, 1491);
+            FOG_DisplayAssert("ptLevelData", szSourceFile, 1491);
             exit(-1);
         }
         nBlankScreen = (int32_t)pLevel->dwBlankScreen;
@@ -2329,7 +2329,7 @@ D2C_AppMode __fastcall GAME_AppModeGame()
     //  The 128-byte client block (0x6FBA7750), zeroed by name.
     GAME_ClearClientGlobalData();
 
-    FOG_Free((uint32_t)(UINT_PTR)gpClientGameBlock, (uint32_t)(UINT_PTR)szSourceFile, 1422, 0);
+    FOG_Free(gpClientGameBlock, szSourceFile, 1422, 0);
 
     FOG_Trace("game close end %d\n", GetTickCount());
 
@@ -2458,12 +2458,12 @@ void __fastcall GAME_ApplyParamStartAct(D2ConfigStrc *pConfig)
     {
         if (!(pConfig->dwAct < (int32_t)NUM_ACTS + 1))
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptParams->nAct < NUM_ACTS + 1", (uint32_t)(UINT_PTR)szSourceFile, 3472);
+            FOG_DisplayAssert("ptParams->nAct < NUM_ACTS + 1", szSourceFile, 3472);
             exit(-1);
         }
         if (!(pConfig->dwAct > 0))
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptParams->nAct > 0", (uint32_t)(UINT_PTR)szSourceFile, 3473);
+            FOG_DisplayAssert("ptParams->nAct > 0", szSourceFile, 3473);
             exit(-1);
         }
         D2GAME_GAME_SetGlobalAct((D2C_Acts)(pConfig->dwAct - 1));

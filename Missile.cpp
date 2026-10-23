@@ -7929,7 +7929,7 @@ void __fastcall MISSILE_LaunchCatapultShot(D2UnitStrc *pMonster, D2UnitStrc *pMi
     D2COMMON_11066(pMonster, &nDirX, &nDirY);
     if (!nDirX && !nDirY)
     {
-        FOG_DisplayAssert((uint32_t)"nDX || nDY", (uint32_t)szMissileCpp, 6224);
+        FOG_DisplayAssert("nDX || nDY", szMissileCpp, 6224);
         exit(-1);
     }
 
@@ -7958,7 +7958,7 @@ void __fastcall MISSILE_LaunchCatapultShot(D2UnitStrc *pMonster, D2UnitStrc *pMi
     //  BUG: no NULL test on the record (the lookup gives NULL for an id out of range). LATENT: its one caller passes only the two catapult ball ids.
     if (pMissilesTxt->wRange != 25)
     {
-        FOG_DisplayAssert((uint32_t)"SHENK_CATAPULT_FRAMES == ptStats->nRange", (uint32_t)szMissileCpp, 6241);
+        FOG_DisplayAssert("SHENK_CATAPULT_FRAMES == ptStats->nRange", szMissileCpp, 6241);
         exit(-1);
     }
 

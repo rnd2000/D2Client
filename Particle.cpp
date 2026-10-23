@@ -70,10 +70,10 @@ void __stdcall PARTICLE_AllocUnitParticles(D2UnitStrc *pUnit)
     pParticle = GFX_GetUnitParticles(pUnit);
     if (!pParticle)
     {
-        pParticle = (D2ClientParticleStrc *)FOG_Alloc(sizeof(D2ClientParticleStrc), (uint32_t)szParticleCpp, 72, 0);
+        pParticle = (D2ClientParticleStrc *)FOG_Alloc(sizeof(D2ClientParticleStrc), szParticleCpp, 72, 0);
         if (!pParticle)
         {
-            FOG_DisplayAssert((uint32_t)"ptParticle", (uint32_t)szParticleCpp, 74);
+            FOG_DisplayAssert("ptParticle", szParticleCpp, 74);
             exit(-1);
         }
     }
@@ -93,7 +93,7 @@ void __stdcall PARTICLE_FreeUnitParticles(D2UnitStrc *pUnit)
     pParticle = GFX_GetUnitParticles(pUnit);
     if (pParticle)
     {
-        FOG_Free((uint32_t)pParticle, (uint32_t)szParticleCpp, 100, 0);
+        FOG_Free(pParticle, szParticleCpp, 100, 0);
         GFX_SetUnitParticles(pUnit, NULL);
     }
 }
@@ -442,7 +442,7 @@ void __stdcall PARTICLE_UpdateUnitParticle(D2UnitStrc *pUnit)
             else if (nUnitType == UNIT_MISSILE)
             {
                 if (pOwner->dwUnitType != UNIT_MONSTER)
-                    FOG_DisplayWarning((uint32_t)"UnitGetType (hSourceUnit) == UNIT_MONSTER", (uint32_t)szParticleCpp, 425);
+                    FOG_DisplayWarning("UnitGetType (hSourceUnit) == UNIT_MONSTER", szParticleCpp, 425);
 
                 if (pOwner->dwAnimMode == MONMODE_DEATH || pOwner->dwAnimMode == MONMODE_DEAD)
                     return;

@@ -274,12 +274,12 @@ void __stdcall CHAT_OnImeNotify(SMSGHANDLER_PARAMS *pMsg)
             if (ImmGetCandidateListA(hImc, 0, NULL, 0) && dwBufLen)
             {
                 if (gpChatCandidateList)
-                    FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 229, 0);
-                gpChatCandidateList = (CANDIDATELIST *)FOG_Alloc(dwBufLen, (uint32_t)szChatCpp, 231, 0);
+                    FOG_Free(gpChatCandidateList, szChatCpp, 229, 0);
+                gpChatCandidateList = (CANDIDATELIST *)FOG_Alloc(dwBufLen, szChatCpp, 231, 0);
                 ImmGetCandidateListA(hImc, 0, gpChatCandidateList, dwBufLen);
                 if (gpChatCandidateList->dwStyle == IME_CAND_CODE && gpChatCandidateList->dwCount == 1)
                 {
-                    FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 236, 0);
+                    FOG_Free(gpChatCandidateList, szChatCpp, 236, 0);
                     gpChatCandidateList = NULL;
                 }
             }
@@ -293,7 +293,7 @@ void __stdcall CHAT_OnImeNotify(SMSGHANDLER_PARAMS *pMsg)
         {
             if (gpChatCandidateList)
             {
-                FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 346, 0);
+                FOG_Free(gpChatCandidateList, szChatCpp, 346, 0);
                 gpChatCandidateList = NULL;
             }
             pMsg->bReturn = 1;
@@ -303,7 +303,7 @@ void __stdcall CHAT_OnImeNotify(SMSGHANDLER_PARAMS *pMsg)
         {
             if (gpChatCandidateList)
             {
-                FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 357, 0);
+                FOG_Free(gpChatCandidateList, szChatCpp, 357, 0);
                 gpChatCandidateList = NULL;
             }
             pMsg->bReturn = 1;
@@ -318,12 +318,12 @@ void __stdcall CHAT_OnImeNotify(SMSGHANDLER_PARAMS *pMsg)
             if (ImmGetCandidateListA(hImc, 0, NULL, 0) && dwBufLen)
             {
                 if (gpChatCandidateList)
-                    FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 229, 0);
-                gpChatCandidateList = (CANDIDATELIST *)FOG_Alloc(dwBufLen, (uint32_t)szChatCpp, 231, 0);
+                    FOG_Free(gpChatCandidateList, szChatCpp, 229, 0);
+                gpChatCandidateList = (CANDIDATELIST *)FOG_Alloc(dwBufLen, szChatCpp, 231, 0);
                 ImmGetCandidateListA(hImc, 0, gpChatCandidateList, dwBufLen);
                 if (gpChatCandidateList->dwStyle == IME_CAND_CODE && gpChatCandidateList->dwCount == 1)
                 {
-                    FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 236, 0);
+                    FOG_Free(gpChatCandidateList, szChatCpp, 236, 0);
                     gpChatCandidateList = NULL;
                 }
             }
@@ -336,12 +336,12 @@ void __stdcall CHAT_OnImeNotify(SMSGHANDLER_PARAMS *pMsg)
             if (ImmGetCandidateListA(hImc, 0, NULL, 0) && dwBufLen)
             {
                 if (gpChatCandidateList)
-                    FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 229, 0);
-                gpChatCandidateList = (CANDIDATELIST *)FOG_Alloc(dwBufLen, (uint32_t)szChatCpp, 231, 0);
+                    FOG_Free(gpChatCandidateList, szChatCpp, 229, 0);
+                gpChatCandidateList = (CANDIDATELIST *)FOG_Alloc(dwBufLen, szChatCpp, 231, 0);
                 ImmGetCandidateListA(hImc, 0, gpChatCandidateList, dwBufLen);
                 if (gpChatCandidateList->dwStyle == IME_CAND_CODE && gpChatCandidateList->dwCount == 1)
                 {
-                    FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 236, 0);
+                    FOG_Free(gpChatCandidateList, szChatCpp, 236, 0);
                     gpChatCandidateList = NULL;
                 }
             }
@@ -582,7 +582,7 @@ void __cdecl CHAT_UnregisterHandlers()
     gwszImeComposition[0].ch = 0;
     if (gpChatCandidateList)
     {
-        FOG_Free((uint32_t)gpChatCandidateList, (uint32_t)szChatCpp, 663, 0);
+        FOG_Free(gpChatCandidateList, szChatCpp, 663, 0);
         gpChatCandidateList = NULL;
     }
 }

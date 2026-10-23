@@ -1461,13 +1461,13 @@ void __fastcall ESCMENU_LoadPageImages(D2ClientEscMenuInfoStrc *ptMenuInfo, D2Cl
 
     if (!ptMenuInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptMenuInfo", (uint32_t)szRestartCpp, 1316);
+        FOG_DisplayAssert("ptMenuInfo", szRestartCpp, 1316);
         exit(-1);
     }
 
     if (!ptMenuItem)
     {
-        FOG_DisplayAssert((uint32_t)"ptMenuItem", (uint32_t)szRestartCpp, 1317);
+        FOG_DisplayAssert("ptMenuItem", szRestartCpp, 1317);
         exit(-1);
     }
 
@@ -1493,7 +1493,7 @@ void __fastcall ESCMENU_LoadPageImages(D2ClientEscMenuInfoStrc *ptMenuInfo, D2Cl
                 {
                     if (!(pRow->dwCount > 0 && pRow->dwCount <= MAX_CHOICE))
                     {
-                        FOG_DisplayAssert((uint32_t)"ptMenuItem[ii].dwCount > 0 && ptMenuItem[ii].dwCount <= MAX_CHOICE", (uint32_t)szRestartCpp, 1377);
+                        FOG_DisplayAssert("ptMenuItem[ii].dwCount > 0 && ptMenuItem[ii].dwCount <= MAX_CHOICE", szRestartCpp, 1377);
                         exit(-1);
                     }
 
@@ -1501,7 +1501,7 @@ void __fastcall ESCMENU_LoadPageImages(D2ClientEscMenuInfoStrc *ptMenuInfo, D2Cl
                     {
                         if (!pRow->pcChoiceFile[jj][0])
                         {
-                            FOG_DisplayAssert((uint32_t)"ptMenuItem[ii].pcChoiceFile[jj][0] != 0", (uint32_t)szRestartCpp, 1380);
+                            FOG_DisplayAssert("ptMenuItem[ii].pcChoiceFile[jj][0] != 0", szRestartCpp, 1380);
                             exit(-1);
                         }
 
@@ -1584,13 +1584,13 @@ void __fastcall ESCMENU_UnloadPageImages(D2ClientEscMenuInfoStrc *ptMenuInfo, D2
 
     if (!ptMenuInfo)
     {
-        FOG_DisplayAssert((uint32_t)"ptMenuInfo", (uint32_t)szRestartCpp, 1466);
+        FOG_DisplayAssert("ptMenuInfo", szRestartCpp, 1466);
         exit(-1);
     }
 
     if (!ptMenuItem)
     {
-        FOG_DisplayAssert((uint32_t)"ptMenuItem", (uint32_t)szRestartCpp, 1467);
+        FOG_DisplayAssert("ptMenuItem", szRestartCpp, 1467);
         exit(-1);
     }
 
@@ -1608,7 +1608,7 @@ void __fastcall ESCMENU_UnloadPageImages(D2ClientEscMenuInfoStrc *ptMenuInfo, D2
         {
             if (!(pRow->dwCount > 0 && pRow->dwCount <= MAX_CHOICE))
             {
-                FOG_DisplayAssert((uint32_t)"ptMenuItem[ii].dwCount > 0 && ptMenuItem[ii].dwCount <= MAX_CHOICE", (uint32_t)szRestartCpp, 1496);
+                FOG_DisplayAssert("ptMenuItem[ii].dwCount > 0 && ptMenuItem[ii].dwCount <= MAX_CHOICE", szRestartCpp, 1496);
                 exit(-1);
             }
 
@@ -1872,13 +1872,13 @@ void __cdecl ESCMENU_Draw(void)
 
     if (!sgptMenuInfo)
     {
-        FOG_DisplayAssert((uint32_t)"sgptMenuInfo", (uint32_t)szRestartCpp, 1726);
+        FOG_DisplayAssert("sgptMenuInfo", szRestartCpp, 1726);
         exit(-1);
     }
 
     if (!sgptMenuItem)
     {
-        FOG_DisplayAssert((uint32_t)"sgptMenuItem", (uint32_t)szRestartCpp, 1727);
+        FOG_DisplayAssert("sgptMenuItem", szRestartCpp, 1727);
         exit(-1);
     }
 

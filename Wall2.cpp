@@ -53,7 +53,7 @@ void __fastcall WALL2_WallInitSquares(D2ClientViewStrc *pView)
 void __fastcall WALL2_WallFreeSquares(D2ClientViewStrc *pView)
 {
     if (pView->pSquares)
-        FOG_Free((uint32_t)(UINT_PTR)pView->pSquares, (uint32_t)(UINT_PTR)szSourceFile, 85, 0);
+        FOG_Free(pView->pSquares, szSourceFile, 85, 0);
 
     pView->pSquares = nullptr;
     pView->nGridSide = 0;
@@ -135,9 +135,9 @@ void __fastcall WALL2_WallBuildSquareGrid(D2ClientViewStrc *pView, int32_t bSkip
     if (!pView->pSquares || nSquareCount != pView->nSquareCount)
     {
         if (pView->pSquares)
-            FOG_Free((uint32_t)(UINT_PTR)pView->pSquares, (uint32_t)(UINT_PTR)szSourceFile, 58, 0);
+            FOG_Free(pView->pSquares, szSourceFile, 58, 0);
 
-        pView->pSquares = (D2ClientWallSquareStrc *)FOG_Alloc(sizeof(D2ClientWallSquareStrc) * nSquareCount, (uint32_t)(UINT_PTR)szSourceFile, 61, 0);
+        pView->pSquares = (D2ClientWallSquareStrc *)FOG_Alloc(sizeof(D2ClientWallSquareStrc) * nSquareCount, szSourceFile, 61, 0);
         pView->nSquareCount = nSquareCount;
     }
 
@@ -160,7 +160,7 @@ void __fastcall WALL2_WallBuildSquareGrid(D2ClientViewStrc *pView, int32_t bSkip
 
     if (!pView->pSquares)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "pWall->pSquares != NULL", (uint32_t)(UINT_PTR)szSourceFile, 828);
+        FOG_DisplayAssert("pWall->pSquares != NULL", szSourceFile, 828);
         exit(-1);
     }
 
@@ -187,7 +187,7 @@ void __fastcall WALL2_WallBuildSquareGrid(D2ClientViewStrc *pView, int32_t bSkip
     pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "hUnit", (uint32_t)(UINT_PTR)szSourceFile, 849);
+        FOG_DisplayAssert("hUnit", szSourceFile, 849);
         exit(-1);
     }
 
@@ -575,12 +575,12 @@ int32_t __stdcall WALL2_WallAddRoomToSquareGrid(D2ActiveRoomStrc *pRoom, D2Clien
             //  Both asserts are unreachable: the enclosing ifs already exclude their conditions. Reproduced as written, with both `< 0` halves.
             if (nLocalX < 0 || nLocalX >= nGridSide)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR) "lTileX >= 0 && lTileX < (LONG) ( pWall->dwSquareSide )", (uint32_t)(UINT_PTR)szSourceFile, 768);
+                FOG_DisplayAssert("lTileX >= 0 && lTileX < (LONG) ( pWall->dwSquareSide )", szSourceFile, 768);
                 exit(-1);
             }
             if (nLocalY < 0 || nLocalY >= nGridSide)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR) "lTileY >= 0 && lTileY < (LONG) ( pWall->dwSquareSide )", (uint32_t)(UINT_PTR)szSourceFile, 769);
+                FOG_DisplayAssert("lTileY >= 0 && lTileY < (LONG) ( pWall->dwSquareSide )", szSourceFile, 769);
                 exit(-1);
             }
 

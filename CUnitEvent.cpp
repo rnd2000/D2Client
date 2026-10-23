@@ -73,7 +73,7 @@ D2UnitEventStrc *__fastcall CUNITEVENT_AddEvent(D2UnitStrc *pUnit, int32_t nCltE
     if (!pUnit)
         return NULL;
 
-    pNewEvent = (D2UnitEventStrc *)FOG_AllocPool((uint32_t)pUnit->pMemoryPool, sizeof(D2UnitEventStrc), (uint32_t)szCUnitEventCpp, 72, 0);
+    pNewEvent = (D2UnitEventStrc *)FOG_AllocPool(pUnit->pMemoryPool, sizeof(D2UnitEventStrc), szCUnitEventCpp, 72, 0);
     memset(pNewEvent, 0, sizeof(D2UnitEventStrc));
     pNewEvent->nGUID1 = nSkillId;
     //  +0 is a DWORD in the client's use

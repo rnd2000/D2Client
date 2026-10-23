@@ -212,7 +212,7 @@ void __fastcall DWALL_DrawRoomWalls(D2ClientWallSquareStrc *pRoom, uint32_t fOnl
     if (fOnlyDrawShadowLayer >= 2)
     {
         //  The expression is pushed from gszAssertOnlyDrawShadowLayer (0x6FB75140).
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)gszAssertOnlyDrawShadowLayer, (uint32_t)(UINT_PTR)szSourceFile, 243);
+        FOG_DisplayAssert(gszAssertOnlyDrawShadowLayer, szSourceFile, 243);
         exit(-1);
     }
 
@@ -222,7 +222,7 @@ void __fastcall DWALL_DrawRoomWalls(D2ClientWallSquareStrc *pRoom, uint32_t fOnl
 
         if (pTileData->nTileType == 15)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptTile->eTileType!= BASE_ROOF", (uint32_t)(UINT_PTR)szSourceFile, 249);
+            FOG_DisplayAssert("ptTile->eTileType!= BASE_ROOF", szSourceFile, 249);
             exit(-1);
         }
 

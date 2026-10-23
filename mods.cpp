@@ -146,13 +146,13 @@ void __fastcall MODS_BuildSocketFillerText(D2UnitStrc *pItem, Unicode *wszOut, i
 
     if (!D2COMMON_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_SOCKET_FILLER))
     {
-        FOG_DisplayAssert((uint32_t)szAssertSocketFiller, (uint32_t)szModsCpp, 538);
+        FOG_DisplayAssert(szAssertSocketFiller, szModsCpp, 538);
         exit(-1);
     }
     pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(pItem ? (int32_t)pItem->dwClassId : -1);
     if (!pItemsTxt)
     {
-        FOG_DisplayAssert((uint32_t)szPtItemStats, (uint32_t)szModsCpp, 540);
+        FOG_DisplayAssert(szPtItemStats, szModsCpp, 540);
         exit(-1);
     }
     wszOut[0].ch = 0;
@@ -162,7 +162,7 @@ void __fastcall MODS_BuildSocketFillerText(D2UnitStrc *pItem, Unicode *wszOut, i
         pGemsTxt = D2COMMON_DATATBLS_GetGemsTxtRecord(pItemsTxt->dwGemOffset);
         if (!pGemsTxt)
         {
-            FOG_DisplayAssert((uint32_t)szPtGemMods, (uint32_t)szModsCpp, 547);
+            FOG_DisplayAssert(szPtGemMods, szModsCpp, 547);
             exit(-1);
         }
 
@@ -234,7 +234,7 @@ void __fastcall MODS_BuildSocketFillerText(D2UnitStrc *pItem, Unicode *wszOut, i
         pGemsTxt = D2COMMON_DATATBLS_GetGemsTxtRecord(pItemsTxt->dwGemOffset);
         if (!pGemsTxt)
         {
-            FOG_DisplayAssert((uint32_t)szPtGemMods, (uint32_t)szModsCpp, 581);
+            FOG_DisplayAssert(szPtGemMods, szModsCpp, 581);
             exit(-1);
         }
 
@@ -422,7 +422,7 @@ void __fastcall MODS_BuildStatsText(D2UnitStrc *pUnit, Unicode *wszOut, int32_t 
             Unicode::toUnicode(wszValue, szValue, 9);
             if (pLabel->nAlwaysOne != 1)
             {
-                FOG_DisplayAssert((uint32_t)szAssertZero, (uint32_t)szModsCpp, 321);
+                FOG_DisplayAssert(szAssertZero, szModsCpp, 321);
                 exit(-1);
             }
             if (nStatValue <= 0)
@@ -436,7 +436,7 @@ void __fastcall MODS_BuildStatsText(D2UnitStrc *pUnit, Unicode *wszOut, int32_t 
             }
             if (pLabel->nAlwaysTwo != 2)
             {
-                FOG_DisplayAssert((uint32_t)szAssertZero, (uint32_t)szModsCpp, 317);
+                FOG_DisplayAssert(szAssertZero, szModsCpp, 317);
                 exit(-1);
             }
             Unicode::strcpy(wszElixirLine, pwszLabel);

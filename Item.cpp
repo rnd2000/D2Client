@@ -274,7 +274,7 @@ void __fastcall ITEM_OnUnitModeUpdate(D2UnitStrc *pUnit)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtUnit, (uint32_t)(UINT_PTR)szItemCpp, 840);
+        FOG_DisplayAssert(szAssertPtUnit, szItemCpp, 840);
         exit(-1);
     }
 
@@ -308,7 +308,7 @@ void __fastcall ITEM_OnUnitModeUpdate(D2UnitStrc *pUnit)
     default:
         //  The mode is bounded by `cmp eax, 6` above, so this arm needs a value outside 0..6 in a field this unit's own writer fills.
         //  The assert message is the single character "0".
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertZero, (uint32_t)(UINT_PTR)szItemCpp, 866);
+        FOG_DisplayAssert(szAssertZero, szItemCpp, 866);
         exit(-1);
     }
 }
@@ -478,7 +478,7 @@ void __fastcall ITEM_SetItemDisplayState(D2UnitStrc *pItem, uint16_t nX, int32_t
 {
     if (!pItem)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtItem, (uint32_t)(UINT_PTR)szItemCpp, 172);
+        FOG_DisplayAssert(szAssertPtItem, szItemCpp, 172);
         exit(-1);
     }
 
@@ -690,7 +690,7 @@ void __fastcall ITEM_ClearUninterruptableState(D2UnitStrc *pUnit)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHItem, (uint32_t)(UINT_PTR)szItemCpp, 3212);
+        FOG_DisplayAssert(szAssertHItem, szItemCpp, 3212);
         exit(-1);
     }
 
@@ -1066,21 +1066,21 @@ void __fastcall ITEM_ApplyGemMods(D2UnitStrc *pItem, D2UnitStrc *pTarget, int32_
     {
         if (pTarget->dwUnitType != UNIT_ITEM)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertUnitIsItem, (uint32_t)(UINT_PTR)szItemCpp, 48);
+            FOG_DisplayAssert(szAssertUnitIsItem, szItemCpp, 48);
             exit(-1);
         }
 
         D2ItemsTxt *pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(pItem ? pItem->dwClassId : -1);
         if (!pItemsTxt)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtItemStats, (uint32_t)(UINT_PTR)szItemCpp, 50);
+            FOG_DisplayAssert(szAssertPtItemStats, szItemCpp, 50);
             exit(-1);
         }
 
         D2GemsTxt *pMods = D2COMMON_DATATBLS_GetGemsTxtRecord(pItemsTxt->dwGemOffset);
         if (!pMods)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtGemMods, (uint32_t)(UINT_PTR)szItemCpp, 52);
+            FOG_DisplayAssert(szAssertPtGemMods, szItemCpp, 52);
             exit(-1);
         }
 
@@ -1090,21 +1090,21 @@ void __fastcall ITEM_ApplyGemMods(D2UnitStrc *pItem, D2UnitStrc *pTarget, int32_
     {
         if (pTarget->dwUnitType != UNIT_ITEM)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertUnitIsItem, (uint32_t)(UINT_PTR)szItemCpp, 58);
+            FOG_DisplayAssert(szAssertUnitIsItem, szItemCpp, 58);
             exit(-1);
         }
 
         D2ItemsTxt *pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(pItem ? pItem->dwClassId : -1);
         if (!pItemsTxt)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtItemStats, (uint32_t)(UINT_PTR)szItemCpp, 60);
+            FOG_DisplayAssert(szAssertPtItemStats, szItemCpp, 60);
             exit(-1);
         }
 
         D2GemsTxt *pMods = D2COMMON_DATATBLS_GetGemsTxtRecord(pItemsTxt->dwGemOffset);
         if (!pMods)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtGemMods, (uint32_t)(UINT_PTR)szItemCpp, 62);
+            FOG_DisplayAssert(szAssertPtGemMods, szItemCpp, 62);
             exit(-1);
         }
 
@@ -1249,7 +1249,7 @@ void __fastcall ITEM_OnPacket92(D2UnitStrc *pPlayer)
         D2UnitStrc *pItem = D2COMMON_INVENTORY_UnitIsItem(pNode);
         if (!pItem)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInvItem, (uint32_t)(UINT_PTR)szItemCpp, 3353);
+            FOG_DisplayAssert(szAssertHInvItem, szItemCpp, 3353);
             exit(-1);
         }
 
@@ -1261,12 +1261,12 @@ void __fastcall ITEM_OnPacket92(D2UnitStrc *pPlayer)
             D2UnitStrc *pRemoved = D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pItem);
             if (!pRemoved)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemove, (uint32_t)(UINT_PTR)szItemCpp, 3364);
+                FOG_DisplayAssert(szAssertHRemove, szItemCpp, 3364);
                 exit(-1);
             }
             if (pRemoved != pItem)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemoveIsInvItem, (uint32_t)(UINT_PTR)szItemCpp, 3365);
+                FOG_DisplayAssert(szAssertHRemoveIsInvItem, szItemCpp, 3365);
                 exit(-1);
             }
 
@@ -1359,7 +1359,7 @@ void __fastcall ITEM_ItemMsg00_PutOnGround(D2GSPacketSrv9C *pPacket)
     D2UnitStrc *pItem = ITEM_CreateItemFromItemExMsg(pPacket, &tItemSave, tItemSave.nX, tItemSave.nY, 0);
     if (!pItem)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHItem, (uint32_t)(UINT_PTR)szItemCpp, 900);
+        FOG_DisplayAssert(szAssertHItem, szItemCpp, 900);
         exit(-1);
     }
 
@@ -1445,14 +1445,14 @@ void __fastcall ITEM_ItemMsg01_ToCursor(D2GSPacketSrv9C *pPacket)
 
     if (CUNIT_FindUnitByGuidAndType(pPacket->nItemId, UNIT_ITEM))
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertNotInUnitTable, (uint32_t)(UINT_PTR)szItemCpp, 928);
+        FOG_DisplayAssert(szAssertNotInUnitTable, szItemCpp, 928);
         exit(-1);
     }
 
     D2UnitStrc *pItem = ITEM_CreateItemFromItemExMsg(pPacket, &tItemSave, 0, 0, 0);
     if (!pItem)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHItem, (uint32_t)(UINT_PTR)szItemCpp, 930);
+        FOG_DisplayAssert(szAssertHItem, szItemCpp, 930);
         exit(-1);
     }
 
@@ -1501,7 +1501,7 @@ void __fastcall ITEM_ItemMsg02_DropToGround(D2GSPacketSrv9C *pPacket)
 
     if (!pItem)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHItem, (uint32_t)(UINT_PTR)szItemCpp, 975);
+        FOG_DisplayAssert(szAssertHItem, szItemCpp, 975);
         exit(-1);
     }
 
@@ -1537,7 +1537,7 @@ void __fastcall ITEM_ItemMsg03_OnGround(D2GSPacketSrv9C *pPacket)
             D2UnitStrc *pPlayer = CUNIT_GetPlayer();
             if (!pPlayer)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHPlayer, (uint32_t)(UINT_PTR)szItemCpp, 1001);
+                FOG_DisplayAssert(szAssertHPlayer, szItemCpp, 1001);
                 exit(-1);
             }
 
@@ -1571,7 +1571,7 @@ void __fastcall ITEM_ItemMsg03_OnGround(D2GSPacketSrv9C *pPacket)
     D2UnitStrc *pNewItem = ITEM_CreateItemFromItemExMsg(pPacket, &tItemSave, tItemSave.nX, tItemSave.nY, 0);
     if (!pNewItem)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHItem, (uint32_t)(UINT_PTR)szItemCpp, 1029);
+        FOG_DisplayAssert(szAssertHItem, szItemCpp, 1029);
         exit(-1);
     }
 
@@ -1746,7 +1746,7 @@ void __fastcall ITEM_PlaceAtStorePage(uint16_t nX, uint16_t nY, int32_t nStorePa
     D2InventoryStrc *pInventory = pPlayer->pInventory;
     if (!pInventory)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 1043);
+        FOG_DisplayAssert(szAssertHInventory, szItemCpp, 1043);
         exit(-1);
     }
 
@@ -1815,7 +1815,7 @@ void __fastcall ITEM_ItemMsg05_ToInventoryGrid(D2GSPacketSrv9D *pPacket)
     D2InventoryStrc *pInventory = pOwner->pInventory;
     if (!pInventory)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 1201);
+        FOG_DisplayAssert(szAssertHInventory, szItemCpp, 1201);
         exit(-1);
     }
 
@@ -1832,7 +1832,7 @@ void __fastcall ITEM_ItemMsg05_ToInventoryGrid(D2GSPacketSrv9D *pPacket)
 
     if (pRemoved != pItem)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemoveIsItem, (uint32_t)(UINT_PTR)szItemCpp, 1218);
+        FOG_DisplayAssert(szAssertHRemoveIsItem, szItemCpp, 1218);
         exit(-1);
     }
 
@@ -1863,7 +1863,7 @@ void __fastcall ITEM_ItemMsg05_ToInventoryGrid(D2GSPacketSrv9D *pPacket)
             pItem = ITEM_CreateItemFromItemUnitExMsg(pPacket, &tItemSave, 0, 0, 0);
             if (!pItem)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHItem, (uint32_t)(UINT_PTR)szItemCpp, 1236);
+                FOG_DisplayAssert(szAssertHItem, szItemCpp, 1236);
                 exit(-1);
             }
         }
@@ -1912,14 +1912,14 @@ void __fastcall ITEM_ItemMsg0A_UpdateItem(D2GSPacketSrv9C *pPacket)
     D2UnitStrc *pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHUnit, (uint32_t)(UINT_PTR)szItemCpp, 1946);
+        FOG_DisplayAssert(szAssertHUnit, szItemCpp, 1946);
         exit(-1);
     }
 
     D2InventoryStrc *pInventory = pPlayer->pInventory;
     if (!pInventory)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 1949);
+        FOG_DisplayAssert(szAssertHInventory, szItemCpp, 1949);
         exit(-1);
     }
 
@@ -1950,7 +1950,7 @@ int32_t __fastcall ITEM_ItemMsg12_RecreateToCursor(D2GSPacketSrv9C *pPacket)
     D2UnitStrc *pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHUnit, (uint32_t)(UINT_PTR)szItemCpp, 2782);
+        FOG_DisplayAssert(szAssertHUnit, szItemCpp, 2782);
         exit(-1);
     }
 
@@ -1962,7 +1962,7 @@ int32_t __fastcall ITEM_ItemMsg12_RecreateToCursor(D2GSPacketSrv9C *pPacket)
     D2InventoryStrc *pInventory = pPlayer->pInventory;
     if (!pInventory)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 2789);
+        FOG_DisplayAssert(szAssertHInventory, szItemCpp, 2789);
         exit(-1);
     }
 
@@ -2205,7 +2205,7 @@ void __fastcall ITEM_ItemMsg07_SwapBodyLocItems(D2GSPacketSrv9D *pPacket)
     D2UnitStrc *pOpposite = D2COMMON_INVENTORY_GetItemFromBodyLoc(pInventory, nOppositeBodyLoc);
     if (!pOpposite)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHOpposite, (uint32_t)(UINT_PTR)szItemCpp, 1500);
+        FOG_DisplayAssert(szAssertHOpposite, szItemCpp, 1500);
         exit(-1);
     }
 
@@ -2216,7 +2216,7 @@ void __fastcall ITEM_ItemMsg07_SwapBodyLocItems(D2GSPacketSrv9D *pPacket)
     D2UnitStrc *pRemoved = D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pOpposite);
     if (!pRemoved || pRemoved != pOpposite)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemoveIsOpposite, (uint32_t)(UINT_PTR)szItemCpp, 1508);
+        FOG_DisplayAssert(szAssertHRemoveIsOpposite, szItemCpp, 1508);
         exit(-1);
     }
 
@@ -2257,7 +2257,7 @@ void __fastcall ITEM_ItemMsg07_SwapBodyLocItems(D2GSPacketSrv9D *pPacket)
         pHandItem = ITEM_CreateItemFromItemUnitExMsg(pPacket, &tItemSave, 0, 0, 0);
         if (!pHandItem)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHHandItem, (uint32_t)(UINT_PTR)szItemCpp, 1541);
+            FOG_DisplayAssert(szAssertHHandItem, szItemCpp, 1541);
             exit(-1);
         }
     }
@@ -2308,7 +2308,7 @@ void __fastcall ITEM_ItemMsg07_SwapBodyLocItems(D2GSPacketSrv9D *pPacket)
         break;
 
     default:
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertZero, (uint32_t)(UINT_PTR)szItemCpp, 1580);
+        FOG_DisplayAssert(szAssertZero, szItemCpp, 1580);
         exit(-1);
     }
 
@@ -2352,7 +2352,7 @@ void __fastcall ITEM_ItemMsg08_RemoveFromBodyLoc(D2GSPacketSrv9D *pPacket)
     D2InventoryStrc *pInventory = pOwner->pInventory;
     if (!pInventory)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 1607);
+        FOG_DisplayAssert(szAssertHInventory, szItemCpp, 1607);
         exit(-1);
     }
 
@@ -2394,7 +2394,7 @@ void __fastcall ITEM_ItemMsg08_RemoveFromBodyLoc(D2GSPacketSrv9D *pPacket)
                 pItem = ITEM_CreateItemFromItemUnitExMsg(pPacket, &tItemSave, 0, 0, 0);
                 if (!pItem)
                 {
-                    FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHItem, (uint32_t)(UINT_PTR)szItemCpp, 1641);
+                    FOG_DisplayAssert(szAssertHItem, szItemCpp, 1641);
                     exit(-1);
                 }
             }
@@ -2449,7 +2449,7 @@ void __fastcall ITEM_ItemMsg09_EquipOnPlayer(D2GSPacketSrv9D *pPacket)
 
         if (pUnit->dwUnitType != UNIT_PLAYER)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertUnitIsPlayer, (uint32_t)(UINT_PTR)szItemCpp, 1691);
+            FOG_DisplayAssert(szAssertUnitIsPlayer, szItemCpp, 1691);
             exit(-1);
         }
 
@@ -2460,7 +2460,7 @@ void __fastcall ITEM_ItemMsg09_EquipOnPlayer(D2GSPacketSrv9D *pPacket)
             pItem = ITEM_CreateItemFromItemUnitExMsg(pPacket, &tItemSave, 0, 0, 0);
             if (!pItem)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHHandItem, (uint32_t)(UINT_PTR)szItemCpp, 1698);
+                FOG_DisplayAssert(szAssertHHandItem, szItemCpp, 1698);
                 exit(-1);
             }
         }
@@ -2474,7 +2474,7 @@ void __fastcall ITEM_ItemMsg09_EquipOnPlayer(D2GSPacketSrv9D *pPacket)
         D2InventoryStrc *pInventory = pUnit->pInventory;
         if (!pInventory)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 1705);
+            FOG_DisplayAssert(szAssertHInventory, szItemCpp, 1705);
             exit(-1);
         }
 
@@ -2537,14 +2537,14 @@ void __fastcall ITEM_UnequipSwitchedOutItem(D2GSPacketSrv9D *pPacket, D2ItemSave
 
     if (pUnit->dwUnitType != UNIT_PLAYER)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertUnitIsPlayer, (uint32_t)(UINT_PTR)szItemCpp, 1750);
+        FOG_DisplayAssert(szAssertUnitIsPlayer, szItemCpp, 1750);
         exit(-1);
     }
 
     D2InventoryStrc *pInventory = pUnit->pInventory;
     if (!pInventory)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 1752);
+        FOG_DisplayAssert(szAssertHInventory, szItemCpp, 1752);
         exit(-1);
     }
 
@@ -2557,12 +2557,12 @@ void __fastcall ITEM_UnequipSwitchedOutItem(D2GSPacketSrv9D *pPacket, D2ItemSave
     D2UnitStrc *pRemoved = D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pItem);
     if (!pRemoved)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemove, (uint32_t)(UINT_PTR)szItemCpp, 1760);
+        FOG_DisplayAssert(szAssertHRemove, szItemCpp, 1760);
         exit(-1);
     }
     if (pRemoved != pItem)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemoveIsItem, (uint32_t)(UINT_PTR)szItemCpp, 1761);
+        FOG_DisplayAssert(szAssertHRemoveIsItem, szItemCpp, 1761);
         exit(-1);
     }
 
@@ -2579,7 +2579,7 @@ void __fastcall ITEM_UnequipSwitchedOutItem(D2GSPacketSrv9D *pPacket, D2ItemSave
             pItem = ITEM_CreateItemFromItemUnitExMsg(pPacket, pItemSave, 0, 0, 0);
             if (!pItem)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHItem, (uint32_t)(UINT_PTR)szItemCpp, 1772);
+                FOG_DisplayAssert(szAssertHItem, szItemCpp, 1772);
                 exit(-1);
             }
         }
@@ -2658,20 +2658,20 @@ void __fastcall ITEM_ItemMsg17_WeaponSwitch(D2GSPacketSrv9D *pPacket)
 
     if (pPlayer->dwUnitType != UNIT_PLAYER)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertUnitIsPlayer, (uint32_t)(UINT_PTR)szItemCpp, 1849);
+        FOG_DisplayAssert(szAssertUnitIsPlayer, szItemCpp, 1849);
         exit(-1);
     }
 
     D2InventoryStrc *pInventory = pPlayer->pInventory;
     if (!pInventory)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 1852);
+        FOG_DisplayAssert(szAssertHInventory, szItemCpp, 1852);
         exit(-1);
     }
 
     if (!D2COMMON_ITEMS_CheckIfFlagIsSet(tItemSave.dwFlags, IFLAG_NEWITEM))
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertRecreateFlag, (uint32_t)(UINT_PTR)szItemCpp, 1854);
+        FOG_DisplayAssert(szAssertRecreateFlag, szItemCpp, 1854);
         exit(-1);
     }
 
@@ -2733,7 +2733,7 @@ void __fastcall ITEM_ItemMsg17_WeaponSwitch(D2GSPacketSrv9D *pPacket)
     D2UnitStrc *pNewItem = ITEM_CreateItemFromItemUnitExMsg(pPacket, &tItemSave, 0, 0, 0);
     if (!pNewItem)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHItem, (uint32_t)(UINT_PTR)szItemCpp, 1870);
+        FOG_DisplayAssert(szAssertHItem, szItemCpp, 1870);
         exit(-1);
     }
 
@@ -2924,7 +2924,7 @@ void __fastcall ITEM_ItemMsg0D_SwapInContainer(D2GSPacketSrv9C *pPacket)
         D2UnitStrc *pPlayer = CUNIT_GetPlayer();
         if (!pPlayer)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHUnit, (uint32_t)(UINT_PTR)szItemCpp, 2170);
+            FOG_DisplayAssert(szAssertHUnit, szItemCpp, 2170);
             exit(-1);
         }
 
@@ -2933,7 +2933,7 @@ void __fastcall ITEM_ItemMsg0D_SwapInContainer(D2GSPacketSrv9C *pPacket)
         D2InventoryStrc *pInventory = pPlayer->pInventory;
         if (!pInventory)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 2175);
+            FOG_DisplayAssert(szAssertHInventory, szItemCpp, 2175);
             exit(-1);
         }
 
@@ -2945,12 +2945,12 @@ void __fastcall ITEM_ItemMsg0D_SwapInContainer(D2GSPacketSrv9C *pPacket)
         D2UnitStrc *pRemoved = D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pItem);
         if (!pRemoved)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemove, (uint32_t)(UINT_PTR)szItemCpp, 2180);
+            FOG_DisplayAssert(szAssertHRemove, szItemCpp, 2180);
             exit(-1);
         }
         if (pRemoved != pItem)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemoveIsItem, (uint32_t)(UINT_PTR)szItemCpp, 2181);
+            FOG_DisplayAssert(szAssertHRemoveIsItem, szItemCpp, 2181);
             exit(-1);
         }
 
@@ -2964,7 +2964,7 @@ void __fastcall ITEM_ItemMsg0D_SwapInContainer(D2GSPacketSrv9C *pPacket)
             pItem = ITEM_CreateItemFromItemExMsg(pPacket, &tItemSave, 0, 0, 0);
             if (!pItem)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHItem, (uint32_t)(UINT_PTR)szItemCpp, 2191);
+                FOG_DisplayAssert(szAssertHItem, szItemCpp, 2191);
                 exit(-1);
             }
         }
@@ -2982,7 +2982,7 @@ void __fastcall ITEM_ItemMsg0D_SwapInContainer(D2GSPacketSrv9C *pPacket)
         D2UnitStrc *pPlayer = CUNIT_GetPlayer();
         if (!pPlayer)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHUnit, (uint32_t)(UINT_PTR)szItemCpp, 2116);
+            FOG_DisplayAssert(szAssertHUnit, szItemCpp, 2116);
             exit(-1);
         }
 
@@ -2993,7 +2993,7 @@ void __fastcall ITEM_ItemMsg0D_SwapInContainer(D2GSPacketSrv9C *pPacket)
             pItem = ITEM_CreateItemFromItemExMsg(pPacket, &tItemSave, 0, 0, 0);
             if (!pItem)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHHandItem, (uint32_t)(UINT_PTR)szItemCpp, 2124);
+                FOG_DisplayAssert(szAssertHHandItem, szItemCpp, 2124);
                 exit(-1);
             }
         }
@@ -3005,7 +3005,7 @@ void __fastcall ITEM_ItemMsg0D_SwapInContainer(D2GSPacketSrv9C *pPacket)
         D2InventoryStrc *pInventory = pPlayer->pInventory;
         if (!pInventory)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 2132);
+            FOG_DisplayAssert(szAssertHInventory, szItemCpp, 2132);
             exit(-1);
         }
 
@@ -3028,7 +3028,7 @@ void __fastcall ITEM_ItemMsg0D_SwapInContainer(D2GSPacketSrv9C *pPacket)
         const D2C_InventoryRecords nRecordId = (D2C_InventoryRecords)D2COMMON_UNITS_GetInventoryRecordId(pPlayer, (D2C_ItemInvPage)nInvPage, GAME_IsExpansionGame());
         if (!D2COMMON_INVENTORY_PlaceItemAtInventoryPage(pInventory, pItem, UNITS_GetXPosition(pItem), UNITS_GetYPosition(pItem), nRecordId, 1, nInvPage))
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertZero, (uint32_t)(UINT_PTR)szItemCpp, 2150);
+            FOG_DisplayAssert(szAssertZero, szItemCpp, 2150);
             exit(-1);
         }
 
@@ -3057,7 +3057,7 @@ void __fastcall ITEM_ItemMsg0E_SetInvPage(D2GSPacketSrv9C *pPacket)
     D2UnitStrc *pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHUnit, (uint32_t)(UINT_PTR)szItemCpp, 2243);
+        FOG_DisplayAssert(szAssertHUnit, szItemCpp, 2243);
         exit(-1);
     }
 
@@ -3077,7 +3077,7 @@ void __fastcall ITEM_ItemMsg0E_SetInvPage(D2GSPacketSrv9C *pPacket)
     D2InventoryStrc *pInventory = pPlayer->pInventory;
     if (!pInventory)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 2259);
+        FOG_DisplayAssert(szAssertHInventory, szItemCpp, 2259);
         exit(-1);
     }
 
@@ -3143,7 +3143,7 @@ void __fastcall ITEM_ItemMsg0F_RemoveFromBelt(D2GSPacketSrv9C *pPacket)
     D2UnitStrc *pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHUnit, (uint32_t)(UINT_PTR)szItemCpp, 2304);
+        FOG_DisplayAssert(szAssertHUnit, szItemCpp, 2304);
         exit(-1);
     }
 
@@ -3151,7 +3151,7 @@ void __fastcall ITEM_ItemMsg0F_RemoveFromBelt(D2GSPacketSrv9C *pPacket)
     D2InventoryStrc *pInventory = pPlayer->pInventory;
     if (!pInventory)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 2309);
+        FOG_DisplayAssert(szAssertHInventory, szItemCpp, 2309);
         exit(-1);
     }
 
@@ -3161,7 +3161,7 @@ void __fastcall ITEM_ItemMsg0F_RemoveFromBelt(D2GSPacketSrv9C *pPacket)
 
     if (pRemoved != pItem)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemoveIsBeltItem, (uint32_t)(UINT_PTR)szItemCpp, 2318);
+        FOG_DisplayAssert(szAssertHRemoveIsBeltItem, szItemCpp, 2318);
         exit(-1);
     }
 
@@ -3217,19 +3217,19 @@ void __fastcall ITEM_ItemMsg10_SwapInBelt(D2GSPacketSrv9C *pPacket)
         D2InventoryStrc *pInventory = pPlayer->pInventory;
         if (!pInventory)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 2401);
+            FOG_DisplayAssert(szAssertHInventory, szItemCpp, 2401);
             exit(-1);
         }
 
         D2UnitStrc *pRemoved = D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pItem);
         if (!pRemoved)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemove, (uint32_t)(UINT_PTR)szItemCpp, 2403);
+            FOG_DisplayAssert(szAssertHRemove, szItemCpp, 2403);
             exit(-1);
         }
         if (pRemoved != pItem)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemoveIsItem, (uint32_t)(UINT_PTR)szItemCpp, 2404);
+            FOG_DisplayAssert(szAssertHRemoveIsItem, szItemCpp, 2404);
             exit(-1);
         }
 
@@ -3247,7 +3247,7 @@ void __fastcall ITEM_ItemMsg10_SwapInBelt(D2GSPacketSrv9C *pPacket)
         D2UnitStrc *pPlayer = CUNIT_GetPlayer();
         if (!pPlayer)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHUnit, (uint32_t)(UINT_PTR)szItemCpp, 2347);
+            FOG_DisplayAssert(szAssertHUnit, szItemCpp, 2347);
             exit(-1);
         }
 
@@ -3260,7 +3260,7 @@ void __fastcall ITEM_ItemMsg10_SwapInBelt(D2GSPacketSrv9C *pPacket)
         D2InventoryStrc *pInventory = pPlayer->pInventory;
         if (!pInventory)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 2359);
+            FOG_DisplayAssert(szAssertHInventory, szItemCpp, 2359);
             exit(-1);
         }
 
@@ -3274,7 +3274,7 @@ void __fastcall ITEM_ItemMsg10_SwapInBelt(D2GSPacketSrv9C *pPacket)
         {
             if (!D2COMMON_INVENTORY_PlaceItemInBeltSlot(pInventory, pItem, UNITS_GetXPosition(pItem)))
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertZero, (uint32_t)(UINT_PTR)szItemCpp, 2372);
+                FOG_DisplayAssert(szAssertZero, szItemCpp, 2372);
                 exit(-1);
             }
         }
@@ -3309,14 +3309,14 @@ void __fastcall ITEM_ItemMsg11_AutoUnequip(D2GSPacketSrv9D *pPacket)
     D2InventoryStrc *pInventory = pOwner->pInventory;
     if (!pInventory)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 2683);
+        FOG_DisplayAssert(szAssertHInventory, szItemCpp, 2683);
         exit(-1);
     }
 
     D2UnitStrc *pItem = D2COMMON_INVENTORY_GetItemFromBodyLoc(pInventory, (D2C_PlayerBodyLocs)tItemSave.nBodyLoc);
     if (!pItem)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHItem, (uint32_t)(UINT_PTR)szItemCpp, 2685);
+        FOG_DisplayAssert(szAssertHItem, szItemCpp, 2685);
         exit(-1);
     }
 
@@ -3328,12 +3328,12 @@ void __fastcall ITEM_ItemMsg11_AutoUnequip(D2GSPacketSrv9D *pPacket)
     D2UnitStrc *pRemoved = D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pItem);
     if (!pRemoved)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemove, (uint32_t)(UINT_PTR)szItemCpp, 2691);
+        FOG_DisplayAssert(szAssertHRemove, szItemCpp, 2691);
         exit(-1);
     }
     if (pRemoved != pItem)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemoveIsItem, (uint32_t)(UINT_PTR)szItemCpp, 2692);
+        FOG_DisplayAssert(szAssertHRemoveIsItem, szItemCpp, 2692);
         exit(-1);
     }
 
@@ -3354,7 +3354,7 @@ void __fastcall ITEM_ItemMsg11_AutoUnequip(D2GSPacketSrv9D *pPacket)
             pItem = ITEM_CreateItemFromItemUnitExMsg(pPacket, &tItemSave, 0, 0, 0);
             if (!pItem)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHItem, (uint32_t)(UINT_PTR)szItemCpp, 2705);
+                FOG_DisplayAssert(szAssertHItem, szItemCpp, 2705);
                 exit(-1);
             }
         }
@@ -3388,7 +3388,7 @@ void __fastcall ITEM_ItemMsg11_AutoUnequip(D2GSPacketSrv9D *pPacket)
     }
     else
     {
-        FOG_DisplayWarning((uint32_t)(UINT_PTR)szWarnUnableToInsertInGrid, (uint32_t)(UINT_PTR)szItemCpp, 2737);
+        FOG_DisplayWarning(szWarnUnableToInsertInGrid, szItemCpp, 2737);
     }
 
     ITEM_RefreshActiveItems(pOwner);
@@ -3426,7 +3426,7 @@ void __fastcall ITEM_ItemMsg13_ItemInSocket(D2GSPacketSrv9D *pPacket)
     D2InventoryStrc *pTargetInventory = pTarget->pInventory;
     if (!pTargetInventory)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 2822);
+        FOG_DisplayAssert(szAssertHInventory, szItemCpp, 2822);
         exit(-1);
     }
 
@@ -3440,7 +3440,7 @@ void __fastcall ITEM_ItemMsg13_ItemInSocket(D2GSPacketSrv9D *pPacket)
             D2InventoryStrc *pCtrlInventory = CUNIT_GetPlayer()->pInventory;
             if (!pCtrlInventory)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHCtrlInventory, (uint32_t)(UINT_PTR)szItemCpp, 2828);
+                FOG_DisplayAssert(szAssertHCtrlInventory, szItemCpp, 2828);
                 exit(-1);
             }
             D2COMMON_INVENTORY_SetCursorItem(pCtrlInventory, NULL);
@@ -3505,7 +3505,7 @@ void __fastcall ITEM_ItemMsg14_Unknown(D2GSPacketSrv9D *pPacket)
     D2InventoryStrc *pInventory = pOwner->pInventory;
     if (!pInventory)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHInventory, (uint32_t)(UINT_PTR)szItemCpp, 2889);
+        FOG_DisplayAssert(szAssertHInventory, szItemCpp, 2889);
         exit(-1);
     }
 
@@ -3518,7 +3518,7 @@ void __fastcall ITEM_ItemMsg14_Unknown(D2GSPacketSrv9D *pPacket)
 
         if (pItem != D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pItem))
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHGridItemIsRemoved, (uint32_t)(UINT_PTR)szItemCpp, 2901);
+            FOG_DisplayAssert(szAssertHGridItemIsRemoved, szItemCpp, 2901);
             exit(-1);
         }
 
@@ -3534,7 +3534,7 @@ void __fastcall ITEM_ItemMsg14_Unknown(D2GSPacketSrv9D *pPacket)
         pItem = ITEM_CreateItemFromItemUnitExMsg(pPacket, &tItemSave, 0, 0, 0);
         if (!pItem)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHGridItem, (uint32_t)(UINT_PTR)szItemCpp, 2911);
+            FOG_DisplayAssert(szAssertHGridItem, szItemCpp, 2911);
             exit(-1);
         }
     }
@@ -3547,7 +3547,7 @@ void __fastcall ITEM_ItemMsg14_Unknown(D2GSPacketSrv9D *pPacket)
         pItem = ITEM_CreateItemFromItemUnitExMsg(pPacket, &tItemSave, 0, 0, 0);
         if (!pItem)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHGridItem, (uint32_t)(UINT_PTR)szItemCpp, 2917);
+            FOG_DisplayAssert(szAssertHGridItem, szItemCpp, 2917);
             exit(-1);
         }
     }
@@ -3637,7 +3637,7 @@ D2UnitStrc *__fastcall ITEM_ItemMsg15_UpdateStats(D2GSPacketSrv9D *pPacket)
             D2UnitStrc *pRemoved = D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pGridItem);
             if (pRemoved != pGridItem)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemoveIsGridItem, (uint32_t)(UINT_PTR)szItemCpp, 3013);
+                FOG_DisplayAssert(szAssertHRemoveIsGridItem, szItemCpp, 3013);
                 exit(-1);
             }
 
@@ -3682,7 +3682,7 @@ D2UnitStrc *__fastcall ITEM_ItemMsg15_UpdateStats(D2GSPacketSrv9D *pPacket)
         D2UnitStrc *pRemoved = D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pItem);
         if (pRemoved != pItem)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemoveIsBodyItem, (uint32_t)(UINT_PTR)szItemCpp, 3052);
+            FOG_DisplayAssert(szAssertHRemoveIsBodyItem, szItemCpp, 3052);
             exit(-1);
         }
 
@@ -3775,7 +3775,7 @@ D2UnitStrc *__fastcall ITEM_ItemMsg15_UpdateStats(D2GSPacketSrv9D *pPacket)
             {
                 if (D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pBeltItem) != pBeltItem)
                 {
-                    FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRemoveIsBeltItem, (uint32_t)(UINT_PTR)szItemCpp, 3114);
+                    FOG_DisplayAssert(szAssertHRemoveIsBeltItem, szItemCpp, 3114);
                     exit(-1);
                 }
 
@@ -3794,7 +3794,7 @@ D2UnitStrc *__fastcall ITEM_ItemMsg15_UpdateStats(D2GSPacketSrv9D *pPacket)
             pNewItem = ITEM_CreateItemFromItemUnitExMsg(pPacket, &tItemSave, 0, 0, 0);
             if (tItemSave.nAnimMode != IMODE_INBELT)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertBModeIsInvBelt, (uint32_t)(UINT_PTR)szItemCpp, 3125);
+                FOG_DisplayAssert(szAssertBModeIsInvBelt, szItemCpp, 3125);
                 exit(-1);
             }
 
@@ -3877,7 +3877,7 @@ int32_t __fastcall ITEM_ItemMsg16_Unknown(D2GSPacketSrv9D *pPacket)
     D2UnitStrc *pNewItem = ITEM_CreateItemFromItemUnitExMsg(pPacket, &tItemSave, 0, 0, 0);
     if (!pNewItem)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHNewItem, (uint32_t)(UINT_PTR)szItemCpp, 3327);
+        FOG_DisplayAssert(szAssertHNewItem, szItemCpp, 3327);
         exit(-1);
     }
 

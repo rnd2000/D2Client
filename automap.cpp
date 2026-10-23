@@ -542,7 +542,7 @@ void __cdecl AUTOMAP_Tick()
     pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHUnit, (uint32_t)(UINT_PTR)szAutomapCpp, 1686);
+        FOG_DisplayAssert(szAssertHUnit, szAutomapCpp, 1686);
         exit(-1);
     }
 
@@ -593,7 +593,7 @@ void __cdecl AUTOMAP_Tick()
     else
     {
     make_layer:
-        pNewLayer = (D2AutomapLayerStrc *)FOG_Alloc(28, (uint32_t)(UINT_PTR)szAutomapCpp, 1517, 0);
+        pNewLayer = (D2AutomapLayerStrc *)FOG_Alloc(28, szAutomapCpp, 1517, 0);
         memset(pNewLayer, 0, sizeof(D2AutomapLayerStrc));
         pNewLayer->nLayerNo = dwLayer;
         pNewLayer->pNext = gpAutomapLayers;
@@ -612,7 +612,7 @@ void __cdecl AUTOMAP_Tick()
             {
                 nBlockToFree = nBlock;
                 nBlock = *(uint32_t *)(nBlock + 10240);
-                FOG_Free(nBlockToFree, (uint32_t)(UINT_PTR)szAutomapCpp, 1310, 0);
+                FOG_Free((void *)(UINT_PTR)nBlockToFree, szAutomapCpp, 1310, 0);
             }
             gpAutomapCellBlocks = 0;
             gnAutomapCellsUsed = 0;
@@ -657,7 +657,7 @@ void __cdecl AUTOMAP_Shutdown()
         {
             nBlockToFree = nBlock;
             nBlock = *(uint32_t *)(nBlock + 10240);
-            FOG_Free(nBlockToFree, (uint32_t)(UINT_PTR)szAutomapCpp, 1310, 0);
+            FOG_Free((void *)(UINT_PTR)nBlockToFree, szAutomapCpp, 1310, 0);
         }
         gpAutomapCellBlocks = 0;
         gnAutomapCellsUsed = 0;
@@ -678,7 +678,7 @@ void __cdecl AUTOMAP_Shutdown()
     while ((int32_t)pIconCels < (int32_t)(gpAutomapIconCels + 4));
 
     //  the successor is taken before the node is freed, in the increment
-    for (pNext = gpAutomapLayers; pNext; FOG_Free((uint32_t)(UINT_PTR)pLayer, (uint32_t)(UINT_PTR)szAutomapCpp, 3098, 0))
+    for (pNext = gpAutomapLayers; pNext; FOG_Free(pLayer, szAutomapCpp, 3098, 0))
     {
         pLayer = pNext;
         pNext = pNext->pNext;
@@ -753,7 +753,7 @@ D2AutomapCellStrc *__cdecl AUTOMAP_AllocCell()
 
     if (!pBlock)
     {
-        pBlock = (uint32_t *)FOG_Alloc(10244, (uint32_t)(UINT_PTR)szAutomapCpp, 861, 0);
+        pBlock = (uint32_t *)FOG_Alloc(10244, szAutomapCpp, 861, 0);
         memset(pBlock, 0, 10244);
 
         if (pPrevBlock)
@@ -780,14 +780,14 @@ D2AutomapCellStrc *__fastcall AUTOMAP_RotateLeft(D2AutomapCellStrc **pptRoot)
     pRoot = *pptRoot;
     if (!pRoot)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtRootNull, (uint32_t)(UINT_PTR)szAutomapCpp, 563);
+        FOG_DisplayAssert(szAssertPtRootNull, szAutomapCpp, 563);
         exit(-1);
     }
 
     pNewRoot = pRoot->pNext;
     if (!pNewRoot)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtMoreNull, (uint32_t)(UINT_PTR)szAutomapCpp, 564);
+        FOG_DisplayAssert(szAssertPtMoreNull, szAutomapCpp, 564);
         exit(-1);
     }
 
@@ -808,14 +808,14 @@ D2AutomapCellStrc *__fastcall AUTOMAP_RotateRight(D2AutomapCellStrc **pptRoot)
     pRoot = *pptRoot;
     if (!pRoot)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtRootNull, (uint32_t)(UINT_PTR)szAutomapCpp, 580);
+        FOG_DisplayAssert(szAssertPtRootNull, szAutomapCpp, 580);
         exit(-1);
     }
 
     pNewRoot = pRoot->pPrev;
     if (!pNewRoot)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtLessNull, (uint32_t)(UINT_PTR)szAutomapCpp, 581);
+        FOG_DisplayAssert(szAssertPtLessNull, szAutomapCpp, 581);
         exit(-1);
     }
 
@@ -911,7 +911,7 @@ int32_t __fastcall AUTOMAP_RebalanceTree(D2AutomapCellStrc *ptNew, D2AutomapCell
 
         if ((int16_t)ptLess->wWeight != 1)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtLessBalence, (uint32_t)(UINT_PTR)szAutomapCpp, 601);
+            FOG_DisplayAssert(szAssertPtLessBalence, szAutomapCpp, 601);
             exit(-1);
         }
 
@@ -997,7 +997,7 @@ int32_t __fastcall AUTOMAP_RebalanceTree(D2AutomapCellStrc *ptNew, D2AutomapCell
 
         if ((int16_t)ptMore->wWeight != 1)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtMoreBalence, (uint32_t)(UINT_PTR)szAutomapCpp, 660);
+            FOG_DisplayAssert(szAssertPtMoreBalence, szAutomapCpp, 660);
             exit(-1);
         }
 
@@ -1116,19 +1116,19 @@ void __fastcall AUTOMAP_AddTile(D2DrlgTileDataStrc *pTile, D2DrlgRoomStrc *pRoom
 
     if (nPixelX < -32768 || nPixelX > 0x7FFF)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPixelX, (uint32_t)(UINT_PTR)szAutomapCpp, 913);
+        FOG_DisplayAssert(szAssertPixelX, szAutomapCpp, 913);
         exit(-1);
     }
 
     if (nPixelY < -32768 || nPixelY > 0x7FFF)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPixelY, (uint32_t)(UINT_PTR)szAutomapCpp, 914);
+        FOG_DisplayAssert(szAssertPixelY, szAutomapCpp, 914);
         exit(-1);
     }
 
     if (nCelNum < -32768 || nCelNum > 0x7FFF)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertCelNum, (uint32_t)(UINT_PTR)szAutomapCpp, 915);
+        FOG_DisplayAssert(szAssertCelNum, szAutomapCpp, 915);
         exit(-1);
     }
 
@@ -1158,19 +1158,19 @@ void __fastcall AUTOMAP_AddUnit(D2UnitStrc *pUnit, int32_t nCelNum, D2AutomapCel
 
     if (nPixelX < -32768 || nPixelX > 0x7FFF)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPixelX, (uint32_t)(UINT_PTR)szAutomapCpp, 965);
+        FOG_DisplayAssert(szAssertPixelX, szAutomapCpp, 965);
         exit(-1);
     }
 
     if (nPixelY < -32768 || nPixelY > 0x7FFF)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPixelY, (uint32_t)(UINT_PTR)szAutomapCpp, 966);
+        FOG_DisplayAssert(szAssertPixelY, szAutomapCpp, 966);
         exit(-1);
     }
 
     if (nCelNum < -32768 || nCelNum > 0x7FFF)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertCelNum, (uint32_t)(UINT_PTR)szAutomapCpp, 967);
+        FOG_DisplayAssert(szAssertCelNum, szAutomapCpp, 967);
         exit(-1);
     }
 
@@ -1334,7 +1334,7 @@ void __stdcall AUTOMAP_RebuildAutomapLayer(D2ActiveRoomStrc *pRoom)
 
     if (!pLayer)
     {
-        pNewLayer = (D2AutomapLayerStrc *)FOG_Alloc(28, (uint32_t)(UINT_PTR)szAutomapCpp, 1517, 0);
+        pNewLayer = (D2AutomapLayerStrc *)FOG_Alloc(28, szAutomapCpp, 1517, 0);
         memset(pNewLayer, 0, sizeof(D2AutomapLayerStrc));
         pNewLayer->nLayerNo = dwLayer;
         pNewLayer->pNext = gpAutomapLayers;
@@ -1353,7 +1353,7 @@ void __stdcall AUTOMAP_RebuildAutomapLayer(D2ActiveRoomStrc *pRoom)
             {
                 nBlockToFree = nBlock;
                 nBlock = *(uint32_t *)(nBlock + 10240);
-                FOG_Free(nBlockToFree, (uint32_t)(UINT_PTR)szAutomapCpp, 1310, 0);
+                FOG_Free((void *)(UINT_PTR)nBlockToFree, szAutomapCpp, 1310, 0);
             }
             gpAutomapCellBlocks = 0;
             gnAutomapCellsUsed = 0;
@@ -1381,7 +1381,7 @@ void __stdcall AUTOMAP_RebuildAutomapLayer(D2ActiveRoomStrc *pRoom)
 
     if (!pLayer)
     {
-        pNewLayer = (D2AutomapLayerStrc *)FOG_Alloc(28, (uint32_t)(UINT_PTR)szAutomapCpp, 1517, 0);
+        pNewLayer = (D2AutomapLayerStrc *)FOG_Alloc(28, szAutomapCpp, 1517, 0);
         memset(pNewLayer, 0, sizeof(D2AutomapLayerStrc));
         pNewLayer->nLayerNo = nPreviousLayerNo;
         pNewLayer->pNext = gpAutomapLayers;
@@ -1400,7 +1400,7 @@ void __stdcall AUTOMAP_RebuildAutomapLayer(D2ActiveRoomStrc *pRoom)
             {
                 nBlockToFree = nBlock;
                 nBlock = *(uint32_t *)(nBlock + 10240);
-                FOG_Free(nBlockToFree, (uint32_t)(UINT_PTR)szAutomapCpp, 1310, 0);
+                FOG_Free((void *)(UINT_PTR)nBlockToFree, szAutomapCpp, 1310, 0);
             }
             gpAutomapCellBlocks = 0;
             gnAutomapCellsUsed = 0;
@@ -1475,7 +1475,7 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
 
     if (!pLayer)
     {
-        pNewLayer = (D2AutomapLayerStrc *)FOG_Alloc(28, (uint32_t)(UINT_PTR)szAutomapCpp, 1517, 0);
+        pNewLayer = (D2AutomapLayerStrc *)FOG_Alloc(28, szAutomapCpp, 1517, 0);
         memset(pNewLayer, 0, sizeof(D2AutomapLayerStrc));
         pNewLayer->nLayerNo = dwLayer;
         pNewLayer->pNext = gpAutomapLayers;
@@ -1494,7 +1494,7 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
             {
                 nBlockToFree = nBlock;
                 nBlock = *(uint32_t *)(nBlock + 10240);
-                FOG_Free(nBlockToFree, (uint32_t)(UINT_PTR)szAutomapCpp, 1310, 0);
+                FOG_Free((void *)(UINT_PTR)nBlockToFree, szAutomapCpp, 1310, 0);
             }
             gpAutomapCellBlocks = 0;
             gnAutomapCellsUsed = 0;
@@ -1545,7 +1545,7 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
         break;
 
     default:
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertAddTown, (uint32_t)(UINT_PTR)szAutomapCpp, 1873);
+        FOG_DisplayAssert(szAssertAddTown, szAutomapCpp, 1873);
         exit(-1);
     }
 
@@ -1573,19 +1573,19 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
 
             if (nPixelX < -32768 || nPixelX > 0x7FFF)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPixelX, (uint32_t)(UINT_PTR)szAutomapCpp, 1911);
+                FOG_DisplayAssert(szAssertPixelX, szAutomapCpp, 1911);
                 exit(-1);
             }
 
             if (nPixelY < -32768 || nPixelY > 0x7FFF)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPixelY, (uint32_t)(UINT_PTR)szAutomapCpp, 1912);
+                FOG_DisplayAssert(szAssertPixelY, szAutomapCpp, 1912);
                 exit(-1);
             }
 
             if (nCelNum < -32768 || nCelNum > 0x7FFF)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertCelNum, (uint32_t)(UINT_PTR)szAutomapCpp, 1913);
+                FOG_DisplayAssert(szAssertCelNum, szAutomapCpp, 1913);
                 exit(-1);
             }
 
@@ -1616,7 +1616,7 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
 
     if (!pLayer)
     {
-        pNewLayer = (D2AutomapLayerStrc *)FOG_Alloc(28, (uint32_t)(UINT_PTR)szAutomapCpp, 1517, 0);
+        pNewLayer = (D2AutomapLayerStrc *)FOG_Alloc(28, szAutomapCpp, 1517, 0);
         memset(pNewLayer, 0, sizeof(D2AutomapLayerStrc));
         pNewLayer->nLayerNo = nPreviousLayerNo;
         pNewLayer->pNext = gpAutomapLayers;
@@ -1635,7 +1635,7 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
             {
                 nBlockToFree = nBlock;
                 nBlock = *(uint32_t *)(nBlock + 10240);
-                FOG_Free(nBlockToFree, (uint32_t)(UINT_PTR)szAutomapCpp, 1310, 0);
+                FOG_Free((void *)(UINT_PTR)nBlockToFree, szAutomapCpp, 1310, 0);
             }
             gpAutomapCellBlocks = 0;
             gnAutomapCellsUsed = 0;
@@ -1914,28 +1914,28 @@ void __cdecl AUTOMAP_RebuildDrawLists()
 
     if (tAutoData.dwFloorSize)
     {
-        gpAutomapDrawWriteCursor = (uint8_t *)FOG_Alloc(tAutoData.dwFloorSize, (uint32_t)(UINT_PTR)szAutomapCpp, 1258, 0);
+        gpAutomapDrawWriteCursor = (uint8_t *)FOG_Alloc(tAutoData.dwFloorSize, szAutomapCpp, 1258, 0);
         tAutoData.pFloors = (void *)gpAutomapDrawWriteCursor;
         AUTOMAP_WriteCellTree(gpAutomapCurrentLayer->pFloors);
     }
 
     if (tAutoData.dwWallsSize)
     {
-        gpAutomapDrawWriteCursor = (uint8_t *)FOG_Alloc(tAutoData.dwWallsSize, (uint32_t)(UINT_PTR)szAutomapCpp, 1265, 0);
+        gpAutomapDrawWriteCursor = (uint8_t *)FOG_Alloc(tAutoData.dwWallsSize, szAutomapCpp, 1265, 0);
         tAutoData.pWalls = (void *)gpAutomapDrawWriteCursor;
         AUTOMAP_WriteCellTree(gpAutomapCurrentLayer->pWalls);
     }
 
     if (tAutoData.dwUnitsSize)
     {
-        gpAutomapDrawWriteCursor = (uint8_t *)FOG_Alloc(tAutoData.dwUnitsSize, (uint32_t)(UINT_PTR)szAutomapCpp, 1272, 0);
+        gpAutomapDrawWriteCursor = (uint8_t *)FOG_Alloc(tAutoData.dwUnitsSize, szAutomapCpp, 1272, 0);
         tAutoData.pUnits = (void *)gpAutomapDrawWriteCursor;
         AUTOMAP_WriteCellTree(gpAutomapCurrentLayer->pObjects);
     }
 
     if (tAutoData.dwExtraSize)
     {
-        gpAutomapDrawWriteCursor = (uint8_t *)FOG_Alloc(tAutoData.dwExtraSize, (uint32_t)(UINT_PTR)szAutomapCpp, 1279, 0);
+        gpAutomapDrawWriteCursor = (uint8_t *)FOG_Alloc(tAutoData.dwExtraSize, szAutomapCpp, 1279, 0);
         tAutoData.pExtras = (void *)gpAutomapDrawWriteCursor;
         AUTOMAP_WriteCellTree(gpAutomapCurrentLayer->pExtras);
     }
@@ -1943,13 +1943,13 @@ void __cdecl AUTOMAP_RebuildDrawLists()
     AUTOMAP_WriteExploredLayer(&tAutoData);
 
     if (tAutoData.pFloors)
-        FOG_Free((uint32_t)(UINT_PTR)tAutoData.pFloors, (uint32_t)(UINT_PTR)szAutomapCpp, 1289, 0);
+        FOG_Free(tAutoData.pFloors, szAutomapCpp, 1289, 0);
     if (tAutoData.pWalls)
-        FOG_Free((uint32_t)(UINT_PTR)tAutoData.pWalls, (uint32_t)(UINT_PTR)szAutomapCpp, 1290, 0);
+        FOG_Free(tAutoData.pWalls, szAutomapCpp, 1290, 0);
     if (tAutoData.pUnits)
-        FOG_Free((uint32_t)(UINT_PTR)tAutoData.pUnits, (uint32_t)(UINT_PTR)szAutomapCpp, 1291, 0);
+        FOG_Free(tAutoData.pUnits, szAutomapCpp, 1291, 0);
     if (tAutoData.pExtras)
-        FOG_Free((uint32_t)(UINT_PTR)tAutoData.pExtras, (uint32_t)(UINT_PTR)szAutomapCpp, 1292, 0);
+        FOG_Free(tAutoData.pExtras, szAutomapCpp, 1292, 0);
 }
 
 
@@ -2042,13 +2042,13 @@ void __stdcall AUTOMAP_LoadCelData()
         //  block 0: floors
         if (nRecordHeader[2])
         {
-            nBlock = FOG_Alloc(nRecordHeader[2], (uint32_t)(UINT_PTR)szAutomapCpp, 1397, 0);
+            nBlock = (int32_t)(UINT_PTR)FOG_Alloc(nRecordHeader[2], szAutomapCpp, 1397, 0);
             nWordCount = (uint32_t)nRecordHeader[2] >> 1;
             FOG_10110((uint32_t)(UINT_PTR)hFile, nBlock, nRecordHeader[2], (uint32_t)(UINT_PTR)&nBytesRead, 0);
 
             if (nBytesRead != nRecordHeader[2])
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertFloorSize, (uint32_t)(UINT_PTR)szAutomapCpp, 1402);
+                FOG_DisplayAssert(szAssertFloorSize, szAutomapCpp, 1402);
                 exit(-1);
             }
 
@@ -2081,19 +2081,19 @@ void __stdcall AUTOMAP_LoadCelData()
                 AUTOMAP_RebalanceTree(pCell, &gpAutomapCurrentLayer->pFloors);
             }
 
-            FOG_Free(nBlock, (uint32_t)(UINT_PTR)szAutomapCpp, 1414, 0);
+            FOG_Free((void *)(UINT_PTR)nBlock, szAutomapCpp,1414, 0);
         }
 
         //  block 1: walls
         if (nRecordHeader[3])
         {
-            nBlock = FOG_Alloc(nRecordHeader[3], (uint32_t)(UINT_PTR)szAutomapCpp, 1418, 0);
+            nBlock = (int32_t)(UINT_PTR)FOG_Alloc(nRecordHeader[3], szAutomapCpp, 1418, 0);
             nWordCount = (uint32_t)nRecordHeader[3] >> 1;
             FOG_10110((uint32_t)(UINT_PTR)hFile, nBlock, nRecordHeader[3], (uint32_t)(UINT_PTR)&nBytesRead, 0);
 
             if (nBytesRead != nRecordHeader[3])
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertWallsSize, (uint32_t)(UINT_PTR)szAutomapCpp, 1423);
+                FOG_DisplayAssert(szAssertWallsSize, szAutomapCpp, 1423);
                 exit(-1);
             }
 
@@ -2126,7 +2126,7 @@ void __stdcall AUTOMAP_LoadCelData()
                 AUTOMAP_RebalanceTree(pCell, &gpAutomapCurrentLayer->pWalls);
             }
 
-            FOG_Free(nBlock, (uint32_t)(UINT_PTR)szAutomapCpp, 1435, 0);
+            FOG_Free((void *)(UINT_PTR)nBlock, szAutomapCpp,1435, 0);
         }
 
         //  block 2: units, the only block gated on the game id
@@ -2134,13 +2134,13 @@ void __stdcall AUTOMAP_LoadCelData()
         {
             if (nRecordHeader[1] == *((uint32_t *)gpClientGameBlock + 1))
             {
-                nBlock = FOG_Alloc(nRecordHeader[4], (uint32_t)(UINT_PTR)szAutomapCpp, 1442, 0);
+                nBlock = (int32_t)(UINT_PTR)FOG_Alloc(nRecordHeader[4], szAutomapCpp, 1442, 0);
                 nWordCount = (uint32_t)nRecordHeader[4] >> 1;
                 FOG_10110((uint32_t)(UINT_PTR)hFile, nBlock, nRecordHeader[4], (uint32_t)(UINT_PTR)&nBytesRead, 0);
 
                 if (nBytesRead != nRecordHeader[4])
                 {
-                    FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertUnitsSize, (uint32_t)(UINT_PTR)szAutomapCpp, 1447);
+                    FOG_DisplayAssert(szAssertUnitsSize, szAutomapCpp, 1447);
                     exit(-1);
                 }
 
@@ -2173,7 +2173,7 @@ void __stdcall AUTOMAP_LoadCelData()
                     AUTOMAP_RebalanceTree(pCell, &gpAutomapCurrentLayer->pObjects);
                 }
 
-                FOG_Free(nBlock, (uint32_t)(UINT_PTR)szAutomapCpp, 1459, 0);
+                FOG_Free((void *)(UINT_PTR)nBlock, szAutomapCpp,1459, 0);
             }
             else
             {
@@ -2185,13 +2185,13 @@ void __stdcall AUTOMAP_LoadCelData()
         //  block 3: extras, the only block with its own cel-set index
         if (nRecordHeader[5])
         {
-            nBlock = FOG_Alloc(nRecordHeader[5], (uint32_t)(UINT_PTR)szAutomapCpp, 1469, 0);
+            nBlock = (int32_t)(UINT_PTR)FOG_Alloc(nRecordHeader[5], szAutomapCpp, 1469, 0);
             nWordCount = (uint32_t)nRecordHeader[5] >> 1;
             FOG_10110((uint32_t)(UINT_PTR)hFile, nBlock, nRecordHeader[5], (uint32_t)(UINT_PTR)&nBytesRead, 0);
 
             if (nBytesRead != nRecordHeader[5])
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertExtraSize, (uint32_t)(UINT_PTR)szAutomapCpp, 1474);
+                FOG_DisplayAssert(szAssertExtraSize, szAutomapCpp, 1474);
                 exit(-1);
             }
 
@@ -2224,7 +2224,7 @@ void __stdcall AUTOMAP_LoadCelData()
                 AUTOMAP_RebalanceTree(pCell, &gpAutomapCurrentLayer->pExtras);
             }
 
-            FOG_Free(nBlock, (uint32_t)(UINT_PTR)szAutomapCpp, 1486, 0);
+            FOG_Free((void *)(UINT_PTR)nBlock, szAutomapCpp,1486, 0);
         }
 
         nRecordOffset = nNextOffset;
@@ -2472,7 +2472,7 @@ void __cdecl AUTOMAP_DrawDifficultyLabel()
 
     if (nDifficultyLen + Unicode::strlen(pwszFormat) + 3 >= 300)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertAutomapDifLen, (uint32_t)(UINT_PTR)szAutomapCpp, 2878);
+        FOG_DisplayAssert(szAssertAutomapDifLen, szAutomapCpp, 2878);
         exit(-1);
     }
 

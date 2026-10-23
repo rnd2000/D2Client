@@ -66,8 +66,8 @@ char *__fastcall EDITBOX_UiEditBoxConstruct(D2ClientEditBoxStrc *pEditBox, int32
     pEditBox->bMouseDown = 0;
     pEditBox->pfnCallback = (int32_t)pfnCallback;
     pEditBox->nBlinkTick = 0;
-    pEditBox->pwszText = (Unicode *)FOG_Alloc(nBufferBytes, (uint32_t)szEditBoxCpp, 93, 0);
-    pwszAltBuffer = (Unicode *)FOG_Alloc(nBufferBytes, (uint32_t)szEditBoxCpp, 94, 0);
+    pEditBox->pwszText = (Unicode *)FOG_Alloc(nBufferBytes, szEditBoxCpp, 93, 0);
+    pwszAltBuffer = (Unicode *)FOG_Alloc(nBufferBytes, szEditBoxCpp, 94, 0);
     pEditBox->pwszTextAlt = pwszAltBuffer;
     memset(pEditBox->pwszText, 0, nBufferBytes);
     memset(pEditBox->pwszTextAlt, 0, nBufferBytes);
@@ -132,12 +132,12 @@ void __fastcall EDITBOX_UiEditBoxDestruct(D2ClientEditBoxStrc *pEditBox)
 
     if (pEditBox->pwszText)
     {
-        FOG_Free((uint32_t)pEditBox->pwszText, (uint32_t)szEditBoxCpp, 142, 0);
+        FOG_Free(pEditBox->pwszText, szEditBoxCpp, 142, 0);
         pEditBox->pwszText = NULL;
     }
     if (pEditBox->pwszTextAlt)
     {
-        FOG_Free((uint32_t)pEditBox->pwszTextAlt, (uint32_t)szEditBoxCpp, 147, 0);
+        FOG_Free(pEditBox->pwszTextAlt, szEditBoxCpp, 147, 0);
         pEditBox->pwszTextAlt = NULL;
     }
     //  no null check here, unlike the two above
@@ -297,8 +297,8 @@ void __fastcall EDITBOX_UiEditBoxDraw(D2ClientEditBoxStrc *pEditBox)
             D2WIN_10117_DrawText(wszCaret, nX, nY, 0, 0);
         }
 
-        FOG_Free((uint32_t)pSplitText->wszLine, (uint32_t)szEditBoxCpp, 259, 0);
-        FOG_Free((uint32_t)pSplitText, (uint32_t)szEditBoxCpp, 260, 0);
+        FOG_Free(pSplitText->wszLine, szEditBoxCpp, 259, 0);
+        FOG_Free(pSplitText, szEditBoxCpp, 260, 0);
         pSplitText = pSplitNext;
     }
     while (pSplitNext);
@@ -576,8 +576,8 @@ int32_t __fastcall EDITBOX_UiEditBoxOnChar(D2ClientEditBoxStrc *pEditBox, int32_
             while (pSplit)
             {
                 pSplitNext = pSplit->pNextLine;
-                FOG_Free((uint32_t)pSplit->wszLine, (uint32_t)szEditBoxCpp, 515, 0);
-                FOG_Free((uint32_t)pSplit, (uint32_t)szEditBoxCpp, 516, 0);
+                FOG_Free(pSplit->wszLine, szEditBoxCpp, 515, 0);
+                FOG_Free(pSplit, szEditBoxCpp, 516, 0);
                 pSplit = pSplitNext;
             }
             if (pLines > pEditBox->nLineCount)

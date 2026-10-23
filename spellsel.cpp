@@ -933,7 +933,7 @@ void __stdcall SPELLSEL_MiniSkillOnLButtonDown(SMSGHANDLER_PARAMS *pMsg)
 
     if (!CUNIT_GetPlayer())
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHUnit, (uint32_t)(UINT_PTR)szAssertFile, 954);
+        FOG_DisplayAssert(szAssertHUnit, szAssertFile, 954);
         exit(-1);
     }
 
@@ -1071,7 +1071,7 @@ void __cdecl SPELLSEL_UnbindEmptyScrollHotkeys()
     pSkill = D2COMMON_UNITS_GetStartSkill(CUNIT_GetPlayer());
     if (!pSkill)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHSkill, (uint32_t)(UINT_PTR)szAssertFile, 1143);
+        FOG_DisplayAssert(szAssertHSkill, szAssertFile, 1143);
         exit(-1);
     }
 

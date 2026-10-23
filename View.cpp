@@ -64,27 +64,27 @@ void __cdecl VIEW_AllocGouraudTables()
 
     if (sgpGouraudTblX)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "!sgpGouraudTblX", (uint32_t)(UINT_PTR)szSourceFile, 202);
+        FOG_DisplayAssert("!sgpGouraudTblX", szSourceFile, 202);
         exit(-1);
     }
     if (sgpGouraudTblY)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "!sgpGouraudTblY", (uint32_t)(UINT_PTR)szSourceFile, 203);
+        FOG_DisplayAssert("!sgpGouraudTblY", szSourceFile, 203);
         exit(-1);
     }
     if (sgpGouraudTblXVal)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "!sgpGouraudTblXVal", (uint32_t)(UINT_PTR)szSourceFile, 204);
+        FOG_DisplayAssert("!sgpGouraudTblXVal", szSourceFile, 204);
         exit(-1);
     }
     if (gpSubtileGouraudTbl)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "!gpSubtileGouraudTbl", (uint32_t)(UINT_PTR)szSourceFile, 205);
+        FOG_DisplayAssert("!gpSubtileGouraudTbl", szSourceFile, 205);
         exit(-1);
     }
     if (gpTileGouraudTbl)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "!gpTileGouraudTbl", (uint32_t)(UINT_PTR)szSourceFile, 206);
+        FOG_DisplayAssert("!gpTileGouraudTbl", szSourceFile, 206);
         exit(-1);
     }
 
@@ -245,22 +245,22 @@ void __cdecl VIEW_FreeGouraudTables()
     {
         if (!sgpGouraudTblY)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "sgpGouraudTblY", (uint32_t)(UINT_PTR)szSourceFile, 251);
+            FOG_DisplayAssert("sgpGouraudTblY", szSourceFile, 251);
             exit(-1);
         }
         if (!sgpGouraudTblXVal)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "sgpGouraudTblXVal", (uint32_t)(UINT_PTR)szSourceFile, 252);
+            FOG_DisplayAssert("sgpGouraudTblXVal", szSourceFile, 252);
             exit(-1);
         }
         if (!gpSubtileGouraudTbl)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "gpSubtileGouraudTbl", (uint32_t)(UINT_PTR)szSourceFile, 253);
+            FOG_DisplayAssert("gpSubtileGouraudTbl", szSourceFile, 253);
             exit(-1);
         }
         if (!gpTileGouraudTbl)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "gpTileGouraudTbl", (uint32_t)(UINT_PTR)szSourceFile, 254);
+            FOG_DisplayAssert("gpTileGouraudTbl", szSourceFile, 254);
             exit(-1);
         }
 
@@ -320,21 +320,21 @@ D2ClientViewStrc *__cdecl VIEW_Alloc()
 
     if (!sgpGouraudTblX)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "sgpGouraudTblX", (uint32_t)(UINT_PTR)szSourceFile, 281);
+        FOG_DisplayAssert("sgpGouraudTblX", szSourceFile, 281);
         exit(-1);
     }
     if (!sgpGouraudTblY)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "sgpGouraudTblY", (uint32_t)(UINT_PTR)szSourceFile, 282);
+        FOG_DisplayAssert("sgpGouraudTblY", szSourceFile, 282);
         exit(-1);
     }
     if (!sgpGouraudTblXVal)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "sgpGouraudTblXVal", (uint32_t)(UINT_PTR)szSourceFile, 283);
+        FOG_DisplayAssert("sgpGouraudTblXVal", szSourceFile, 283);
         exit(-1);
     }
 
-    pView = (D2ClientViewStrc *)FOG_Alloc(sizeof(D2ClientViewStrc), (uint32_t)(UINT_PTR)szSourceFile, 285, 0);
+    pView = (D2ClientViewStrc *)FOG_Alloc(sizeof(D2ClientViewStrc), szSourceFile, 285, 0);
 
     SetRect(&pView->rcView, 0, 0, 0, 0);
     pView->dwFlags = 0;
@@ -356,7 +356,7 @@ D2ClientViewStrc *__cdecl VIEW_Alloc()
 void __fastcall VIEW_Free(D2ClientViewStrc *pView)
 {
     WALL2_WallFreeSquares(pView);
-    FOG_Free((uint32_t)(UINT_PTR)pView, (uint32_t)(UINT_PTR)szSourceFile, 321, 0);
+    FOG_Free(pView, szSourceFile, 321, 0);
 }
 
 //1.10f: D2Client.0x6FAB70F0
@@ -456,7 +456,7 @@ void __fastcall VIEW_Draw(D2ClientViewStrc *pView, int32_t bSkipUnits)
 {
     if (!pView)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "hView", (uint32_t)(UINT_PTR)szSourceFile, 477);
+        FOG_DisplayAssert("hView", szSourceFile, 477);
         exit(-1);
     }
 

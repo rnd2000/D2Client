@@ -51,7 +51,7 @@ void __cdecl ROSTERPETS_FreeAll()
         do
         {
             pNext = pPet->pNext;
-            FOG_Free((uint32_t)(UINT_PTR)pPet, (uint32_t)(UINT_PTR)szRosterPetsCpp, 47, 0);
+            FOG_Free(pPet, szRosterPetsCpp, 47, 0);
             pPet = pNext;
         } while (pNext);
     }
@@ -91,7 +91,7 @@ void __fastcall ROSTERPETS_FindOrAddPet(uint32_t dwUnitId, uint32_t dwOwnerId, i
                 {
                     gpRosterPetList = pWalk->pNext;
                 }
-                FOG_Free((uint32_t)(UINT_PTR)pWalk, (uint32_t)(UINT_PTR)szRosterPetsCpp, 89, 0);
+                FOG_Free(pWalk, szRosterPetsCpp, 89, 0);
                 pPet = gpRosterPetList;
                 break;
             }
@@ -111,7 +111,7 @@ void __fastcall ROSTERPETS_FindOrAddPet(uint32_t dwUnitId, uint32_t dwOwnerId, i
     }
 
     //  BUG: FOG_Alloc's answer is used untested. LATENT: only a failed 52-byte allocation reaches it.
-    pNewPet = (D2RosterPetStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterPetStrc), (uint32_t)(UINT_PTR)szRosterPetsCpp, 122, 0);
+    pNewPet = (D2RosterPetStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterPetStrc), szRosterPetsCpp, 122, 0);
     memset(pNewPet, 0, sizeof(D2RosterPetStrc));
     pNewPet->dwUnitId = dwUnitId;
     pNewPet->dwOwnerId = dwOwnerId;
@@ -165,7 +165,7 @@ void __fastcall ROSTERPETS_OnPetPacket81(uint32_t dwUnitId, uint32_t dwOwnerId, 
                 {
                     gpRosterPetList = pWalk->pNext;
                 }
-                FOG_Free((uint32_t)(UINT_PTR)pWalk, (uint32_t)(UINT_PTR)szRosterPetsCpp, 89, 0);
+                FOG_Free(pWalk, szRosterPetsCpp, 89, 0);
                 pHead = gpRosterPetList;
                 break;
             }
@@ -192,7 +192,7 @@ void __fastcall ROSTERPETS_OnPetPacket81(uint32_t dwUnitId, uint32_t dwOwnerId, 
                 {
                     gpRosterPetList = pWalk->pNext;
                 }
-                FOG_Free((uint32_t)(UINT_PTR)pWalk, (uint32_t)(UINT_PTR)szRosterPetsCpp, 89, 0);
+                FOG_Free(pWalk, szRosterPetsCpp, 89, 0);
                 pHead = gpRosterPetList;
                 break;
             }
@@ -215,7 +215,7 @@ void __fastcall ROSTERPETS_OnPetPacket81(uint32_t dwUnitId, uint32_t dwOwnerId, 
     else
     {
         //  BUG: FOG_Alloc's answer is used untested. LATENT: only a failed 52-byte allocation reaches it.
-        pNewPet = (D2RosterPetStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterPetStrc), (uint32_t)(UINT_PTR)szRosterPetsCpp, 122, 0);
+        pNewPet = (D2RosterPetStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterPetStrc), szRosterPetsCpp, 122, 0);
         memset(pNewPet, 0, sizeof(D2RosterPetStrc));
         pNewPet->dwUnitId = dwUnitId;
         pNewPet->dwOwnerId = dwOwnerId;
@@ -231,7 +231,7 @@ void __fastcall ROSTERPETS_OnPetPacket81(uint32_t dwUnitId, uint32_t dwOwnerId, 
     {
         if (!pPet)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptPet", (uint32_t)(UINT_PTR)szRosterPetsCpp, 149);
+            FOG_DisplayAssert("ptPet", szRosterPetsCpp, 149);
             exit(-1);
         }
         if (pPet->dwUnitId == dwUnitId)
@@ -303,7 +303,7 @@ void __fastcall ROSTERPETS_RemovePetOrMarkHireling(uint32_t dwUnitId)
     {
         gpRosterPetList = pPet->pNext;
     }
-    FOG_Free((uint32_t)(UINT_PTR)pPet, (uint32_t)(UINT_PTR)szRosterPetsCpp, 209, 0);
+    FOG_Free(pPet, szRosterPetsCpp, 209, 0);
 }
 
 //1.10f: D2Client.0x6FAB1810
@@ -645,7 +645,7 @@ int32_t __fastcall ROSTERPETS_IsPetOwnerHostile(D2UnitStrc *pPet)
     pPlayer = CUNIT_GetPlayer();
     if (!pPlayer || pPlayer->dwUnitId == 0xFFFFFFFF)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "dwControlId != INVALID_PLAYER_ID", (uint32_t)(UINT_PTR)szRosterPetsCpp, 549);
+        FOG_DisplayAssert("dwControlId != INVALID_PLAYER_ID", szRosterPetsCpp, 549);
         exit(-1);
     }
     if (dwOwnerId == 0xFFFFFFFF)

@@ -57,7 +57,7 @@ static void ENV_ResetParticlePool()
     //  The original's assert calls this member nTotalCount (D2DataArrayStrc +0x114).
     if (ghEnvParticles->nUsedCount)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "spParticleData->nTotalCount == 0", (uint32_t)(UINT_PTR)szSourceFile, 347);
+        FOG_DisplayAssert("spParticleData->nTotalCount == 0", szSourceFile, 347);
         exit(-1);
     }
 }
@@ -102,7 +102,7 @@ void __fastcall ENV_SetRainState(uint32_t eState)
 
     if (eState >= 4)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "eState >= 0 && eState < NUMBER_OF_RAIN_STATES", (uint32_t)(UINT_PTR)szSourceFile, 298);
+        FOG_DisplayAssert("eState >= 0 && eState < NUMBER_OF_RAIN_STATES", szSourceFile, 298);
         exit(-1);
     }
 
@@ -114,7 +114,7 @@ void __fastcall ENV_SetRainState(uint32_t eState)
     pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "hCtrlUnit", (uint32_t)(UINT_PTR)szSourceFile, 311);
+        FOG_DisplayAssert("hCtrlUnit", szSourceFile, 311);
         exit(-1);
     }
 
@@ -482,7 +482,7 @@ void __fastcall ENV_SpawnSplash(int32_t nX, int32_t nY, int32_t nPerspX, int32_t
     pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "hCtrlUnit", (uint32_t)(UINT_PTR)szSourceFile, 720);
+        FOG_DisplayAssert("hCtrlUnit", szSourceFile, 720);
         exit(-1);
     }
 
@@ -517,7 +517,7 @@ void __fastcall ENV_SpawnSplash(int32_t nX, int32_t nY, int32_t nPerspX, int32_t
 
     if ((uint32_t)nWhichRain >= 4)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "tSplash->nWhichRain >= 0 && tSplash->nWhichRain < 4", (uint32_t)(UINT_PTR)szSourceFile, 744);
+        FOG_DisplayAssert("tSplash->nWhichRain >= 0 && tSplash->nWhichRain < 4", szSourceFile, 744);
         exit(-1);
     }
 
@@ -543,7 +543,7 @@ void __fastcall ENV_SpawnBubble(int32_t nX, int32_t nY, int32_t nPerspX, int32_t
     pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "hCtrlUnit", (uint32_t)(UINT_PTR)szSourceFile, 762);
+        FOG_DisplayAssert("hCtrlUnit", szSourceFile, 762);
         exit(-1);
     }
 
@@ -645,7 +645,7 @@ void __fastcall ENV_SpawnParticle(D2SeedStrc *pSeed)
         nSize = pParticle->nSize;
         if (nSize >= 8)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "tParticle->nSize < NUM_SNOW_SHAPES && tParticle->nSize >= 0", (uint32_t)(UINT_PTR)szSourceFile, 910);
+            FOG_DisplayAssert("tParticle->nSize < NUM_SNOW_SHAPES && tParticle->nSize >= 0", szSourceFile, 910);
             exit(-1);
         }
 
@@ -659,7 +659,7 @@ void __fastcall ENV_SpawnParticle(D2SeedStrc *pSeed)
         nPeriodOfDay = D2COMMON_ENVIRONMENT_GetPeriodOfDayFromAct((D2DrlgActStrc *)gpAct, nullptr);
         if ((uint32_t)nPeriodOfDay >= 4)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "nPeriodOfDay >= 0 && nPeriodOfDay < NUM_ENVIRONMENTS", (uint32_t)(UINT_PTR)szSourceFile, 852);
+            FOG_DisplayAssert("nPeriodOfDay >= 0 && nPeriodOfDay < NUM_ENVIRONMENTS", szSourceFile, 852);
             exit(-1);
         }
 
@@ -986,7 +986,7 @@ void __cdecl ENV_UpdateWeather()
     pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "hCtrlUnit", (uint32_t)(UINT_PTR)szSourceFile, 1349);
+        FOG_DisplayAssert("hCtrlUnit", szSourceFile, 1349);
         exit(-1);
     }
 
@@ -1214,7 +1214,7 @@ void __cdecl ENV_UpdateLightningAndThunder()
     pPlayer = CUNIT_GetPlayer();
     if (!pPlayer)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "hCtrlUnit", (uint32_t)(UINT_PTR)szSourceFile, 1393);
+        FOG_DisplayAssert("hCtrlUnit", szSourceFile, 1393);
         exit(-1);
     }
 

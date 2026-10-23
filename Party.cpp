@@ -128,7 +128,7 @@ void __cdecl PARTY_FreeRowList()
     while (pRow)
     {
         pNext = pRow->pNext;
-        FOG_Free((uint32_t)(UINT_PTR)pRow, (uint32_t)(UINT_PTR)szPartyCpp, 264, 0);
+        FOG_Free(pRow, szPartyCpp, 264, 0);
         pRow = pNext;
     }
     gpPartyRowList = NULL;
@@ -166,7 +166,7 @@ void __cdecl PARTY_BuildRowList()
     for (nRow = 0; pEntry || nRow > 8; ++nRow)
     {
         pHead = gpPartyRowList;
-        pRow = (D2ClientPartyRowStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientPartyRowStrc), (uint32_t)(UINT_PTR)szPartyCpp, 333, 0);
+        pRow = (D2ClientPartyRowStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientPartyRowStrc), szPartyCpp, 333, 0);
         memset(pRow, 0, sizeof(D2ClientPartyRowStrc));
         pRow->nNameBandBottom = nRowY + 13;
 
@@ -308,12 +308,12 @@ void __cdecl PARTY_DrawPanel()
             {
                 D2WIN_10127_SetFont(nCount < 14 ? D2FONT_FONT8 : D2FONT_FONT6);
             }
-            pwszTitle = (Unicode *)(UINT_PTR)FOG_Alloc(2 * nCount, (uint32_t)(UINT_PTR)szPartyCpp, 529, 0);
+            pwszTitle = (Unicode *)(UINT_PTR)FOG_Alloc(2 * nCount, szPartyCpp, 529, 0);
             Unicode::toUnicode(pwszTitle, szTitle, (int32_t)nCount);
             //  D2ExpRes PartyOwnCharname lands on the right edge
             CHAR_DrawTextCentered(gnBorderXDifference + 20, 31 - gnBorderYDifference, gnBorderXDifference + 190, pwszTitle, 0);
             D2WIN_10127_SetFont(D2FONT_FONT8);
-            FOG_Free((uint32_t)(UINT_PTR)pwszTitle, (uint32_t)(UINT_PTR)szPartyCpp, 538, 0);
+            FOG_Free(pwszTitle, szPartyCpp, 538, 0);
         }
     }
 
@@ -1496,7 +1496,7 @@ void __stdcall PARTY_OnLButtonUp(SMSGHANDLER_PARAMS *pMsg)
                         }
                         if (!pSearch)
                         {
-                            FOG_DisplayAssert((uint32_t)"ptEntry != NULL", (uint32_t)szPartyCpp, 1251);
+                            FOG_DisplayAssert("ptEntry != NULL", szPartyCpp, 1251);
                             exit(-1);
                         }
                         pSearch->Buttons[iRow].eButton = eButton;

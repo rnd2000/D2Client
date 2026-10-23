@@ -1123,12 +1123,12 @@ int32_t __cdecl NPCMENU_OnResultContinueClicked(void)
     }
     if (sgUIState.Transaction == 6)
     {
-        FOG_DisplayAssert((uint32_t)"sgUIState.Transaction != HealPlayer", (uint32_t)szSourceFile, 3256);
+        FOG_DisplayAssert("sgUIState.Transaction != HealPlayer", szSourceFile, 3256);
         exit(-1);
     }
     if (sgUIState.CurrentState == 8)
     {
-        FOG_DisplayAssert((uint32_t)"sgUIState.CurrentState != UIStateHealPlayer", (uint32_t)szSourceFile, 3257);
+        FOG_DisplayAssert("sgUIState.CurrentState != UIStateHealPlayer", szSourceFile, 3257);
         exit(-1);
     }
     sgUIState.CurrentState = 3;
@@ -1166,7 +1166,7 @@ void __fastcall NPCMENU_AbortOnPlayerAction(D2UnitStrc *pUnit)
                     pEntry->bRerollLine = 0;
                     if (!CUNIT_GetPlayer())
                     {
-                        FOG_DisplayAssert((uint32_t)"hCtrlUnit != NULL", (uint32_t)szSourceFile, 3845);
+                        FOG_DisplayAssert("hCtrlUnit != NULL", szSourceFile, 3845);
                         exit(-1);
                     }
                     NPCMENU_PickRandomSpeechLine(pEntry);
@@ -1976,7 +1976,7 @@ int32_t __cdecl NPCMENU_OnTalkLineClicked(void)
     pTextHeader = TEXT_GetMessageListHead();
     if (!pTextHeader)
     {
-        FOG_DisplayAssert((uint32_t)"hTextList != NULL", (uint32_t)szSourceFile, 1760);
+        FOG_DisplayAssert("hTextList != NULL", szSourceFile, 1760);
         exit(-1);
     }
     wTblStringId = D2COMMON_TEXT_GetStringIdOfMenuType2Node(pTextHeader, nNode);
@@ -2155,7 +2155,7 @@ void __fastcall NPCMENU_BuildTalkMenu(int32_t nUnused, D2C_StringIndices nTitleT
 
     if (sgUIState.hDialogTalkMenu)
     {
-        FOG_DisplayAssert((uint32_t)"sgUIState.hDialogTalkMenu == NULL", (uint32_t)szSourceFile, 1847);
+        FOG_DisplayAssert("sgUIState.hDialogTalkMenu == NULL", szSourceFile, 1847);
         exit(-1);
     }
     tClientCoords.nX = 0;
@@ -2938,7 +2938,7 @@ void __fastcall NPCMENU_SendTransactionAndWait(int32_t bSkippedVerify, int32_t n
 
     if (sgUIState.hDialogWaiting)
     {
-        FOG_DisplayAssert((uint32_t)"sgUIState.hDialogWaiting == NULL", (uint32_t)szSourceFile, 4352);
+        FOG_DisplayAssert("sgUIState.hDialogWaiting == NULL", szSourceFile, 4352);
         exit(-1);
     }
     tClientCoords.nX = 0;
@@ -2984,7 +2984,7 @@ int32_t __cdecl NPCMENU_OnIdentifyClicked(void)
     }
     if (sgUIState.hDialogWaiting)
     {
-        FOG_DisplayAssert((uint32_t)"sgUIState.hDialogWaiting == NULL", (uint32_t)szSourceFile, 2491);
+        FOG_DisplayAssert("sgUIState.hDialogWaiting == NULL", szSourceFile, 2491);
         exit(-1);
     }
     tClientCoords.nX = 0;
@@ -3144,14 +3144,14 @@ void __fastcall NPCMENU_OnTransactionResult(D2GSPacketSrv2A *pPacket)
         }
         if (sgUIState.CurrentState != 5)
         {
-            FOG_DisplayAssert((uint32_t)"0", (uint32_t)szSourceFile, 4853);
+            FOG_DisplayAssert("0", szSourceFile, 4853);
             exit(-1);
         }
         sgUIState.CurrentState = 6;
         INV_NpcShopEnterPanelMode7();
         if (sgUIState.hDialogResults)
         {
-            FOG_DisplayAssert((uint32_t)"sgUIState.hDialogResults == NULL", (uint32_t)szSourceFile, 4833);
+            FOG_DisplayAssert("sgUIState.hDialogResults == NULL", szSourceFile, 4833);
             exit(-1);
         }
         if (sgUIState.Transaction == 2)
@@ -3224,7 +3224,7 @@ void __cdecl NPCMENU_ShowTransactionResult(void)
         sgUIState.CurrentState = 12;
         if (sgUIState.hDialogResults)
         {
-            FOG_DisplayAssert((uint32_t)"sgUIState.hDialogResults == NULL", (uint32_t)szSourceFile, 4955);
+            FOG_DisplayAssert("sgUIState.hDialogResults == NULL", szSourceFile, 4955);
             exit(-1);
         }
         nMouseY = CURSOR_GetMouseY();
@@ -3636,7 +3636,7 @@ void __cdecl NPCMENU_BuildConfirmDialog(void)
 
     if (sgUIState.hDialogConfirm)
     {
-        FOG_DisplayAssert((uint32_t)"sgUIState.hDialogConfirm == NULL", (uint32_t)szSourceFile, 5219);
+        FOG_DisplayAssert("sgUIState.hDialogConfirm == NULL", szSourceFile, 5219);
         exit(-1);
     }
     sgUIState.CurrentState = 4;
@@ -3667,7 +3667,7 @@ ADD_OWNED_TITLE:
         DIALOG_AddLine(sgUIState.hDialogConfirm, D2LANG_GetStringFromTblIndex(STR_IDX_3352_VerifyTransaction9), 21, 0, 4, 1, NULL, 0);
         goto ADD_CHOICES;
     default:
-        FOG_DisplayAssert((uint32_t)"0", (uint32_t)szSourceFile, 5272);
+        FOG_DisplayAssert("0", szSourceFile, 5272);
         exit(-1);
     }
 
@@ -3736,7 +3736,7 @@ int32_t __cdecl NPCMENU_OnGraphicActionVerified(void)
     SELECT_ClearSelectedUnit();
     if (sgUIState.CurrentState == 4)
     {
-        FOG_DisplayAssert((uint32_t)"sgUIState.CurrentState != UIStateGraphicVerifyingAction", (uint32_t)szSourceFile, 5185);
+        FOG_DisplayAssert("sgUIState.CurrentState != UIStateGraphicVerifyingAction", szSourceFile, 5185);
         exit(-1);
     }
     return 1;
@@ -3851,7 +3851,7 @@ void __cdecl NPCMENU_BuildMainMenu(void)
 
     if (sgUIState.hDialogMainMenu)
     {
-        FOG_DisplayAssert((uint32_t)"sgUIState.hDialogMainMenu == NULL", (uint32_t)szSourceFile, 3057);
+        FOG_DisplayAssert("sgUIState.hDialogMainMenu == NULL", szSourceFile, 3057);
         exit(-1);
     }
     if (!NPCMENU_NPC_GetActiveNpcUnit())
@@ -4148,7 +4148,7 @@ void __cdecl NPCMENU_BuildInterruptDialog(void)
     }
     if (sgUIState.hDialogInterrupt)
     {
-        FOG_DisplayAssert((uint32_t)"sgUIState.hDialogInterrupt == NULL", (uint32_t)szSourceFile, 3276);
+        FOG_DisplayAssert("sgUIState.hDialogInterrupt == NULL", szSourceFile, 3276);
         exit(-1);
     }
 
@@ -4241,7 +4241,7 @@ void __fastcall NPCMENU_OnNpcCmdPacket(D2GSPacketSrv50 *ptCmd)
 {
     if (!ptCmd)
     {
-        FOG_DisplayAssert((uint32_t)"ptCmd", (uint32_t)szSourceFile, 3872);
+        FOG_DisplayAssert("ptCmd", szSourceFile, 3872);
         exit(-1);
     }
     if (ptCmd->nQuestId == 3)
@@ -4333,7 +4333,7 @@ static void NPCMENU_OpenInterruptMenu(D2UnitStrc *pNpc)
     GAME_ResetClickState();
     if (NPCMENU_NPC_GetActiveNpcUnit())
     {
-        FOG_DisplayAssert((uint32_t)"UINPCMenuGetActive() == NULL", (uint32_t)szSourceFile, 3372);
+        FOG_DisplayAssert("UINPCMenuGetActive() == NULL", szSourceFile, 3372);
         exit(-1);
     }
     NPCMENU_SetInteractingNpc((int32_t *)pNpc);
@@ -4448,7 +4448,7 @@ void __fastcall NPCMENU_BeginInteraction(uint8_t nUnitType, int32_t dwNpcGUID, u
     pTextHeader = TEXT_GetMessageListHead();
     if (!pTextHeader)
     {
-        FOG_DisplayAssert((uint32_t)"hTextList != NULL", (uint32_t)szSourceFile, 4016);
+        FOG_DisplayAssert("hTextList != NULL", szSourceFile, 4016);
         exit(-1);
     }
     nSpeechTblId = (uint16_t)D2COMMON_TEXT_GetStringIdOfMenuType1Or2Node(pTextHeader, 0);

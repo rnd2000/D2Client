@@ -145,14 +145,14 @@ D2C_Sounds __fastcall UNITSND_GetHitClassSound(D2UnitStrc *pUnit, int32_t nHitCl
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 2908);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 2908);
         exit(-1);
     }
 
     nHitClassBase = nHitClass & 0xF;
     if (!(nHitClassBase >= (int32_t)HITCLASS_None && nHitClassBase < (int32_t)NUM_EHITCLASSES))
     {
-        FOG_DisplayAssert((uint32_t)"eHitClassBase >= EHITCLASS_NONE && eHitClassBase < NUM_EHITCLASSES", (uint32_t)szUnitSndCpp, 2912);
+        FOG_DisplayAssert("eHitClassBase >= EHITCLASS_NONE && eHitClassBase < NUM_EHITCLASSES", szUnitSndCpp, 2912);
         exit(-1);
     }
     return gHitClassSounds[nHitClassBase].nSoundId;
@@ -172,14 +172,14 @@ uint32_t __fastcall UNITSND_GetHitClassSoundDelay(D2UnitStrc *pUnit, int32_t nHi
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 2923);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 2923);
         exit(-1);
     }
 
     nHitClassBase = nHitClass & 0xF;
     if (!(nHitClassBase >= (int32_t)HITCLASS_None && nHitClassBase < (int32_t)NUM_EHITCLASSES))
     {
-        FOG_DisplayAssert((uint32_t)"eHitClassBase >= EHITCLASS_NONE && eHitClassBase < NUM_EHITCLASSES", (uint32_t)szUnitSndCpp, 2927);
+        FOG_DisplayAssert("eHitClassBase >= EHITCLASS_NONE && eHitClassBase < NUM_EHITCLASSES", szUnitSndCpp, 2927);
         exit(-1);
     }
 
@@ -209,7 +209,7 @@ void __fastcall UNITSND_GetImpactSoundsForHitClass(D2UnitStrc *pUnit, int32_t nH
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 2946);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 2946);
         exit(-1);
     }
 
@@ -330,7 +330,7 @@ int32_t __fastcall UNITSND_FindPlayingSoundInGroup(D2UnitStrc *pUnit, D2C_Sounds
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 3143);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 3143);
         exit(-1);
     }
 
@@ -358,7 +358,7 @@ int32_t __fastcall UNITSND_GetFirstSoundOnUnit(D2UnitStrc *pUnit)
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 3171);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 3171);
         exit(-1);
     }
 
@@ -510,7 +510,7 @@ D2C_Sounds __fastcall UNITSND_GetFootstepSoundId(D2UnitStrc *pUnit, int32_t bRun
         nClass = UNITSND_GetSoundClassId(pUnit);
         if ((uint32_t)nClass >= NUMBER_OF_PLAYERCLASSES)
         {
-            FOG_DisplayAssert((uint32_t)"eUnitClass < NUM_PLAYERCLASS", (uint32_t)szUnitSndCpp, 2850);
+            FOG_DisplayAssert("eUnitClass < NUM_PLAYERCLASS", szUnitSndCpp, 2850);
             exit(-1);
         }
         nSoundId = gpPlayerClassSounds[nClass][10];
@@ -885,7 +885,7 @@ void __fastcall UNITSND_UpdateUnitModeSound(D2UnitStrc *pUnit)
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 3215);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 3215);
         exit(-1);
     }
     if (pUnit->bUnitSfx && nUnitMode == pUnit->dwSfxMode)
@@ -894,7 +894,7 @@ void __fastcall UNITSND_UpdateUnitModeSound(D2UnitStrc *pUnit)
     nObjectClass = UNITSND_GetSoundClassId(pUnit);
     if (!(nObjectClass < 573 && nUnitMode < (int32_t)NUM_OBJECTMODES))
     {
-        FOG_DisplayAssert((uint32_t)"eUnitClass < NUM_OBJECTS && nMode < NUM_OBJECTMODES", (uint32_t)szUnitSndCpp, 3718);
+        FOG_DisplayAssert("eUnitClass < NUM_OBJECTS && nMode < NUM_OBJECTMODES", szUnitSndCpp, 3718);
         exit(-1);
     }
 
@@ -954,7 +954,7 @@ void __fastcall UNITSND_UpdateUnitModeSound(D2UnitStrc *pUnit)
         nObjectClass = UNITSND_GetSoundClassId(pUnit);
         if (!(nObjectClass < 573 && nUnitMode < (int32_t)NUM_OBJECTMODES))
         {
-            FOG_DisplayAssert((uint32_t)"eUnitClass < NUM_OBJECTS && nMode < NUM_OBJECTMODES", (uint32_t)szUnitSndCpp, 3698);
+            FOG_DisplayAssert("eUnitClass < NUM_OBJECTS && nMode < NUM_OBJECTMODES", szUnitSndCpp, 3698);
             exit(-1);
         }
         pObjectModeSound = gpObjectModeSounds[nObjectClass];
@@ -1015,7 +1015,7 @@ D2SoundListNodeStrc **__fastcall UNITSND_GetSoundListHead(D2UnitStrc *pUnit)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 3116);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 3116);
         exit(-1);
     }
     return &pUnit->pUnitSfxData;
@@ -1028,7 +1028,7 @@ void __fastcall UNITSND_SetSfxStarted(D2UnitStrc *pUnit, uint8_t bStarted)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 3226);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 3226);
         exit(-1);
     }
     pUnit->bUnitSfx = bStarted;
@@ -1041,7 +1041,7 @@ void __fastcall UNITSND_SetSfxMode(D2UnitStrc *pUnit, int32_t nMode)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 3248);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 3248);
         exit(-1);
     }
     pUnit->dwSfxMode = nMode;
@@ -1055,7 +1055,7 @@ uint32_t __fastcall UNITSND_GetSfxTicks(D2UnitStrc *pUnit)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 3259);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 3259);
         exit(-1);
     }
     return pUnit->dwSfxTicks;
@@ -1069,7 +1069,7 @@ uint32_t __fastcall UNITSND_GetSfxAsyncTicks(D2UnitStrc *pUnit)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 3281);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 3281);
         exit(-1);
     }
     return pUnit->dwSfxAsyncTicks;
@@ -1082,7 +1082,7 @@ void __fastcall UNITSND_SetSfxAsyncTicks(D2UnitStrc *pUnit, uint32_t nFrame)
 {
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 3292);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 3292);
         exit(-1);
     }
     pUnit->dwSfxAsyncTicks = nFrame;
@@ -1462,7 +1462,7 @@ void __fastcall UNITSND_PlayHitOrDeathSound(D2UnitStrc *pUnit, int32_t nMode)
         nClass = UNITSND_GetSoundClassId(pUnit);
         if ((uint32_t)nClass >= NUMBER_OF_PLAYERCLASSES)
         {
-            FOG_DisplayAssert((uint32_t)"eUnitClass < NUM_PLAYERCLASS", (uint32_t)szUnitSndCpp, 2850);
+            FOG_DisplayAssert("eUnitClass < NUM_PLAYERCLASS", szUnitSndCpp, 2850);
             exit(-1);
         }
         pPlayerClassSounds = gpPlayerClassSounds[nClass];
@@ -1530,7 +1530,7 @@ void __fastcall UNITSND_PlayMonsterSkillSound(D2UnitStrc *pUnit, int32_t nMode)
     nTicksFrame = GAME_GetFrameCount();
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 3270);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 3270);
         exit(-1);
     }
     pUnit->dwSfxTicks = nTicksFrame;
@@ -1572,7 +1572,7 @@ void __fastcall UNITSND_PlayPlayerSoundEvent(D2UnitStrc *pPlayer, uint16_t nSoun
 
     if (!pPlayer || (uint32_t)pPlayer->dwClassId >= NUMBER_OF_PLAYERCLASSES)
     {
-        FOG_DisplayAssert((uint32_t)"eUnitClass < NUM_PLAYERCLASS", (uint32_t)szUnitSndCpp, 2850);
+        FOG_DisplayAssert("eUnitClass < NUM_PLAYERCLASS", szUnitSndCpp, 2850);
         exit(-1);
     }
     pPlayerClassSounds = gpPlayerClassSounds[pPlayer->dwClassId];
@@ -1882,7 +1882,7 @@ void __fastcall UNITSND_AdjustUnitSoundRefCounts(D2UnitStrc *pUnit, int32_t nDel
     nType = UNITSND_GetSoundUnitType(pUnit);
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)"ptUnit", (uint32_t)szUnitSndCpp, 3325);
+        FOG_DisplayAssert("ptUnit", szUnitSndCpp, 3325);
         exit(-1);
     }
 
@@ -1912,7 +1912,7 @@ void __fastcall UNITSND_AdjustUnitSoundRefCounts(D2UnitStrc *pUnit, int32_t nDel
         nObjectClass = UNITSND_GetSoundClassId(pUnit);
         if (nObjectClass >= 573)
         {
-            FOG_DisplayAssert((uint32_t)"eUnitClass < NUM_OBJECTS", (uint32_t)szUnitSndCpp, 4627);
+            FOG_DisplayAssert("eUnitClass < NUM_OBJECTS", szUnitSndCpp, 4627);
             exit(-1);
         }
         pObjectSounds = gpObjectModeSounds[nObjectClass];

@@ -83,7 +83,7 @@ void __fastcall ROSTER_AddPlayer(uint32_t dwUnitGUID, int32_t nClass, const char
     pPrev = NULL;
     if (dwUnitGUID == 0xFFFFFFFF)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "dwUnitId != INVALID_PLAYER_ID", (uint32_t)(UINT_PTR)szRosterCpp, 176);
+        FOG_DisplayAssert("dwUnitId != INVALID_PLAYER_ID", szRosterCpp, 176);
         exit(-1);
     }
 
@@ -189,7 +189,7 @@ void __fastcall ROSTER_AddPlayer(uint32_t dwUnitGUID, int32_t nClass, const char
     {
         //  BUG: FOG_Alloc's answer is used untested (`rep stosd` over it, 0x21 dwords, 0x6FAAEEF0), where ROSTER_FindCorpseEntry asserts its own
         //  allocation of the same 0x84 bytes. LATENT: only a failed allocation reaches it.
-        pEntry = (D2RosterUnitStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterUnitStrc), (uint32_t)(UINT_PTR)szRosterCpp, 213, 0);
+        pEntry = (D2RosterUnitStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterUnitStrc), szRosterCpp, 213, 0);
         memset(pEntry, 0, sizeof(D2RosterUnitStrc));
     }
 
@@ -362,7 +362,7 @@ void __fastcall ROSTER_RemovePlayer(uint32_t dwPlayerGUID)
     pPrev = NULL;
     if (dwPlayerGUID == 0xFFFFFFFF)
     {
-        FOG_DisplayWarning((uint32_t)(UINT_PTR) "dwUnitId != INVALID_PLAYER_ID", (uint32_t)(UINT_PTR)szRosterCpp, 286);
+        FOG_DisplayWarning("dwUnitId != INVALID_PLAYER_ID", szRosterCpp, 286);
     }
 
     for (pEntry = gpPartyEntries; pEntry; pEntry = pEntry->pNext)
@@ -390,11 +390,11 @@ void __fastcall ROSTER_RemovePlayer(uint32_t dwPlayerGUID)
         for (pCorpse = pEntry->pCorpse; pCorpse; pCorpse = pPrevCorpse)
         {
             pPrevCorpse = pCorpse->pPrev;
-            FOG_Free((uint32_t)(UINT_PTR)pCorpse, (uint32_t)(UINT_PTR)szRosterCpp, 269, 0);
+            FOG_Free(pCorpse, szRosterCpp, 269, 0);
         }
         pEntry->pCorpse = NULL;
 
-        FOG_Free((uint32_t)(UINT_PTR)pEntry, (uint32_t)(UINT_PTR)szRosterCpp, 302, 0);
+        FOG_Free(pEntry, szRosterCpp, 302, 0);
     }
 
     pPlayer = CUNIT_GetPlayer();
@@ -413,7 +413,7 @@ void __fastcall ROSTER_RemovePlayer(uint32_t dwPlayerGUID)
         pGroup = ROSTER_FindListNode(nGroupId);
         if (!pGroup)
         {
-            pGroup = (D2RosterGroupStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterGroupStrc), (uint32_t)(UINT_PTR)szRosterCpp, 505, 0);
+            pGroup = (D2RosterGroupStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterGroupStrc), szRosterCpp, 505, 0);
             memset(pGroup, 0, sizeof(D2RosterGroupStrc));
             pGroup->wPartyId = nGroupId;
             pGroup->pNext = gpRosterList;
@@ -467,10 +467,10 @@ void __cdecl ROSTER_FreeAll()
         for (pCorpse = pEntry->pCorpse; pCorpse; pCorpse = pPrevCorpse)
         {
             pPrevCorpse = pCorpse->pPrev;
-            FOG_Free((uint32_t)(UINT_PTR)pCorpse, (uint32_t)(UINT_PTR)szRosterCpp, 269, 0);
+            FOG_Free(pCorpse, szRosterCpp, 269, 0);
         }
         pEntry->pCorpse = NULL;
-        FOG_Free((uint32_t)(UINT_PTR)pEntry, (uint32_t)(UINT_PTR)szRosterCpp, 330, 0);
+        FOG_Free(pEntry, szRosterCpp, 330, 0);
     }
     gpPartyEntries = NULL;
 
@@ -482,10 +482,10 @@ void __cdecl ROSTER_FreeAll()
         for (pCorpse = pEntry->pCorpse; pCorpse; pCorpse = pPrevCorpse)
         {
             pPrevCorpse = pCorpse->pPrev;
-            FOG_Free((uint32_t)(UINT_PTR)pCorpse, (uint32_t)(UINT_PTR)szRosterCpp, 269, 0);
+            FOG_Free(pCorpse, szRosterCpp, 269, 0);
         }
         pEntry->pCorpse = NULL;
-        FOG_Free((uint32_t)(UINT_PTR)pEntry, (uint32_t)(UINT_PTR)szRosterCpp, 342, 0);
+        FOG_Free(pEntry, szRosterCpp, 342, 0);
     }
     gpPendingRosterEntries = NULL;
 }
@@ -509,7 +509,7 @@ char *__fastcall ROSTER_GetDisplayName(D2RosterUnitStrc *pEntry)
 {
     if (!pEntry)
     {
-        FOG_DisplayWarning((uint32_t)(UINT_PTR) "ptRoster", (uint32_t)(UINT_PTR)szRosterCpp, 369);
+        FOG_DisplayWarning("ptRoster", szRosterCpp, 369);
     }
     return (char *)((UINT_PTR)pEntry + offsetof(D2RosterUnitStrc, szNameEx));
 }
@@ -626,7 +626,7 @@ D2RosterGroupStrc *__fastcall ROSTER_FindOrAddListNode(int16_t nPartyId)
 
     //  BUG: FOG_Alloc's answer is used untested (the three stores at 0x6FAAF773..0x6FAAF778), as at every other copy of this allocation in the
     //  unit. LATENT: only a failed allocation reaches it.
-    pGroup = (D2RosterGroupStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterGroupStrc), (uint32_t)(UINT_PTR)szRosterCpp, 505, 0);
+    pGroup = (D2RosterGroupStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterGroupStrc), szRosterCpp, 505, 0);
     memset(pGroup, 0, sizeof(D2RosterGroupStrc));
     pGroup->wPartyId = nPartyId;
     pGroup->pNext = gpRosterList;
@@ -645,7 +645,7 @@ void __cdecl ROSTER_FreeList()
     for (pGroup = gpRosterList; pGroup; pGroup = pNextGroup)
     {
         pNextGroup = pGroup->pNext;
-        FOG_Free((uint32_t)(UINT_PTR)pGroup, (uint32_t)(UINT_PTR)szRosterCpp, 556, 0);
+        FOG_Free(pGroup, szRosterCpp, 556, 0);
     }
     gpRosterList = NULL;
 }
@@ -907,7 +907,7 @@ void __fastcall ROSTER_OnPartyUpdate(uint32_t dwUnitId, int32_t nKillCount)
         pGroup = ROSTER_FindListNode(nGroupId);
         if (!pGroup)
         {
-            pGroup = (D2RosterGroupStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterGroupStrc), (uint32_t)(UINT_PTR)szRosterCpp, 505, 0);
+            pGroup = (D2RosterGroupStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterGroupStrc), szRosterCpp, 505, 0);
             memset(pGroup, 0, sizeof(D2RosterGroupStrc));
             pGroup->wPartyId = nGroupId;
             pGroup->pNext = gpRosterList;
@@ -1271,7 +1271,7 @@ void __fastcall ROSTER_PartySendButtonCommand(D2RosterUnitStrc *pEntry)
         break;
 
     case PARTYBUTTON_NONE:
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptRoster->eButton != PARTYBUTTON_NONE", (uint32_t)(UINT_PTR)szRosterCpp, 1213);
+        FOG_DisplayAssert("ptRoster->eButton != PARTYBUTTON_NONE", szRosterCpp, 1213);
         exit(-1);
 
     case PARTYBUTTON_ACCEPT:
@@ -1310,7 +1310,7 @@ void __fastcall ROSTER_PartySendButtonCommand(D2RosterUnitStrc *pEntry)
         pGroup = ROSTER_FindListNode(nGroupId);
         if (!pGroup)
         {
-            pGroup = (D2RosterGroupStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterGroupStrc), (uint32_t)(UINT_PTR)szRosterCpp, 505, 0);
+            pGroup = (D2RosterGroupStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterGroupStrc), szRosterCpp, 505, 0);
             memset(pGroup, 0, sizeof(D2RosterGroupStrc));
             pGroup->wPartyId = nGroupId;
             pGroup->pNext = gpRosterList;
@@ -1370,7 +1370,7 @@ void __cdecl ROSTER_PartySendLeaveParty()
     ptRoster = ROSTER_FindEntryByUnitOrCorpse(dwLocalId);
     if (!ptRoster)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptRoster", (uint32_t)(UINT_PTR)szRosterCpp, 1251);
+        FOG_DisplayAssert("ptRoster", szRosterCpp, 1251);
         exit(-1);
     }
     ptRoster->eButton = PARTYBUTTON_NONE;
@@ -1476,7 +1476,7 @@ void __fastcall ROSTER_PartySendHostileToggle(D2RosterUnitStrc *pEntry)
     ptRoster = ROSTER_FindEntryByUnitOrCorpse(dwLocalId);
     if (!ptRoster)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptRoster", (uint32_t)(UINT_PTR)szRosterCpp, 114);
+        FOG_DisplayAssert("ptRoster", szRosterCpp, 114);
         exit(-1);
     }
     if (ptRoster->wPartyId != pEntry->wPartyId)
@@ -1490,7 +1490,7 @@ void __fastcall ROSTER_PartySendHostileToggle(D2RosterUnitStrc *pEntry)
     ptRoster = ROSTER_FindEntryByUnitOrCorpse(dwLocalId);
     if (!ptRoster)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptRoster", (uint32_t)(UINT_PTR)szRosterCpp, 1251);
+        FOG_DisplayAssert("ptRoster", szRosterCpp, 1251);
         exit(-1);
     }
     ptRoster->wPartyId = 0xFFFF;
@@ -1655,7 +1655,7 @@ void __fastcall ROSTER_UpdateLifeAndLevel(int32_t dwUnitGUID, int32_t nLifePerce
         pGroup = ROSTER_FindListNode(nGroupId);
         if (!pGroup)
         {
-            pGroup = (D2RosterGroupStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterGroupStrc), (uint32_t)(UINT_PTR)szRosterCpp, 505, 0);
+            pGroup = (D2RosterGroupStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterGroupStrc), szRosterCpp, 505, 0);
             memset(pGroup, 0, sizeof(D2RosterGroupStrc));
             pGroup->wPartyId = nGroupId;
             pGroup->pNext = gpRosterList;
@@ -1794,12 +1794,12 @@ char *__fastcall ROSTER_GetPlayerDisplayName(D2UnitStrc *pUnit)
 
     if (!pUnit)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "hPlayer", (uint32_t)(UINT_PTR)szRosterCpp, 1489);
+        FOG_DisplayAssert("hPlayer", szRosterCpp, 1489);
         exit(-1);
     }
     if (pUnit->dwUnitType != UNIT_PLAYER)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "UnitGetType (hPlayer) == UNIT_PLAYER", (uint32_t)(UINT_PTR)szRosterCpp, 1490);
+        FOG_DisplayAssert("UnitGetType (hPlayer) == UNIT_PLAYER", szRosterCpp, 1490);
         exit(-1);
     }
     dwUnitId = pUnit->dwUnitId;
@@ -1813,7 +1813,7 @@ char *__fastcall ROSTER_GetPlayerDisplayName(D2UnitStrc *pUnit)
     pPlayerData = D2COMMON_UNITS_GetPlayerData(pUnit);
     if (!pPlayerData)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptPlayerInfo", (uint32_t)(UINT_PTR)szRosterCpp, 1499);
+        FOG_DisplayAssert("ptPlayerInfo", szRosterCpp, 1499);
         exit(-1);
     }
     return pPlayerData->szName;
@@ -1935,7 +1935,7 @@ void __fastcall ROSTER_SetPartyId(int32_t dwPlayerGUID, int16_t nPartyGUID)
         pGroup = ROSTER_FindListNode(nGroupId);
         if (!pGroup)
         {
-            pGroup = (D2RosterGroupStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterGroupStrc), (uint32_t)(UINT_PTR)szRosterCpp, 505, 0);
+            pGroup = (D2RosterGroupStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterGroupStrc), szRosterCpp, 505, 0);
             memset(pGroup, 0, sizeof(D2RosterGroupStrc));
             pGroup->wPartyId = nGroupId;
             pGroup->pNext = gpRosterList;
@@ -2034,10 +2034,10 @@ void __fastcall ROSTER_FindCorpseEntry(uint32_t dwUnitId, uint32_t dwCorpseId)
     pEntry = ROSTER_FindEntryByUnitOrCorpse(dwUnitId);
     if (!pEntry)
     {
-        pEntry = (D2RosterUnitStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterUnitStrc), (uint32_t)(UINT_PTR)szRosterCpp, 1660, 0);
+        pEntry = (D2RosterUnitStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterUnitStrc), szRosterCpp, 1660, 0);
         if (!pEntry)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptRoster", (uint32_t)(UINT_PTR)szRosterCpp, 1661);
+            FOG_DisplayAssert("ptRoster", szRosterCpp, 1661);
             exit(-1);
         }
         memset(pEntry, 0, sizeof(D2RosterUnitStrc));
@@ -2051,10 +2051,10 @@ void __fastcall ROSTER_FindCorpseEntry(uint32_t dwUnitId, uint32_t dwCorpseId)
         return;
     }
 
-    pCorpse = (D2RosterCorpseStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterCorpseStrc), (uint32_t)(UINT_PTR)szRosterCpp, 1677, 0);
+    pCorpse = (D2RosterCorpseStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterCorpseStrc), szRosterCpp, 1677, 0);
     if (!pCorpse)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR) "ptBody", (uint32_t)(UINT_PTR)szRosterCpp, 1678);
+        FOG_DisplayAssert("ptBody", szRosterCpp, 1678);
         exit(-1);
     }
     memset(pCorpse, 0, sizeof(D2RosterCorpseStrc));
@@ -2101,7 +2101,7 @@ void __fastcall ROSTER_RemoveCorpseFromEntry(int32_t nUnitId, int32_t nCorpseId)
     {
         pEntry->pCorpse = pCorpse->pPrev;
     }
-    FOG_Free((uint32_t)(UINT_PTR)pCorpse, (uint32_t)(UINT_PTR)szRosterCpp, 1715, 0);
+    FOG_Free(pCorpse, szRosterCpp, 1715, 0);
 }
 
 //  The functions from here to the end of the unit (0x6FAB1200..0x6FAB14BD) carry no assert and no source line, so nothing in them names a file;

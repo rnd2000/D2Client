@@ -105,7 +105,7 @@ int32_t __fastcall SOUNDCHAN_PrepareWaveBuffer(D2SoundsTxt *ptHeader)
 
     if (ptHeader->eDataState != 2)
     {
-        FOG_DisplayAssert((uint32_t)"ptHeader->eDataState == ESOUNDDATASTATE_LOADED", (uint32_t)szSoundChanCpp, 86);
+        FOG_DisplayAssert("ptHeader->eDataState == ESOUNDDATASTATE_LOADED", szSoundChanCpp, 86);
         exit(-1);
     }
 
@@ -455,7 +455,7 @@ void __fastcall SOUNDCHAN_ApplyVolumeAndPosition(D2SoundChannelStrc *ptChannel)
     pInstance = ptChannel->pInstance;
     if (!pInstance)
     {
-        FOG_DisplayAssert((uint32_t)"ptChannel->ptInst", (uint32_t)szSoundChanCpp, 537);
+        FOG_DisplayAssert("ptChannel->ptInst", szSoundChanCpp, 537);
         exit(-1);
     }
 
@@ -675,7 +675,7 @@ BOOL __fastcall SOUNDCHAN_CreateChannels(int32_t nKindMode)
 
     if (sgfSoundChannelsActive)
     {
-        FOG_DisplayAssert((uint32_t)"!sgfSoundChannelsActive", (uint32_t)szSoundChanCpp, 248);
+        FOG_DisplayAssert("!sgfSoundChannelsActive", szSoundChanCpp, 248);
         exit(-1);
     }
 

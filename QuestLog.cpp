@@ -391,7 +391,7 @@ void __stdcall QUESTLOG_QuestScreenOnMouseDown(SMSGHANDLER_PARAMS *pMsg)
 ICONS:
     if ((uint32_t)gnQuestLogEntryCount > 6)   // `jbe`, unsigned (0x6FB05C3B)
     {
-        FOG_DisplayAssert((uint32_t)szQuestLogButtonAssert, (uint32_t)szQuestLogCpp, 1848);
+        FOG_DisplayAssert(szQuestLogButtonAssert, szQuestLogCpp, 1848);
         exit(-1);
     }
 
@@ -522,7 +522,7 @@ void __stdcall QUESTLOG_QuestScreenOnMouseUp(SMSGHANDLER_PARAMS *pMsg)
         {
             if ((uint32_t)gnQuestLogEntryCount > 6)   // `jbe`, unsigned (0x6FB05EC8)
             {
-                FOG_DisplayAssert((uint32_t)szQuestLogButtonAssert, (uint32_t)szQuestLogCpp, 1848);
+                FOG_DisplayAssert(szQuestLogButtonAssert, szQuestLogCpp, 1848);
                 exit(-1);
             }
 
@@ -1785,7 +1785,7 @@ BY_COLOUR:
         Unicode::strcpy((Unicode *)pEntry->wszText, pTemplate);
         if (Unicode::strlen(pTemplate) >= 280)
         {
-            FOG_DisplayAssert((uint32_t)szTemplateLengthAssert, (uint32_t)szQuestLogCpp, 1274);
+            FOG_DisplayAssert(szTemplateLengthAssert, szQuestLogCpp, 1274);
             exit(-1);
         }
         Unicode::strcat((Unicode *)pEntry->wszText, wszCount);
@@ -2278,8 +2278,8 @@ TAB_GATE:
                         {
                             D2WIN_10117_DrawText(pSplitText->wszLine, gnQuestLogTextX + gnBorderXDifference, gnQuestLogTextY + iLineY - gnBorderYDifference, 0, 0);
                             pSplitNext = pSplitText->pNextLine;
-                            FOG_Free((uint32_t)pSplitText->wszLine, (uint32_t)szQuestLogCpp, 2257, 0);
-                            FOG_Free((uint32_t)pSplitText, (uint32_t)szQuestLogCpp, 2258, 0);
+                            FOG_Free(pSplitText->wszLine, szQuestLogCpp, 2257, 0);
+                            FOG_Free(pSplitText, szQuestLogCpp, 2258, 0);
                             iLineY += 20;
                             pSplitText = pSplitNext;
                         }

@@ -93,7 +93,7 @@ D2ClientLightStrc *__fastcall DLIGHTMAP_AddLight(D2UnitStrc *pUnit, int32_t nTyp
 
     ++gnDLightAllocCount;
 
-    pLight = (D2ClientLightStrc *)FOG_Alloc(52, (uint32_t)(UINT_PTR)szSourceFile, 255, 0);
+    pLight = (D2ClientLightStrc *)FOG_Alloc(52, szSourceFile, 255, 0);
 
     dwUnitType = UNIT_TYPES_COUNT;
     if (pUnit)
@@ -131,7 +131,7 @@ D2ClientLightStrc *__fastcall DLIGHTMAP_AddLight(D2UnitStrc *pUnit, int32_t nTyp
 
     //  a static light bakes its map; every other kind carries the NULL
     if (nType == LIGHT_TYPE_STATIC)
-        pLight->pnStaticMap = (int32_t *)FOG_Alloc(4 * (2 * nRadiusClamped + 1) * (2 * nRadiusClamped + 1), (uint32_t)(UINT_PTR)szSourceFile, 278, 0);
+        pLight->pnStaticMap = (int32_t *)FOG_Alloc(4 * (2 * nRadiusClamped + 1) * (2 * nRadiusClamped + 1), szSourceFile, 278, 0);
     else
         pLight->pnStaticMap = NULL;
 
@@ -152,7 +152,7 @@ void __fastcall DLIGHTMAP_SetTargetRadius(D2ClientLightStrc *ptLight, int32_t nR
             nRadiusSubtiles = 18;
         if (!ptLight)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtLight, (uint32_t)(UINT_PTR)szSourceFile, 305);
+            FOG_DisplayAssert(szAssertPtLight, szSourceFile, 305);
             exit(-1);
         }
         ptLight->nTargetRadius = 8 * nRadiusSubtiles;
@@ -171,7 +171,7 @@ void __fastcall DLIGHTMAP_SetRadius(D2ClientLightStrc *ptLight, int32_t nRadiusS
             nRadiusSubtiles = 18;
         if (!ptLight)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtLight, (uint32_t)(UINT_PTR)szSourceFile, 321);
+            FOG_DisplayAssert(szAssertPtLight, szSourceFile, 321);
             exit(-1);
         }
         ptLight->nRadius = 8 * nRadiusSubtiles;
@@ -180,7 +180,7 @@ void __fastcall DLIGHTMAP_SetRadius(D2ClientLightStrc *ptLight, int32_t nRadiusS
         {
             ptLight->fStaticValid = 0;
             if (ptLight->pnStaticMap)
-                FOG_Free((uint32_t)(UINT_PTR)ptLight->pnStaticMap, (uint32_t)(UINT_PTR)szSourceFile, 330, 0);
+                FOG_Free(ptLight->pnStaticMap, szSourceFile, 330, 0);
             ptLight->pnStaticMap = NULL;
         }
     }
@@ -192,7 +192,7 @@ int32_t __fastcall DLIGHTMAP_GetRadius(D2ClientLightStrc *ptLight)
 {
     if (!ptLight)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtLight, (uint32_t)(UINT_PTR)szSourceFile, 341);
+        FOG_DisplayAssert(szAssertPtLight, szSourceFile, 341);
         exit(-1);
     }
     return ptLight->nRadius >> 3;
@@ -205,7 +205,7 @@ void __fastcall DLIGHTMAP_SetColor(D2ClientLightStrc *ptLight, uint8_t nRed, uin
 {
     if (!ptLight)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtLight, (uint32_t)(UINT_PTR)szSourceFile, 359);
+        FOG_DisplayAssert(szAssertPtLight, szSourceFile, 359);
         exit(-1);
     }
     ptLight->nRed = nRed;
@@ -235,7 +235,7 @@ void __fastcall DLIGHTMAP_RemoveLight(D2ClientLightStrc *pLight)
     }
     if (!ptCurr)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtCurr, (uint32_t)(UINT_PTR)szSourceFile, 378);
+        FOG_DisplayAssert(szAssertPtCurr, szSourceFile, 378);
         exit(-1);
     }
 
@@ -245,9 +245,9 @@ void __fastcall DLIGHTMAP_RemoveLight(D2ClientLightStrc *pLight)
         gpDynamicLights = ptCurr->pNext;
 
     if (pLight->pnStaticMap)
-        FOG_Free((uint32_t)(UINT_PTR)pLight->pnStaticMap, (uint32_t)(UINT_PTR)szSourceFile, 385, 0);
+        FOG_Free(pLight->pnStaticMap, szSourceFile, 385, 0);
 
-    FOG_Free((uint32_t)(UINT_PTR)pLight, (uint32_t)(UINT_PTR)szSourceFile, 387, 0);
+    FOG_Free(pLight, szSourceFile, 387, 0);
     ++gnDLightFreeCount;
 }
 
@@ -262,7 +262,7 @@ void __fastcall DLIGHTMAP_ReleaseLight(D2ClientLightStrc *ptLight)
 
     if (!ptLight)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtLight, (uint32_t)(UINT_PTR)szSourceFile, 397);
+        FOG_DisplayAssert(szAssertPtLight, szSourceFile, 397);
         exit(-1);
     }
 
@@ -272,7 +272,7 @@ void __fastcall DLIGHTMAP_ReleaseLight(D2ClientLightStrc *ptLight)
 
     if (nType == LIGHT_TYPE_STATIC)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtLightNTypeStatic, (uint32_t)(UINT_PTR)szSourceFile, 400);
+        FOG_DisplayAssert(szAssertPtLightNTypeStatic, szSourceFile, 400);
         exit(-1);
     }
 }
@@ -750,7 +750,7 @@ void __fastcall DLIGHTMAP_Update(D2ClientLightStrc *pLight, int32_t nQualityLeve
         {
             pLight->fStaticValid = 0;
             if (pLight->pnStaticMap)
-                FOG_Free((uint32_t)(UINT_PTR)pLight->pnStaticMap, (uint32_t)(UINT_PTR)szSourceFile, 1228, 0);
+                FOG_Free(pLight->pnStaticMap, szSourceFile, 1228, 0);
             pLight->pnStaticMap = NULL;
         }
         nRadius = pLight->nRadius;
@@ -885,7 +885,7 @@ void __fastcall DLIGHTMAP_Update(D2ClientLightStrc *pLight, int32_t nQualityLeve
             if (!pLight->pnStaticMap)
             {
                 nDiameterCells = 2 * (pLight->nRadius >> 3) + 1;
-                pLight->pnStaticMap = (int32_t *)FOG_Alloc(4 * nDiameterCells * nDiameterCells, (uint32_t)(UINT_PTR)szSourceFile, 1265, 0);
+                pLight->pnStaticMap = (int32_t *)FOG_Alloc(4 * nDiameterCells * nDiameterCells, szSourceFile, 1265, 0);
             }
             DLIGHTMAP_BuildStaticMap(pLight);
         }
@@ -1362,7 +1362,7 @@ void __fastcall DLIGHTMAP_BuildStaticMap(D2ClientLightStrc *pLight)
     pRoom = D2COMMON_UNITS_GetRoom(pUnit);
     if (!pRoom)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertHRoom, (uint32_t)(UINT_PTR)szSourceFile, 1044);
+        FOG_DisplayAssert(szAssertHRoom, szSourceFile, 1044);
         exit(-1);
     }
 
@@ -1438,13 +1438,13 @@ void __fastcall DLIGHTMAP_BuildStaticMap(D2ClientLightStrc *pLight)
 
     if (pLight->fStaticValid)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertNotPtLightFStaticValid, (uint32_t)(UINT_PTR)szSourceFile, 1108);
+        FOG_DisplayAssert(szAssertNotPtLightFStaticValid, szSourceFile, 1108);
         exit(-1);
     }
     pnDest = pLight->pnStaticMap;
     if (!pnDest)
     {
-        FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtLightPnStaticMap, (uint32_t)(UINT_PTR)szSourceFile, 1109);
+        FOG_DisplayAssert(szAssertPtLightPnStaticMap, szSourceFile, 1109);
         exit(-1);
     }
 
@@ -1505,12 +1505,12 @@ void __fastcall DLIGHTMAP_ApplyLight(D2ClientLightStrc *pLight)
     {
         if (!pLight->pnStaticMap)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtLightPnStaticMap, (uint32_t)(UINT_PTR)szSourceFile, 1150);
+            FOG_DisplayAssert(szAssertPtLightPnStaticMap, szSourceFile, 1150);
             exit(-1);
         }
         if (!pLight->fStaticValid)
         {
-            FOG_DisplayAssert((uint32_t)(UINT_PTR)szAssertPtLightFStaticValid, (uint32_t)(UINT_PTR)szSourceFile, 1151);
+            FOG_DisplayAssert(szAssertPtLightFStaticValid, szSourceFile, 1151);
             exit(-1);
         }
 
@@ -1576,8 +1576,8 @@ void __cdecl DLIGHTMAP_FreeAll()
             pnStaticMap = pLight->pnStaticMap;
             pNext = pLight->pNext;
             if (pnStaticMap)
-                FOG_Free((uint32_t)(UINT_PTR)pnStaticMap, (uint32_t)(UINT_PTR)szSourceFile, 1405, 0);
-            FOG_Free((uint32_t)(UINT_PTR)pLight, (uint32_t)(UINT_PTR)szSourceFile, 1407, 0);
+                FOG_Free(pnStaticMap, szSourceFile, 1405, 0);
+            FOG_Free(pLight, szSourceFile, 1407, 0);
             pLight = pNext;
         } while (pNext);
     }
@@ -1619,7 +1619,7 @@ void __fastcall DLIGHTMAP_ActCallback(D2ActiveRoomStrc *pRoom)
             }
             if (!pUnit)
             {
-                FOG_DisplayAssert((uint32_t)(UINT_PTR)gszAssertHSrcUnit, (uint32_t)(UINT_PTR)szSourceFile, 1425);
+                FOG_DisplayAssert(gszAssertHSrcUnit, szSourceFile, 1425);
                 exit(-1);
             }
 
