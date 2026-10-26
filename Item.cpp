@@ -1176,9 +1176,9 @@ void __fastcall ITEM_OnItemPairPacket7D(D2GSPacketSrv7D *pPacket)
     const D2Composits eComponent = (D2Composits)D2COMMON_UNITS_GetItemComponentId(pOwner, pItem);
     const uint32_t dwItemMode = pItem->dwItemMode;
 
-    if (pPacket->unk0x0A == 256)
+    if (pPacket->nItemFlag == 256)
     {
-        D2COMMON_ITEMS_SetItemFlag(pItem, (D2C_ItemFlags)pPacket->unk0x0A, pPacket->unk0x0E);
+        D2COMMON_ITEMS_SetItemFlag(pItem, (D2C_ItemFlags)pPacket->nItemFlag, pPacket->bSet);
         GFX_StopIfAlive(pOwner);
 
         D2InventoryStrc *pInventory = pOwner->pInventory;
@@ -1196,7 +1196,7 @@ void __fastcall ITEM_OnItemPairPacket7D(D2GSPacketSrv7D *pPacket)
     }
     else
     {
-        if (pPacket->unk0x0A != 512)
+        if (pPacket->nItemFlag != 512)
             return;
 
         D2COMMON_ITEMS_SetItemFlag(pItem, IFLAG_BROKEN, 0);

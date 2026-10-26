@@ -149,7 +149,7 @@ void __cdecl MSG_SendPing6C()
         gnLastPing6CTick = dwNow;
         tPacket.nHeader = D2CLTSYS_0x6C;
         tPacket.nSendTick = (int32_t)GetTickCount();
-        tPacket.nHalfLatency = (int32_t)((uint32_t)GAME_GetNetworkLatencyRunningMean() >> 1);
+        tPacket.nHalfAveragePing = (int32_t)((uint32_t)GAME_GetNetworkLatencyRunningMean() >> 1);
         D2NET_CLIENT_Send(0, &tPacket.nHeader, (int32_t)sizeof(tPacket));
         gPacketAllSize += sizeof(tPacket);
         ++gPacketCounter;
@@ -157,7 +157,7 @@ void __cdecl MSG_SendPing6C()
 }
 
 static_assert(offsetof(D2GSPacketClt6C, nSendTick) == 1
-              && offsetof(D2GSPacketClt6C, nHalfLatency) == 5,
+              && offsetof(D2GSPacketClt6C, nHalfAveragePing) == 5,
               "MSG_SendPing6C: var_B and var_7 against pBuffer at -0Ch");
 
 
@@ -230,7 +230,7 @@ void __fastcall MSG_Send_D2CLTSYS_JOINGAME(int16_t nGameId, int32_t nTokenId)
 
     //  the Battle.net interface, untested; +0x5C is GetVersion
     pComInterface = GAME_GetComInterface();
-    tPacket.nVersion = (*(int32_t(__stdcall **)(void))((char *)pComInterface + 0x5C))();
+    tPacket.dwVersion = (*(int32_t(__stdcall **)(void))((char *)pComInterface + 0x5C))();
 
     tPacket.nLocale = (uint8_t)D2LANG_STRTABLE_GetLanguage();
     if (ARENA_IsArenaPlayerClassForced())
@@ -247,7 +247,7 @@ void __fastcall MSG_Send_D2CLTSYS_JOINGAME(int16_t nGameId, int32_t nTokenId)
 static_assert(offsetof(D2GSPacketClt67, nTokenId) == 0x01
               && offsetof(D2GSPacketClt67, nGameId) == 0x05
               && offsetof(D2GSPacketClt67, nPlayerClass) == 0x07
-              && offsetof(D2GSPacketClt67, nVersion) == 0x08
+              && offsetof(D2GSPacketClt67, dwVersion) == 0x08
               && offsetof(D2GSPacketClt67, nLocale) == 0x0C
               && offsetof(D2GSPacketClt67, szClientName) == 0x0D,
               "MSG_Send_D2CLTSYS_JOINGAME: var_1F, var_1B, var_19, var_18, "

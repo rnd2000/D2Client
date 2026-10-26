@@ -3497,7 +3497,7 @@ uint8_t nHeader;
 int32_t nTokenId;
 uint16_t nGameId;
 uint8_t nPlayerClass;
-int32_t nVersion;
+int32_t dwVersion;
 uint8_t nLocale;
 char szClientName[16];
 };
@@ -3516,7 +3516,7 @@ struct D2GSPacketClt6C
 {
 uint8_t nHeader;
 int32_t nSendTick;
-int32_t nHalfLatency;
+int32_t nHalfAveragePing;
 };
 
 struct D2GSPacketSrv01
@@ -3625,8 +3625,8 @@ uint8_t nHeader;
 uint8_t nUnitType;
 uint32_t dwUnitGUID;
 uint8_t nAction;
-uint8_t nTargetType;
-uint32_t dwTargetGUID;
+uint8_t bTargetable;
+uint32_t nAnimMode;
 };
 
 struct D2GSPacketSrv0F
@@ -3637,7 +3637,7 @@ uint32_t dwUnitGUID;
 uint8_t nAction;
 uint16_t nDestPosX;
 uint16_t nDestPosY;
-uint8_t unk0x00B;
+uint8_t nHitClass;
 uint16_t nCurrentPosX;
 uint16_t nCurrentPosY;
 };
@@ -3669,7 +3669,7 @@ uint8_t nUnitType;
 uint32_t dwUnitGUID;
 uint16_t nPosX;
 uint16_t nPosY;
-uint8_t unk0x00A;
+uint8_t bReassign;
 };
 
 struct D2GSPacketSrv16
@@ -3770,7 +3770,7 @@ uint8_t nUnitType;
 uint32_t dwUnitGUID;
 uint8_t bLeftSkill;
 uint16_t nSkill;
-uint32_t dwOwnerGUID;
+uint32_t nOwnerGUID;
 };
 
 struct D2GSPacketSrv26
@@ -3812,7 +3812,7 @@ struct D2GSPacketSrv28
 {
 uint8_t nHeader;
 uint8_t nUnitType;
-uint32_t dwUnitGUID;
+uint32_t nUnitGUID;
 uint8_t nAbortUnitType;
 uint8_t pData[96];
 };
@@ -3830,7 +3830,7 @@ uint8_t unk0x01;
 uint8_t nResult;
 uint32_t unk0x03;
 uint32_t dwItemGUID;
-uint32_t unk0x0B;
+uint32_t nGold;
 };
 
 struct D2GSPacketSrv2C
@@ -3859,7 +3859,9 @@ uint16_t nSkill;
 struct D2GSPacketSrv40
 {
 uint8_t nHeader;
-uint8_t unk0x001[12];
+uint32_t nItemGUID;
+D2C_ItemFlags dwFlag;
+int32_t bSet;
 };
 
 struct D2GSPacketSrv42
@@ -3896,19 +3898,19 @@ uint16_t nSkillId;
 uint8_t nSkillLevel;
 uint8_t nTargetType;
 uint32_t dwTargetGUID;
-uint16_t unk0x0E;
+uint16_t nItemEffect;
 };
 
 struct D2GSPacketSrv4D
 {
 uint8_t nHeader;
 uint8_t nUnitType;
-uint32_t dwUnitGUID;
+uint32_t nUnitGUID;
 uint32_t nSkillId;
 uint8_t nSkillLevel;
 uint16_t nX;
 uint16_t nY;
-uint16_t unk0x0F;
+uint16_t nItemEffect;
 };
 
 struct D2GSPacketSrv4E
@@ -4010,7 +4012,7 @@ struct D2GSPacketSrv57
 uint8_t nHeader;
 uint32_t dwUnitGUID;
 uint8_t nUnitType;
-uint16_t wNameSeed;
+uint16_t nNameSeed;
 uint16_t wUmods;
 uint16_t wUmod2;
 uint16_t bChampion;
@@ -4020,8 +4022,8 @@ struct D2GSPacketSrv58
 {
 uint8_t nHeader;
 int32_t nUnitId;
-uint8_t unk0x05;
-uint8_t unk0x06;
+uint8_t nAction;
+uint8_t bSuccess;
 };
 
 struct D2GSPacketSrv59
@@ -4119,8 +4121,8 @@ uint16_t nLevel;
 uint16_t nPartyId;
 uint16_t unk0x1C;
 uint16_t nPartyFlags;
-uint16_t unk0x20;
-char unk0x22[256];
+uint16_t nGuildFlags;
+char szGuildTag[256];
 };
 
 struct D2GSPacketSrv5C
@@ -4141,7 +4143,7 @@ uint16_t field_4;
 struct D2GSPacketSrv5E
 {
 uint8_t nHeader;
-uint8_t unk0x001[37];
+uint8_t nQuestIntroFlags[37];
 };
 
 struct D2GSPacketSrv5F
@@ -4161,7 +4163,7 @@ uint32_t dwUnitGUID;
 struct D2GSPacketSrv61
 {
 uint8_t nHeader;
-uint8_t unk0x001;
+uint8_t nCinematic;
 };
 
 struct D2GSPacketSrv62
@@ -4183,7 +4185,7 @@ struct D2GSPacketSrv65
 {
 uint8_t nHeader;
 uint32_t dwUnitId;
-uint16_t unk0x05;
+uint16_t nKillCount;
 };
 
 struct D2GSPacketSrv67
@@ -4193,11 +4195,11 @@ int32_t nUnitGUID;
 uint8_t nAction;
 int16_t nX;
 int16_t nY;
-int8_t unk0x0A;
-int8_t unk0x0B;
+int8_t nUnitLife;
+int8_t nHitClass;
 int8_t nPathType;
 int16_t nVelocity;
-int8_t unk0x0F;
+int8_t nMaxDistance;
 };
 
 struct D2GSPacketSrv68
@@ -4207,13 +4209,13 @@ int32_t nUnitGUID;
 uint8_t nAction;
 int16_t nX;
 int16_t nY;
-int8_t nTargetType;
-int32_t dwTargetGUID;
-int8_t unk0x0F;
-int8_t unk0x10;
+int8_t nTargetUnitType;
+int32_t nTargetUnitGUID;
+int8_t nUnitLife;
+int8_t nHitClass;
 int8_t nPathType;
 int16_t nVelocity;
-int8_t unk0x14;
+int8_t nMaxDistance;
 };
 
 struct D2GSPacketSrv69
@@ -4223,8 +4225,8 @@ uint32_t nUnitGUID;
 uint8_t nAction;
 uint16_t nX;
 uint16_t nY;
-uint8_t unk0x0A;
-uint8_t unk0x0B;
+uint8_t nUnitLife;
+uint8_t nHitClass;
 };
 
 struct D2GSPacketSrv6A
@@ -4242,10 +4244,10 @@ struct D2GSPacketSrv6B
 uint8_t nHeader;
 uint32_t nUnitGUID;
 uint8_t nAction;
-uint16_t nDestPosX;
-uint16_t nDestPosY;
-uint8_t unk0x0A;
-uint8_t unk0x0B;
+uint16_t nTargetX;
+uint16_t nTargetY;
+uint8_t nUnitLife;
+uint8_t nHitClass;
 uint16_t nCurrentPosX;
 uint16_t nCurrentPosY;
 };
@@ -4255,9 +4257,9 @@ struct D2GSPacketSrv6C
 uint8_t nHeader;
 uint32_t nUnitGUID;
 uint8_t nAction;
-uint8_t nTargetType;
-uint32_t dwTargetGUID;
-uint8_t unk0x0B;
+uint8_t nTargetUnitType;
+uint32_t nTargetUnitGUID;
+uint8_t nUnitLife;
 uint16_t nCurrentPosX;
 uint16_t nCurrentPosY;
 };
@@ -4268,7 +4270,7 @@ uint8_t nHeader;
 uint32_t nUnitGUID;
 uint16_t nX;
 uint16_t nY;
-uint8_t unk0x09;
+uint8_t nUnitLife;
 };
 
 struct D2GSPacketSrv73
@@ -4292,7 +4294,7 @@ struct D2GSPacketSrv74
 uint8_t nHeader;
 uint8_t bIsCorpse;
 int32_t nOwnerGUID;
-int32_t nBodyGUID;
+int32_t nCorpseGUID;
 };
 
 struct D2GSPacketSrv75
@@ -4302,7 +4304,7 @@ uint32_t nUnitGUID;
 uint16_t nPartyId;
 uint16_t nLevel;
 uint16_t nFlags;
-uint16_t unk0x0B;
+uint16_t nPartyFlags;
 };
 
 struct D2GSPacketSrv76
@@ -4328,18 +4330,18 @@ uint32_t dwPlayerGUID;
 struct D2GSPacketSrv79
 {
 uint8_t nHeader;
-uint8_t bSelf;
+uint8_t bOwnGold;
 uint32_t dwGold;
 };
 
 struct D2GSPacketSrv7A
 {
 uint8_t nHeader;
-uint8_t unk0x01;
-uint8_t unk0x02;
-uint16_t unk0x03;
-uint32_t unk0x05;
-uint32_t unk0x09;
+uint8_t bAdd;
+uint8_t nPetType;
+uint16_t nMonStatsId;
+uint32_t dwOwnerGUID;
+uint32_t dwPetGUID;
 };
 
 struct D2GSPacketSrv7B
@@ -4367,8 +4369,8 @@ uint8_t nHeader;
 uint8_t nUnitType;
 uint32_t nUnitGUID1;
 uint32_t nUnitGUID2;
-uint32_t unk0x0A;
-uint32_t unk0x0E;
+uint32_t nItemFlag;
+uint32_t bSet;
 };
 
 struct D2GSPacketSrv7E
@@ -4389,12 +4391,12 @@ uint16_t nLevelId;
 struct D2GSPacketSrv81
 {
 uint8_t nHeader;
-uint8_t unk0x01;
-uint16_t unk0x02;
-uint32_t unk0x04;
-uint32_t unk0x08;
-uint32_t unk0x0C;
-uint32_t unk0x10;
+uint8_t nPetType;
+uint16_t nMonStatsId;
+uint32_t nOwnerGUID;
+uint32_t nPetGUID;
+uint32_t dwNameSeed;
+uint32_t dwNameStringId;
 };
 
 struct D2GSPacketSrv82
@@ -4450,7 +4452,7 @@ uint32_t dwCorpseGUID;
 struct D2GSPacketSrv8F
 {
 uint8_t nHeader;
-uint8_t unk0x001[32];
+uint8_t pPongData[32];
 };
 
 struct D2GSPacketSrv90
@@ -4481,7 +4483,7 @@ uint8_t nHeader;
 uint32_t dwUnitGUID;
 uint8_t nLevelDelta;
 uint8_t nElement;
-uint8_t nSkillPage;
+uint8_t nSkillTab;
 };
 
 struct D2GSPacketSrv94__SkillInfo
@@ -4518,39 +4520,39 @@ uint8_t nHeader;
 struct D2GSPacketSrv98
 {
 uint8_t nHeader;
-uint32_t dwUnitGUID;
-uint16_t nMinionClassId;
+uint32_t nUnitGUID;
+uint16_t nMinionSpawnClassId;
 };
 
 struct D2GSPacketSrv99
 {
 uint8_t nHeader;
-uint8_t nUnitType;
-uint32_t dwUnitGUID;
+uint8_t nSourceUnitType;
+uint32_t nSourceUnitGUID;
 uint16_t nSkillId;
 uint8_t nSkillLevel;
 uint8_t nTargetType;
 int32_t dwTargetGUID;
-uint16_t unk0x0E;
+uint16_t nItemEffect;
 };
 
 struct D2GSPacketSrv9A
 {
 uint8_t nHeader;
 uint8_t nUnitType;
-uint32_t dwUnitGUID;
+uint32_t nUnitGUID;
 uint32_t nSkillId;
 uint8_t nSkillLevel;
 uint16_t nX;
 uint16_t nY;
-uint16_t unk0x0F;
+uint16_t nItemEffect;
 };
 
 struct D2GSPacketSrv9B
 {
 uint8_t nHeader;
-uint16_t wNameTblId;
-uint32_t nCost;
+uint16_t nMercNameStringId;
+uint32_t nReviveCost;
 };
 
 struct D2GSPacketSrv9C
@@ -4618,13 +4620,13 @@ uint16_t nValue;
 struct D2GSPacketSrvA3
 {
 uint8_t nHeader;
-uint8_t unk0x01;
+uint8_t nSeed;
 uint16_t nSkillId;
 uint16_t nSkillLevel;
 uint8_t nUnitType;
-uint32_t dwUnitGUID;
+uint32_t nUnitGUID;
 uint8_t nTargetType;
-uint32_t dwTargetGUID;
+uint32_t nTargetGUID;
 uint32_t nX;
 uint32_t nY;
 };
@@ -4632,14 +4634,14 @@ uint32_t nY;
 struct D2GSPacketSrvA4
 {
 uint8_t nHeader;
-uint16_t nMonsterId;
+uint16_t nMonStatsId;
 };
 
 struct D2GSPacketSrvA5
 {
 uint8_t nHeader;
 uint8_t nUnitType;
-int32_t dwUnitGUID;
+int32_t nUnitGUID;
 uint16_t nSkillId;
 };
 
@@ -4732,8 +4734,8 @@ uint8_t bitstream[244];
 struct D2GSPacketSrvAD
 {
 uint8_t nHeader;
-int32_t unk0x01;
-int32_t unk0x05;
+int32_t dwMemCheckAddress1;
+int32_t dwMemCheckAddress2;
 };
 
 struct D2GemsTxt
@@ -8891,7 +8893,7 @@ int32_t bCopyToUnitBuffer;
 // struct D2GSPacketClt23
 // {
 // uint8_t nHeader;
-// int32_t unk0x01;
+// int32_t nCursorItemGUID;
 // int32_t nBeltSlotId;
 // };
 // static_assert(sizeof(D2GSPacketClt23) == 9, "D2GSPacketClt23: layout differs from the database");
@@ -8940,7 +8942,8 @@ int32_t bCopyToUnitBuffer;
 // struct D2GSPacketClt31
 // {
 // uint8_t nHeader;
-// int32_t unk0x01[2];
+// int32_t nNpcGUID;
+// int32_t nMessageId;
 // };
 // static_assert(sizeof(D2GSPacketClt31) == 9, "D2GSPacketClt31: layout differs from the database");
 

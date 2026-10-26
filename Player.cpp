@@ -55,7 +55,7 @@ static_assert(SKILLSFLAGINDEX_TARGETITEM == 27 && MONSTATSFLAGINDEX_INTERACT == 
               "`test [edx+0Ch], cl`, 0x6FB49FB0); monstats.txt byte 0Ch + (9 >> 3) against gdwBitMasks[9 & 7] "
               "(`mov al, [eax+0Dh]` / `test [ecx+4], al`, 0x6FB4A52D)");
 static_assert(offsetof(D2GSPacketSrv74, bIsCorpse) == 1 && offsetof(D2GSPacketSrv74, nOwnerGUID) == 2
-                  && offsetof(D2GSPacketSrv74, nBodyGUID) == 6,
+                  && offsetof(D2GSPacketSrv74, nCorpseGUID) == 6,
               "PLAYER_AssignCorpse: `mov al, [esi+1]` (0x6FB4B3C9), `mov ecx, [esi+2]` (0x6FB4B3D4), "
               "`mov ecx, [esi+6]` (0x6FB4B409)");
 static_assert(COMPOSIT_LEFTHAND == 6,
@@ -2256,7 +2256,7 @@ void __fastcall PLAYER_AssignCorpse(D2GSPacketSrv74 *ptCmd)
 
     if (pOwner == CUNIT_GetPlayer())
     {
-        pBody = CUNIT_FindUnitByGuidAndType((uint32_t)ptCmd->nBodyGUID, UNIT_PLAYER);
+        pBody = CUNIT_FindUnitByGuidAndType((uint32_t)ptCmd->nCorpseGUID, UNIT_PLAYER);
         if (!pBody)
             return;
 

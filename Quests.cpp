@@ -19,11 +19,11 @@ static_assert(offsetof(D2GSPacketSrv50, nQuestId) == 1
               && offsetof(D2GSPacketSrv50, A5Q6_BaalPayload) == 3,
               "QUESTS_DispatchQuestPacket: `mov ax, [ecx+1]` at 0x6FAB8E03, "
               "`mov cx, [ecx+3]` at 0x6FAB8E2C and `mov ax, [ecx+3]` at 0x6FAB8E21");
-static_assert(offsetof(D2GSPacketSrv5E, unk0x001) == 1
-              && sizeof(((D2GSPacketSrv5E *)0)->unk0x001) == 9 * 4 + 1,
+static_assert(offsetof(D2GSPacketSrv5E, nQuestIntroFlags) == 1
+              && sizeof(((D2GSPacketSrv5E *)0)->nQuestIntroFlags) == 9 * 4 + 1,
               "QUESTS_StoreSrv5EPayload: `lea esi, [ecx+1]`, then `mov ecx, 9 / "
               "rep movsd / movsb` -- 37 bytes");
-static_assert(offsetof(D2GSPacketSrv61, unk0x001) == 1,
+static_assert(offsetof(D2GSPacketSrv61, nCinematic) == 1,
               "QUESTS_PlayCinematicFromPacket: `mov al, [ecx+1]` at 0x6FAB8F52");
 
 //1.10f: D2Client.0x6FAB8E00
@@ -79,8 +79,8 @@ void __fastcall QUESTS_DispatchQuestPacket(D2GSPacketSrv50 *pCmd)
 //  here. The copy is a `rep movsd` of nine dwords and a `movsb`, then the store of 1. What the bytes are: see the BUG note of QUESTS_GetQuestState.
 void __fastcall QUESTS_StoreSrv5EPayload(D2GSPacketSrv5E *pPacket)
 {
-    static_assert(sizeof(pPacket->unk0x001) == sizeof(gQuestStates), "the copy fills gQuestStates exactly");
-    memcpy(gQuestStates, pPacket->unk0x001, sizeof(gQuestStates));
+    static_assert(sizeof(pPacket->nQuestIntroFlags) == sizeof(gQuestStates), "the copy fills gQuestStates exactly");
+    memcpy(gQuestStates, pPacket->nQuestIntroFlags, sizeof(gQuestStates));
     gbQuestStatesReceived = 1;
 }
 
@@ -129,5 +129,5 @@ extern "C" int32_t __stdcall QUESTS_GetQuestState(int32_t nUnused, D2Quests nQue
 //  SCMD_HandleSrv61_PlayCinematic, reloads the resolution after it.
 void __fastcall QUESTS_PlayCinematicFromPacket(D2GSPacketSrv61 *pPacket)
 {
-    VIDEO_PlayCinematic(pPacket->unk0x001);
+    VIDEO_PlayCinematic(pPacket->nCinematic);
 }

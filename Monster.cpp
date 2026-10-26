@@ -3875,11 +3875,11 @@ void __fastcall MONSTER_SetMinionSpawnClassId(const D2GSPacketSrv98 *pPacket)
     D2UnitStrc *pMonster;
     int32_t nMinionClassId;
 
-    pMonster = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, UNIT_MONSTER);
+    pMonster = CUNIT_FindUnitByGuidAndType(pPacket->nUnitGUID, UNIT_MONSTER);
     if (!pMonster)
         return;
 
-    nMinionClassId = pPacket->nMinionClassId == 0xFFFF ? -1 : pPacket->nMinionClassId;
+    nMinionClassId = pPacket->nMinionSpawnClassId == 0xFFFF ? -1 : pPacket->nMinionSpawnClassId;
     if (pMonster->dwUnitType == UNIT_MONSTER && pMonster->pMonsterData)
         pMonster->pMonsterData->unk0x3C.nMinionClassId = nMinionClassId;
 }

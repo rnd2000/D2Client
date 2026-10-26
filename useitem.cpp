@@ -530,7 +530,7 @@ void __fastcall USEITEM_AnvilOnPanelPacket(D2GSPacketSrv58 *pPacket)
     D2UnitStrc *pPlayer;
     D2C_Sounds nSoundId;
 
-    switch (pPacket->unk0x05)
+    switch (pPacket->nAction)
     {
     case 0u:
         gnAnvilPanelMode = 0;
@@ -542,7 +542,7 @@ void __fastcall USEITEM_AnvilOnPanelPacket(D2GSPacketSrv58 *pPacket)
         //  No null check on the player -- the original's own shape.
         pPlayer = CUNIT_GetPlayer();
         D2COMMON_INVENTORY_SetCursorItem(pPlayer->pInventory, NULL);
-        nSoundId = pPacket->unk0x06 ? SOUND_CURSOR_POINT_DROP : SOUND_CURSOR_ERROR;
+        nSoundId = pPacket->bSuccess ? SOUND_CURSOR_POINT_DROP : SOUND_CURSOR_ERROR;
         SOUNDINST_PlaySound(nSoundId, NULL, 0, 0, 0);
         //  Falls through into the close, exactly as the original does.
     case 1u:

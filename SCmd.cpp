@@ -326,7 +326,7 @@ void __fastcall SCMD_ProcessUnitPacketQueue(D2UnitStrc *pUnit)
 //  NPC conversation packets: 0x28, 0x29, 0x2A, 0x42, 0x4E, 0x4F, 0x50, 0x62, 0x8A, 0x91 and 0x9B, each a few instructions that hand the packet
 //  on to the NPC menu.
 
-static_assert(offsetof(D2GSPacketSrv28, nUnitType) == 1 && offsetof(D2GSPacketSrv28, dwUnitGUID) == 2
+static_assert(offsetof(D2GSPacketSrv28, nUnitType) == 1 && offsetof(D2GSPacketSrv28, nUnitGUID) == 2
               && offsetof(D2GSPacketSrv28, nAbortUnitType) == 6 && offsetof(D2GSPacketSrv28, pData) == 7,
               "D2GSPacketSrv28: `mov cl, [ecx+1]`, `mov edx, [ecx+2]`, `mov al, [ecx+6]`, "
               "`lea edx, [ecx+7]` at 0x6FAB2B80..0x6FAB2B8B");
@@ -334,14 +334,14 @@ static_assert(offsetof(D2GSPacketSrv29, pData) == 1,
               "D2GSPacketSrv29: `inc ecx` at 0x6FAB2BB0");
 static_assert(offsetof(D2GSPacketSrv62, nUnitType) == 1 && offsetof(D2GSPacketSrv62, nUnitId) == 2,
               "D2GSPacketSrv62: `mov cl, [ecx+1]` and `mov edx, [ecx+2]` at 0x6FAB2BA0");
-static_assert(offsetof(D2GSPacketSrv9B, wNameTblId) == 1 && offsetof(D2GSPacketSrv9B, nCost) == 3,
+static_assert(offsetof(D2GSPacketSrv9B, nMercNameStringId) == 1 && offsetof(D2GSPacketSrv9B, nReviveCost) == 3,
               "D2GSPacketSrv9B: `mov cx, [ecx+1]` and `mov dx, [ecx+3]` at 0x6FAB43D2");
 
 //1.10f: D2Client.0x6FAB2B80
 //  Packet 0x28: an NPC starts a conversation.
 void __fastcall SCMD_HandleSrv28_NpcMenu(D2GSPacketSrv28 *pPacket)
 {
-    NPCMENU_BeginInteraction(pPacket->nUnitType, (int32_t)pPacket->dwUnitGUID, pPacket->pData, pPacket->nAbortUnitType);
+    NPCMENU_BeginInteraction(pPacket->nUnitType, (int32_t)pPacket->nUnitGUID, pPacket->pData, pPacket->nAbortUnitType);
 }
 
 //1.10f: D2Client.0x6FAB2BA0
@@ -421,7 +421,7 @@ void __fastcall SCMD_HandleSrv8A_NpcAlert(D2GSPacketSrv8A *pPacket)
 //  modulo 65536 on the client's side.
 void __fastcall SCMD_HandleSrv9B_ResurrectMercOffer(D2GSPacketSrv9B *pPacket)
 {
-    NPCMENU_SetResurrectMercOffer((D2C_StringIndices)pPacket->wNameTblId, (uint16_t)pPacket->nCost);
+    NPCMENU_SetResurrectMercOffer((D2C_StringIndices)pPacket->nMercNameStringId, (uint16_t)pPacket->nReviveCost);
 }
 
 
@@ -669,11 +669,11 @@ static_assert(offsetof(D2GSPacketSrv0D, nUnitType) == 1 && offsetof(D2GSPacketSr
               && offsetof(D2GSPacketSrv0D, nY) == 9 && offsetof(D2GSPacketSrv0D, nHitType) == 0x0B
               && offsetof(D2GSPacketSrv0D, nUnitLifePct) == 0x0C,
               "0x0D: words at [esi+7] and [esi+9], [esi+0Bh], [esi+2], [esi+6], [esi+1], [esi+0Ch]");
-static_assert(offsetof(D2GSPacketSrv0E, nAction) == 6 && offsetof(D2GSPacketSrv0E, nTargetType) == 7
-              && offsetof(D2GSPacketSrv0E, dwTargetGUID) == 8,
+static_assert(offsetof(D2GSPacketSrv0E, nAction) == 6 && offsetof(D2GSPacketSrv0E, bTargetable) == 7
+              && offsetof(D2GSPacketSrv0E, nAnimMode) == 8,
               "0x0E: [eax+7], [eax+6], [eax+8] at 0x6FAB251A..0x6FAB2524");
 static_assert(offsetof(D2GSPacketSrv0F, nAction) == 6 && offsetof(D2GSPacketSrv0F, nDestPosX) == 7
-              && offsetof(D2GSPacketSrv0F, nDestPosY) == 9 && offsetof(D2GSPacketSrv0F, unk0x00B) == 0x0B
+              && offsetof(D2GSPacketSrv0F, nDestPosY) == 9 && offsetof(D2GSPacketSrv0F, nHitClass) == 0x0B
               && offsetof(D2GSPacketSrv0F, nCurrentPosX) == 0x0C
               && offsetof(D2GSPacketSrv0F, nCurrentPosY) == 0x0E,
               "0x0F: [esi+7], [esi+9], [esi+0Bh], [esi+0Eh], [esi+0Ch], [esi+6]");
@@ -685,40 +685,40 @@ static_assert(offsetof(D2GSPacketSrv4C, nUnitType) == 1 && offsetof(D2GSPacketSr
               && offsetof(D2GSPacketSrv4C, nSkillId) == 6 && offsetof(D2GSPacketSrv4C, nSkillLevel) == 8
               && offsetof(D2GSPacketSrv4C, nTargetType) == 9 && offsetof(D2GSPacketSrv4C, dwTargetGUID) == 0x0A,
               "0x4C: a word at [edx+6], [edx+9], [edx+0Ah], [edx+8] at 0x6FAB37E8..0x6FAB3800");
-static_assert(offsetof(D2GSPacketSrv4D, nUnitType) == 1 && offsetof(D2GSPacketSrv4D, dwUnitGUID) == 2
+static_assert(offsetof(D2GSPacketSrv4D, nUnitType) == 1 && offsetof(D2GSPacketSrv4D, nUnitGUID) == 2
               && offsetof(D2GSPacketSrv4D, nSkillId) == 6 && offsetof(D2GSPacketSrv4D, nSkillLevel) == 0x0A
               && offsetof(D2GSPacketSrv4D, nX) == 0x0B && offsetof(D2GSPacketSrv4D, nY) == 0x0D,
               "0x4D: [edx+6], words at [edx+0Bh] and [edx+0Dh], [edx+0Ah] at 0x6FAB3848..0x6FAB3861");
 static_assert(offsetof(D2GSPacketSrv67, nAction) == 5 && offsetof(D2GSPacketSrv67, nX) == 6
-              && offsetof(D2GSPacketSrv67, nY) == 8 && offsetof(D2GSPacketSrv67, unk0x0A) == 0x0A
-              && offsetof(D2GSPacketSrv67, unk0x0B) == 0x0B && offsetof(D2GSPacketSrv67, nPathType) == 0x0C
-              && offsetof(D2GSPacketSrv67, nVelocity) == 0x0D && offsetof(D2GSPacketSrv67, unk0x0F) == 0x0F,
+              && offsetof(D2GSPacketSrv67, nY) == 8 && offsetof(D2GSPacketSrv67, nUnitLife) == 0x0A
+              && offsetof(D2GSPacketSrv67, nHitClass) == 0x0B && offsetof(D2GSPacketSrv67, nPathType) == 0x0C
+              && offsetof(D2GSPacketSrv67, nVelocity) == 0x0D && offsetof(D2GSPacketSrv67, nMaxDistance) == 0x0F,
               "0x67: the eight loads at 0x6FAB25FA..0x6FAB2636");
 static_assert(offsetof(D2GSPacketSrv68, nAction) == 5 && offsetof(D2GSPacketSrv68, nX) == 6
-              && offsetof(D2GSPacketSrv68, nY) == 8 && offsetof(D2GSPacketSrv68, nTargetType) == 0x0A
-              && offsetof(D2GSPacketSrv68, dwTargetGUID) == 0x0B && offsetof(D2GSPacketSrv68, unk0x0F) == 0x0F
-              && offsetof(D2GSPacketSrv68, unk0x10) == 0x10 && offsetof(D2GSPacketSrv68, nPathType) == 0x11
-              && offsetof(D2GSPacketSrv68, nVelocity) == 0x12 && offsetof(D2GSPacketSrv68, unk0x14) == 0x14,
+              && offsetof(D2GSPacketSrv68, nY) == 8 && offsetof(D2GSPacketSrv68, nTargetUnitType) == 0x0A
+              && offsetof(D2GSPacketSrv68, nTargetUnitGUID) == 0x0B && offsetof(D2GSPacketSrv68, nUnitLife) == 0x0F
+              && offsetof(D2GSPacketSrv68, nHitClass) == 0x10 && offsetof(D2GSPacketSrv68, nPathType) == 0x11
+              && offsetof(D2GSPacketSrv68, nVelocity) == 0x12 && offsetof(D2GSPacketSrv68, nMaxDistance) == 0x14,
               "0x68: the ten loads at 0x6FAB2659..0x6FAB26B1");
 static_assert(offsetof(D2GSPacketSrv69, nUnitGUID) == 1 && offsetof(D2GSPacketSrv69, nAction) == 5
               && offsetof(D2GSPacketSrv69, nX) == 6 && offsetof(D2GSPacketSrv69, nY) == 8
-              && offsetof(D2GSPacketSrv69, unk0x0A) == 0x0A && offsetof(D2GSPacketSrv69, unk0x0B) == 0x0B,
+              && offsetof(D2GSPacketSrv69, nUnitLife) == 0x0A && offsetof(D2GSPacketSrv69, nHitClass) == 0x0B,
               "0x69: [eax+6], [eax+5], [eax+8], [eax+0Ah], [eax+0Bh] at 0x6FAB26DA..0x6FAB2704");
 static_assert(offsetof(D2GSPacketSrv6A, nAction) == 5 && offsetof(D2GSPacketSrv6A, nTargetUnitType) == 6
               && offsetof(D2GSPacketSrv6A, nTargetUnitGuid) == 7 && offsetof(D2GSPacketSrv6A, nDirection) == 0x0B,
               "0x6A: [eax+6], [eax+5], [eax+7], [eax+0Bh] at 0x6FAB273A..0x6FAB274D");
 static_assert(offsetof(D2GSPacketSrv6B, nUnitGUID) == 1 && offsetof(D2GSPacketSrv6B, nAction) == 5
-              && offsetof(D2GSPacketSrv6B, nDestPosX) == 6 && offsetof(D2GSPacketSrv6B, nDestPosY) == 8
-              && offsetof(D2GSPacketSrv6B, unk0x0A) == 0x0A && offsetof(D2GSPacketSrv6B, unk0x0B) == 0x0B
+              && offsetof(D2GSPacketSrv6B, nTargetX) == 6 && offsetof(D2GSPacketSrv6B, nTargetY) == 8
+              && offsetof(D2GSPacketSrv6B, nUnitLife) == 0x0A && offsetof(D2GSPacketSrv6B, nHitClass) == 0x0B
               && offsetof(D2GSPacketSrv6B, nCurrentPosX) == 0x0C && offsetof(D2GSPacketSrv6B, nCurrentPosY) == 0x0E,
               "0x6B: [esi+0Eh], [esi+0Ch], then [esi+6], [esi+8], [esi+0Bh], [esi+0Ah], [esi+5]");
 static_assert(offsetof(D2GSPacketSrv6C, nUnitGUID) == 1 && offsetof(D2GSPacketSrv6C, nAction) == 5
-              && offsetof(D2GSPacketSrv6C, nTargetType) == 6 && offsetof(D2GSPacketSrv6C, dwTargetGUID) == 7
-              && offsetof(D2GSPacketSrv6C, unk0x0B) == 0x0B && offsetof(D2GSPacketSrv6C, nCurrentPosX) == 0x0C
+              && offsetof(D2GSPacketSrv6C, nTargetUnitType) == 6 && offsetof(D2GSPacketSrv6C, nTargetUnitGUID) == 7
+              && offsetof(D2GSPacketSrv6C, nUnitLife) == 0x0B && offsetof(D2GSPacketSrv6C, nCurrentPosX) == 0x0C
               && offsetof(D2GSPacketSrv6C, nCurrentPosY) == 0x0E,
               "0x6C: [esi+0Eh], [esi+0Ch], then [esi+7], [esi+6], [esi+0Bh], [esi+5]");
 static_assert(offsetof(D2GSPacketSrv6D, nUnitGUID) == 1 && offsetof(D2GSPacketSrv6D, nX) == 5
-              && offsetof(D2GSPacketSrv6D, nY) == 7 && offsetof(D2GSPacketSrv6D, unk0x09) == 9,
+              && offsetof(D2GSPacketSrv6D, nY) == 7 && offsetof(D2GSPacketSrv6D, nUnitLife) == 9,
               "0x6D: words at [eax+5] and [eax+7], a byte at [eax+9] at 0x6FAB2898..0x6FAB28BF");
 
 //  The original inlines this into SCMD_SaveCharacterFile, starting at the player-name assert and ending at the close; each early return is the
@@ -893,8 +893,8 @@ void __fastcall SCMD_HandleSrv0D_ActionAtXY(D2UnitStrc *pUnit, D2GSPacketSrv0D *
 void __fastcall SCMD_HandleSrv0E_ActionOnTarget(D2UnitStrc *pUnit, D2GSPacketSrv0E *pPacket)
 {
     int32_t pActionParams[7];
-    pActionParams[0] = pPacket->nTargetType;
-    pActionParams[1] = pPacket->dwTargetGUID;
+    pActionParams[0] = pPacket->bTargetable;
+    pActionParams[1] = pPacket->nAnimMode;
     UNITMODE_DispatchActionByUnitType((D2C_ClientActions)pPacket->nAction,pUnit, pActionParams, TRUE);
 }
 
@@ -905,7 +905,7 @@ void __fastcall SCMD_HandleSrv0F_ActionAtXYFromPos(D2UnitStrc *pUnit, D2GSPacket
     int32_t pActionParams[7];
     pActionParams[0] = pPacket->nDestPosX;
     pActionParams[1] = pPacket->nDestPosY;
-    pActionParams[2] = pPacket->unk0x00B;
+    pActionParams[2] = pPacket->nHitClass;
     UNITMODE_SyncUnitPosition(pUnit, pPacket->nCurrentPosX, pPacket->nCurrentPosY, 0, 0, 0);
     UNITMODE_DispatchActionByUnitType((D2C_ClientActions)pPacket->nAction,pUnit, pActionParams, TRUE);
 }
@@ -928,11 +928,11 @@ void __fastcall SCMD_HandleSrv67_ActionAtXYPathed(D2UnitStrc *pUnit, D2GSPacketS
     int32_t pActionParams[7];
     pActionParams[0] = (uint16_t)pPacket->nX;
     pActionParams[1] = (uint16_t)pPacket->nY;
-    pActionParams[2] = (uint8_t)pPacket->unk0x0A;
+    pActionParams[2] = (uint8_t)pPacket->nUnitLife;
     pActionParams[3] = (uint8_t)pPacket->nPathType;
     pActionParams[4] = pPacket->nVelocity;
-    pActionParams[5] = (uint8_t)pPacket->unk0x0F;
-    pActionParams[6] = (uint8_t)pPacket->unk0x0B;
+    pActionParams[5] = (uint8_t)pPacket->nMaxDistance;
+    pActionParams[6] = (uint8_t)pPacket->nHitClass;
     UNITMODE_DispatchActionByUnitType((D2C_ClientActions)pPacket->nAction,pUnit, pActionParams, TRUE);
 }
 
@@ -941,13 +941,13 @@ void __fastcall SCMD_HandleSrv67_ActionAtXYPathed(D2UnitStrc *pUnit, D2GSPacketS
 void __fastcall SCMD_HandleSrv68_ActionOnTargetPathedFromPos(D2UnitStrc *pUnit, D2GSPacketSrv68 *pPacket)
 {
     int32_t pActionParams[7];
-    pActionParams[0] = (uint8_t)pPacket->nTargetType;
-    pActionParams[1] = pPacket->dwTargetGUID;
-    pActionParams[2] = (uint8_t)pPacket->unk0x0F;
+    pActionParams[0] = (uint8_t)pPacket->nTargetUnitType;
+    pActionParams[1] = pPacket->nTargetUnitGUID;
+    pActionParams[2] = (uint8_t)pPacket->nUnitLife;
     pActionParams[3] = (uint8_t)pPacket->nPathType;
     pActionParams[4] = pPacket->nVelocity;
-    pActionParams[5] = (uint8_t)pPacket->unk0x14;
-    pActionParams[6] = (uint8_t)pPacket->unk0x10;
+    pActionParams[5] = (uint8_t)pPacket->nMaxDistance;
+    pActionParams[6] = (uint8_t)pPacket->nHitClass;
     UNITMODE_SyncUnitPosition(pUnit, (uint16_t)pPacket->nX, (uint16_t)pPacket->nY, 0, 0, 0);
     UNITMODE_DispatchActionByUnitType((D2C_ClientActions)pPacket->nAction,pUnit, pActionParams, TRUE);
 }
@@ -960,9 +960,9 @@ void __fastcall SCMD_HandleSrv69_ActionAtXY(D2UnitStrc *pUnit, D2GSPacketSrv69 *
     pActionParams[0] = pPacket->nX;
     pActionParams[1] = pPacket->nY;
     pActionParams[3] = 2;
-    pActionParams[2] = pPacket->unk0x0A;
+    pActionParams[2] = pPacket->nUnitLife;
     pActionParams[4] = 0;
-    pActionParams[6] = pPacket->unk0x0B;
+    pActionParams[6] = pPacket->nHitClass;
     pActionParams[5] = 4;
     UNITMODE_DispatchActionByUnitType((D2C_ClientActions)pPacket->nAction,pUnit, pActionParams, TRUE);
 }
@@ -987,10 +987,10 @@ void __fastcall SCMD_HandleSrv6B_ActionAtXYFromPos(D2UnitStrc *pUnit, D2GSPacket
 {
     int32_t pActionParams[7];
     UNITMODE_SyncUnitPosition(pUnit, pPacket->nCurrentPosX, pPacket->nCurrentPosY, 0, 0, 0);
-    pActionParams[0] = pPacket->nDestPosX;
-    pActionParams[1] = pPacket->nDestPosY;
-    pActionParams[6] = pPacket->unk0x0B;
-    pActionParams[2] = pPacket->unk0x0A;
+    pActionParams[0] = pPacket->nTargetX;
+    pActionParams[1] = pPacket->nTargetY;
+    pActionParams[6] = pPacket->nHitClass;
+    pActionParams[2] = pPacket->nUnitLife;
     pActionParams[3] = 2;
     pActionParams[4] = 0;
     pActionParams[5] = 4;
@@ -1003,9 +1003,9 @@ void __fastcall SCMD_HandleSrv6C_ActionOnTargetFromPos(D2UnitStrc *pUnit, D2GSPa
 {
     int32_t pActionParams[7];
     UNITMODE_SyncUnitPosition(pUnit, pPacket->nCurrentPosX, pPacket->nCurrentPosY, 0, 0, 0);
-    pActionParams[0] = pPacket->nTargetType;
-    pActionParams[1] = pPacket->dwTargetGUID;
-    pActionParams[2] = pPacket->unk0x0B;
+    pActionParams[0] = pPacket->nTargetUnitType;
+    pActionParams[1] = pPacket->nTargetUnitGUID;
+    pActionParams[2] = pPacket->nUnitLife;
     pActionParams[3] = 2;
     pActionParams[4] = 0;
     pActionParams[5] = 4;
@@ -1025,7 +1025,7 @@ void __fastcall SCMD_HandleSrv6D_PierceAtXY(D2UnitStrc *pUnit, D2GSPacketSrv6D *
     const uint16_t nY = pPacket->nY;
     pActionParams[0] = nX;
     pActionParams[1] = nY;
-    pActionParams[2] = pPacket->unk0x09;
+    pActionParams[2] = pPacket->nUnitLife;
     pActionParams[3] = 2;
     pActionParams[4] = 0;
     pActionParams[5] = 4;
@@ -1131,7 +1131,7 @@ static_assert(offsetof(D2GSPacketSrv11, nUnitType) == 1 && offsetof(D2GSPacketSr
               "0x11: [eax+2], [eax+1], [eax+6] at 0x6FAB2935..0x6FAB293B");
 static_assert(offsetof(D2GSPacketSrv15, nUnitType) == 1 && offsetof(D2GSPacketSrv15, dwUnitGUID) == 2
               && offsetof(D2GSPacketSrv15, nPosX) == 6 && offsetof(D2GSPacketSrv15, nPosY) == 8
-              && offsetof(D2GSPacketSrv15, unk0x00A) == 0x0A,
+              && offsetof(D2GSPacketSrv15, bReassign) == 0x0A,
               "0x15: [edi+2], [edi+1], [edi+6], [edi+8], [edi+0Ah]");
 static_assert(offsetof(D2GSPacketSrv16, nNumUpdates) == 3 && offsetof(D2GSPacketSrv16, unitUpdate) == 4
               && offsetof(D2ClientUnitUpdateStrc, nUnitType) == 0 && offsetof(D2ClientUnitUpdateStrc, nUnitGUID) == 1
@@ -1142,14 +1142,14 @@ static_assert(offsetof(D2GSPacketSrv9E, nStat) == 1 && offsetof(D2GSPacketSrv9E,
               && offsetof(D2GSPacketSrvA0, nValue) == 6 && offsetof(D2GSPacketSrvA1, nValue) == 6
               && offsetof(D2GSPacketSrvA2, nValue) == 6,
               "0x9E..0xA2: [ecx+1], [ecx+2], and the value at [ecx+6] as byte, word or dword");
-static_assert(offsetof(D2GSPacketSrvA3, unk0x01) == 1 && offsetof(D2GSPacketSrvA3, nSkillId) == 2
+static_assert(offsetof(D2GSPacketSrvA3, nSeed) == 1 && offsetof(D2GSPacketSrvA3, nSkillId) == 2
               && offsetof(D2GSPacketSrvA3, nSkillLevel) == 4 && offsetof(D2GSPacketSrvA3, nUnitType) == 6
-              && offsetof(D2GSPacketSrvA3, dwUnitGUID) == 7 && offsetof(D2GSPacketSrvA3, nTargetType) == 0x0B
-              && offsetof(D2GSPacketSrvA3, dwTargetGUID) == 0x0C && offsetof(D2GSPacketSrvA3, nX) == 0x10
+              && offsetof(D2GSPacketSrvA3, nUnitGUID) == 7 && offsetof(D2GSPacketSrvA3, nTargetType) == 0x0B
+              && offsetof(D2GSPacketSrvA3, nTargetGUID) == 0x0C && offsetof(D2GSPacketSrvA3, nX) == 0x10
               && offsetof(D2GSPacketSrvA3, nY) == 0x14,
               "0xA3: the loads at 0x6FAB2D6B..0x6FAB2D9C and [esi+1] at 0x6FAB2DDF");
-static_assert(offsetof(D2GSPacketSrvA4, nMonsterId) == 1, "0xA4: mov cx, [ecx+1] at 0x6FAB2EE5");
-static_assert(offsetof(D2GSPacketSrvA5, nUnitType) == 1 && offsetof(D2GSPacketSrvA5, dwUnitGUID) == 2
+static_assert(offsetof(D2GSPacketSrvA4, nMonStatsId) == 1, "0xA4: mov cx, [ecx+1] at 0x6FAB2EE5");
+static_assert(offsetof(D2GSPacketSrvA5, nUnitType) == 1 && offsetof(D2GSPacketSrvA5, nUnitGUID) == 2
               && offsetof(D2GSPacketSrvA5, nSkillId) == 6,
               "0xA5: [eax+2], [eax+1], [eax+6] at 0x6FAB2E26..0x6FAB2E2C");
 
@@ -1176,7 +1176,7 @@ void __fastcall SCMD_HandleSrv15_ReassignPlayer(D2GSPacketSrv15 *pPacket)
     if (!pUnit)
         return;
 
-    CUNIT_WarpUnit(pUnit, nPosX, nPosY, pPacket->unk0x00A);
+    CUNIT_WarpUnit(pUnit, nPosX, nPosY, pPacket->bReassign);
 
     D2ActiveRoomStrc *pRoom = D2COMMON_UNITS_GetRoom(pUnit);
     if (!pRoom)
@@ -1330,11 +1330,11 @@ void __fastcall SCMD_HandleSrv9E_A2(uint8_t *pPacket)
 //  row pointer's upper 24 bits; the callee masks it (`and ecx, 0FFh`, 0x6FABCC40; `and eax, 0FFh`, 0x6FABCC62), and ours passes the byte.
 void __fastcall SCMD_HandleSrvA3_SkillEffect(D2GSPacketSrvA3 *pPacket)
 {
-    D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
+    D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->nUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
     if (!pUnit)
         return;
 
-    D2UnitStrc *pTarget = CUNIT_FindUnitByGuidAndType(pPacket->dwTargetGUID, (D2C_UnitTypes)pPacket->nTargetType);
+    D2UnitStrc *pTarget = CUNIT_FindUnitByGuidAndType(pPacket->nTargetGUID, (D2C_UnitTypes)pPacket->nTargetType);
     const int16_t nSkillLevel = (int16_t)pPacket->nSkillLevel;
     const int32_t nX = (int32_t)pPacket->nX;
     const int32_t nY = (int32_t)pPacket->nY;
@@ -1347,9 +1347,9 @@ void __fastcall SCMD_HandleSrvA3_SkillEffect(D2GSPacketSrvA3 *pPacket)
         return;
 
     if ((uint8_t)pSkillsTxt->dwFlags[0] & (uint8_t)gdwBitMasks[SKILLSFLAGINDEX_PROGRESSIVE])
-        SKILLS_ApplyClientSkillEffect(pUnit, pTarget, (D2C_Skills)nSkillId, nSkillLevel, nX, nY, pPacket->unk0x01);
+        SKILLS_ApplyClientSkillEffect(pUnit, pTarget, (D2C_Skills)nSkillId, nSkillLevel, nX, nY, pPacket->nSeed);
     else
-        SKILLS_ApplyClientSkillEffectNonProgressive(pUnit, pTarget, (D2C_Skills)nSkillId, nSkillLevel, nX, nY, pPacket->unk0x01);
+        SKILLS_ApplyClientSkillEffectNonProgressive(pUnit, pTarget, (D2C_Skills)nSkillId, nSkillLevel, nX, nY, pPacket->nSeed);
 }
 
 //1.10f: D2Client.0x6FAB2E20
@@ -1358,7 +1358,7 @@ void __fastcall SCMD_HandleSrvA3_SkillEffect(D2GSPacketSrvA3 *pPacket)
 void __fastcall SCMD_HandleSrvA5_EndSkillMove(D2GSPacketSrvA5 *pPacket)
 {
     const uint16_t nSkillId = pPacket->nSkillId;
-    D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType((uint32_t)pPacket->dwUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
+    D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType((uint32_t)pPacket->nUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
     if (!pUnit)
         return;
 
@@ -1395,7 +1395,7 @@ void __fastcall SCMD_HandleSrvA5_EndSkillMove(D2GSPacketSrvA5 *pPacket)
 //  Row 0xA4: a monster's COF files added, the id bounded by monstats.txt's count. A tail jump.
 void __fastcall SCMD_HandleSrvA4_PreloadMonsterCofs(D2GSPacketSrvA4 *pPacket)
 {
-    const int32_t nMonsterId = pPacket->nMonsterId;
+    const int32_t nMonsterId = pPacket->nMonStatsId;
     if (nMonsterId < sgptDataTables->nMonStatsTxtRecordCount)
         GFX_AddMonsterCofFiles(nMonsterId, 0);
 }
@@ -1703,7 +1703,7 @@ static_assert(offsetof(D2GSPacketSrv21, nUnitType) == 1 && offsetof(D2GSPacketSr
               && offsetof(D2GSPacketSrv21, nSkillLevel) == 9,
               "0x21: [esi+3], [esi+1], [esi+7], [esi+2], [esi+9]");
 static_assert(offsetof(D2GSPacketSrv93, dwUnitGUID) == 1 && offsetof(D2GSPacketSrv93, nLevelDelta) == 5
-              && offsetof(D2GSPacketSrv93, nElement) == 6 && offsetof(D2GSPacketSrv93, nSkillPage) == 7,
+              && offsetof(D2GSPacketSrv93, nElement) == 6 && offsetof(D2GSPacketSrv93, nSkillTab) == 7,
               "0x93: [eax+5], [eax+1], [eax+6], [eax+7]");
 static_assert(offsetof(D2GSPacketSrv94, nSkills) == 1 && offsetof(D2GSPacketSrv94, dwUnitGUID) == 2
               && offsetof(D2GSPacketSrv94, Skills) == 6 && offsetof(D2GSPacketSrv94__SkillInfo, nSkill) == 0
@@ -1713,19 +1713,19 @@ static_assert(offsetof(D2GSPacketSrv22, nUnitGUID) == 3 && offsetof(D2GSPacketSr
               && offsetof(D2GSPacketSrv22, nQuantity) == 9 && offsetof(D2GSPacketSrv22, bIsCorpse) == 0x0B,
               "0x22: [esi+0Bh], [esi+3], [esi+7], [esi+9]");
 static_assert(offsetof(D2GSPacketSrv23, dwUnitGUID) == 2 && offsetof(D2GSPacketSrv23, bLeftSkill) == 6
-              && offsetof(D2GSPacketSrv23, nSkill) == 7 && offsetof(D2GSPacketSrv23, dwOwnerGUID) == 9,
+              && offsetof(D2GSPacketSrv23, nSkill) == 7 && offsetof(D2GSPacketSrv23, nOwnerGUID) == 9,
               "0x23: [esi+2], [esi+7], [esi+9], [esi+6]");
-static_assert(offsetof(D2GSPacketSrv98, dwUnitGUID) == 1 && offsetof(D2GSPacketSrv98, nMinionClassId) == 5,
+static_assert(offsetof(D2GSPacketSrv98, nUnitGUID) == 1 && offsetof(D2GSPacketSrv98, nMinionSpawnClassId) == 5,
               "MONSTER_SetMinionSpawnClassId: [esi+1] at 0x6FB44888, word [esi+5] at 0x6FB44894");
-static_assert(offsetof(D2GSPacketSrv99, nUnitType) == 1 && offsetof(D2GSPacketSrv99, dwUnitGUID) == 2
+static_assert(offsetof(D2GSPacketSrv99, nSourceUnitType) == 1 && offsetof(D2GSPacketSrv99, nSourceUnitGUID) == 2
               && offsetof(D2GSPacketSrv99, nSkillId) == 6 && offsetof(D2GSPacketSrv99, nSkillLevel) == 8
               && offsetof(D2GSPacketSrv99, nTargetType) == 9 && offsetof(D2GSPacketSrv99, dwTargetGUID) == 0x0A
-              && offsetof(D2GSPacketSrv99, unk0x0E) == 0x0E,
+              && offsetof(D2GSPacketSrv99, nItemEffect) == 0x0E,
               "0x99: [esi+2], [esi+1], [esi+0Ah], [esi+9], [esi+0Eh], [esi+8], [esi+6]");
-static_assert(offsetof(D2GSPacketSrv9A, nUnitType) == 1 && offsetof(D2GSPacketSrv9A, dwUnitGUID) == 2
+static_assert(offsetof(D2GSPacketSrv9A, nUnitType) == 1 && offsetof(D2GSPacketSrv9A, nUnitGUID) == 2
               && offsetof(D2GSPacketSrv9A, nSkillId) == 6 && offsetof(D2GSPacketSrv9A, nSkillLevel) == 0x0A
               && offsetof(D2GSPacketSrv9A, nX) == 0x0B && offsetof(D2GSPacketSrv9A, nY) == 0x0D
-              && offsetof(D2GSPacketSrv9A, unk0x0F) == 0x0F,
+              && offsetof(D2GSPacketSrv9A, nItemEffect) == 0x0F,
               "0x9A: [esi+2], [esi+1], [esi+0Fh], [esi+0Dh], [esi+0Bh], [esi+0Ah], [esi+6]");
 static_assert(offsetof(D2GSPacketSrv26, nMessageType) == 1 && offsetof(D2GSPacketSrv26, nLang) == 2
               && offsetof(D2GSPacketSrv26, nUnitType) == 3 && offsetof(D2GSPacketSrv26, dwUnitGUID) == 4
@@ -1760,7 +1760,7 @@ void __fastcall SCMD_HandleSrv93_SkillPageLevels(D2GSPacketSrv93 *pPacket)
     if (nDelta > 0x80)
         nDelta -= 0x100;
     const int32_t nElement = pPacket->nElement;
-    const uint8_t nSkillPage = pPacket->nSkillPage;
+    const uint8_t nSkillPage = pPacket->nSkillTab;
 
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, UNIT_PLAYER);
     if (pUnit)
@@ -1811,7 +1811,7 @@ void __fastcall SCMD_HandleSrv22_SetSkill(D2GSPacketSrv22 *pPacket)
 void __fastcall SCMD_HandleSrv23_SetActiveSkill(D2GSPacketSrv23 *pPacket)
 {
     const uint16_t nSkill = pPacket->nSkill;
-    const D2UnitGUID dwOwnerGUID = pPacket->dwOwnerGUID;
+    const D2UnitGUID dwOwnerGUID = pPacket->nOwnerGUID;
     D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, UNIT_PLAYER);
     if (!pUnit)
         return;
@@ -1837,7 +1837,7 @@ void __fastcall SCMD_HandleSrv98_MinionSpawnClass(D2GSPacketSrv98 *pPacket)
 //  forward the dword and SKILLS_ClientCastAtTarget masks it (`and edx, 0FFFFh`, 0x6FABA77B) before SKILLS_RunClientDoFunc tests it.
 void __fastcall SCMD_HandleSrv99_CastAtUnit(D2GSPacketSrv99 *pPacket)
 {
-    D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
+    D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->nSourceUnitGUID, (D2C_UnitTypes)pPacket->nSourceUnitType);
     if (!pUnit)
         return;
 
@@ -1845,7 +1845,7 @@ void __fastcall SCMD_HandleSrv99_CastAtUnit(D2GSPacketSrv99 *pPacket)
     if (!pTarget)
         return;
 
-    SKILLS_ClientCastAtUnit(pUnit, (D2C_Skills)pPacket->nSkillId, pPacket->nSkillLevel, pTarget, pPacket->unk0x0E);
+    SKILLS_ClientCastAtUnit(pUnit, (D2C_Skills)pPacket->nSkillId, pPacket->nSkillLevel, pTarget, pPacket->nItemEffect);
 }
 
 //1.10f: D2Client.0x6FAB3790
@@ -1853,11 +1853,11 @@ void __fastcall SCMD_HandleSrv99_CastAtUnit(D2GSPacketSrv99 *pPacket)
 //  0x99.
 void __fastcall SCMD_HandleSrv9A_CastAtXY(D2GSPacketSrv9A *pPacket)
 {
-    D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->dwUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
+    D2UnitStrc *pUnit = CUNIT_FindUnitByGuidAndType(pPacket->nUnitGUID, (D2C_UnitTypes)pPacket->nUnitType);
     if (!pUnit)
         return;
 
-    SKILLS_ClientCastAtPosition(pUnit, (D2C_Skills)(uint16_t)pPacket->nSkillId, pPacket->nSkillLevel, pPacket->nX, pPacket->nY, pPacket->unk0x0F);
+    SKILLS_ClientCastAtPosition(pUnit, (D2C_Skills)(uint16_t)pPacket->nSkillId, pPacket->nSkillLevel, pPacket->nX, pPacket->nY, pPacket->nItemEffect);
 }
 
 //1.10f: D2Client.0x6FAB3890
@@ -1938,7 +1938,7 @@ static_assert(offsetof(D2GSPacketSrv53, nIndex) == 1 && offsetof(D2GSPacketSrv53
               && offsetof(D2GSPacketSrv53, bEclipse) == 9,
               "0x53: [esi+1], [esi+5], [esi+9]");
 static_assert(offsetof(D2GSPacketSrv57, dwUnitGUID) == 1 && offsetof(D2GSPacketSrv57, nUnitType) == 5
-              && offsetof(D2GSPacketSrv57, wNameSeed) == 6 && offsetof(D2GSPacketSrv57, wUmods) == 8
+              && offsetof(D2GSPacketSrv57, nNameSeed) == 6 && offsetof(D2GSPacketSrv57, wUmods) == 8
               && offsetof(D2GSPacketSrv57, wUmod2) == 0x0A && offsetof(D2GSPacketSrv57, bChampion) == 0x0C,
               "0x57: [eax+0Ah], [eax+1], [eax+8], [eax+0Ch], [eax+5], [eax+6]");
 static_assert(offsetof(D2GSPacketSrv59, dwGUID) == 1 && offsetof(D2GSPacketSrv59, nClass) == 5
@@ -1948,11 +1948,11 @@ static_assert(offsetof(D2GSPacketSrv59, dwGUID) == 1 && offsetof(D2GSPacketSrv59
 static_assert(offsetof(D2GSPacketSrv5B, nUnitGUID) == 3 && offsetof(D2GSPacketSrv5B, nClass) == 7
               && offsetof(D2GSPacketSrv5B, szName) == 8 && offsetof(D2GSPacketSrv5B, nLevel) == 0x18
               && offsetof(D2GSPacketSrv5B, nPartyId) == 0x1A && offsetof(D2GSPacketSrv5B, unk0x1C) == 0x1C
-              && offsetof(D2GSPacketSrv5B, nPartyFlags) == 0x1E && offsetof(D2GSPacketSrv5B, unk0x20) == 0x20
-              && offsetof(D2GSPacketSrv5B, unk0x22) == 0x22,
+              && offsetof(D2GSPacketSrv5B, nPartyFlags) == 0x1E && offsetof(D2GSPacketSrv5B, nGuildFlags) == 0x20
+              && offsetof(D2GSPacketSrv5B, szGuildTag) == 0x22,
               "0x5B: the loads at 0x6FAB3DA7..0x6FAB3DDD");
 static_assert(offsetof(D2GSPacketSrv5C, dwPlayerGUID) == 1 && offsetof(D2GSPacketSrv5F, dwPortalFlags) == 1
-              && offsetof(D2GSPacketSrv65, dwUnitId) == 1 && offsetof(D2GSPacketSrv65, unk0x05) == 5
+              && offsetof(D2GSPacketSrv65, dwUnitId) == 1 && offsetof(D2GSPacketSrv65, nKillCount) == 5
               && offsetof(D2GSPacketSrv92, nUnitType) == 1 && offsetof(D2GSPacketSrv92, dwUnitGUID) == 2,
               "0x5C [ecx+1]; 0x5F [ecx+1]; 0x65 [ecx+5], [ecx+1]; 0x92 [eax+2], [eax+1]");
 
@@ -2063,7 +2063,7 @@ void __fastcall SCMD_HandleSrv57_MonsterEnchants(D2GSPacketSrv57 *pPacket)
     const uint32_t dwUnitGUID = pPacket->dwUnitGUID;
     const uint16_t wUmods = pPacket->wUmods;
     const uint16_t bChampion = pPacket->bChampion;
-    const uint16_t wNameSeed = pPacket->wNameSeed;
+    const uint16_t wNameSeed = pPacket->nNameSeed;
     if (pPacket->nUnitType != UNIT_MONSTER)
         return;
 
@@ -2104,9 +2104,9 @@ void __fastcall SCMD_HandleSrv59_AssignPlayer(D2GSPacketSrv59 *pPacket)
 //  +0x1C.
 void __fastcall SCMD_HandleSrv5B_RosterAddPlayer(D2GSPacketSrv5B *pPacket)
 {
-    char *szGuildTag = (char *)pPacket + offsetof(D2GSPacketSrv5B, unk0x22);
+    char *szGuildTag = (char *)pPacket + offsetof(D2GSPacketSrv5B, szGuildTag);
     ROSTER_AddPlayer(pPacket->nUnitGUID, pPacket->nClass, pPacket->szName, (int16_t)pPacket->nLevel, (int16_t)pPacket->nPartyId, (int16_t)pPacket->unk0x1C, (D2C_PartyButtons)pPacket->nPartyFlags,
-                     (int16_t)pPacket->unk0x20, szGuildTag, szGuildTag + strlen(szGuildTag) + 1);
+                     (int16_t)pPacket->nGuildFlags, szGuildTag, szGuildTag + strlen(szGuildTag) + 1);
 }
 
 //1.10f: D2Client.0x6FAB3DF0
@@ -2191,7 +2191,7 @@ void __fastcall SCMD_HandleSrv63_WaypointMenu(D2GSPacketSrv63 *pPacket)
 //  sign-extends by hand (0x6FAAFB55).
 void __fastcall SCMD_HandleSrv65_RosterUpdate(D2GSPacketSrv65 *pPacket)
 {
-    ROSTER_OnPartyUpdate(pPacket->dwUnitId, pPacket->unk0x05);
+    ROSTER_OnPartyUpdate(pPacket->dwUnitId, pPacket->nKillCount);
 }
 
 
@@ -2223,17 +2223,17 @@ static_assert(offsetof(D2MissileStrc, pOwner) == 4 && offsetof(D2MissileStrc, nM
               "0x73: the stores into the block, 0x6FAB3FC2..0x6FAB4000");
 static_assert(offsetof(D2GSPacketSrv75, nUnitGUID) == 1 && offsetof(D2GSPacketSrv75, nPartyId) == 5
               && offsetof(D2GSPacketSrv75, nLevel) == 7 && offsetof(D2GSPacketSrv75, nFlags) == 9
-              && offsetof(D2GSPacketSrv75, unk0x0B) == 0x0B,
+              && offsetof(D2GSPacketSrv75, nPartyFlags) == 0x0B,
               "0x75: [ecx+9], [ecx+0Bh], [ecx+7], [ecx+5], [ecx+1]");
-static_assert(offsetof(D2GSPacketSrv79, bSelf) == 1 && offsetof(D2GSPacketSrv79, dwGold) == 2,
+static_assert(offsetof(D2GSPacketSrv79, bOwnGold) == 1 && offsetof(D2GSPacketSrv79, dwGold) == 2,
               "0x79: mov dl, [ecx+1] and mov ecx, [ecx+2]");
-static_assert(offsetof(D2GSPacketSrv7A, unk0x01) == 1 && offsetof(D2GSPacketSrv7A, unk0x02) == 2
-              && offsetof(D2GSPacketSrv7A, unk0x03) == 3 && offsetof(D2GSPacketSrv7A, unk0x05) == 5
-              && offsetof(D2GSPacketSrv7A, unk0x09) == 9,
+static_assert(offsetof(D2GSPacketSrv7A, bAdd) == 1 && offsetof(D2GSPacketSrv7A, nPetType) == 2
+              && offsetof(D2GSPacketSrv7A, nMonStatsId) == 3 && offsetof(D2GSPacketSrv7A, dwOwnerGUID) == 5
+              && offsetof(D2GSPacketSrv7A, dwPetGUID) == 9,
               "0x7A: [eax+1], [eax+9], [eax+3], [eax+2], [eax+5]");
-static_assert(offsetof(D2GSPacketSrv81, unk0x01) == 1 && offsetof(D2GSPacketSrv81, unk0x02) == 2
-              && offsetof(D2GSPacketSrv81, unk0x04) == 4 && offsetof(D2GSPacketSrv81, unk0x08) == 8
-              && offsetof(D2GSPacketSrv81, unk0x0C) == 0x0C && offsetof(D2GSPacketSrv81, unk0x10) == 0x10,
+static_assert(offsetof(D2GSPacketSrv81, nPetType) == 1 && offsetof(D2GSPacketSrv81, nMonStatsId) == 2
+              && offsetof(D2GSPacketSrv81, nOwnerGUID) == 4 && offsetof(D2GSPacketSrv81, nPetGUID) == 8
+              && offsetof(D2GSPacketSrv81, dwNameSeed) == 0x0C && offsetof(D2GSPacketSrv81, dwNameStringId) == 0x10,
               "0x81: [ecx+0Ch], [ecx+10h], [ecx+2], [ecx+1], [ecx+4], [ecx+8]");
 static_assert(offsetof(D2GSPacketSrv7B, nSlot) == 1 && offsetof(D2GSPacketSrv7B, nItemGUID) == 4,
               "0x7B: mov bl, [ecx+1] and mov edx, [ecx+4], the bit-field word at [ecx+2] between them");
@@ -2315,7 +2315,7 @@ void __fastcall SCMD_HandleSrv74_AssignCorpse(D2GSPacketSrv74 *pPacket)
 //  `mov [esi+22h], dx` (0x6FAAF0CF).
 void __fastcall SCMD_HandleSrv75_PartyRosterUpdate(D2GSPacketSrv75 *pPacket)
 {
-    ROSTER_UpdatePartyState(pPacket->nUnitGUID, (int16_t)pPacket->nPartyId, (int16_t)pPacket->nLevel, (int16_t)pPacket->nFlags, (D2C_PartyButtons)pPacket->unk0x0B);
+    ROSTER_UpdatePartyState(pPacket->nUnitGUID, (int16_t)pPacket->nPartyId, (int16_t)pPacket->nLevel, (int16_t)pPacket->nFlags, (D2C_PartyButtons)pPacket->nPartyFlags);
 }
 
 //1.10f: D2Client.0x6FAB4110
@@ -2338,17 +2338,17 @@ void __fastcall SCMD_HandleSrv78_TradePartner(D2GSPacketSrv78 *pPacket)
 //  Row 0x79: a jump to trade.cpp's TRADE_SetGold; bSelf is passed in dl, which is all TRADE_SetGold tests.
 void __fastcall SCMD_HandleSrv79_TradeGold(D2GSPacketSrv79 *pPacket)
 {
-    TRADE_SetGold((int32_t)pPacket->dwGold, pPacket->bSelf);
+    TRADE_SetGold((int32_t)pPacket->dwGold, pPacket->bOwnGold);
 }
 
 //1.10f: D2Client.0x6FAB4160
 //  Row 0x7A: ROSTERPETS_FindOrAddPet, or ROSTERPETS_RemovePetOrMarkHireling by jump when the byte at +1 is zero.
 void __fastcall SCMD_HandleSrv7A_RosterPetsOnPetPacket(D2GSPacketSrv7A *pPacket)
 {
-    if (pPacket->unk0x01)
-        ROSTERPETS_FindOrAddPet(pPacket->unk0x09, pPacket->unk0x05, pPacket->unk0x02, pPacket->unk0x03);
+    if (pPacket->bAdd)
+        ROSTERPETS_FindOrAddPet(pPacket->dwPetGUID, pPacket->dwOwnerGUID, pPacket->nPetType, pPacket->nMonStatsId);
     else
-        ROSTERPETS_RemovePetOrMarkHireling(pPacket->unk0x09);
+        ROSTERPETS_RemovePetOrMarkHireling(pPacket->dwPetGUID);
 }
 
 //1.10f: D2Client.0x6FAB4190
@@ -2356,10 +2356,10 @@ void __fastcall SCMD_HandleSrv7A_RosterPetsOnPetPacket(D2GSPacketSrv7A *pPacket)
 void __fastcall SCMD_HandleSrv81_AddPet(D2GSPacketSrv81 *pPacket)
 {
     uint32_t tPetInfo[3];
-    tPetInfo[0] = pPacket->unk0x0C;
-    tPetInfo[1] = pPacket->unk0x10;
+    tPetInfo[0] = pPacket->dwNameSeed;
+    tPetInfo[1] = pPacket->dwNameStringId;
     tPetInfo[2] = 0;
-    ROSTERPETS_OnPetPacket81(pPacket->unk0x08, pPacket->unk0x04, pPacket->unk0x01, pPacket->unk0x02, tPetInfo);
+    ROSTERPETS_OnPetPacket81(pPacket->nPetGUID, pPacket->nOwnerGUID, pPacket->nPetType, pPacket->nMonStatsId, tPetInfo);
 }
 
 //1.10f: D2Client.0x6FAB41D0
@@ -2797,7 +2797,7 @@ static_assert(offsetof(D2GSPacketSrvAC, dwUnitGUID) == 1 && offsetof(D2GSPacketS
               && offsetof(D2GSPacketSrvAC, nLifePct) == 0x0B && offsetof(D2GSPacketSrvAC, nPacketLength) == 0x0C
               && offsetof(D2GSPacketSrvAC, bitstream) == 0x0D,
               "0xAC: [ebp+1], [ebp+5], [ebp+7], [ebp+9], [ebp+0Bh], [ebp+0Ch], lea ecx, [ebp+0Dh]");
-static_assert(offsetof(D2GSPacketSrvAD, unk0x01) == 1 && offsetof(D2GSPacketSrvAD, unk0x05) == 5,
+static_assert(offsetof(D2GSPacketSrvAD, dwMemCheckAddress1) == 1 && offsetof(D2GSPacketSrvAD, dwMemCheckAddress2) == 5,
               "0xAD: mov eax, [ecx+1] and mov ecx, [ecx+5]");
 static_assert(offsetof(D2DataTablesStrc, pMonStatsTxt) == 0xA78
               && offsetof(D2DataTablesStrc, pMonStats2Txt) == 0xA90
@@ -3066,6 +3066,6 @@ void __fastcall SCMD_HandleSrvAC_SpawnMonster(D2GSPacketSrvAC *pPacket)
 //  UNITMODE_FlushServerMemoryProbe to answer.
 void __fastcall SCMD_HandleSrvAD_ServerMemoryProbe(D2GSPacketSrvAD *pPacket)
 {
-    gnServerProbeAddr1 = (uint32_t)pPacket->unk0x01;
-    gnServerProbeAddr2 = (uint32_t)pPacket->unk0x05;
+    gnServerProbeAddr1 = (uint32_t)pPacket->dwMemCheckAddress1;
+    gnServerProbeAddr2 = (uint32_t)pPacket->dwMemCheckAddress2;
 }
