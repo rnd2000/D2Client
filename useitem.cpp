@@ -439,7 +439,7 @@ void __cdecl USEITEM_AnvilOpenPanel()
 
     ANVIL_NotifyInteractionEnd();
     ANVIL_ResetAndTeardown();
-    //  The last call of ANVIL_ResetAndTeardown is this one; the original returns its answer from here, so this is not simply `return 0`.
+    //  The last call of ANVIL_ResetAndTeardown is this one; the original leaves its answer in eax, which no caller reads.
     SELECT_SetClickRegion(NULL);
 }
 
