@@ -34,9 +34,9 @@
 //
 //  GENERATED BELOW THIS LINE -- do not edit by hand; regenerate instead.
 //
-//    python tools/d2client/sweep/bridge.py --run D2Client \
-//           tools/d2client/sweep/ida_dump_globals.py DG_OUT=<dump>.json
-//    python tools/d2client/sweep/gen_vars_header.py \
+//    python <Tools>/sweep/bridge.py --run D2Client \
+//           <Tools>/sweep/ida_dump_globals.py DG_OUT=<dump>.json
+//    python <Tools>/sweep/gen_vars_header.py \
 //           GV_DUMP=<dump>.json GV_APPLY=1
 //
 //  Source: the D2Client IDA database of the d2client-sweep repository --
@@ -753,7 +753,7 @@
 // OURS, Game.h: D2VAR(D2CLIENT, gnGameThreadId, DWORD, 0x10774C)
 // OURS, Game.h: D2VAR(D2CLIENT, gnActiveMessageCallbackIndex, int32_t, 0x107750)
 // OURS, Game.h: D2VAR(D2CLIENT, gpfnActiveMessageCallback, D2ClientMessageCallbackFn, 0x107754)
-// OURS, Game.h: D2VAR(D2CLIENT, ghClientPoolSystem, int32_t, 0x107758)
+// OURS, Game.h: D2VAR(D2CLIENT, ghClientPoolSystem, void *, 0x107758)
 // OURS, Game.h: D2VAR(D2CLIENT, gdwFrameTick, uint32_t, 0x10775C)
 // OURS, Game.h: D2VAR(D2CLIENT, gdwLastGameTickTime, uint32_t, 0x107760)
 // OURS, Game.h: D2VAR(D2CLIENT, gnTotalGameTicks, int32_t, 0x107764)

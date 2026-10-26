@@ -1700,14 +1700,14 @@ static_assert(offsetof(D2AutomapIndexStrc, dwGameIds) == 8,
 //  and if that file cannot be opened the code falls through to the flat save directory with the same name and carries on, so a mod whose save
 //  name is wrong silently shares the base game's map files.
 //  The three MAX_PATH buffers are zeroed a byte at a time and then in bulk. FOG_CreateFileA(szFile, 0xC0000000, 0, 0, 4, 128, 0) is read/write,
-//  OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL; 0xC0000000 is written as the signed -1073741824 the import's parameter takes.
-int32_t __stdcall AUTOMAP_SaveExploredMap()
+//  OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL.
+HANDLE __stdcall AUTOMAP_SaveExploredMap()
 {
     void *hIndexFile;
     int32_t nSlot;
     int32_t nSlotUsed;
-    int32_t hMapFile;
-    int32_t nBytesDone;
+    HANDLE hMapFile;
+    DWORD nBytesDone;
     D2AutomapIndexStrc tIndex;
     CHAR szFile[260];
     char szSaveDir[260];
@@ -1720,7 +1720,7 @@ int32_t __stdcall AUTOMAP_SaveExploredMap()
     szPath[0] = gszEmptyString;
     memset(&szPath[1], 0, 259);
 
-    FOG_GetSavePath((uint32_t)(UINT_PTR)szSaveDir, 260);
+    FOG_GetSavePath(szSaveDir, 260);
 
     hIndexFile = (void *)-1;
     if (*(char *)gszRealmName)
@@ -1728,7 +1728,7 @@ int32_t __stdcall AUTOMAP_SaveExploredMap()
         STORM_SStrPrintf(szPath, 0x104u, "%s%s\\", szSaveDir, (const char *)gszRealmName);
         FOG_CreatePathHierarchy(szPath);
         STORM_SStrPrintf(szFile, 0x104u, "%s%s.map", szPath, gLocalPlayerName);
-        hIndexFile = (void *)FOG_CreateFileA((uint32_t)(UINT_PTR)szFile, -1073741824, 0, 0, 4, 128, 0);
+        hIndexFile = FOG_CreateFileA(szFile, 0xC0000000, 0, 0, 4, 128, 0);
         if (hIndexFile != (void *)-1)
             STORM_SStrCopy(szSaveDir, szPath, 0x104u);
     }
@@ -1737,9 +1737,9 @@ int32_t __stdcall AUTOMAP_SaveExploredMap()
     {
         //  the flat fallback, reached both when there is no save name and when the sub-directory's index could not be opened
         sprintf(szFile, "%s%s.map", szSaveDir, gLocalPlayerName);
-        hMapFile = FOG_CreateFileA((uint32_t)(UINT_PTR)szFile, -1073741824, 0, 0, 4, 128, 0);
-        hIndexFile = (void *)hMapFile;
-        if (hMapFile == -1)
+        hMapFile = FOG_CreateFileA(szFile, 0xC0000000, 0, 0, 4, 128, 0);
+        hIndexFile = hMapFile;
+        if (hMapFile == (void *)-1)
             return hMapFile;
     }
 
@@ -1747,7 +1747,7 @@ int32_t __stdcall AUTOMAP_SaveExploredMap()
     memset(tIndex.dwGameIds, 0, sizeof(tIndex.dwGameIds));
     tIndex.nVersion = 0;
     nBytesDone = 0;
-    FOG_10110((uint32_t)(UINT_PTR)hIndexFile, (uint32_t)(UINT_PTR)&tIndex, 24, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+    FOG_10110(hIndexFile, &tIndex, 24, &nBytesDone, 0);
 
     if (nBytesDone == 24 && tIndex.nVersion == 12)
     {
@@ -1762,7 +1762,7 @@ int32_t __stdcall AUTOMAP_SaveExploredMap()
             //  the id is already in the table: reuse the slot and leave the index alone
             FOG_CloseFile(hIndexFile);
             sprintf(szFile, Format, szSaveDir, gLocalPlayerName, nSlotUsed);
-            return FOG_CreateFileA((uint32_t)(UINT_PTR)szFile, -1073741824, 0, 0, 4, 128, 0);
+            return FOG_CreateFileA(szFile, 0xC0000000, 0, 0, 4, 128, 0);
         }
 
         nSlotUsed = tIndex.nNextSlot;
@@ -1787,12 +1787,12 @@ int32_t __stdcall AUTOMAP_SaveExploredMap()
         nSlotUsed = 0;
     }
 
-    FOG_10112((uint32_t)(UINT_PTR)hIndexFile, 0, 0, 0);
-    FOG_10111((uint32_t)(UINT_PTR)hIndexFile, (uint32_t)(UINT_PTR)&tIndex, 24, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+    FOG_10112(hIndexFile, 0, 0, 0);
+    FOG_10111(hIndexFile, &tIndex, 24, &nBytesDone, 0);
 
     FOG_CloseFile(hIndexFile);
     sprintf(szFile, Format, szSaveDir, gLocalPlayerName, nSlotUsed);
-    return FOG_CreateFileA((uint32_t)(UINT_PTR)szFile, -1073741824, 0, 0, 4, 128, 0);
+    return FOG_CreateFileA(szFile, 0xC0000000, 0, 0, 4, 128, 0);
 }
 
 
@@ -1808,25 +1808,25 @@ void __fastcall AUTOMAP_WriteExploredLayer(D2AutomapDataStrc *pData)
     uint32_t dwAppendAt;
     int32_t nSeekTo;
     int32_t nLastRecord;
-    int32_t nBytesDone;
+    DWORD nBytesDone;
     int32_t nChainOffset;
     uint32_t dwRecordOffset;
     int32_t aLayerChainHead[100];
 
-    hFile = (void *)AUTOMAP_SaveExploredMap();
+    hFile = AUTOMAP_SaveExploredMap();
     if (hFile == (void *)-1)
         return;
 
     memset(aLayerChainHead, 0, sizeof(aLayerChainHead));
     nBytesDone = 0;
-    FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+    FOG_10110(hFile, aLayerChainHead, 400, &nBytesDone, 0);
 
     if (nBytesDone != 400)
     {
         //  a fresh file: zero the table and put it there
         memset(aLayerChainHead, 0, sizeof(aLayerChainHead));
-        FOG_10112((uint32_t)(UINT_PTR)hFile, 0, 0, 0);
-        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+        FOG_10112(hFile, 0, 0, 0);
+        FOG_10111(hFile, aLayerChainHead, 400, &nBytesDone, 0);
     }
 
     nChainOffset = aLayerChainHead[pData->nLayerNo];
@@ -1839,44 +1839,44 @@ void __fastcall AUTOMAP_WriteExploredLayer(D2AutomapDataStrc *pData)
         nLastRecord = 0;
         do
         {
-            FOG_10112((uint32_t)(UINT_PTR)hFile, nSeekTo, 0, 0);
+            FOG_10112(hFile, nSeekTo, 0, 0);
             nLastRecord = nChainOffset;
-            FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nChainOffset, 4, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+            FOG_10110(hFile, &nChainOffset, 4, &nBytesDone, 0);
             nSeekTo = nChainOffset;
         }
         while (nChainOffset);
 
-        FOG_10112((uint32_t)(UINT_PTR)hFile, nLastRecord, 0, 0);
-        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&dwRecordOffset, 4, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+        FOG_10112(hFile, nLastRecord, 0, 0);
+        FOG_10111(hFile, &dwRecordOffset, 4, &nBytesDone, 0);
     }
     else
     {
         aLayerChainHead[pData->nLayerNo] = dwAppendAt;
     }
 
-    FOG_10112((uint32_t)(UINT_PTR)hFile, 0, 0, 0);
-    FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+    FOG_10112(hFile, 0, 0, 0);
+    FOG_10111(hFile, aLayerChainHead, 400, &nBytesDone, 0);
 
-    FOG_10112((uint32_t)(UINT_PTR)hFile, dwRecordOffset, 0, 0);
+    FOG_10112(hFile, dwRecordOffset, 0, 0);
     dwRecordOffset = 0;
-    FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&dwRecordOffset, 4, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+    FOG_10111(hFile, &dwRecordOffset, 4, &nBytesDone, 0);
 
-    FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)pData, 4, (uint32_t)(UINT_PTR)&nBytesDone, 0);
-    FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&pData->fSaved, 4, (uint32_t)(UINT_PTR)&nBytesDone, 0);
-    FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&pData->dwGameField, 4, (uint32_t)(UINT_PTR)&nBytesDone, 0);
-    FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&pData->dwFloorSize, 4, (uint32_t)(UINT_PTR)&nBytesDone, 0);
-    FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&pData->dwWallsSize, 4, (uint32_t)(UINT_PTR)&nBytesDone, 0);
-    FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&pData->dwUnitsSize, 4, (uint32_t)(UINT_PTR)&nBytesDone, 0);
-    FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&pData->dwExtraSize, 4, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+    FOG_10111(hFile, pData, 4, &nBytesDone, 0);
+    FOG_10111(hFile, &pData->fSaved, 4, &nBytesDone, 0);
+    FOG_10111(hFile, &pData->dwGameField, 4, &nBytesDone, 0);
+    FOG_10111(hFile, &pData->dwFloorSize, 4, &nBytesDone, 0);
+    FOG_10111(hFile, &pData->dwWallsSize, 4, &nBytesDone, 0);
+    FOG_10111(hFile, &pData->dwUnitsSize, 4, &nBytesDone, 0);
+    FOG_10111(hFile, &pData->dwExtraSize, 4, &nBytesDone, 0);
 
     if (pData->dwFloorSize)
-        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)pData->pFloors, pData->dwFloorSize, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+        FOG_10111(hFile, pData->pFloors, pData->dwFloorSize, &nBytesDone, 0);
     if (pData->dwWallsSize)
-        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)pData->pWalls, pData->dwWallsSize, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+        FOG_10111(hFile, pData->pWalls, pData->dwWallsSize, &nBytesDone, 0);
     if (pData->dwUnitsSize)
-        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)pData->pUnits, pData->dwUnitsSize, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+        FOG_10111(hFile, pData->pUnits, pData->dwUnitsSize, &nBytesDone, 0);
     if (pData->dwExtraSize)
-        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)pData->pExtras, pData->dwExtraSize, (uint32_t)(UINT_PTR)&nBytesDone, 0);
+        FOG_10111(hFile, pData->pExtras, pData->dwExtraSize, &nBytesDone, 0);
 
     FOG_CloseFile(hFile);
 }
@@ -1973,7 +1973,7 @@ void __cdecl AUTOMAP_RebuildDrawLists()
 void __stdcall AUTOMAP_LoadCelData()
 {
     void *hFile;
-    int32_t nBytesRead;
+    DWORD nBytesRead;
     int32_t nRecordOffset;
     int32_t nPrevOffset;
     int32_t nLastRecord;
@@ -1981,24 +1981,24 @@ void __stdcall AUTOMAP_LoadCelData()
     int32_t nRecordLayerNo;
     int32_t nRecordHeader[10];
     int32_t aLayerChainHead[100];
-    int32_t nBlock;
+    uint16_t *pBlock;
     uint32_t nWordCount;
     uint32_t iWord;
     int32_t nCellNo;
     D2AutomapCellStrc *pCell;
-    int32_t nUnlinkDone;
+    DWORD nUnlinkDone;
     int32_t nZero;
 
     if (!gpAutomapCurrentLayer)
         return;
 
-    hFile = (void *)AUTOMAP_SaveExploredMap();
+    hFile = AUTOMAP_SaveExploredMap();
     if (hFile == (void *)-1)
         return;
 
     memset(aLayerChainHead, 0, sizeof(aLayerChainHead));
     nBytesRead = 0;
-    FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nBytesRead, 0);
+    FOG_10110(hFile, aLayerChainHead, 400, &nBytesRead, 0);
 
     if (nBytesRead != 400)
     {
@@ -2022,15 +2022,15 @@ void __stdcall AUTOMAP_LoadCelData()
         nRecordLayerNo = 0;
         memset(nRecordHeader, 0, sizeof(nRecordHeader));
 
-        FOG_10112((uint32_t)(UINT_PTR)hFile, nRecordOffset, 0, 0);
-        FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nNextOffset, 4, (uint32_t)(UINT_PTR)&nBytesRead, 0);
-        FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nRecordLayerNo, 4, (uint32_t)(UINT_PTR)&nBytesRead, 0);
-        FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nRecordHeader[0], 4, (uint32_t)(UINT_PTR)&nBytesRead, 0);
-        FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nRecordHeader[1], 4, (uint32_t)(UINT_PTR)&nBytesRead, 0);
-        FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nRecordHeader[2], 4, (uint32_t)(UINT_PTR)&nBytesRead, 0);
-        FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nRecordHeader[3], 4, (uint32_t)(UINT_PTR)&nBytesRead, 0);
-        FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nRecordHeader[4], 4, (uint32_t)(UINT_PTR)&nBytesRead, 0);
-        FOG_10110((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nRecordHeader[5], 4, (uint32_t)(UINT_PTR)&nBytesRead, 0);
+        FOG_10112(hFile, nRecordOffset, 0, 0);
+        FOG_10110(hFile, &nNextOffset, 4, &nBytesRead, 0);
+        FOG_10110(hFile, &nRecordLayerNo, 4, &nBytesRead, 0);
+        FOG_10110(hFile, &nRecordHeader[0], 4, &nBytesRead, 0);
+        FOG_10110(hFile, &nRecordHeader[1], 4, &nBytesRead, 0);
+        FOG_10110(hFile, &nRecordHeader[2], 4, &nBytesRead, 0);
+        FOG_10110(hFile, &nRecordHeader[3], 4, &nBytesRead, 0);
+        FOG_10110(hFile, &nRecordHeader[4], 4, &nBytesRead, 0);
+        FOG_10110(hFile, &nRecordHeader[5], 4, &nBytesRead, 0);
 
         if (nRecordLayerNo != (int32_t)gpAutomapCurrentLayer->nLayerNo)
             break;
@@ -2038,9 +2038,9 @@ void __stdcall AUTOMAP_LoadCelData()
         //  block 0: floors
         if (nRecordHeader[2])
         {
-            nBlock = (int32_t)(UINT_PTR)FOG_Alloc(nRecordHeader[2], szAutomapCpp, 1397, 0);
+            pBlock = (uint16_t *)FOG_Alloc(nRecordHeader[2], szAutomapCpp, 1397, 0);
             nWordCount = (uint32_t)nRecordHeader[2] >> 1;
-            FOG_10110((uint32_t)(UINT_PTR)hFile, nBlock, nRecordHeader[2], (uint32_t)(UINT_PTR)&nBytesRead, 0);
+            FOG_10110(hFile, pBlock, nRecordHeader[2], &nBytesRead, 0);
 
             if (nBytesRead != nRecordHeader[2])
             {
@@ -2050,42 +2050,42 @@ void __stdcall AUTOMAP_LoadCelData()
 
             for (iWord = 0; iWord < nWordCount; iWord += 3)
             {
-                nCellNo = *(uint16_t *)(nBlock + 2 * iWord);
+                nCellNo = pBlock[iWord];
                 if ((int16_t)nCellNo >= gnAutomapIconCelCounts[0])
                 {
                     //  cut the chain; nPrevOffset is this record's own offset from the second record onward
                     if (nPrevOffset)
                     {
-                        FOG_10112((uint32_t)(UINT_PTR)hFile, nPrevOffset, 0, 0);
+                        FOG_10112(hFile, nPrevOffset, 0, 0);
                         nZero = 0;
-                        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nZero, 4, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
+                        FOG_10111(hFile, &nZero, 4, &nUnlinkDone, 0);
                     }
                     else
                     {
                         aLayerChainHead[gpAutomapCurrentLayer->nLayerNo] = 0;
-                        FOG_10112((uint32_t)(UINT_PTR)hFile, 0, 0, 0);
-                        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
+                        FOG_10112(hFile, 0, 0, 0);
+                        FOG_10111(hFile, aLayerChainHead, 400, &nUnlinkDone, 0);
                     }
                     break;
                 }
 
                 pCell = AUTOMAP_AllocCell();
                 pCell->nCellNo = (uint16_t)nCellNo;
-                pCell->xPixel = *(uint16_t *)(nBlock + 2 * iWord + 2);
-                pCell->yPixel = *(uint16_t *)(nBlock + 2 * iWord + 4);
+                pCell->xPixel = pBlock[iWord + 1];
+                pCell->yPixel = pBlock[iWord + 2];
                 pCell->fSaved = 1;
                 AUTOMAP_RebalanceTree(pCell, &gpAutomapCurrentLayer->pFloors);
             }
 
-            FOG_Free((void *)(UINT_PTR)nBlock, szAutomapCpp,1414, 0);
+            FOG_Free(pBlock, szAutomapCpp,1414, 0);
         }
 
         //  block 1: walls
         if (nRecordHeader[3])
         {
-            nBlock = (int32_t)(UINT_PTR)FOG_Alloc(nRecordHeader[3], szAutomapCpp, 1418, 0);
+            pBlock = (uint16_t *)FOG_Alloc(nRecordHeader[3], szAutomapCpp, 1418, 0);
             nWordCount = (uint32_t)nRecordHeader[3] >> 1;
-            FOG_10110((uint32_t)(UINT_PTR)hFile, nBlock, nRecordHeader[3], (uint32_t)(UINT_PTR)&nBytesRead, 0);
+            FOG_10110(hFile, pBlock, nRecordHeader[3], &nBytesRead, 0);
 
             if (nBytesRead != nRecordHeader[3])
             {
@@ -2095,34 +2095,34 @@ void __stdcall AUTOMAP_LoadCelData()
 
             for (iWord = 0; iWord < nWordCount; iWord += 3)
             {
-                nCellNo = *(uint16_t *)(nBlock + 2 * iWord);
+                nCellNo = pBlock[iWord];
                 if ((int16_t)nCellNo >= gnAutomapIconCelCounts[0])
                 {
                     //  cut the chain; nPrevOffset is this record's own offset from the second record onward
                     if (nPrevOffset)
                     {
-                        FOG_10112((uint32_t)(UINT_PTR)hFile, nPrevOffset, 0, 0);
+                        FOG_10112(hFile, nPrevOffset, 0, 0);
                         nZero = 0;
-                        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nZero, 4, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
+                        FOG_10111(hFile, &nZero, 4, &nUnlinkDone, 0);
                     }
                     else
                     {
                         aLayerChainHead[gpAutomapCurrentLayer->nLayerNo] = 0;
-                        FOG_10112((uint32_t)(UINT_PTR)hFile, 0, 0, 0);
-                        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
+                        FOG_10112(hFile, 0, 0, 0);
+                        FOG_10111(hFile, aLayerChainHead, 400, &nUnlinkDone, 0);
                     }
                     break;
                 }
 
                 pCell = AUTOMAP_AllocCell();
                 pCell->nCellNo = (uint16_t)nCellNo;
-                pCell->xPixel = *(uint16_t *)(nBlock + 2 * iWord + 2);
-                pCell->yPixel = *(uint16_t *)(nBlock + 2 * iWord + 4);
+                pCell->xPixel = pBlock[iWord + 1];
+                pCell->yPixel = pBlock[iWord + 2];
                 pCell->fSaved = 1;
                 AUTOMAP_RebalanceTree(pCell, &gpAutomapCurrentLayer->pWalls);
             }
 
-            FOG_Free((void *)(UINT_PTR)nBlock, szAutomapCpp,1435, 0);
+            FOG_Free(pBlock, szAutomapCpp,1435, 0);
         }
 
         //  block 2: units, the only block gated on the game id
@@ -2130,9 +2130,9 @@ void __stdcall AUTOMAP_LoadCelData()
         {
             if (nRecordHeader[1] == *((uint32_t *)gpClientGameBlock + 1))
             {
-                nBlock = (int32_t)(UINT_PTR)FOG_Alloc(nRecordHeader[4], szAutomapCpp, 1442, 0);
+                pBlock = (uint16_t *)FOG_Alloc(nRecordHeader[4], szAutomapCpp, 1442, 0);
                 nWordCount = (uint32_t)nRecordHeader[4] >> 1;
-                FOG_10110((uint32_t)(UINT_PTR)hFile, nBlock, nRecordHeader[4], (uint32_t)(UINT_PTR)&nBytesRead, 0);
+                FOG_10110(hFile, pBlock, nRecordHeader[4], &nBytesRead, 0);
 
                 if (nBytesRead != nRecordHeader[4])
                 {
@@ -2142,48 +2142,48 @@ void __stdcall AUTOMAP_LoadCelData()
 
                 for (iWord = 0; iWord < nWordCount; iWord += 3)
                 {
-                    nCellNo = *(uint16_t *)(nBlock + 2 * iWord);
+                    nCellNo = pBlock[iWord];
                     if ((int16_t)nCellNo >= gnAutomapIconCelCounts[0])
                     {
                         //  cut the chain; nPrevOffset is this record's own offset from the second record onward
                         if (nPrevOffset)
                         {
-                            FOG_10112((uint32_t)(UINT_PTR)hFile, nPrevOffset, 0, 0);
+                            FOG_10112(hFile, nPrevOffset, 0, 0);
                             nZero = 0;
-                            FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nZero, 4, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
+                            FOG_10111(hFile, &nZero, 4, &nUnlinkDone, 0);
                         }
                         else
                         {
                             aLayerChainHead[gpAutomapCurrentLayer->nLayerNo] = 0;
-                            FOG_10112((uint32_t)(UINT_PTR)hFile, 0, 0, 0);
-                            FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
+                            FOG_10112(hFile, 0, 0, 0);
+                            FOG_10111(hFile, aLayerChainHead, 400, &nUnlinkDone, 0);
                         }
                         break;
                     }
 
                     pCell = AUTOMAP_AllocCell();
                     pCell->nCellNo = (uint16_t)nCellNo;
-                    pCell->xPixel = *(uint16_t *)(nBlock + 2 * iWord + 2);
-                    pCell->yPixel = *(uint16_t *)(nBlock + 2 * iWord + 4);
+                    pCell->xPixel = pBlock[iWord + 1];
+                    pCell->yPixel = pBlock[iWord + 2];
                     pCell->fSaved = 1;
                     AUTOMAP_RebalanceTree(pCell, &gpAutomapCurrentLayer->pObjects);
                 }
 
-                FOG_Free((void *)(UINT_PTR)nBlock, szAutomapCpp,1459, 0);
+                FOG_Free(pBlock, szAutomapCpp,1459, 0);
             }
             else
             {
                 //  a different game's units: seek past the block, do not read it
-                FOG_10112((uint32_t)(UINT_PTR)hFile, nRecordHeader[4], 0, 1);
+                FOG_10112(hFile, nRecordHeader[4], 0, 1);
             }
         }
 
         //  block 3: extras, the only block with its own cel-set index
         if (nRecordHeader[5])
         {
-            nBlock = (int32_t)(UINT_PTR)FOG_Alloc(nRecordHeader[5], szAutomapCpp, 1469, 0);
+            pBlock = (uint16_t *)FOG_Alloc(nRecordHeader[5], szAutomapCpp, 1469, 0);
             nWordCount = (uint32_t)nRecordHeader[5] >> 1;
-            FOG_10110((uint32_t)(UINT_PTR)hFile, nBlock, nRecordHeader[5], (uint32_t)(UINT_PTR)&nBytesRead, 0);
+            FOG_10110(hFile, pBlock, nRecordHeader[5], &nBytesRead, 0);
 
             if (nBytesRead != nRecordHeader[5])
             {
@@ -2193,34 +2193,34 @@ void __stdcall AUTOMAP_LoadCelData()
 
             for (iWord = 0; iWord < nWordCount; iWord += 3)
             {
-                nCellNo = *(uint16_t *)(nBlock + 2 * iWord);
+                nCellNo = pBlock[iWord];
                 if ((int16_t)nCellNo >= gnAutomapIconCelCounts[nRecordHeader[0]])
                 {
                     //  cut the chain; nPrevOffset is this record's own offset from the second record onward
                     if (nPrevOffset)
                     {
-                        FOG_10112((uint32_t)(UINT_PTR)hFile, nPrevOffset, 0, 0);
+                        FOG_10112(hFile, nPrevOffset, 0, 0);
                         nZero = 0;
-                        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nZero, 4, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
+                        FOG_10111(hFile, &nZero, 4, &nUnlinkDone, 0);
                     }
                     else
                     {
                         aLayerChainHead[gpAutomapCurrentLayer->nLayerNo] = 0;
-                        FOG_10112((uint32_t)(UINT_PTR)hFile, 0, 0, 0);
-                        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
+                        FOG_10112(hFile, 0, 0, 0);
+                        FOG_10111(hFile, aLayerChainHead, 400, &nUnlinkDone, 0);
                     }
                     break;
                 }
 
                 pCell = AUTOMAP_AllocCell();
                 pCell->nCellNo = (uint16_t)nCellNo;
-                pCell->xPixel = *(uint16_t *)(nBlock + 2 * iWord + 2);
-                pCell->yPixel = *(uint16_t *)(nBlock + 2 * iWord + 4);
+                pCell->xPixel = pBlock[iWord + 1];
+                pCell->yPixel = pBlock[iWord + 2];
                 pCell->fSaved = 1;
                 AUTOMAP_RebalanceTree(pCell, &gpAutomapCurrentLayer->pExtras);
             }
 
-            FOG_Free((void *)(UINT_PTR)nBlock, szAutomapCpp,1486, 0);
+            FOG_Free(pBlock, szAutomapCpp,1486, 0);
         }
 
         nRecordOffset = nNextOffset;
@@ -2238,15 +2238,15 @@ void __stdcall AUTOMAP_LoadCelData()
     //  the layer number did not match: cut the chain here, as in the blocks above
     if (nLastRecord)
     {
-        FOG_10112((uint32_t)(UINT_PTR)hFile, nLastRecord, 0, 0);
+        FOG_10112(hFile, nLastRecord, 0, 0);
         nZero = 0;
-        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)&nZero, 4, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
+        FOG_10111(hFile, &nZero, 4, &nUnlinkDone, 0);
     }
     else
     {
         aLayerChainHead[gpAutomapCurrentLayer->nLayerNo] = 0;
-        FOG_10112((uint32_t)(UINT_PTR)hFile, 0, 0, 0);
-        FOG_10111((uint32_t)(UINT_PTR)hFile, (uint32_t)(UINT_PTR)aLayerChainHead, 400, (uint32_t)(UINT_PTR)&nUnlinkDone, 0);
+        FOG_10112(hFile, 0, 0, 0);
+        FOG_10111(hFile, aLayerChainHead, 400, &nUnlinkDone, 0);
     }
     FOG_CloseFile(hFile);
 }

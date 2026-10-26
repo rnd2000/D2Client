@@ -111,7 +111,7 @@ void __fastcall ROSTERPETS_FindOrAddPet(uint32_t dwUnitId, uint32_t dwOwnerId, i
     }
 
     //  BUG: FOG_Alloc's answer is used untested. LATENT: only a failed 52-byte allocation reaches it.
-    pNewPet = (D2RosterPetStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterPetStrc), szRosterPetsCpp, 122, 0);
+    pNewPet = (D2RosterPetStrc *)FOG_Alloc(sizeof(D2RosterPetStrc), szRosterPetsCpp, 122, 0);
     memset(pNewPet, 0, sizeof(D2RosterPetStrc));
     pNewPet->dwUnitId = dwUnitId;
     pNewPet->dwOwnerId = dwOwnerId;
@@ -215,7 +215,7 @@ void __fastcall ROSTERPETS_OnPetPacket81(uint32_t dwUnitId, uint32_t dwOwnerId, 
     else
     {
         //  BUG: FOG_Alloc's answer is used untested. LATENT: only a failed 52-byte allocation reaches it.
-        pNewPet = (D2RosterPetStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterPetStrc), szRosterPetsCpp, 122, 0);
+        pNewPet = (D2RosterPetStrc *)FOG_Alloc(sizeof(D2RosterPetStrc), szRosterPetsCpp, 122, 0);
         memset(pNewPet, 0, sizeof(D2RosterPetStrc));
         pNewPet->dwUnitId = dwUnitId;
         pNewPet->dwOwnerId = dwOwnerId;

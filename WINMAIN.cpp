@@ -137,7 +137,7 @@ int32_t __stdcall WINMAIN_CmdArgPreCache(void *pParam, int32_t nUnused)
     UINT_PTR nEnd;
     UINT_PTR nPage;
 
-    nCache = (UINT_PTR)FOG_Alloc((uint32_t)nPreCacheBytes, szAssertFile, 285, 0);
+    nCache = (UINT_PTR)FOG_Alloc(nPreCacheBytes, szAssertFile, 285, 0);
     nEnd = nCache + nPreCacheBytes;
     for (nPage = nCache; nPage < nEnd; nPage += nPreCachePageSize) *(char *)nPage = 0;
 

@@ -357,7 +357,7 @@ static_assert(sizeof(gpfnActiveMessageCallback) == 4, "gpfnActiveMessageCallback
 //  pool constructor takes the handle as an out-parameter. Read back by GAME_InitGame and GAME_AppModeGame. The `rep stosd` over the 128-byte client
 //  block also writes it (GAME_InitGame before the pool is made, GAME_AppModeGame after it is destroyed); GAME_ClearClientGlobalData zeroes the
 //  region's globals by name.
-inline int32_t ghClientPoolSystem;
+inline void *ghClientPoolSystem;
 static_assert(sizeof(ghClientPoolSystem) == 4, "ghClientPoolSystem: the item's 4 bytes in the .i64");
 
 //  D2Client 0x6FBA775C

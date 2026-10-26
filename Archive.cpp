@@ -78,7 +78,7 @@ uint32_t __fastcall ARCHIVE_GetFileSize(void *hArchive, void *hFile, uint32_t *p
         exit(-1);
     }
 
-    dwFileSize = (uint32_t)FOG_FGetFileSize(hFile, pdwSizeHigh);
+    dwFileSize = FOG_FGetFileSize(hFile, pdwSizeHigh);
     if (!dwFileSize)
     {
         STORM_SFileGetFileName(hFile, szFileName, 260);
@@ -115,7 +115,7 @@ void __fastcall ARCHIVE_ReadFile(void *hArchive, void *hFile, void *pBuffer, uin
     }
 
     dwBytesRequested = dwBytesToRead;
-    bReadOk = FOG_FReadFile(hFile, pBuffer, (uint32_t)dwBytesToRead, &dwBytesToRead, 0, 0, 0);
+    bReadOk = FOG_FReadFile(hFile, pBuffer, dwBytesToRead, &dwBytesToRead, 0, 0, 0);
     if (!bReadOk)
     {
         STORM_SFileGetFileName(hFile, szFileName, 260);
@@ -158,7 +158,7 @@ void *__fastcall ARCHIVE_LoadFile(void *hArchive, const char *szFilename, uint32
 
     dwFileSize = ARCHIVE_GetFileSize(hArchive, hFile, &dwSizeHigh);
 
-    pBuffer = (void *)FOG_Alloc(dwFileSize + 800, szSrcFile, (uint32_t)nSrcLine, 0);
+    pBuffer = FOG_Alloc(dwFileSize + 800, szSrcFile, nSrcLine, 0);
     if (!pBuffer)
         return NULL;
 

@@ -476,7 +476,7 @@ void __cdecl UI_LoadScreenBegin();
 
 //  D2Client.0x6FAA13A0, Core\MemoryPartitions.cpp -- divide physical memory between the sound, tile and sprite caches, and halt on a machine
 //  with less than 22 MB + 512000.
-void __fastcall MEMPART_InitMemoryPartitions(int32_t hPool, int32_t bInitTileCache);
+void __fastcall MEMPART_InitMemoryPartitions(void *pPool, int32_t bInitTileCache);
 
 //  D2Client.0x6FAA14E0 and 0x6FAA1500, Core\MemoryPartitions.cpp -- the three caches' teardown, and the one-byte `retn` fifteen sites call.
 void __fastcall MEMPART_DestroyCaches(BOOL bFreeLRU);
@@ -1442,7 +1442,7 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
 //  over four data files and the last four games are remembered; a data file is a 400-byte table of 100 per-layer chain heads and then records
 //  of six-byte {cel, x, y} triples. The layer index is unbounded at both ends, and LoadCelData's chain truncation drops the whole chain for
 //  the first record and only the successors for any later one.
-int32_t __stdcall AUTOMAP_SaveExploredMap();
+HANDLE __stdcall AUTOMAP_SaveExploredMap();
 void __fastcall AUTOMAP_WriteExploredLayer(D2AutomapDataStrc *pData);
 void __cdecl AUTOMAP_RebuildDrawLists();
 void __stdcall AUTOMAP_LoadCelData();
@@ -2215,7 +2215,7 @@ void __cdecl CMDTBL_CommandHandleMouse4Lift(void);                            //
 void __cdecl CMDTBL_CommandHandleMouse5Down(void);                            // CmdTbl.cpp
 void __cdecl CMDTBL_CommandHandleMouse5Lift(void);                            // CmdTbl.cpp
 void __fastcall CMDTBL_CommandHandleMouseWheel(int32_t nDelta);                   // CmdTbl.cpp
-int32_t __fastcall CMDTBL_OpenPlayerKeyFile(int32_t dwDesiredAccess, int32_t dwCreationDisposition); // CmdTbl.cpp
+HANDLE __fastcall CMDTBL_OpenPlayerKeyFile(DWORD dwDesiredAccess, DWORD dwCreationDisposition); // CmdTbl.cpp
 int16_t __fastcall CMDTBL_ControlsFindBoundKey(D2HotkeyIndices eCmd, BOOL bPrimary); // CmdTbl.cpp
 BOOL __fastcall CMDTBL_ControlsIsActionBound(D2HotkeyIndices eCmd, BOOL bPrimary); // CmdTbl.cpp
 void __fastcall CMDTBL_UnbindCommand(int32_t eCmd, int32_t bPrimary);           // CmdTbl.cpp

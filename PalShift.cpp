@@ -60,7 +60,7 @@ void __cdecl PALSHIFT_Init()
     void *hFile2;
 
     nPalShiftSize = 8 * sgptDataTables->nMonStatsTxtRecordCount;
-    gpMonPalShift = (D2ClientMonPalShiftStrc *)(UINT_PTR)FOG_Alloc(nPalShiftSize, szSourceFile, 99, 0);
+    gpMonPalShift = (D2ClientMonPalShiftStrc *)FOG_Alloc(nPalShiftSize, szSourceFile, 99, 0);
     memset(gpMonPalShift, 0, nPalShiftSize);
 
     nMonStatsTxtRecordCount = sgptDataTables->nMonStatsTxtRecordCount;
@@ -80,7 +80,7 @@ void __cdecl PALSHIFT_Init()
 
     if (ARCHIVE_OpenFileOrTrace(0, "Data\\Global\\Monsters\\GreenBlood.dat", &hFile2, 1))
     {
-        gpGreenBloodRemap = (uint8_t *)(UINT_PTR)FOG_Alloc(256, szSourceFile, 82, 0);
+        gpGreenBloodRemap = (uint8_t *)FOG_Alloc(256, szSourceFile, 82, 0);
         memset(gpGreenBloodRemap, 0, 0x100);
         ARCHIVE_ReadFile(NULL, hFile2, gpGreenBloodRemap, 0x100);
         ARCHIVE_CloseFile(NULL, hFile2);
@@ -169,7 +169,7 @@ void __fastcall PALSHIFT_EnsureMonsterPalette(D2C_MonsterIds nMonsterClassId)
     if (!ARCHIVE_OpenFileOrTrace(0, szFileName, &hFile, 1))
         return;
 
-    pPalShift = (D2ClientPalShiftStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientPalShiftStrc), szSourceFile, 244, 0);
+    pPalShift = (D2ClientPalShiftStrc *)FOG_Alloc(sizeof(D2ClientPalShiftStrc), szSourceFile, 244, 0);
     memset(pPalShift, 0, sizeof(D2ClientPalShiftStrc));
     ARCHIVE_ReadFile(NULL, hFile, pPalShift->nShift, 0x800);
     ARCHIVE_CloseFile(NULL, hFile);

@@ -93,7 +93,7 @@ void __fastcall RECORD_LogEvent(uint32_t nEventId, WPARAM wParam, LPARAM lParam)
         pHolder = gpRecordBlock;
         if (pHolder->nRecordWriteCurr >= RECORDS_PER_HOLDER)
         {
-            pHolder = (D2ClientRecordHolderStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientRecordHolderStrc), szSourceFile, 53, 0);
+            pHolder = (D2ClientRecordHolderStrc *)FOG_Alloc(sizeof(D2ClientRecordHolderStrc), szSourceFile, 53, 0);
             pHolder->nRecordWriteCurr = 0;
             pHolder->nRecordReadCurr = 0;
             gpRecordBlock->ptNext = pHolder;
@@ -120,7 +120,7 @@ void __fastcall RECORD_LogEvent(uint32_t nEventId, WPARAM wParam, LPARAM lParam)
         pHolder = gpRecordBlock;
         if (pHolder->nRecordWriteCurr >= RECORDS_PER_HOLDER)
         {
-            pHolder = (D2ClientRecordHolderStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientRecordHolderStrc), szSourceFile, 53, 0);
+            pHolder = (D2ClientRecordHolderStrc *)FOG_Alloc(sizeof(D2ClientRecordHolderStrc), szSourceFile, 53, 0);
             pHolder->nRecordReadCurr = 0;
             pHolder->nRecordWriteCurr = 0;
             gpRecordBlock->ptNext = pHolder;
@@ -249,7 +249,7 @@ void __cdecl RECORD_Play()
         {
             if (iHolder)
             {
-                pHolder = (D2ClientRecordHolderStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientRecordHolderStrc), szSourceFile, 53, 0);
+                pHolder = (D2ClientRecordHolderStrc *)FOG_Alloc(sizeof(D2ClientRecordHolderStrc), szSourceFile, 53, 0);
                 pHolder->nRecordWriteCurr = 0;
                 pHolder->nRecordReadCurr = 0;
                 gpRecordBlock->ptNext = pHolder;

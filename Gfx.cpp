@@ -1028,7 +1028,7 @@ void __fastcall GFX_LoadMonsterModeGfx(D2UnitStrc *pUnit, int32_t nMode)
     pMonStats2Txt = DATATBLS_GetMonStats2TxtRecord(nClass);
     if (!pMonStats2Txt || !(gdwBitMasks[nMode & 7] & pMonStats2Txt->nModeFlags[nMode >> 3]))
     {
-        FOG_DisplayHalt((const char *)FOG_csprintf(szMessage, "[GFX.CPP] Mode (%i) is not used by monster (%i)", nMode, nClass), szGfxCpp, 1158);
+        FOG_DisplayHalt(FOG_csprintf(szMessage, "[GFX.CPP] Mode (%i) is not used by monster (%i)", nMode, nClass), szGfxCpp, 1158);
         exit(-1);
     }
 
@@ -1070,7 +1070,7 @@ void __fastcall GFX_LoadObjectModeGfx(D2UnitStrc *pUnit, int32_t nMode)
 
     if (pObjectsTxt->nMode[nMode] != 1)
     {
-        FOG_DisplayHalt((const char *)FOG_csprintf(szMessage, "[GFX.CPP] Mode (%i) is not used by object (%i)", nMode, nClass), szGfxCpp, 1243);
+        FOG_DisplayHalt(FOG_csprintf(szMessage, "[GFX.CPP] Mode (%i) is not used by object (%i)", nMode, nClass), szGfxCpp, 1243);
         exit(-1);
     }
 
@@ -3640,7 +3640,7 @@ void __fastcall GFX_AddMonsterCofFiles(int32_t nMonsterId, BOOL bValidateSprites
             pCofFile = GFX_LoadCofFile(pCache, szCofPath);
             if (!pCofFile)
             {
-                FOG_DisplayHalt((const char *)FOG_csprintf(szTitle, "Could not add cof file: %s", szCofPath), szGfxCpp, 3767);
+                FOG_DisplayHalt(FOG_csprintf(szTitle, "Could not add cof file: %s", szCofPath), szGfxCpp, 3767);
                 exit(-1);
             }
         }

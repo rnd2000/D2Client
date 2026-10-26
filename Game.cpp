@@ -759,7 +759,7 @@ void __cdecl GAME_InitGame()
     gbGameExitPending = 0;
     gbStandStillKeyHeld = 0;
 
-    FOG_CreateNewPoolSystem((uint32_t)(UINT_PTR)&ghClientPoolSystem, (uint32_t)(UINT_PTR) "Client Pool System", 0x40000, 0x1000);
+    FOG_CreateNewPoolSystem(&ghClientPoolSystem, "Client Pool System", 0x40000, 0x1000);
     CUNIT_SetPlayerUnit(NULL);
 
     //  One byte, and only the character '1' turns green blood on. The flag is never cleared here, so once green blood is on a later game skips the
@@ -818,7 +818,7 @@ void __cdecl GAME_InitGame()
     QUESTSFX_Reset();
 
     //  Eight bytes at Game.cpp line 1339; GAME_AppModeGame frees the same pointer at line 1422.
-    gpClientGameBlock = (void *)FOG_Alloc(8, szSourceFile, 1339, 0);
+    gpClientGameBlock = FOG_Alloc(8, szSourceFile, 1339, 0);
 
     CUNIT_ClearUnitTables();
     DLIGHTMAP_ClearAmbientLight();

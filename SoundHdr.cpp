@@ -304,22 +304,22 @@ void __cdecl SOUNDHDR_LoadSoundsTxt()
     //  sounds.txt.
     wsprintfA(szFilename, "%s\\sounds.txt", "DATA\\GLOBAL\\EXCEL");
     pFileData = ARCHIVE_LoadFile(D2WIN_GetArchive(), szFilename, &dwFileSize, szSoundHdrCpp, 257);
-    pBinFile = (D2BinFileStrc *)FOG_CreateBinFile((uint32_t)pFileData, dwFileSize);
-    gnSoundHeaderCount = FOG_GetRecordCountFromBinFile((uint32_t)pBinFile);
+    pBinFile = FOG_CreateBinFile(pFileData, dwFileSize);
+    gnSoundHeaderCount = FOG_GetRecordCountFromBinFile(pBinFile);
     gpSoundHeaders = (D2SoundsTxt *)FOG_Alloc(sizeof(D2SoundsTxt) * gnSoundHeaderCount, szSoundHdrCpp, 262, 0);
     memset(gpSoundHeaders, 0, sizeof(D2SoundsTxt) * gnSoundHeaderCount);
-    FOG_10207((uint32_t)pBinFile, (uint32_t)aSoundsTxtFields, (uint32_t)gpSoundHeaders, gnSoundHeaderCount, sizeof(D2SoundsTxt));
-    FOG_FreeBinFile((uint32_t)pBinFile);
+    FOG_10207(pBinFile, aSoundsTxtFields, gpSoundHeaders, gnSoundHeaderCount, sizeof(D2SoundsTxt));
+    FOG_FreeBinFile(pBinFile);
 
     //  soundenviron.txt.
     wsprintfA(szFilename, "%s\\soundenviron.txt", "DATA\\GLOBAL\\EXCEL");
     pFileData = ARCHIVE_LoadFile(D2WIN_GetArchive(), szFilename, &dwFileSize, szSoundHdrCpp, 269);
-    pBinFile = (D2BinFileStrc *)FOG_CreateBinFile((uint32_t)pFileData, dwFileSize);
-    gnSoundEnvironTxtRecordCount = FOG_GetRecordCountFromBinFile((uint32_t)pBinFile);
+    pBinFile = FOG_CreateBinFile(pFileData, dwFileSize);
+    gnSoundEnvironTxtRecordCount = FOG_GetRecordCountFromBinFile(pBinFile);
     gpSoundEnvironTxt = (D2SoundEnvironTxt *)FOG_Alloc(sizeof(D2SoundEnvironTxt) * gnSoundEnvironTxtRecordCount, szSoundHdrCpp, 274, 0);
     memset(gpSoundEnvironTxt, 0, sizeof(D2SoundEnvironTxt) * gnSoundEnvironTxtRecordCount);
-    FOG_10207((uint32_t)pBinFile, (uint32_t)aSoundEnvironFields, (uint32_t)gpSoundEnvironTxt, gnSoundEnvironTxtRecordCount, sizeof(D2SoundEnvironTxt));
-    FOG_FreeBinFile((uint32_t)pBinFile);
+    FOG_10207(pBinFile, aSoundEnvironFields, gpSoundEnvironTxt, gnSoundEnvironTxtRecordCount, sizeof(D2SoundEnvironTxt));
+    FOG_FreeBinFile(pBinFile);
 
     //  The second pass over sounds.txt.
     nGroupSize = 1;
@@ -751,7 +751,7 @@ void __fastcall SOUNDHDR_LoadWaveData(D2C_Sounds nSoundId, int32_t bForceLoad, i
         return;
     }
 
-    ptHeader->hAsyncData = FOG_AsyncDataLoadFileEx(0, szFilename, 1, 0, (uint32_t)-1, 0, 0, (uint32_t)-2, szSoundHdrCpp, 795);
+    ptHeader->hAsyncData = FOG_AsyncDataLoadFileEx(0, szFilename, 1, 0, -1, 0, 0, -2, szSoundHdrCpp, 795);
     if (!ptHeader->hAsyncData)
         return;
     ptHeader->nWaveSize = FOG_AsyncDataGetBufferSize(ptHeader->hAsyncData);

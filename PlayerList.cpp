@@ -25,7 +25,7 @@ D2RosterInfoStrc **__cdecl PLAYERLIST_RosterAllocPlayerInfoList(void)
 {
     D2RosterInfoStrc **ppInfoHead;
 
-    ppInfoHead = (D2RosterInfoStrc **)(UINT_PTR)FOG_Alloc(4, szPlayerListCpp, 37, 0);
+    ppInfoHead = (D2RosterInfoStrc **)FOG_Alloc(4, szPlayerListCpp, 37, 0);
     if (!ppInfoHead)
     {
         FOG_DisplayAssert("ptInfo", szPlayerListCpp, 39);
@@ -84,7 +84,7 @@ void __fastcall PLAYERLIST_RosterGetOrAddInfoEntry(uint32_t dwPlayerGUID, uint32
         }
     }
 
-    pInfoEntry = (D2RosterInfoStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2RosterInfoStrc), szPlayerListCpp, 116, 0);
+    pInfoEntry = (D2RosterInfoStrc *)FOG_Alloc(sizeof(D2RosterInfoStrc), szPlayerListCpp, 116, 0);
     //  BUG: FOG_Alloc's answer is not tested before the stores. LATENT.
     pInfoEntry->dwUnitId = 0;
     pInfoEntry->dwPartyFlags = 0;

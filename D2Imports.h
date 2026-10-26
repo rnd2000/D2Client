@@ -57,7 +57,7 @@ int __stdcall D2CMP_CelGetOffsetX(D2GfxCellStrc *pCel);   /* #10039 */
 int __stdcall D2CMP_CelGetOffsetY(D2GfxCellStrc *pCel);   /* #10040 */
 int __stdcall D2CMP_CelFileGetCelsPerDirection(D2CellFileStrc *pCelFile);   /* #10046 */
 char * __stdcall D2CMP_GetGfxFileExtension(int nGfxType);   /* #10051 */
-int __stdcall D2CMP_InitSpriteCache(int a1, int a2, int a3, unsigned int a4);   /* #10052 */
+void __stdcall D2CMP_InitSpriteCache(void *pPool, int32_t nSpriteCacheBytes, int32_t nCelHeaderCacheBytes, uint32_t dwMemoryOverride);   /* #10052 */
 int __stdcall D2CMP_FlushSpriteCache(int a1);   /* #10053 */
 int __stdcall D2CMP_SetCompressedDataMode(_DWORD);   /* #10054 */
 BOOL __stdcall D2CMP_SpriteValidate(D2GfxDataStrc *pGfxData, BOOL bAsyncWait, BOOL bAsyncLoad);   /* #10055 */
@@ -72,7 +72,7 @@ int __stdcall D2CMP_10077_GetTileType(_DWORD);   /* #10077 */
 int __stdcall D2CMP_10078_GetTileStyle(_DWORD);   /* #10078 */
 int __stdcall D2CMP_10082_GetTileSequence(_DWORD);   /* #10082 */
 int __stdcall D2CMP_10084(_DWORD);   /* #10084 */
-int __stdcall D2CMP_10089(int a1, int a2);   /* #10089 */
+void __stdcall D2CMP_10089(void *pPool, uint32_t dwCacheBytes);   /* #10089 */
 int __stdcall D2CMP_10090(_DWORD);   /* #10090 */
 int __stdcall D2CMP_10092(_DWORD, _DWORD, _DWORD, _DWORD);   /* #10092 */
 int __stdcall D2CMP_10093(void);   /* #10093 */
@@ -906,14 +906,14 @@ int32_t __fastcall FOG_Free(void *pFree, const char *szFile, int32_t nLine, int3
 void * __fastcall FOG_AllocPool(void *pPool, uint32_t dwSize, const char *szFile, int32_t nLine, int32_t nFlags);   /* #10045 */
 int32_t __fastcall FOG_FreePool(void *pPool, void *pData, const char *szFile, int32_t nLine, int32_t nFlags);   /* #10046 */
 int __stdcall FOG_10055_GetSyncTime(void);   /* #10055 */
-int __fastcall FOG_DATAARRAYS_Alloc(_DWORD, _DWORD, _DWORD);   /* #10060 */
+D2DataArrayStrc * __fastcall FOG_DATAARRAYS_Alloc(const char *pszName, int32_t nCount, int32_t nStride);   /* #10060 */
 void __fastcall FOG_DATAARRAYS_Free(D2DataArrayStrc *pArray);   /* #10061 */
 int __fastcall FOG_DATAARRAYS_Init(D2DataArrayStrc *pArray);   /* #10062 */
 int __fastcall FOG_DATAARRAYS_Reset(D2DataArrayStrc *pArray);   /* #10063 */
 int __fastcall FOG_DATAARRAYS_AllocSlot(D2DataArrayStrc *pArray);   /* #10064 */
 void __fastcall FOG_DATAARRAYS_FreeSlot(D2DataArrayStrc *pArray, int hSlot);   /* #10065 */
-double __stdcall FOG_10083_Cos_LUT(_DWORD);   /* #10083 */
-double __stdcall FOG_10084_Sin_LUT(_DWORD);   /* #10084 */
+float __stdcall FOG_10083_Cos_LUT(int32_t nIndex);   /* #10083 */
+float __stdcall FOG_10084_Sin_LUT(int32_t nIndex);   /* #10084 */
 AsyncData * __fastcall FOG_AsyncDataLoadFileEx(void *pMemPool, const char *szFileName, int32_t bAllowAsync, int32_t nFileOffset, int32_t nFileSize, void *pBuffer, AsyncDataLoadFileCallback *pCallback, int32_t nPriority, const char *szSourceFile, int32_t nSourceLine);   /* #10091 */
 int32_t __fastcall FOG_AsyncDataTestLoaded(AsyncData *pAsyncData);   /* #10092 */
 void * __fastcall FOG_AsyncDataGetBuffer(AsyncData *pAsyncData);   /* #10094 */
@@ -924,27 +924,27 @@ int32_t __fastcall FOG_FOpenFile(const char *szFile, void **ppFileHandle);   /* 
 int32_t __fastcall FOG_FCloseFile(void *hFile);   /* #10103 */
 int32_t __fastcall FOG_FReadFile(void *hFile, void *pBuffer, uint32_t dwBytes, uint32_t *pBytesRead, uint32_t nUnknown0, uint32_t nUnknown1, uint32_t nUnknown2);   /* #10104 */
 uint32_t __fastcall FOG_FGetFileSize(void *hFile, uint32_t *pFileSizeHigh);   /* #10105 */
-int __fastcall FOG_CreateFileA(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD, _DWORD);   /* #10107 */
+HANDLE __fastcall FOG_CreateFileA(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, LPSECURITY_ATTRIBUTES lpSecurityAttributes, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes, HANDLE hTemplateFile);   /* #10107 */
 BOOL __fastcall FOG_DeleteFileA(LPCSTR lpFileName);   /* #10108 */
 BOOL __fastcall FOG_CloseFile(HANDLE hObject);   /* #10109 */
-int __fastcall FOG_10110(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);   /* #10110 */
-int __fastcall FOG_10111(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);   /* #10111 */
-int __fastcall FOG_10112(_DWORD, _DWORD, _DWORD, _DWORD);   /* #10112 */
+BOOL __fastcall FOG_10110(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped);   /* #10110 */
+BOOL __fastcall FOG_10111(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped);   /* #10111 */
+DWORD __fastcall FOG_10112(HANDLE hFile, LONG lDistanceToMove, PLONG lpDistanceToMoveHigh, DWORD dwMoveMethod);   /* #10112 */
 BOOL __fastcall FOG_CreatePathHierarchy(char *szPath);   /* #10114 */
-int __fastcall FOG_GetSavePath(_DWORD, _DWORD);   /* #10115 */
-int __fastcall FOG_GetInstallPath(_DWORD, _DWORD);   /* #10116 */
+BOOL __fastcall FOG_GetSavePath(char *pPathBuffer, size_t nBufferSize);   /* #10115 */
+void __fastcall FOG_GetInstallPath(char *pPathBuffer, size_t nBufferSize);   /* #10116 */
 void __stdcall FOG_BITMANIP_Initialize(D2BitBufferStrc *pBuffer, uint8_t *pBitStream, size_t nSize);   /* #10126 */
 int __stdcall FOG_BITMANIP_ReadSigned(D2BitBufferStrc *pBuffer, int nBits);   /* #10129 */
 uint32_t __stdcall FOG_BITMANIP_Read(D2BitBufferStrc *pBuffer, int nBits);   /* #10130 */
-int __cdecl FOG_CreateNewPoolSystem(_DWORD, _DWORD, _DWORD, _DWORD);   /* #10142 */
-int __cdecl FOG_DestroyMemoryPoolSystem(_DWORD);   /* #10143 */
-int __cdecl FOG_10144(_DWORD);   /* #10144 */
-int __cdecl FOG_SetMemoryPoolSystemMode(_DWORD, _DWORD);   /* #10145 */
+int32_t __cdecl FOG_CreateNewPoolSystem(void **pMemPoolSystem, const char *szName, uint32_t nPools, uint32_t nUnused);   /* #10142 */
+void __cdecl FOG_DestroyMemoryPoolSystem(void *pMemoryPoolSystem);   /* #10143 */
+void __cdecl FOG_10144(void *pMemoryPoolSystem);   /* #10144 */
+void __cdecl FOG_SetMemoryPoolSystemMode(void *pMemoryPoolSystem, BOOL bFreePoolAlloc);   /* #10145 */
 int __stdcall FOG_10191(void);   /* #10191 */
-int __stdcall FOG_10207(_DWORD, _DWORD, _DWORD, _DWORD, _DWORD);   /* #10207 */
-int __stdcall FOG_CreateBinFile(_DWORD, _DWORD);   /* #10208 */
-int __stdcall FOG_FreeBinFile(_DWORD);   /* #10209 */
-int __stdcall FOG_GetRecordCountFromBinFile(_DWORD);   /* #10210 */
+void __stdcall FOG_10207(D2BinFileStrc *pBinFile, D2BinFieldStrc *pBinField, void *pTxt, int32_t nRecordCount, int32_t nRecordSize);   /* #10207 */
+D2BinFileStrc * __stdcall FOG_CreateBinFile(void *pDataBuffer, int32_t nBufferSize);   /* #10208 */
+int32_t __stdcall FOG_FreeBinFile(D2BinFileStrc *pBinFile);   /* #10209 */
+int32_t __stdcall FOG_GetRecordCountFromBinFile(D2BinFileStrc *pBinFile);   /* #10210 */
 int __stdcall FOG_IsExpansion(void);   /* #10227 */
 
 /*  ---- Storm ---- */

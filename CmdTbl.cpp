@@ -870,12 +870,12 @@ void __fastcall CMDTBL_CommandHandleMouseWheel(int32_t nDelta)
 //  The caller passes the desired access and the creation disposition through untouched, so one function serves the load (read, OPEN_EXISTING)
 //  and the save (write, CREATE_ALWAYS). The three 260-byte locals are each cleared by writing gszEmptyString into the first byte and
 //  memsetting the rest, the original's own idiom.
-int32_t __fastcall CMDTBL_OpenPlayerKeyFile(int32_t dwDesiredAccess, int32_t dwCreationDisposition)
+HANDLE __fastcall CMDTBL_OpenPlayerKeyFile(DWORD dwDesiredAccess, DWORD dwCreationDisposition)
 {
     char szSavePath[260];
     char szDir[260];
     char szFile[260];
-    int32_t hFile;
+    HANDLE hFile;
 
     szFile[0] = gszEmptyString;
     memset(&szFile[1], 0, 0x100u);
@@ -884,14 +884,14 @@ int32_t __fastcall CMDTBL_OpenPlayerKeyFile(int32_t dwDesiredAccess, int32_t dwC
     szSavePath[0] = gszEmptyString;
     memset(&szSavePath[1], 0, 259);
 
-    FOG_GetSavePath((uint32_t)szFile, 260);
+    FOG_GetSavePath(szFile, 260);
     if (*(char *)gszRealmName)
     {
         STORM_SStrPrintf(szSavePath, 0x104u, "%s%s\\", szFile, (const char *)gszRealmName);
         FOG_CreatePathHierarchy(szSavePath);
         STORM_SStrPrintf(szDir, 0x104u, "%s%s.key", szSavePath, gLocalPlayerName);
-        hFile = FOG_CreateFileA((uint32_t)szDir, dwDesiredAccess, 0, 0, dwCreationDisposition, 128, 0);
-        if (hFile != -1)
+        hFile = FOG_CreateFileA(szDir, dwDesiredAccess, 0, 0, dwCreationDisposition, 128, 0);
+        if (hFile != (void *)-1)
         {
             return hFile;
         }
@@ -899,7 +899,7 @@ int32_t __fastcall CMDTBL_OpenPlayerKeyFile(int32_t dwDesiredAccess, int32_t dwC
 
     //  reached both when there is no save name and when that open failed
     STORM_SStrPrintf(szDir, 0x104u, "%s%s.key", szFile, gLocalPlayerName);
-    return FOG_CreateFileA((uint32_t)szDir, dwDesiredAccess, 0, 0, dwCreationDisposition, 128, 0);
+    return FOG_CreateFileA(szDir, dwDesiredAccess, 0, 0, dwCreationDisposition, 128, 0);
 }
 
 
@@ -1862,7 +1862,7 @@ void __fastcall CMDTBL_SetKeyHookMode(int32_t nMode, int32_t bSwapReleaseHandler
 void __cdecl CMDTBL_LoadDefaultBindings(void)
 {
     void *hFile;
-    int32_t nBytesRead;
+    DWORD nBytesRead;
     uint32_t aFileData[286];
     int32_t nCmd;
     int32_t nEntry;
@@ -1871,7 +1871,7 @@ void __cdecl CMDTBL_LoadDefaultBindings(void)
     HotkeyMappingEntry *pEntry;
     int32_t nSlot;
 
-    hFile = (void *)CMDTBL_OpenPlayerKeyFile(0x80000000, 3);
+    hFile = CMDTBL_OpenPlayerKeyFile(0x80000000, 3);
     if (hFile == (void *)-1)
     {
         goto USE_DEFAULTS;
@@ -1879,7 +1879,7 @@ void __cdecl CMDTBL_LoadDefaultBindings(void)
 
     memset(aFileData, 0, 1142);
     nBytesRead = 0;
-    FOG_10110((uint32_t)hFile, (uint32_t)aFileData, 1142, (uint32_t)&nBytesRead, 0);
+    FOG_10110(hFile, aFileData, 1142, &nBytesRead, 0);
     FOG_CloseFile(hFile);
 
     if (nBytesRead != 1142 || (uint16_t)aFileData[0] != 37)
@@ -1952,7 +1952,7 @@ void __cdecl CMDTBL_SaveBindingsToFiles(void)
 {
     void *hFile;
     void *hDefault;
-    int32_t nBytesWritten;
+    DWORD nBytesWritten;
     //  BUG: the original writes each file's header and body as ONE call from the header local's address (2 + 1140 bytes, and 4 + 2 for the
     //  default file's header), relying on the body its compiler placed behind it.
     //  DIFFERENCE: ours is the defined program: each file is one object and each write starts at its base, because reading or writing past one
@@ -1962,7 +1962,7 @@ void __cdecl CMDTBL_SaveBindingsToFiles(void)
     char szPath[260];
     int32_t nSlot;
 
-    hFile = (void *)CMDTBL_OpenPlayerKeyFile(0x40000000, 2);
+    hFile = CMDTBL_OpenPlayerKeyFile(0x40000000, 2);
     if (hFile == (void *)-1)
     {
         return;
@@ -1977,19 +1977,19 @@ void __cdecl CMDTBL_SaveBindingsToFiles(void)
         *(int16_t *)&abBindingsFile[2 + 10 * nSlot + 4] = -1;
     }
     memcpy(abBindingsFile + 2, gKeyBindings, 114 * sizeof(HotkeyMappingEntry));
-    FOG_10111((uint32_t)hFile, (uint32_t)abBindingsFile, 1142, (uint32_t)&nBytesWritten, 0);
+    FOG_10111(hFile, abBindingsFile, 1142, &nBytesWritten, 0);
     FOG_CloseFile(hFile);
 
-    FOG_GetInstallPath((uint32_t)szPath, 220);
+    FOG_GetInstallPath(szPath, 220);
     strcat(szPath, aDefaultKey);
-    hDefault = (void *)FOG_CreateFileA((uint32_t)szPath, 0x40000000, 0, 0, 2, 128, 0);
+    hDefault = FOG_CreateFileA(szPath, 0x40000000, 0, 0, 2, 128, 0);
     if (hDefault != (void *)-1)
     {
         //  21335 at +0 and 37 at +2: the original stores them as two words, which is the dword 37 << 16 | 21335
         *(int32_t *)abDefaultHeader = 2446167;
         *(int16_t *)(abDefaultHeader + 4) = 1146;
-        FOG_10111((uint32_t)hDefault, (uint32_t)abDefaultHeader, 6, (uint32_t)&nBytesWritten, 0);
-        FOG_10111((uint32_t)hDefault, (uint32_t)gKeyBindings, 1140, (uint32_t)&nBytesWritten, 0);
+        FOG_10111(hDefault, abDefaultHeader, 6, &nBytesWritten, 0);
+        FOG_10111(hDefault, gKeyBindings, 1140, &nBytesWritten, 0);
         FOG_CloseFile(hDefault);
     }
 }
@@ -2003,7 +2003,7 @@ void __cdecl CMDTBL_SaveBindingsToFiles(void)
 void __fastcall CMDTBL_CommandLoadDefaultKeyBindings(void *bTryDiskFile)
 {
     int32_t nLangCode;
-    int32_t nBytesRead;
+    DWORD nBytesRead;
     char szPath[260];
     //  BUG: the original declares a 1144-byte buffer and reads 1146 bytes into it, so the last two bytes land on the local its compiler placed
     //  immediately behind; it then copies only 1144 and puts those two back by hand.
@@ -2019,12 +2019,12 @@ void __fastcall CMDTBL_CommandLoadDefaultKeyBindings(void *bTryDiskFile)
 
     if (bTryDiskFile)
     {
-        FOG_GetInstallPath((uint32_t)szPath, 220);
+        FOG_GetInstallPath(szPath, 220);
         strcat(szPath, aDefaultKey);
-        hFile = (void *)FOG_CreateFileA((uint32_t)szPath, 0x80000000, 0, 0, 3, 128, 0);
+        hFile = FOG_CreateFileA(szPath, 0x80000000, 0, 0, 3, 128, 0);
         if (hFile != (void *)-1)
         {
-            FOG_10110((uint32_t)hFile, (uint32_t)aReadBuffer, 1146, (uint32_t)&nBytesRead, 0);
+            FOG_10110(hFile, aReadBuffer, 1146, &nBytesRead, 0);
             FOG_CloseFile(hFile);
             if (nBytesRead == 1146)
             {

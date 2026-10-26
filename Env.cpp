@@ -22,15 +22,15 @@
 //  void: the original leaves eax at 170 from its last two stores; the one caller does not read it.
 void __cdecl ENV_Init()
 {
-    ghEnvParticles = (D2DataArrayStrc *)FOG_DATAARRAYS_Alloc((uint32_t)(UINT_PTR) "Environment Particles", 256, 40);
+    ghEnvParticles = FOG_DATAARRAYS_Alloc("Environment Particles", 256, 40);
     FOG_DATAARRAYS_Init(ghEnvParticles);
 
     gnEnvTargetParticleCount = 0;
 
-    ghEnvSplashes = (D2DataArrayStrc *)FOG_DATAARRAYS_Alloc((uint32_t)(UINT_PTR) "Environment Splashes", 512, 24);
+    ghEnvSplashes = FOG_DATAARRAYS_Alloc("Environment Splashes", 512, 24);
     FOG_DATAARRAYS_Init(ghEnvSplashes);
 
-    ghEnvBubbles = (D2DataArrayStrc *)FOG_DATAARRAYS_Alloc((uint32_t)(UINT_PTR) "Environment Bubbles", 128, 24);
+    ghEnvBubbles = FOG_DATAARRAYS_Alloc("Environment Bubbles", 128, 24);
     FOG_DATAARRAYS_Init(ghEnvBubbles);
 
     gbEnvThunderScheduled = 0;

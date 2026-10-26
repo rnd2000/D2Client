@@ -1117,7 +1117,7 @@ struct Unicode **__fastcall TEXT_ParseLinesAndScrollRate(Unicode *pwszText, int3
 
     LINE_READY:
         {
-            struct Unicode **pNode = (struct Unicode **)(UINT_PTR)FOG_Alloc(8, szTextCpp, 1460, 0);
+            struct Unicode **pNode = (struct Unicode **)FOG_Alloc(8, szTextCpp, 1460, 0);
 
             if (bFirstLine == 1)
             {
@@ -1160,7 +1160,7 @@ struct Unicode **__fastcall TEXT_ParseLinesAndScrollRate(Unicode *pwszText, int3
                 if (D2WIN_10121_GetTextWidth(wszText) >= 308)
                     wsprintfA(szWarnTooLong2, szWarnLineTooLong, *pnLineCount);
 
-                struct Unicode *pDest = (struct Unicode *)(UINT_PTR)FOG_Alloc(2 * nTextLen + 2, szTextCpp, 1511, 0);
+                struct Unicode *pDest = (struct Unicode *)FOG_Alloc(2 * nTextLen + 2, szTextCpp, 1511, 0);
                 *pNode = pDest;
                 Unicode::strcpy(pDest, wszText);
                 pNode[1] = nullptr;
@@ -1258,7 +1258,7 @@ void __fastcall TEXT_ShowSpeechPopup(D2UnitStrc *pNpc, int16_t nTblStringId, int
     sgTextState.bPopupDismissed = 0;
     const enum Font eFontOuter = D2WIN_10127_SetFont(D2FONT_FONTFORMAL11);
     Unicode *pwszText = (Unicode *)D2LANG_GetStringFromTblIndex(wTblStringId);
-    D2ClientPopupStrc *pPopup = (D2ClientPopupStrc *)(UINT_PTR)FOG_Alloc(44, szTextCpp, 1625, 0);
+    D2ClientPopupStrc *pPopup = (D2ClientPopupStrc *)FOG_Alloc(44, szTextCpp, 1625, 0);
     const enum Font eFontInner = D2WIN_10127_SetFont(D2FONT_FONTFORMAL11);
 
     pPopup->pLines = (struct D2ClientTextLineStrc *)TEXT_ParseLinesAndScrollRate(pwszText, &pPopup->nLineCount, (int16_t *)&pPopup->wScrollRate);
@@ -1374,7 +1374,7 @@ void __fastcall TEXT_ShowQuestScrollingText(int32_t nTblStringId, int16_t bIsQue
     //  The two font saves are nested the other way round from the speech popup's: inner set first, restored last. Both restore what they saved.
     const enum Font eFontInner = D2WIN_10127_SetFont(D2FONT_FONTFORMAL11);
     Unicode *pwszText = (Unicode *)D2LANG_GetStringFromTblIndex(wTblStringId);
-    D2ClientPopupStrc *pPopup = (D2ClientPopupStrc *)(UINT_PTR)FOG_Alloc(44, szTextCpp, 1625, 0);
+    D2ClientPopupStrc *pPopup = (D2ClientPopupStrc *)FOG_Alloc(44, szTextCpp, 1625, 0);
     const enum Font eFontOuter = D2WIN_10127_SetFont(D2FONT_FONTFORMAL11);
 
     pPopup->pLines = (struct D2ClientTextLineStrc *)TEXT_ParseLinesAndScrollRate(pwszText, &pPopup->nLineCount, (int16_t *)&pPopup->wScrollRate);
@@ -1804,7 +1804,7 @@ void __fastcall TEXT_PlaceHoverMsg(D2UnitStrc *pUnit, D2HoverTextStrc *pHoverMsg
 
     int32_t nMaxTextWidth = 0;
     const enum Font ePrevFont = D2WIN_10127_SetFont(D2FONT_FONTINGAMECHAT);
-    D2ClientPopupStrc *pMsg = (D2ClientPopupStrc *)(UINT_PTR)FOG_Alloc(44, szTextCpp, 1625, 0);
+    D2ClientPopupStrc *pMsg = (D2ClientPopupStrc *)FOG_Alloc(44, szTextCpp, 1625, 0);
 
     //  D2Win's own name for the 8-byte node is D2SplittedTextStrc; D2Client calls the same layout D2ClientTextLineStrc.
     D2ClientTextLineStrc *pSplitText = (D2ClientTextLineStrc *)D2WIN_10199(wszText, &pMsg->nLineCount, 180);
@@ -2479,7 +2479,7 @@ void __cdecl TEXT_DrawQuickMessages()
 //  The original inlines TEXT_FreeMessageList's node free and the message-log listbox refresh here.
 void __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
 {
-    D2ClientTextNodeStrc *pMessage = (D2ClientTextNodeStrc *)(UINT_PTR)FOG_Alloc(38, szTextCpp, 3394, 0);
+    D2ClientTextNodeStrc *pMessage = (D2ClientTextNodeStrc *)FOG_Alloc(38, szTextCpp, 3394, 0);
 
     //  36 + 2 = 38: MSVC emits the whole-record clear as a dword run and a two-byte tail, and the tail lands inside pNext at +0x22.
     memset(pMessage, 0, sizeof(D2ClientTextNodeStrc));
@@ -2587,7 +2587,7 @@ void __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
 //  The original inlines TEXT_FreeMessageList's node free here.
 void __fastcall TEXT_PushMessageLogEntry(D2ClientTextNodeStrc *pSrcMessage)
 {
-    D2ClientTextNodeStrc *pLogEntry = (D2ClientTextNodeStrc *)(UINT_PTR)FOG_Alloc(38, szTextCpp, 2508, 0);
+    D2ClientTextNodeStrc *pLogEntry = (D2ClientTextNodeStrc *)FOG_Alloc(38, szTextCpp, 2508, 0);
     memset(pLogEntry, 0, sizeof(D2ClientTextNodeStrc));
     pLogEntry->pNext = nullptr;
 
@@ -2597,7 +2597,7 @@ void __fastcall TEXT_PushMessageLogEntry(D2ClientTextNodeStrc *pSrcMessage)
         do
         {
             const int32_t nLineLen = Unicode::strlen(pSrcMessage->pLines[iLine]);
-            Unicode *pCopy = (Unicode *)(UINT_PTR)FOG_Alloc(2 * nLineLen + 2, szTextCpp, 2512, 0);
+            Unicode *pCopy = (Unicode *)FOG_Alloc(2 * nLineLen + 2, szTextCpp, 2512, 0);
             pLogEntry->pLines[iLine] = pCopy;
             Unicode::strcpy(pCopy, pSrcMessage->pLines[iLine]);
             ++iLine;
@@ -2655,7 +2655,7 @@ void __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
 {
     const enum Font ePrevFont = D2WIN_10127_SetFont(D2FONT_FONTINGAMECHAT);
 
-    D2ClientTextNodeStrc *pMessage = (D2ClientTextNodeStrc *)(UINT_PTR)FOG_Alloc(38, szTextCpp, 3483, 0);
+    D2ClientTextNodeStrc *pMessage = (D2ClientTextNodeStrc *)FOG_Alloc(38, szTextCpp, 3483, 0);
     memset(pMessage, 0, sizeof(D2ClientTextNodeStrc));
     pMessage->pNext = nullptr;
     pMessage->dwExpireTick = GetTickCount() + 10000;
@@ -2697,7 +2697,7 @@ void __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
         if (pMessage->wLineCount >= 6u)
             break;
 
-        pMessage->pLines[pMessage->wLineCount] = (Unicode *)(UINT_PTR)FOG_Alloc(2 * nLen + 2, szTextCpp, 3525, 0);
+        pMessage->pLines[pMessage->wLineCount] = (Unicode *)FOG_Alloc(2 * nLen + 2, szTextCpp, 3525, 0);
         memset(pMessage->pLines[pMessage->wLineCount], 0, 2 * nLen + 2);
         Unicode::strncpy(pMessage->pLines[pMessage->wLineCount], pSrc, nLen);
         ++pMessage->wLineCount;

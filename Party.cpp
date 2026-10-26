@@ -166,7 +166,7 @@ void __cdecl PARTY_BuildRowList()
     for (nRow = 0; pEntry || nRow > 8; ++nRow)
     {
         pHead = gpPartyRowList;
-        pRow = (D2ClientPartyRowStrc *)(UINT_PTR)FOG_Alloc(sizeof(D2ClientPartyRowStrc), szPartyCpp, 333, 0);
+        pRow = (D2ClientPartyRowStrc *)FOG_Alloc(sizeof(D2ClientPartyRowStrc), szPartyCpp, 333, 0);
         memset(pRow, 0, sizeof(D2ClientPartyRowStrc));
         pRow->nNameBandBottom = nRowY + 13;
 
@@ -308,7 +308,7 @@ void __cdecl PARTY_DrawPanel()
             {
                 D2WIN_10127_SetFont(nCount < 14 ? D2FONT_FONT8 : D2FONT_FONT6);
             }
-            pwszTitle = (Unicode *)(UINT_PTR)FOG_Alloc(2 * nCount, szPartyCpp, 529, 0);
+            pwszTitle = (Unicode *)FOG_Alloc(2 * nCount, szPartyCpp, 529, 0);
             Unicode::toUnicode(pwszTitle, szTitle, (int32_t)nCount);
             //  D2ExpRes PartyOwnCharname lands on the right edge
             CHAR_DrawTextCentered(gnBorderXDifference + 20, 31 - gnBorderYDifference, gnBorderXDifference + 190, pwszTitle, 0);

@@ -233,7 +233,7 @@ void __fastcall VIDEO_PlayCinematic(int32_t nCinematicId)
     if (nCinematicId == 7)
     {
         bExpansionDisc = TRUE;
-        FOG_GetInstallPath((uint32_t)(UINT_PTR)szInstallPath, sizeof(szInstallPath));
+        FOG_GetInstallPath(szInstallPath, sizeof(szInstallPath));
         strcat(szInstallPath, "d2game.dll");
         hGameDll = CreateFileA(szInstallPath, 0, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
         if (hGameDll == INVALID_HANDLE_VALUE)

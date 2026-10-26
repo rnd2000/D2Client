@@ -754,7 +754,7 @@ static void SCMD_WriteCharacterFile()
 
     //  BUG: the path is built into a 500-byte buffer (szFilePath, 500 bytes below szSavePath) by an unbounded sprintf from a save path fetched with a
     //  limit of 1024.
-    FOG_GetSavePath((uint32_t)(UINT_PTR)szSavePath, 1024);
+    FOG_GetSavePath(szSavePath, 1024);
     sprintf(szFilePath, szSaveFileFormat, szSavePath, gLocalPlayerName);
 
     //  DIFFERENCE: the file goes through the C runtime's fopen, fwrite and fclose; the original calls its own VC6 runtime's (0x6FB60F4F, 0x6FB60F62,
@@ -805,7 +805,7 @@ void __fastcall SCMD_SaveCharacterFile(uint8_t *pBuffer, int32_t nLen)
             gnScmdBufferSize = 0;
         }
         if (!gpScmdBuffer)
-            gpScmdBuffer = (void *)(UINT_PTR)FOG_Alloc(*(uint32_t *)(pBuffer + 3), szFile, 98, 0);
+            gpScmdBuffer = (void *)FOG_Alloc(*(uint32_t *)(pBuffer + 3), szFile, 98, 0);
 
         //  BUG: nothing compares the copy with the allocation. The buffer is the size of the chunk that allocated it; a later chunk without the
         //  restart flag is copied at gnScmdBufferSize whatever its own total says, and the only test is the equality after the copy. Chunks that pass
@@ -1964,7 +1964,7 @@ void __fastcall SCMD_HandleSrv3E_ItemStatUpdate(D2GSPacketSrv3E *pPacket)
     D2BitBufferStrc tBits;
     //  BUG: the bit buffer is sized as the packet's length byte minus 2 (`sub eax, 2` at 0x6FAB39FE) with no test: a length below 2 hands
     //  BITMANIP_Initialize a size near 4 GB.
-    FOG_BITMANIP_Initialize(&tBits, pPacket->pBuffer, (size_t)(pPacket->nSize - 2));
+    FOG_BITMANIP_Initialize(&tBits, pPacket->pBuffer, pPacket->nSize - 2);
 
     int32_t nWidth = 8;
     if (FOG_BITMANIP_Read(&tBits, 1))
@@ -2726,7 +2726,7 @@ void __fastcall SCMD_HandleSrvA8_StateOnWithStats(D2GSPacketSrvA8 *pPacket)
     D2BitBufferStrc tBits;
     //  BUG: the bit stream is sized as the length byte minus 8 (`sub eax, 8` at 0x6FAB47AF) with no test, as in 0x3E: a length below 8 hands
     //  BITMANIP_Initialize a size near 4 GB.
-    FOG_BITMANIP_Initialize(&tBits, pPacket->pStream, (size_t)(pPacket->nSize - 8));
+    FOG_BITMANIP_Initialize(&tBits, pPacket->pStream, pPacket->nSize - 8);
 
     D2StatListStrc *pStatList = NULL;
     for (int32_t nStatId = (int32_t)FOG_BITMANIP_Read(&tBits, 9); nStatId < 511; nStatId = (int32_t)FOG_BITMANIP_Read(&tBits, 9))
@@ -2823,7 +2823,7 @@ void __fastcall SCMD_HandleSrvAA_AllStates(D2GSPacketSrvAA *pPacket)
 
     D2BitBufferStrc tBits;
     //  BUG: the bit stream is sized as the length byte minus 7 (`sub edx, 7` at 0x6FAB499F) with no test: a length below 7 wraps.
-    FOG_BITMANIP_Initialize(&tBits, pPacket->pStream, (size_t)(pPacket->nSize - 7));
+    FOG_BITMANIP_Initialize(&tBits, pPacket->pStream, pPacket->nSize - 7);
 
     for (int32_t nState = (int32_t)FOG_BITMANIP_Read(&tBits, 8); nState < 255; nState = (int32_t)FOG_BITMANIP_Read(&tBits, 8))
     {
@@ -2909,7 +2909,7 @@ void __fastcall SCMD_HandleSrvAC_SpawnMonster(D2GSPacketSrvAC *pPacket)
 
     D2BitBufferStrc tBits;
     //  BUG: the bit stream is sized as the length byte minus 13 (`sub eax, 0Dh` at 0x6FAB4BFA) with no test: a length below 13 wraps.
-    FOG_BITMANIP_Initialize(&tBits, pPacket->bitstream, (size_t)(pPacket->nPacketLength - 13));
+    FOG_BITMANIP_Initialize(&tBits, pPacket->bitstream, pPacket->nPacketLength - 13);
 
     const uint8_t nAnimMode = (uint8_t)FOG_BITMANIP_Read(&tBits, 4);
 

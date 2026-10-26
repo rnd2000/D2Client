@@ -36,7 +36,7 @@ static_assert(0xB00000 == 11 * 1024 * 1024 && 0x300000 == 3 * 1024 * 1024
 static_assert(0x1800000 == 24 * 1024 * 1024 && 0x4000000 == 64 * 1024 * 1024,
               "the sprite cache clamps, in megabytes");
 
-void __fastcall MEMPART_InitMemoryPartitions(int32_t hPool, int32_t bInitTileCache)
+void __fastcall MEMPART_InitMemoryPartitions(void *pPool, int32_t bInitTileCache)
 {
     D2FogSystemInfoStrc *pSysInfo;
     uint32_t nPhysicalBytes;
@@ -81,7 +81,7 @@ void __fastcall MEMPART_InitMemoryPartitions(int32_t hPool, int32_t bInitTileCac
     if (bInitTileCache)
     {
         nRemainingBytes -= 6 * 1024 * 1024;
-        D2CMP_10089(hPool, 6 * 1024 * 1024);
+        D2CMP_10089(pPool, 6 * 1024 * 1024);
     }
 
     nSpriteThird = (nRemainingBytes - 2 * 1024 * 1024) / 3;
@@ -96,7 +96,7 @@ void __fastcall MEMPART_InitMemoryPartitions(int32_t hPool, int32_t bInitTileCac
     FOG_Trace("Tile Cache Size: %dMB", 6);
     FOG_Trace("Sprite Cache Size: %dMB", nSpriteCacheSize >> 20);
 
-    D2CMP_InitSpriteCache(hPool, nSpriteCacheSize, 512000, nUsableBytes);
+    D2CMP_InitSpriteCache(pPool, nSpriteCacheSize, 512000, nUsableBytes);
 
     //  A tail call (`jmp GFX_InitCelCache` after `mov ecx, 200000h`) in the original, not the start of a second half of this function.
     GFX_InitCelCache(2 * 1024 * 1024);

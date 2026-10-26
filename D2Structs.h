@@ -8982,10 +8982,10 @@ int32_t bCopyToUnitBuffer;
 // struct D2GSPacketClt3A
 // {
 // uint8_t nHeader;
-// uint16_t nStat;
-// int32_t nPoints;
+// uint8_t nStat;
+// uint8_t nPointsLessOne;
 // };
-// static_assert(sizeof(D2GSPacketClt3A) == 7, "D2GSPacketClt3A: layout differs from the database");
+// static_assert(sizeof(D2GSPacketClt3A) == 3, "D2GSPacketClt3A: layout differs from the database");
 
 // struct D2GSPacketClt3B
 // {

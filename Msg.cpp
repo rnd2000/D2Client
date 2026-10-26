@@ -347,7 +347,7 @@ void __fastcall MSG_Send_D2CLTSYS_OPENCHAR(int32_t bShowLoadingScreen)
         exit(-1);
     }
 
-    FOG_GetSavePath((uint32_t)szSavePath, 1024);
+    FOG_GetSavePath(szSavePath, 1024);
     sprintf(szFilePath, "%s%s.d2s", szSavePath, gLocalPlayerName);
 
     nFileSize = 0;
@@ -365,7 +365,7 @@ void __fastcall MSG_Send_D2CLTSYS_OPENCHAR(int32_t bShowLoadingScreen)
         {
             nFileSize = ftell(pStream);
             fseek(pStream, 0, SEEK_SET);
-            pbData = (void *)FOG_Alloc(nFileSize, szMsgCpp, 421, 0);
+            pbData = FOG_Alloc(nFileSize, szMsgCpp, 421, 0);
             fread(pbData, nFileSize, 1, pStream);
             fclose(pStream);
         }
