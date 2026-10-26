@@ -396,15 +396,14 @@ void __fastcall SKILLDESC_AttFunc5(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Ski
 
 //1.10f: D2Client.0x6FB0A730
 //  descatt handler 2. Both exits are tail calls: the walker when the character can dual wield, the single-weapon routine when it cannot
-//  (SKILLDESC_AttFunc1 is the unconditional single-weapon version). The walk's nShared is the skill, so the callback's pSkill parameter
-//  carries it; nExtraB is the level.
+//  (SKILLDESC_AttFunc1 is the unconditional single-weapon version). The walk's pSkill is the skill, and nExtraB is the level.
 void __fastcall SKILLDESC_AttFunc2(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnAttackRatingA, int32_t *pnColorA, int32_t *pnAttackRatingB, int32_t *pnColorB)
 {
     D2UnitStrc *pLeftHandWeapon;
 
     if (D2COMMON_UNITS_CanDualWield(pUnit))
     {
-        SKILLDESC_ForEachWieldedWeapon(pUnit, pnAttackRatingA, pnColorA, 0, pnAttackRatingB, pnColorB, 0, (int32_t)pSkill, SKILLDESC_AttackRatingCallback, 0, nSkillLevel);
+        SKILLDESC_ForEachWieldedWeapon(pUnit, pnAttackRatingA, pnColorA, 0, pnAttackRatingB, pnColorB, 0, pSkill, SKILLDESC_AttackRatingCallback, 0, nSkillLevel);
     }
     else
     {
@@ -437,9 +436,9 @@ void __fastcall SKILLDESC_AttackRatingCallback(D2UnitStrc *pUnit, int32_t *pnVal
 //  The two-handed route goes through SKILLDESC_PrepareOffHandWeapon for the B pair and SKILLDESC_PrepareMainHandWeapon for A, and zeroes the
 //  pair whose helper returned NULL. The single-hand route merges the left-hand weapon's statlist with mode 1 when it is equippable and calls
 //  the callback with no weapon. pfnCompute is SKILLDESC_AttackRatingCallback, SKILLDESC_AddTotalDamageCallback or SKILLDESC_ComputeThrowDamage; it
-//  receives (pUnit, pair, nArg, nExtraA, nExtraB, nShared, 0, weapon), the last three carrying the caller's own meaning. A throwing potion does
+//  receives (pUnit, pair, nArg, nExtraA, nExtraB, pSkill, 0, weapon), nExtraA and nExtraB carrying the caller's own meaning. A throwing potion does
 //  not count as a wielded weapon. bCanDualWield holds UNITS_CanDualWield; the last return is reached only when the unit cannot dual wield.
-int32_t __fastcall SKILLDESC_ForEachWieldedWeapon(D2UnitStrc *pUnit, int32_t *pnValueA, int32_t *pnColorA, int32_t nArgA, int32_t *pnValueB, int32_t *pnColorB, int32_t nArgB, int32_t nShared, void *pfnCompute, int32_t nExtraA, int32_t nExtraB)
+int32_t __fastcall SKILLDESC_ForEachWieldedWeapon(D2UnitStrc *pUnit, int32_t *pnValueA, int32_t *pnColorA, int32_t *pnArgA, int32_t *pnValueB, int32_t *pnColorB, int32_t *pnArgB, D2SkillStrc *pSkill, void *pfnCompute, int32_t nExtraA, int32_t nExtraB)
 {
     D2InventoryStrc *pInventory;
     int32_t bCanDualWield;
@@ -476,7 +475,7 @@ int32_t __fastcall SKILLDESC_ForEachWieldedWeapon(D2UnitStrc *pUnit, int32_t *pn
         pOffHandWeapon = SKILLDESC_PrepareOffHandWeapon(pUnit);
         if (pOffHandWeapon)
         {
-            ((void(__fastcall *)(D2UnitStrc *, int32_t *, int32_t *, int32_t, int32_t, int32_t, int32_t, int32_t, D2UnitStrc *))pfnCompute)(pUnit, pnValueB, pnColorB, nArgB, nExtraA, nExtraB, nShared, 0, pOffHandWeapon);
+            ((void(__fastcall *)(D2UnitStrc *, int32_t *, int32_t *, int32_t *, int32_t, int32_t, D2SkillStrc *, int32_t, D2UnitStrc *))pfnCompute)(pUnit, pnValueB, pnColorB, pnArgB, nExtraA, nExtraB, pSkill, 0, pOffHandWeapon);
         }
         else
         {
@@ -486,7 +485,7 @@ int32_t __fastcall SKILLDESC_ForEachWieldedWeapon(D2UnitStrc *pUnit, int32_t *pn
         pMainHandWeapon = SKILLDESC_PrepareMainHandWeapon(pUnit);
         if (pMainHandWeapon)
         {
-            ((void(__fastcall *)(D2UnitStrc *, int32_t *, int32_t *, int32_t, int32_t, int32_t, int32_t, int32_t, D2UnitStrc *))pfnCompute)(pUnit, pnValueA, pnColorA, nArgA, nExtraA, nExtraB, nShared, 0, pMainHandWeapon);
+            ((void(__fastcall *)(D2UnitStrc *, int32_t *, int32_t *, int32_t *, int32_t, int32_t, D2SkillStrc *, int32_t, D2UnitStrc *))pfnCompute)(pUnit, pnValueA, pnColorA, pnArgA, nExtraA, nExtraB, pSkill, 0, pMainHandWeapon);
         }
         else
         {
@@ -501,7 +500,7 @@ int32_t __fastcall SKILLDESC_ForEachWieldedWeapon(D2UnitStrc *pUnit, int32_t *pn
     {
         D2COMMON_STATLIST_MergeStatLists(pUnit, pLeftHandWeapon, 1);
     }
-    ((void(__fastcall *)(D2UnitStrc *, int32_t *, int32_t *, int32_t, int32_t, int32_t, int32_t, int32_t, int32_t))pfnCompute)(pUnit, pnValueA, pnColorA, nArgA, nExtraA, nExtraB, nShared, 0, 0);
+    ((void(__fastcall *)(D2UnitStrc *, int32_t *, int32_t *, int32_t *, int32_t, int32_t, D2SkillStrc *, int32_t, D2UnitStrc *))pfnCompute)(pUnit, pnValueA, pnColorA, pnArgA, nExtraA, nExtraB, pSkill, 0, 0);
     return 1;
 }
 
@@ -660,7 +659,7 @@ void __fastcall SKILLDESC_AttFunc3(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Ski
 //  (SKILLDESC_PrepareOffHandWeapon runs first, into B) and no second line.
 void __fastcall SKILLDESC_AttFunc4(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnAttackRatingA, int32_t *pnColorA, int32_t *pnAttackRatingB, int32_t *pnColorB)
 {
-    SKILLDESC_ForEachWieldedWeapon(pUnit, pnAttackRatingA, pnColorA, 0, pnAttackRatingB, pnColorB, 0, (int32_t)pSkill, SKILLDESC_AttackRatingCallback, 0, nSkillLevel);
+    SKILLDESC_ForEachWieldedWeapon(pUnit, pnAttackRatingA, pnColorA, 0, pnAttackRatingB, pnColorB, 0, pSkill, SKILLDESC_AttackRatingCallback, 0, nSkillLevel);
     *pnAttackRatingA = *pnAttackRatingB;
     *pnColorA = *pnColorB;
     *pnAttackRatingB = 0;
@@ -1177,8 +1176,8 @@ int32_t __cdecl SKILLDESC_GetChargeUpDamagePercent(void)
 //  After the elements, a skill flagged SKILLSFLAGINDEX_FINISHING gets the charge-up damage through SKILLDESC_AddChargeUpElemDamage, and the two
 //  state checks override the colour last, DamBlue 3 then DamRed 1. The last block is a display guard, not arithmetic: when the max came out
 //  above zero, `if (*pnMin < 1) *pnMin = 1; if (*pnMax <= *pnMin) *pnMax = *pnMin + 1;`, so a panel line never reads 0-0 and never shows a max
-//  below its min; the damage the game deals is untouched. nUnused is accepted and never read.
-void __fastcall SKILLDESC_AddItemElemDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nUnused, D2SkillStrc *pSkill)
+//  below its min; the damage the game deals is untouched. pUnused is accepted and never read.
+void __fastcall SKILLDESC_AddItemElemDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, D2UnitStrc *pUnused, D2SkillStrc *pSkill)
 {
     D2SkillsTxt *pSkillsTxtRec;
     UINT_PTR nStatRow;   // integer cursor; see the DIFFERENCE note below
@@ -1629,7 +1628,7 @@ void __fastcall SKILLDESC_DamFunc1(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Ski
     nExtraA = D2COMMON_SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescRec->dwDamCalc[0], nSkillIdFromSkill, nSkillLevel);
     nSkillIdFromSkill = (D2C_Skills)D2COMMON_SKILLS_GetSkillIdFromSkill(pSkill, szSkillDescCpp, 2489);
     nExtraB = D2COMMON_SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescRec->dwDamCalc[1], nSkillIdFromSkill, nSkillLevel);
-    SKILLDESC_DrawDualWieldDamage(pUnit, (int32_t)pSkill, pSkillsTxt, nSkillLevel, SKILLDESC_AddTotalDamageCallback, nExtraA, nExtraB, nLeft, nY, nRight, 1);
+    SKILLDESC_DrawDualWieldDamage(pUnit, pSkill, pSkillsTxt, nSkillLevel, SKILLDESC_AddTotalDamageCallback, nExtraA, nExtraB, nLeft, nY, nRight, 1);
 }
 
 
@@ -1641,7 +1640,7 @@ void __fastcall SKILLDESC_DamFunc1(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Ski
 void __fastcall SKILLDESC_AddTotalDamageCallback(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nExtraDamagePercent, int32_t nFlatBonus, D2SkillStrc *pSkill, int32_t nSrcDamOverride, D2UnitStrc *pWeapon)
 {
     SKILLDESC_AddWeaponPhysDamage(pUnit, pnMin, pnMax, pnColor, nExtraDamagePercent, nFlatBonus, pSkill, nSrcDamOverride, pWeapon, 0);
-    SKILLDESC_AddItemElemDamage(pUnit, pnMin, pnMax, pnColor, (int32_t)pWeapon, pSkill);
+    SKILLDESC_AddItemElemDamage(pUnit, pnMin, pnMax, pnColor, pWeapon, pSkill);
 }
 
 
@@ -1662,7 +1661,7 @@ void __fastcall SKILLDESC_AddTotalDamageCallback(D2UnitStrc *pUnit, int32_t *pnM
 //  The single-value arm of both one-line paths is dead, as found: each clamps `if (min >= max) max = min + 1;` before its format test (lea ebx,
 //  [edi+1] at 0x6FB0C579, cmp edi, ebx at 0x6FB0C593). The two-line path does not clamp, and there pnValueA == pnColorA and nMin == nMax really
 //  do collapse to a plain "%d". The clamp stays where the original put it.
-void __fastcall SKILLDESC_DrawDualWieldDamage(D2UnitStrc *pUnit, int32_t nShared, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, void *pfnCompute, int32_t nExtraA, int32_t nExtraB, int32_t nX, int32_t nY, int32_t nRight, int32_t bAddElemDamage)
+void __fastcall SKILLDESC_DrawDualWieldDamage(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, void *pfnCompute, int32_t nExtraA, int32_t nExtraB, int32_t nX, int32_t nY, int32_t nRight, int32_t bAddElemDamage)
 {
     int32_t nSrcDam;
     int32_t nValueACopy;
@@ -1691,7 +1690,7 @@ void __fastcall SKILLDESC_DrawDualWieldDamage(D2UnitStrc *pUnit, int32_t nShared
     Unicode wszDest[32];
     Unicode wszOut[32];
 
-    if (!nShared || !pSkillsTxt || !pfnCompute)
+    if (!pSkill || !pSkillsTxt || !pfnCompute)
     {
         return;
     }
@@ -1710,7 +1709,7 @@ void __fastcall SKILLDESC_DrawDualWieldDamage(D2UnitStrc *pUnit, int32_t nShared
     pnColorA = 0;
     nMin = 0;
     nMax = 0;
-    SKILLDESC_ForEachWieldedWeapon(pUnit, &pnValueA, &pnColorA, (int32_t)&pnColor, &nMin, &nMax, (int32_t)&nArgB, nShared, pfnCompute, nExtraA, nExtraB);
+    SKILLDESC_ForEachWieldedWeapon(pUnit, &pnValueA, &pnColorA, &pnColor, &nMin, &nMax, &nArgB, pSkill, pfnCompute, nExtraA, nExtraB);
     nColorACopy = pnColorA;
     nValueACopy = pnValueA;
     if (pnValueA && pnColorA)
@@ -1904,7 +1903,7 @@ void __fastcall SKILLDESC_DamFunc20(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Sk
     nExtraA = D2COMMON_SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescRec->dwDamCalc[0], nSkillIdFromSkill, nSkillLevel);
     nSkillIdFromSkill = (D2C_Skills)D2COMMON_SKILLS_GetSkillIdFromSkill(pSkill, szSkillDescCpp, 2526);
     nExtraB = D2COMMON_SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescRec->dwDamCalc[1], nSkillIdFromSkill, nSkillLevel);
-    SKILLDESC_DrawDualWieldDamage(pUnit, (int32_t)pSkill, pSkillsTxt, nSkillLevel, SKILLDESC_AddTotalDamageCallback, nExtraA, nExtraB, nLeft, nY, nRight, 0);
+    SKILLDESC_DrawDualWieldDamage(pUnit, pSkill, pSkillsTxt, nSkillLevel, SKILLDESC_AddTotalDamageCallback, nExtraA, nExtraB, nLeft, nY, nRight, 0);
 }
 
 
@@ -1963,7 +1962,7 @@ void __fastcall SKILLDESC_DamFunc19(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Sk
         nExtraA = D2COMMON_SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescRec->dwDamCalc[0], nSkillIdFromSkill, nSkillLevel);
         nSkillIdFromSkill = (D2C_Skills)D2COMMON_SKILLS_GetSkillIdFromSkill(pSkill, szSkillDescCpp, 2563);
         nExtraB = D2COMMON_SKILLS_EvaluateSkillDescFormula(pUnit, pSkillDescRec->dwDamCalc[1], nSkillIdFromSkill, nSkillLevel);
-        SKILLDESC_DrawDualWieldDamage(pUnit, (int32_t)pSkill, pSkillsTxt, nSkillLevel, SKILLDESC_AddTotalDamageCallback, nExtraA, nExtraB, nLeft, nY, nRight, 1);
+        SKILLDESC_DrawDualWieldDamage(pUnit, pSkill, pSkillsTxt, nSkillLevel, SKILLDESC_AddTotalDamageCallback, nExtraA, nExtraB, nLeft, nY, nRight, 1);
         return;
     }
 
@@ -2394,7 +2393,7 @@ void __fastcall SKILLDESC_ComputeThrowDamage(D2UnitStrc *pUnit, int32_t *pnMin, 
     }
     nElemMin = 0;
     nElemMax = 0;
-    SKILLDESC_AddItemElemDamage(pUnit, &nElemMin, &nElemMax, pnColor, (int32_t)pWeapon, pSkill);
+    SKILLDESC_AddItemElemDamage(pUnit, &nElemMin, &nElemMax, pnColor, pWeapon, pSkill);
     result = nElemMax;
     if (nElemMax < nElemMin)
     {
@@ -2894,15 +2893,15 @@ DRAW_ONE_LINE:
 //1.10f: D2Client.0x6FB0E7B0
 //  descdam handler 13: entry 13 of gpSkillDescDamFuncs, the smallest of the family. One formula out of the skill's own dwCalc[0] (through
 //  SKILLS_EvaluateSkillFormula, the plain evaluator, not the assert-carrying one the DamFunc7 family uses), then the walker with
-//  SKILLDESC_ComputeThrowDamage as its pfnCompute, nExtraB 0 and bAddElemDamage 1. The skill pointer goes into the walker's nShared slot as
-//  an integer. It is the only caller of SKILLDESC_DrawDualWieldDamage that hands it the throwing-damage callback (DamFunc1, DamFunc20 and
+//  SKILLDESC_ComputeThrowDamage as its pfnCompute, nExtraB 0 and bAddElemDamage 1, and the skill in the walker's pSkill. It is the only caller
+//  of SKILLDESC_DrawDualWieldDamage that hands it the throwing-damage callback (DamFunc1, DamFunc20 and
 //  DamFunc19 pass SKILLDESC_AddTotalDamageCallback), so descdam 13 is the thrown-weapon line of the dual-wield pair.
 void __fastcall SKILLDESC_DamFunc13(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nLeft, int32_t nY, int32_t nRight)
 {
     int32_t nExtraA;
 
     nExtraA = D2COMMON_SKILLS_EvaluateSkillFormula(pUnit, pSkillsTxt->dwCalc[0], (D2C_Skills)pSkillsTxt->nSkillId, nSkillLevel);
-    SKILLDESC_DrawDualWieldDamage(pUnit, (int32_t)pSkill, pSkillsTxt, nSkillLevel, SKILLDESC_ComputeThrowDamage, nExtraA, 0, nLeft, nY, nRight, 1);
+    SKILLDESC_DrawDualWieldDamage(pUnit, pSkill, pSkillsTxt, nSkillLevel, SKILLDESC_ComputeThrowDamage, nExtraA, 0, nLeft, nY, nRight, 1);
 }
 
 
@@ -3157,7 +3156,7 @@ void __fastcall SKILLDESC_DamFunc10(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Sk
     {
         return;
     }
-    nItemId = pShield ? (int32_t)pShield->dwClassId : -1;
+    nItemId = pShield ? pShield->dwClassId : -1;
     pItemsTxtRec = D2COMMON_DATATBLS_GetItemsTxtRecord(nItemId);
     nMinDam = pItemsTxtRec->nMinDam;
     nMaxDam = pItemsTxtRec->nMaxDam;
@@ -3367,7 +3366,7 @@ void __fastcall SKILLDESC_DamFunc11(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Sk
     {
         nDrawColor = UI_COLOR_BLUE;
     }
-    SKILLDESC_DrawDamageValue((int32_t)pUnit, nMinTotal, nMaxTotal, nDrawColor, nLeft, nY, nRight);
+    SKILLDESC_DrawDamageValue(pUnit, nMinTotal, nMaxTotal, nDrawColor, nLeft, nY, nRight);
 }
 
 
@@ -3379,7 +3378,7 @@ void __fastcall SKILLDESC_DamFunc11(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Sk
 //  `nMax = 11 * nMax / 7;` and the fit test. nTextHeight is written and never read. The equality arm is dead here too: `if (nMin >= nMax)
 //  nMaxClamped = nMin + 1;` runs before the format test (lea ebp, [edi+1] at 0x6FB0F5F0, cmp edi, ebp at 0x6FB0F60D), so a single value
 //  prints as the range n-(n+1). The original inlines SKILLDESC_FormatRangeOrValue here.
-void __fastcall SKILLDESC_DrawDamageValue(int32_t nUnused, int32_t nMin, int32_t nMax, int32_t nColor, int32_t nLeft, int32_t nY, int32_t nRight)
+void __fastcall SKILLDESC_DrawDamageValue(D2UnitStrc *pUnused, int32_t nMin, int32_t nMax, int32_t nColor, int32_t nLeft, int32_t nY, int32_t nRight)
 {
     int32_t nMaxClamped;
     int32_t nTextHeight;
@@ -3604,7 +3603,7 @@ void __fastcall SKILLDESC_DamFunc15(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Sk
     SKILLDESC_AddChargeUpElemDamage(pUnit, &nElemMin, &nElemMax, &nColor);
     nMinTotal += nElemMin;
     nMaxTotal += nElemMax;
-    SKILLDESC_DrawDamageValue((int32_t)pUnit, nMinTotal, nMaxTotal, nColor, nLeft, nY, nRight);
+    SKILLDESC_DrawDamageValue(pUnit, nMinTotal, nMaxTotal, nColor, nLeft, nY, nRight);
 }
 
 
@@ -4206,7 +4205,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             {
                 goto RETURN_ONE;
             }
-            nDifficulty = (uint8_t)GAME_GetDifficulty();
+            nDifficulty = GAME_GetDifficulty();
             memset(&tSummon, 0, sizeof(tSummon));
             nLevel = (int16_t)pMonStatsTxtById->nLevel[nDifficulty];
             nGameType = GAME_IsLadderGame();
@@ -4519,7 +4518,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         goto APPEND_MISSILE_RANGE;
 
     case 0x1F:  //  the AI-curse duration, divided by the difficulty's own divisor
-        nDifficulty = (uint8_t)GAME_GetDifficulty();
+        nDifficulty = GAME_GetDifficulty();
         pDifficultyLevels = D2COMMON_DATATBLS_GetDifficultyLevelsTxtRecord(nDifficulty);
         nFrames = nCalcA;
         //  `test ecx, ecx` / `jle` (0x6FB11C55) and `idiv ecx` (0x6FB11C5A): the divisor is tested and divided signed; the struct carries it as
@@ -4564,8 +4563,8 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             }
             memset(&tSummon, 0, sizeof(tSummon));
             //  GAME_GetDifficulty is called twice, for the level's index (0x6FB11D75) and again for the argument (0x6FB11D88); the C makes both calls
-            nLevel = (int16_t)pSummonMonStats->nLevel[(uint8_t)GAME_GetDifficulty()];
-            nDifficulty = (uint8_t)GAME_GetDifficulty();
+            nLevel = (int16_t)pSummonMonStats->nLevel[GAME_GetDifficulty()];
+            nDifficulty = GAME_GetDifficulty();
             nGameType = GAME_IsLadderGame();
             D2COMMON_DATATBLS_CalculateMonsterStatsByLevel((int16_t)pSkillsTxt->wSummon, nGameType, nDifficulty, nLevel, 8, &tSummon);
             nPercent = 0;
@@ -4668,8 +4667,8 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             }
             memset(&tSummon, 0, sizeof(tSummon));
             //  two GAME_GetDifficulty calls here too (0x6FB1214D, 0x6FB12160), as in case 0x22
-            nLevel = (int16_t)pMonStatsTxtById->nLevel[(uint8_t)GAME_GetDifficulty()];
-            nDifficulty = (uint8_t)GAME_GetDifficulty();
+            nLevel = (int16_t)pMonStatsTxtById->nLevel[GAME_GetDifficulty()];
+            nDifficulty = GAME_GetDifficulty();
             nGameType = GAME_IsLadderGame();
             nMonsterId = (int16_t)pSkillsTxt->wSummon;
             D2COMMON_DATATBLS_CalculateMonsterStatsByLevel(nMonsterId, nGameType, nDifficulty, nLevel, 8, &tSummon);
@@ -4724,7 +4723,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             {
                 goto RETURN_ONE;
             }
-            nDifficulty = (uint8_t)GAME_GetDifficulty();
+            nDifficulty = GAME_GetDifficulty();
             memset(&tSummon, 0, sizeof(tSummon));
             nLevel = (int16_t)pMonStatsTxtById->nLevel[nDifficulty];
             nGameType = GAME_IsLadderGame();

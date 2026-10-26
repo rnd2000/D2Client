@@ -723,7 +723,7 @@ void __fastcall ITEM_SetUninterruptableState(D2UnitStrc *pUnit)
     if (pUnit)
     {
         dwUnitId = pUnit->dwUnitId;
-        dwUnitType = (D2C_UnitTypes)pUnit->dwUnitType;
+        dwUnitType = pUnit->dwUnitType;
     }
     else
     {
@@ -1271,7 +1271,7 @@ void __fastcall ITEM_OnPacket92(D2UnitStrc *pPlayer)
 
             if (D2COMMON_INVENTORY_GetItemNodePage(pNode) == 3)
             {
-                D2COMMON_10254_Return0((int32_t)(UINT_PTR)pInventory, D2COMMON_INVENTORY_GetBodyLocFromEquippedItem(pInventory, pItem));
+                D2COMMON_10254_Return0(pInventory, D2COMMON_INVENTORY_GetBodyLocFromEquippedItem(pInventory, pItem));
             }
 
             D2COMMON_ITEMS_UpdateSets(pPlayer, pRemoved, 1, 1);
@@ -1310,7 +1310,7 @@ void __fastcall ITEM_NpcMenuAckItemActionAndDropCursorItem(void *pPacket)
     D2COMMON_INVENTORY_SetCursorItem(pInventory, NULL);
     CURSOR_SetHeldUnit(D2COMMON_INVENTORY_GetCursorItem(pInventory));
 
-    CUNIT_RemoveUnitById(dwUnitId, (D2C_UnitTypes)pCursorItem->dwUnitType);
+    CUNIT_RemoveUnitById(dwUnitId, pCursorItem->dwUnitType);
     NPCMENU_AckItemMessage(dwUnitId);
 }
 
@@ -1555,7 +1555,7 @@ void __fastcall ITEM_ItemMsg03_OnGround(D2GSPacketSrv9C *pPacket)
             D2UnitStrc *pRemoved = D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pItem);
             if (pRemoved)
             {
-                D2COMMON_10254_Return0((int32_t)(UINT_PTR)pInventory, eBodyLoc);
+                D2COMMON_10254_Return0(pInventory, eBodyLoc);
 
                 ITEM_DetachItemFromUnit(pRemoved, pPlayer, 0, 0);
             }
@@ -2066,7 +2066,7 @@ void __fastcall ITEM_ItemMsg06_InsertIntoBodyLoc(D2GSPacketSrv9D *pPacket)
         if (pRemoved)
         {
             ITEM_DetachItemFromUnit(pRemoved, pOwner, 0, 0);
-            D2COMMON_10254_Return0((int32_t)(UINT_PTR)pOwnerInventory, nOldBodyLoc);
+            D2COMMON_10254_Return0(pOwnerInventory, nOldBodyLoc);
         }
 
         //  The old copy's NULL guard cannot fire: the slot holds the item this arm found, and the one call in between that could change it
@@ -2105,7 +2105,7 @@ void __fastcall ITEM_ItemMsg06_InsertIntoBodyLoc(D2GSPacketSrv9D *pPacket)
 
     if (D2COMMON_INVENTORY_GetItemFromBodyLoc(pInventory, (D2C_PlayerBodyLocs)nBodyLoc))
     {
-        D2COMMON_10254_Return0((int32_t)(UINT_PTR)pInventory, nBodyLoc);
+        D2COMMON_10254_Return0(pInventory, nBodyLoc);
         FOG_Trace(szTraceForcedIntoBody);
     }
 
@@ -2220,7 +2220,7 @@ void __fastcall ITEM_ItemMsg07_SwapBodyLocItems(D2GSPacketSrv9D *pPacket)
 
     ITEM_DetachItemFromUnit(pRemoved, pOwner, 0, 0);
 
-    D2COMMON_10254_Return0((int32_t)(UINT_PTR)pInventory, nOppositeBodyLoc);
+    D2COMMON_10254_Return0(pInventory, nOppositeBodyLoc);
     GFX_RebuildUnitAnimForMode(pOwner, 0);
 
     if (pOwner == pPlayer)
@@ -2286,7 +2286,7 @@ void __fastcall ITEM_ItemMsg07_SwapBodyLocItems(D2GSPacketSrv9D *pPacket)
 
     if (D2COMMON_INVENTORY_GetItemFromBodyLoc(pInventory, (D2C_PlayerBodyLocs)nBodyLoc))
     {
-        D2COMMON_10254_Return0((int32_t)(UINT_PTR)pInventory, nBodyLoc);
+        D2COMMON_10254_Return0(pInventory, nBodyLoc);
         FOG_Trace(szTraceForcedIntoBody);
     }
 
@@ -2364,7 +2364,7 @@ void __fastcall ITEM_ItemMsg08_RemoveFromBodyLoc(D2GSPacketSrv9D *pPacket)
     D2COMMON_INVENTORY_GetSecondWieldingWeapon(pOwner, pInventory, &pItem, (D2C_PlayerBodyLocs)tItemSave.nBodyLoc);
 
     D2UnitStrc *pRemoved = D2COMMON_INVENTORY_RemoveItemFromInventory(pInventory, pItem);
-    D2COMMON_10254_Return0((int32_t)(UINT_PTR)pInventory, tItemSave.nBodyLoc);
+    D2COMMON_10254_Return0(pInventory, tItemSave.nBodyLoc);
     D2COMMON_ITEMS_UpdateSets(pOwner, pRemoved, 1, 1);
 
     ITEM_DetachItemFromUnit(pRemoved, pOwner, 0, 0);
@@ -2489,7 +2489,7 @@ void __fastcall ITEM_ItemMsg09_EquipOnPlayer(D2GSPacketSrv9D *pPacket)
         const int32_t nBodyLoc = tItemSave.nBodyLoc;
         if (D2COMMON_INVENTORY_GetItemFromBodyLoc(pInventory, (D2C_PlayerBodyLocs)nBodyLoc))
         {
-            D2COMMON_10254_Return0((int32_t)(UINT_PTR)pInventory, nBodyLoc);
+            D2COMMON_10254_Return0(pInventory, nBodyLoc);
             FOG_Trace(szTraceForcedIntoBody);
         }
 
@@ -2567,7 +2567,7 @@ void __fastcall ITEM_UnequipSwitchedOutItem(D2GSPacketSrv9D *pPacket, D2ItemSave
     ITEM_DetachItemFromUnit(pRemoved, pUnit, 0, 0);
 
     D2COMMON_ITEMS_UpdateSets(pUnit, pRemoved, 1, 1);
-    D2COMMON_10254_Return0((int32_t)(UINT_PTR)pInventory, pItemSave->nBodyLoc);
+    D2COMMON_10254_Return0(pInventory, pItemSave->nBodyLoc);
 
     if (D2COMMON_ITEMS_CheckIfFlagIsSet(pItemSave->dwFlags, IFLAG_NEWITEM))
     {
@@ -2693,7 +2693,7 @@ void __fastcall ITEM_ItemMsg17_WeaponSwitch(D2GSPacketSrv9D *pPacket)
         if (pOldRemoved)
         {
             ITEM_DetachItemFromUnit(pOldRemoved, pPlayer, 0, 0);
-            D2COMMON_10254_Return0((int32_t)(UINT_PTR)pOldInventory, nOldBodyLoc);
+            D2COMMON_10254_Return0(pOldInventory, nOldBodyLoc);
         }
 
         if (pOldItem)
@@ -2719,7 +2719,7 @@ void __fastcall ITEM_ItemMsg17_WeaponSwitch(D2GSPacketSrv9D *pPacket)
         if (pBodyRemoved)
         {
             ITEM_DetachItemFromUnit(pBodyRemoved, pPlayer, 0, 0);
-            D2COMMON_10254_Return0((int32_t)(UINT_PTR)pBodyInventory, nBodyItemLoc);
+            D2COMMON_10254_Return0(pBodyInventory, nBodyItemLoc);
         }
 
         if (pBodyItem)
@@ -3163,7 +3163,7 @@ void __fastcall ITEM_ItemMsg0F_RemoveFromBelt(D2GSPacketSrv9C *pPacket)
         exit(-1);
     }
 
-    D2COMMON_10267_Return((int32_t)(UINT_PTR)pInventory, tItemSave.nX);
+    D2COMMON_10267_Return(pInventory, tItemSave.nX);
     PANEL_BeltResetHoverState();
     PANEL_BeltSetColumnHasItem(tItemSave.nX, 0);
 
@@ -3233,7 +3233,7 @@ void __fastcall ITEM_ItemMsg10_SwapInBelt(D2GSPacketSrv9C *pPacket)
 
         ITEM_DetachItemFromUnit(pItem, pPlayer, 0, 0);
 
-        D2COMMON_10267_Return((int32_t)(UINT_PTR)pInventory, tItemSave.nX);
+        D2COMMON_10267_Return(pInventory, tItemSave.nX);
         ITEM_SetItemDisplayState(pItem, 0, 0, tItemSave.nAnimMode, 0, tItemSave.nStorePage);
         D2COMMON_INVENTORY_SetCursorItem(pInventory, pItem);
         CURSOR_SetHeldUnit(D2COMMON_INVENTORY_GetCursorItem(pInventory));
@@ -3341,7 +3341,7 @@ void __fastcall ITEM_ItemMsg11_AutoUnequip(D2GSPacketSrv9D *pPacket)
 
     ITEM_ClearUninterruptableState(pRemoved);
 
-    D2COMMON_10254_Return0((int32_t)(UINT_PTR)pInventory, tItemSave.nBodyLoc);
+    D2COMMON_10254_Return0(pInventory, tItemSave.nBodyLoc);
     GFX_RebuildUnitAnimForMode(pOwner, 0);
 
     if (D2COMMON_ITEMS_CheckIfFlagIsSet(tItemSave.dwFlags, IFLAG_NEWITEM))
@@ -3565,7 +3565,7 @@ void __fastcall ITEM_ItemMsg14_Unknown(D2GSPacketSrv9D *pPacket)
     const int32_t nBodyLoc = tItemSave.nBodyLoc;
     if (D2COMMON_INVENTORY_GetItemFromBodyLoc(pInventory, (D2C_PlayerBodyLocs)nBodyLoc))
     {
-        D2COMMON_10254_Return0((int32_t)(UINT_PTR)pInventory, nBodyLoc);
+        D2COMMON_10254_Return0(pInventory, nBodyLoc);
         FOG_Trace(szTraceForcedIntoBody);
     }
 
@@ -3687,7 +3687,7 @@ D2UnitStrc *__fastcall ITEM_ItemMsg15_UpdateStats(D2GSPacketSrv9D *pPacket)
         ITEM_DetachItemFromUnit(pRemoved, pOwner, 0, 0);
 
         D2COMMON_ITEMS_UpdateSets(pOwner, pRemoved, 1, 1);
-        D2COMMON_10254_Return0((int32_t)(UINT_PTR)pInventory, tItemSave.nBodyLoc);
+        D2COMMON_10254_Return0(pInventory, tItemSave.nBodyLoc);
         GFX_RebuildUnitAnimForMode(pOwner, 0);
 
         //  The guard that cannot fire, as in 0x06.
@@ -3729,7 +3729,7 @@ D2UnitStrc *__fastcall ITEM_ItemMsg15_UpdateStats(D2GSPacketSrv9D *pPacket)
 
         if (D2COMMON_INVENTORY_GetItemFromBodyLoc(pInventory, (D2C_PlayerBodyLocs)nBodyLoc))
         {
-            D2COMMON_10254_Return0((int32_t)(UINT_PTR)pInventory, nBodyLoc);
+            D2COMMON_10254_Return0(pInventory, nBodyLoc);
             FOG_Trace(szTraceForcedIntoBody);
         }
 
@@ -3778,7 +3778,7 @@ D2UnitStrc *__fastcall ITEM_ItemMsg15_UpdateStats(D2GSPacketSrv9D *pPacket)
                 }
 
                 int32_t nOldSlot = UNITS_GetXPosition(pBeltItem);
-                D2COMMON_10267_Return((int32_t)(UINT_PTR)pInventory, nOldSlot);
+                D2COMMON_10267_Return(pInventory, nOldSlot);
 
                 uint32_t nOldColumn = UNITS_GetXPosition(pBeltItem);
                 PANEL_BeltSetColumnHasItem(nOldColumn, 0);

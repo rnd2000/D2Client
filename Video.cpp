@@ -176,7 +176,7 @@ void __fastcall VIDEO_PlayCinematic(int32_t nCinematicId)
     BOOL bCutsceneOpened;
     BOOL bExpansionDisc;
     HANDLE hGameDll;
-    int32_t hVideoFile;
+    void *hVideoFile;
     char szLanguage[4];
     char szFileName[260];
     char szBaseName[260];
@@ -257,23 +257,23 @@ void __fastcall VIDEO_PlayCinematic(int32_t nCinematicId)
 
         if (pEntry->bLocalized)
         {
-            D2LANG_10006((uint32_t)(UINT_PTR)szLanguage, 0);
+            D2LANG_10006(szLanguage, 0);
             sprintf(szFileName, "%s\\video\\%s\\%s", "DATA\\LOCAL", szLanguage, szBaseName);
             if (STORM_SFileOpenFileEx(0, szFileName, 0, &hVideoFile))
             {
-                STORM_SFileCloseFile((void *)(UINT_PTR)hVideoFile);
+                STORM_SFileCloseFile(hVideoFile);
             }
             else if (D2LANG_STRTABLE_GetLanguage() != LANGUAGE_ENGLISH)
             {
                 sprintf(szFileName, "%s\\video\\%s\\%s", "DATA\\LOCAL", "ENG", szBaseName);
                 if (STORM_SFileOpenFileEx(0, szFileName, 0, &hVideoFile))
-                    STORM_SFileCloseFile((void *)(UINT_PTR)hVideoFile);
+                    STORM_SFileCloseFile(hVideoFile);
             }
             else
             {
                 sprintf(szFileName, "%s\\video\\%s\\%s", "DATA\\LOCAL", "CHI", szBaseName);
                 if (STORM_SFileOpenFileEx(0, szFileName, 0, &hVideoFile))
-                    STORM_SFileCloseFile((void *)(UINT_PTR)hVideoFile);
+                    STORM_SFileCloseFile(hVideoFile);
             }
         }
         else
@@ -325,23 +325,23 @@ void __fastcall VIDEO_PlayCinematic(int32_t nCinematicId)
 
             if (gCinematics[6].bLocalized)
             {
-                D2LANG_10006((uint32_t)(UINT_PTR)szLanguage, 0);
+                D2LANG_10006(szLanguage, 0);
                 sprintf(szFileName, "%s\\video\\%s\\%s", "DATA\\LOCAL", szLanguage, szBaseName);
                 if (STORM_SFileOpenFileEx(0, szFileName, 0, &hVideoFile))
                 {
-                    STORM_SFileCloseFile((void *)(UINT_PTR)hVideoFile);
+                    STORM_SFileCloseFile(hVideoFile);
                 }
                 else if (D2LANG_STRTABLE_GetLanguage() != LANGUAGE_ENGLISH)
                 {
                     sprintf(szFileName, "%s\\video\\%s\\%s", "DATA\\LOCAL", "ENG", szBaseName);
                     if (STORM_SFileOpenFileEx(0, szFileName, 0, &hVideoFile))
-                        STORM_SFileCloseFile((void *)(UINT_PTR)hVideoFile);
+                        STORM_SFileCloseFile(hVideoFile);
                 }
                 else
                 {
                     sprintf(szFileName, "%s\\video\\%s\\%s", "DATA\\LOCAL", "CHI", szBaseName);
                     if (STORM_SFileOpenFileEx(0, szFileName, 0, &hVideoFile))
-                        STORM_SFileCloseFile((void *)(UINT_PTR)hVideoFile);
+                        STORM_SFileCloseFile(hVideoFile);
                 }
             }
             else

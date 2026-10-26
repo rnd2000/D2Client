@@ -105,7 +105,7 @@ void __fastcall RECORD_LogEvent(uint32_t nEventId, WPARAM wParam, LPARAM lParam)
         pRecord->nFrame = GAME_GetFrameCount();
         pRecord->nLParam = (int32_t)lParam;
         pRecord->nMsg = nEventId;
-        pRecord->nWParam = (uint32_t)wParam;
+        pRecord->nWParam = wParam;
         return;
 
     case WM_CLOSE:
@@ -132,7 +132,7 @@ void __fastcall RECORD_LogEvent(uint32_t nEventId, WPARAM wParam, LPARAM lParam)
         pRecord->nFrame = GAME_GetFrameCount();
         pRecord->nLParam = (int32_t)lParam;
         pRecord->nMsg = nEventId;
-        pRecord->nWParam = (uint32_t)wParam;
+        pRecord->nWParam = wParam;
         return;
 
     default:

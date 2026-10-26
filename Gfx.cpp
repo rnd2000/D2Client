@@ -303,7 +303,7 @@ void __fastcall GFX_TickUnitOverlays(D2UnitStrc *pUnit)
             if (pUnit && ((pUnit->dwFlagEx >> 3) & 1))
             {
                 nConvType = (int32_t)pUnit->dwUnitType;
-                nConvClass = (int32_t)pUnit->dwClassId;
+                nConvClass = pUnit->dwClassId;
                 nConvMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
                 D2COMMON_11013_ConvertMode(pUnit, &nConvType, &nConvClass, &nConvMode, szEngineH, 260);
                 nMode = nConvMode;
@@ -596,7 +596,7 @@ D2ClientCofNodeStrc *__fastcall GFX_GetUnitAnimNode(D2UnitStrc *pUnit, int32_t n
         if (pUnit && ((pUnit->dwFlagEx >> 3) & 1))
         {
             nConvType = (int32_t)pUnit->dwUnitType;
-            nConvClass = (int32_t)pUnit->dwClassId;
+            nConvClass = pUnit->dwClassId;
             nConvMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
             D2COMMON_11013_ConvertMode(pUnit, &nConvType, &nConvClass, &nConvMode, szEngineH, 260);
             nAnimMode = nConvMode;
@@ -648,7 +648,7 @@ D2ClientCofNodeStrc *__fastcall GFX_RebuildUnitGfx(D2UnitStrc *pUnit, int32_t nW
     int32_t nMonMode;
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nUnitMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nUnitMode, szGfxCpp, 1280);
 
@@ -660,7 +660,7 @@ D2ClientCofNodeStrc *__fastcall GFX_RebuildUnitGfx(D2UnitStrc *pUnit, int32_t nW
     {
         nLoadMode = nMode;
         nMonType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-        nMonClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+        nMonClass = pUnit ? pUnit->dwClassId : -1;
         nMonMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
         D2COMMON_11013_ConvertMode(pUnit, &nMonType, &nMonClass, &nMonMode, szGfxCpp, 1175);
         if (nMode == MONMODE_SEQUENCE)
@@ -778,7 +778,7 @@ void *__fastcall GFX_GetUnitCofNode(D2UnitStrc *pUnit, void **ppReplacedCofData,
         if (GFX_TestFlagEx(pUnit, UNITFLAGEX_ISSHAPESHIFTED))
         {
             nConvType = (int32_t)pUnit->dwUnitType;
-            nConvClass = (int32_t)pUnit->dwClassId;
+            nConvClass = pUnit->dwClassId;
             nConvMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
             D2COMMON_11013_ConvertMode(pUnit, &nConvType, &nConvClass, &nConvMode, szEngineH, 260);
             nMode = nConvMode;
@@ -824,7 +824,7 @@ void *__fastcall GFX_GetUnitCofNode(D2UnitStrc *pUnit, void **ppReplacedCofData,
         if ((pUnit->dwFlagEx >> 3) & 1)
         {
             nConvType = nType;
-            nConvClass = (int32_t)pUnit->dwClassId;
+            nConvClass = pUnit->dwClassId;
             nConvMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
             D2COMMON_11013_ConvertMode(pUnit, &nConvType, &nConvClass, &nConvMode, szEngineH, 242);
             nType = nConvType;
@@ -1021,7 +1021,7 @@ void __fastcall GFX_LoadMonsterModeGfx(D2UnitStrc *pUnit, int32_t nMode)
     char szMessage[256];
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nUnitMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nUnitMode, szGfxCpp, 1124);
 
@@ -1057,7 +1057,7 @@ void __fastcall GFX_LoadObjectModeGfx(D2UnitStrc *pUnit, int32_t nMode)
     char szMessage[256];
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nUnitMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nUnitMode, szGfxCpp, 1213);
 
@@ -1326,7 +1326,7 @@ void __fastcall GFX_DrawUnitCelShadow(D2UnitStrc *pUnit)
         return;
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szGfxCpp, 2151);
     bPerspective = D2GFX_CheckPerspective();
@@ -1462,7 +1462,7 @@ void __fastcall GFX_DrawUnitShadow(D2UnitStrc *pUnit)
         if (pUnit && ((pUnit->dwFlagEx >> 3) & 1))
         {
             nDrawnType = (int32_t)pUnit->dwUnitType;
-            nDrawnClass = (int32_t)pUnit->dwClassId;
+            nDrawnClass = pUnit->dwClassId;
             nDrawnMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
             D2COMMON_11013_ConvertMode(pUnit, &nDrawnType, &nDrawnClass, &nDrawnMode, szEngineH, 242);
         }
@@ -1543,7 +1543,7 @@ void __fastcall GFX_DrawUnitShadow(D2UnitStrc *pUnit)
     }
 
     nUnitType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClassId = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClassId = pUnit ? pUnit->dwClassId : -1;
     nAnimMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nUnitType, &nClassId, &nAnimMode, szGfxCpp, 2334);
     D2COMMON_UNITS_GetShiftedFrameMetrics(pUnit, &nFrame, &nFrameCount);
@@ -1632,7 +1632,7 @@ void __fastcall GFX_DrawUnitCelHilight(D2UnitStrc *pUnit)
     nOffsetX = 0;
     nOffsetY = 0;
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szGfxCpp, 2476);
     bPerspective = D2GFX_CheckPerspective();
@@ -1712,7 +1712,7 @@ uint8_t __fastcall GFX_GetUnitHilightPaletteIndex(D2UnitStrc *pUnit)
     }
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szGfxCpp, 2439);
     if (nType != UNIT_MONSTER)
@@ -1832,7 +1832,7 @@ void __fastcall GFX_DrawUnitHilight(D2UnitStrc *pUnit)
 
     nPaletteIndex = GFX_GetUnitHilightPaletteIndex(pUnit);
     nType = (int32_t)pUnit->dwUnitType;
-    nClass = (int32_t)pUnit->dwClassId;
+    nClass = pUnit->dwClassId;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szGfxCpp, 2597);
     nUnitDirection = D2COMMON_UNITS_GetDirection(pUnit);
@@ -2162,7 +2162,7 @@ int32_t __fastcall GFX_DrawUnitCels(D2UnitStrc *pUnit, int32_t nColor, int32_t n
         GFX_DrawUnitHilight(pUnit);
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szGfxCpp, 2788);
 
@@ -2216,7 +2216,7 @@ int32_t __fastcall GFX_DrawUnitCels(D2UnitStrc *pUnit, int32_t nColor, int32_t n
         //  GFX_DrawUnitShadow's is not. Last, with bDrawCel, the overlays of pass 0 with the flag, and the unit perspective put back.
         dwLight = (uint32_t)nColor;
         nUnitType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-        nClassId = pUnit ? (int32_t)pUnit->dwClassId : -1;
+        nClassId = pUnit ? pUnit->dwClassId : -1;
         nAnimMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
         D2COMMON_11013_ConvertMode(pUnit, &nUnitType, &nClassId, &nAnimMode, szGfxCpp, 1321);
         nXPos = nX - SCROLL_GetViewportOriginX();
@@ -2449,7 +2449,7 @@ int32_t __fastcall GFX_DrawUnitCels(D2UnitStrc *pUnit, int32_t nColor, int32_t n
     if (nType == UNIT_MISSILE)
     {
         //  The missiles.txt record lookup, written out in place.
-        nClassId = (int32_t)pUnit->dwClassId;
+        nClassId = pUnit->dwClassId;
         if (nClassId < 0 || nClassId >= sgptDataTables->nMissilesTxtRecordCount)
             pMissilesTxt = NULL;
         else
@@ -2567,7 +2567,7 @@ void __fastcall GFX_SetAllUnitModesLoaded(D2UnitStrc *pUnit, uint8_t bLoaded)
         exit(-1);
     }
 
-    for (nMode = 0; nMode < 20; ++nMode) *(uint8_t *)&pGfxInfo->wModeLoaded[nMode] = (uint8_t)bLoaded;
+    for (nMode = 0; nMode < 20; ++nMode) *(uint8_t *)&pGfxInfo->wModeLoaded[nMode] = bLoaded;
 }
 
 
@@ -2621,7 +2621,7 @@ void __fastcall GFX_PreloadVisibleUnits(int32_t bAsync)
             for (pUnit = ppRoomList[iRoom]->pUnitFirst; pUnit; pUnit = pUnit->pRoomNext)
             {
                 nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-                nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+                nClass = pUnit ? pUnit->dwClassId : -1;
                 nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
                 D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szGfxCpp, 1954);
 
@@ -2699,7 +2699,7 @@ int32_t __fastcall GFX_AsyncLoadBlock(D2UnitStrc *pUnit, int32_t nAnimMode, int3
 
     if (!GFX_GetUnitAnimNode(pUnit, nWeaponClassCode, nAnimMode) && !GFX_RebuildUnitGfx(pUnit, nWeaponClassCode, nAnimMode))
     {
-        sprintf(szBuffer, "sAsyncLoadBlock failed on async:%d unittype:%d unitclass:%d unitmode:%d weaponclass:%d wclass:%d\n", bAsync, (int32_t)pUnit->dwUnitType, (int32_t)pUnit->dwClassId, nAnimMode, nWeaponClassId, nWeaponClassCode);
+        sprintf(szBuffer, "sAsyncLoadBlock failed on async:%d unittype:%d unitclass:%d unitmode:%d weaponclass:%d wclass:%d\n", bAsync, (int32_t)pUnit->dwUnitType, pUnit->dwClassId, nAnimMode, nWeaponClassId, nWeaponClassCode);
         FOG_Trace(szBuffer);
         return 0;
     }
@@ -2707,7 +2707,7 @@ int32_t __fastcall GFX_AsyncLoadBlock(D2UnitStrc *pUnit, int32_t nAnimMode, int3
     pCofData = GFX_GetUnitCofData(pUnit, nAnimMode);
     if (!pCofData)
     {
-        FOG_Trace("Unable to get cof file for unit type:%d  class:%d  mode:%d in file:%s  line:%d", (int32_t)pUnit->dwUnitType, (int32_t)pUnit->dwClassId, D2COMMON_UNITS_GetAnimOrSeqMode(pUnit), szGfxCpp, 1719);
+        FOG_Trace("Unable to get cof file for unit type:%d  class:%d  mode:%d in file:%s  line:%d", (int32_t)pUnit->dwUnitType, pUnit->dwClassId, D2COMMON_UNITS_GetAnimOrSeqMode(pUnit), szGfxCpp, 1719);
         return 0;
     }
 
@@ -2721,7 +2721,7 @@ int32_t __fastcall GFX_AsyncLoadBlock(D2UnitStrc *pUnit, int32_t nAnimMode, int3
     nCelDirection = 0;
     nUnitDirection = D2COMMON_UNITS_GetDirection(pUnit);
     nConvType = (int32_t)pUnit->dwUnitType;
-    nConvClass = (int32_t)pUnit->dwClassId;
+    nConvClass = pUnit->dwClassId;
     nConvMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nConvType, &nConvClass, &nConvMode, szGfxCpp, 1733);
     GFXUTIL_ResolveAnimDirection(pUnit, (D2C_UnitTypes)nConvType, nConvClass, nAnimMode, &nUnitDirection, &nCelDirection, &nNumDirections, pCof[2], 0);
@@ -2745,7 +2745,7 @@ int32_t __fastcall GFX_AsyncLoadBlock(D2UnitStrc *pUnit, int32_t nAnimMode, int3
         if (GFXUTIL_FillGfxData(&tGfxData, pUnit, NULL, D2COMMON_UNITS_GetDirection(pUnit), 0, &nClassOut, nComponent, nAnimMode) && !D2CMP_SpriteValidate(&tGfxData, bAsync, bAsync))
         {
             tGfxData.pCellFile = NULL;
-            if (!D2CMP_10056((uint32_t)&tGfxData))
+            if (!D2CMP_10056(&tGfxData))
                 return -1;
 
             if (!(tGfxData.fFlags & 4))
@@ -2774,7 +2774,7 @@ void __fastcall GFX_PreloadAnimMode(D2UnitStrc *pUnit, int32_t nAnimMode, int32_
     int32_t nMode;
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szGfxCpp, 1794);
     if (nClass >= sgptDataTables->nMonStatsTxtRecordCount)
@@ -2878,7 +2878,7 @@ void __fastcall GFX_AddOverlay(D2UnitStrc *pUnit, D2_OverlayIds nOverlayId, D2C_
 
         if (pUnit->dwUnitType == UNIT_MONSTER)
         {
-            pMonStats2Txt = DATATBLS_GetMonStats2TxtRecord((int32_t)pUnit->dwClassId);
+            pMonStats2Txt = DATATBLS_GetMonStats2TxtRecord(pUnit->dwClassId);
             if (pMonStats2Txt && (pMonStats2Txt->nFlags[MONSTATS2FLAGINDEX_NOOVLY >> 3] & gdwBitMasks[MONSTATS2FLAGINDEX_NOOVLY & 7]))
             {
                 return;
@@ -3171,7 +3171,7 @@ void __fastcall GFX_RebuildUnitAnimForMode(D2UnitStrc *pUnit, int32_t nUnused)
     int32_t nMonMode;
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nUnitMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nUnitMode, szGfxCpp, 3339);
 
@@ -3185,7 +3185,7 @@ void __fastcall GFX_RebuildUnitAnimForMode(D2UnitStrc *pUnit, int32_t nUnused)
     case UNIT_MONSTER:
         nLoadMode = nUnitMode;
         nMonType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-        nMonClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+        nMonClass = pUnit ? pUnit->dwClassId : -1;
         nMonMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
         D2COMMON_11013_ConvertMode(pUnit, &nMonType, &nMonClass, &nMonMode, szGfxCpp, 1175);
         if (nLoadMode == MONMODE_SEQUENCE)
@@ -3247,7 +3247,7 @@ void __fastcall GFX_ClearUnitModesLoaded(D2UnitStrc *pUnit, D2Composits nCompone
     else if ((pUnit->dwFlagEx >> 3) & 1)
     {
         nConvType = (int32_t)pUnit->dwUnitType;
-        nConvClass = (int32_t)pUnit->dwClassId;
+        nConvClass = pUnit->dwClassId;
         nConvMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
         D2COMMON_11013_ConvertMode(pUnit, &nConvType, &nConvClass, &nConvMode, szEngineH, 242);
         nType = nConvType;
@@ -3309,7 +3309,7 @@ void __fastcall GFX_GetUnitCel(D2UnitStrc *pUnit, D2Composits nComponent, int32_
 
     pDynamicPath = pUnit->pDynamicPath;
     nType = (int32_t)pUnit->dwUnitType;
-    nClass = (int32_t)pUnit->dwClassId;
+    nClass = pUnit->dwClassId;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szGfxCpp, 3393);
 
@@ -3373,7 +3373,7 @@ BOOL __fastcall GFX_HitTestUnitCof(D2UnitStrc *pUnit, int32_t nX, int32_t nY, in
         GFX_RebuildUnitGfx(pUnit, nWeaponClassCode, -1);
 
     nType = (int32_t)pUnit->dwUnitType;
-    nClass = (int32_t)pUnit->dwClassId;
+    nClass = pUnit->dwClassId;
     nUnitMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nUnitMode, szGfxCpp, 3458);
 
@@ -3425,7 +3425,7 @@ BOOL __fastcall GFX_IsUnitCofOnScreen(D2UnitStrc *pUnit, int32_t nX, int32_t nY,
         GFX_RebuildUnitGfx(pUnit, nWeaponClassCode, -1);
 
     nType = (int32_t)pUnit->dwUnitType;
-    nClass = (int32_t)pUnit->dwClassId;
+    nClass = pUnit->dwClassId;
     nUnitMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nUnitMode, szGfxCpp, 3508);
 
@@ -3689,7 +3689,7 @@ void __fastcall GFX_AddMonsterCofFiles(int32_t nMonsterId, BOOL bValidateSprites
                         if (!D2CMP_SpriteValidate(&tDirCelContext, TRUE, TRUE))
                         {
                             tDirCelContext.pCellFile = NULL;
-                            D2CMP_10056((uint32_t)&tDirCelContext);
+                            D2CMP_10056(&tDirCelContext);
                         }
                     }
                     else
@@ -3709,7 +3709,7 @@ void __fastcall GFX_AddMonsterCofFiles(int32_t nMonsterId, BOOL bValidateSprites
                     if (!D2CMP_SpriteValidate(&tCelContext, TRUE, TRUE))
                     {
                         tCelContext.pCellFile = NULL;
-                        D2CMP_10056((uint32_t)&tCelContext);
+                        D2CMP_10056(&tCelContext);
                     }
                 }
                 else
@@ -3901,7 +3901,7 @@ void __fastcall GFX_PreloadPlayerMode(D2UnitStrc *pUnit, int32_t nAnimMode, int3
     int32_t nMode;
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szGfxCpp, 1865);
 
@@ -4014,7 +4014,7 @@ void __fastcall GFX_PreloadUnit(D2UnitStrc *pUnit)
     int32_t bAsync;
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szGfxCpp, 4197);
     if (nType != UNIT_MONSTER || nClass >= sgptDataTables->nMonStatsTxtRecordCount)

@@ -206,7 +206,7 @@ void __stdcall DIALOG_OnMouseUp(SMSGHANDLER_PARAMS *pMsg)
         }
         nHitLine = DIALOG_HitTestLine(pDialog, pMsg);
         //  tested on nPressedLine, fetched from nSelectedLine
-        if (pDialog->nPressedLine != nHitLine || nHitLine < 0 || nHitLine >= pDialog->NumLines || (pfnOnSelect = (int32_t (*)(void)) pDialog->Lines[pDialog->nSelectedLine].pfnOnSelect) == NULL)
+        if (pDialog->nPressedLine != nHitLine || nHitLine < 0 || nHitLine >= pDialog->NumLines || (pfnOnSelect = pDialog->Lines[pDialog->nSelectedLine].pfnOnSelect) == NULL)
         {
             pDialog->bLinePressActive = 0;
             return;
@@ -838,7 +838,7 @@ void __stdcall DIALOG_OnEnter(SMSGHANDLER_PARAMS *pMsg)
         return;
     }
 
-    pfnOnSelect = (int32_t (*)(void))pDialog->Lines[nSelected].pfnOnSelect;
+    pfnOnSelect = pDialog->Lines[nSelected].pfnOnSelect;
     if (pfnOnSelect)
     {
         if (pfnOnSelect() == 1)
@@ -1485,7 +1485,7 @@ void __fastcall DIALOG_SetHighlight(D2ClientDialogStrc *pDialog, int32_t eHighli
 //  The centring is `(nWidth - nTextWidth + 1) / 2 + 1`: rounded up, then shifted one more pixel right, as in the original.
 //  The click region is set from the current box on every added line, and the first selectable line added to a dialog with nothing selected
 //  becomes the selection.
-void __fastcall DIALOG_AddLine(D2ClientDialogStrc *pDialog, const Unicode *wszText, int32_t nLineHeight, int32_t nUnused1, int32_t nBaseColor, int32_t nFont, DIALOGCALLBACK pfnOnClick, int32_t bSelectable)
+void __fastcall DIALOG_AddLine(D2ClientDialogStrc *pDialog, const Unicode *wszText, int32_t nLineHeight, int32_t nUnused1, int32_t nBaseColor, int32_t nFont, int32_t (__cdecl *pfnOnClick)(), int32_t bSelectable)
 {
     int32_t nIndex;
     int32_t nMax;
@@ -1514,7 +1514,7 @@ void __fastcall DIALOG_AddLine(D2ClientDialogStrc *pDialog, const Unicode *wszTe
     }
 
     pDialog->Lines[nIndex].nBaseColor = nBaseColor;
-    pDialog->Lines[nIndex].pfnOnSelect = (int32_t)pfnOnClick;
+    pDialog->Lines[nIndex].pfnOnSelect = pfnOnClick;
     pDialog->Lines[nIndex].bSelectable = bSelectable;
 
     nMax = Unicode::strlen(wszText) + 1;

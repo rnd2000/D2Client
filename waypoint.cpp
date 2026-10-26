@@ -316,7 +316,7 @@ QUEST_GATE:
                 D2GFX_TEXTURE_CelDraw(&pData, gnBorderXDifference + pRowLayout->nX, pRowLayout->nY - gnBorderYDifference, 0xFFFFFFFF, 5, NULL);
             }
 
-            D2WIN_10117_DrawText((const Unicode *)UI_LevelsGetLevelName(pWaypoint->nLevelId), gnBorderXDifference + pRowLayout->nTextX, pRowLayout->nTextY - gnBorderYDifference, nTextColor, 0);
+            D2WIN_10117_DrawText(UI_LevelsGetLevelName(pWaypoint->nLevelId), gnBorderXDifference + pRowLayout->nTextX, pRowLayout->nTextY - gnBorderYDifference, nTextColor, 0);
 
             ++iWaypoint;
             ++pRowLayout;

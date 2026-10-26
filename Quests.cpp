@@ -44,7 +44,7 @@ void __fastcall QUESTS_DispatchQuestPacket(D2GSPacketSrv50 *pCmd)
         return;
 
     case 2:
-        NPCMENU_RefreshHireIconsForOffer((int16_t)pCmd->HirelingPayload.nHireling);
+        NPCMENU_RefreshHireIconsForOffer(pCmd->HirelingPayload.nHireling);
         return;
 
     case 3:

@@ -549,11 +549,11 @@ void __cdecl AUTOMAP_Tick()
     gnAutomapPlayerYUnused = nPlayerY;
 
     nDeltaX = gnAutomapLastRevealX - gnAutomapPlayerX;
-    if ((int32_t)(gnAutomapLastRevealX - gnAutomapPlayerX) < 0)
+    if ((gnAutomapLastRevealX - gnAutomapPlayerX) < 0)
         nDeltaX = gnAutomapPlayerX - gnAutomapLastRevealX;
 
     nDeltaY = gnAutomapLastRevealY - nPlayerY;
-    if ((int32_t)(gnAutomapLastRevealY - nPlayerY) < 0)
+    if ((gnAutomapLastRevealY - nPlayerY) < 0)
         nDeltaY = nPlayerY - gnAutomapLastRevealY;
 
     if (nDeltaX <= nDeltaY)
@@ -1090,9 +1090,9 @@ void __fastcall AUTOMAP_AddTile(D2DrlgTileDataStrc *pTile, D2DrlgRoomStrc *pRoom
     pTile->dwFlags |= 0x40000;
 
     dwAutomapType = D2COMMON_DRLG_GetLevelTypeFromLevelId((D2C_Levels)pRoom->pLevel->nLevelId);
-    dwTileType = D2CMP_10077_GetTileType((uint32_t)(UINT_PTR)pTile->pTile);
-    nStyle = D2CMP_10078_GetTileStyle((uint32_t)(UINT_PTR)pTile->pTile);
-    nSequence = D2CMP_10082_GetTileSequence((uint32_t)(UINT_PTR)pTile->pTile);
+    dwTileType = D2CMP_10077_GetTileType(pTile->pTile);
+    nStyle = D2CMP_10078_GetTileStyle(pTile->pTile);
+    nSequence = D2CMP_10082_GetTileSequence(pTile->pTile);
 
     nCelNum = D2COMMON_DATATBLS_GetAutomapCellId(dwAutomapType, dwTileType, nStyle, nSequence);
     if (nCelNum == -1)
@@ -2281,7 +2281,7 @@ void __cdecl AUTOMAP_DrawLevelName()
     if (!pRoom)
         return;
 
-    pwszLevelName = (const Unicode *)UI_LevelsGetLevelName(D2COMMON_DUNGEON_GetLevelIdFromRoom(pRoom));
+    pwszLevelName = UI_LevelsGetLevelName(D2COMMON_DUNGEON_GetLevelIdFromRoom(pRoom));
 
     nY = gnAutomapTextY;
     nTextWidth = D2WIN_10121_GetTextWidth(pwszLevelName);
@@ -2446,7 +2446,7 @@ void __cdecl AUTOMAP_DrawDifficultyLabel()
     int32_t nY;
     int32_t nTextWidth;
 
-    nDifficulty = (uint8_t)GAME_GetDifficulty() - 1;
+    nDifficulty = GAME_GetDifficulty() - 1;
     if (nDifficulty == 0)
     {
         nDifficultyStrId = STR_IDX_5155_Nightmare;
@@ -2971,7 +2971,7 @@ void __cdecl AUTOMAP_DrawUnits()
 
     for (pEntry = ROSTER_PartyGetNextEntry(pFirstEntry); pEntry; pEntry = ROSTER_PartyGetNextEntry(pEntry))
     {
-        if (!CUNIT_FindUnitByGuidAndType(ROSTER_GetEntryUnitId(pEntry), UNIT_PLAYER) && nSharedPartyId == (int16_t)(uint16_t)ROSTER_PartyGetSharedPartyId(pEntry))
+        if (!CUNIT_FindUnitByGuidAndType(ROSTER_GetEntryUnitId(pEntry), UNIT_PLAYER) && nSharedPartyId == ROSTER_PartyGetSharedPartyId(pEntry))
         {
             AUTOMAP_DrawPartyMember(pEntry);
         }

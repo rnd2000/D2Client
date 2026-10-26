@@ -805,7 +805,7 @@ void __fastcall SCMD_SaveCharacterFile(uint8_t *pBuffer, int32_t nLen)
             gnScmdBufferSize = 0;
         }
         if (!gpScmdBuffer)
-            gpScmdBuffer = (void *)FOG_Alloc(*(uint32_t *)(pBuffer + 3), szFile, 98, 0);
+            gpScmdBuffer = FOG_Alloc(*(uint32_t *)(pBuffer + 3), szFile, 98, 0);
 
         //  BUG: nothing compares the copy with the allocation. The buffer is the size of the chunk that allocated it; a later chunk without the
         //  restart flag is copied at gnScmdBufferSize whatever its own total says, and the only test is the equality after the copy. Chunks that pass
@@ -2338,7 +2338,7 @@ void __fastcall SCMD_HandleSrv78_TradePartner(D2GSPacketSrv78 *pPacket)
 //  Row 0x79: a jump to trade.cpp's TRADE_SetGold; bSelf is passed in dl, which is all TRADE_SetGold tests.
 void __fastcall SCMD_HandleSrv79_TradeGold(D2GSPacketSrv79 *pPacket)
 {
-    TRADE_SetGold((int32_t)pPacket->dwGold, (uint8_t)pPacket->bSelf);
+    TRADE_SetGold((int32_t)pPacket->dwGold, pPacket->bSelf);
 }
 
 //1.10f: D2Client.0x6FAB4160
@@ -3050,7 +3050,7 @@ void __fastcall SCMD_HandleSrvAC_SpawnMonster(D2GSPacketSrvAC *pPacket)
             pStatList = D2COMMON_STATLIST_GetStatListFromUnitStateAndFlag(pMonster, STATE_NONE, 0x40);
             if (!pStatList)
             {
-                pStatList = D2COMMON_STATLIST_AllocStatList(NULL, 0x40, 0, (D2C_UnitTypes)pMonster->dwUnitType, pMonster->dwUnitId);
+                pStatList = D2COMMON_STATLIST_AllocStatList(NULL, 0x40, 0, pMonster->dwUnitType, pMonster->dwUnitId);
                 D2COMMON_STATLIST_SetState(pStatList, STATE_NONE);
                 D2COMMON_10475_PostStatToStatList(pMonster, pStatList, 1);
             }

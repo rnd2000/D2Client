@@ -590,7 +590,7 @@ void __cdecl CHAR_CharPanelDraw()
     nDefenseTotal = D2COMMON_UNITS_GetDefense(pDefender);
     nDefenseTotal += D2COMMON_STATLIST_UnitGetStatValue(pDefender, STAT_ARMORCLASS_VS_HTH, 0);
 
-    nDifficulty = (uint8_t)GAME_GetDifficulty();
+    nDifficulty = GAME_GetDifficulty();
     if (nDifficulty >= NUM_DIFFICULTIES)
     {
         FOG_DisplayAssert(szDifficultyLevelAssert, szCharCpp, 470);
@@ -779,7 +779,7 @@ void __cdecl CHAR_CharPanelDraw()
     //  ---- 10. class and name -----------------------------------------------
     if (pUnit && pUnit->dwUnitType == UNIT_PLAYER)
     {
-        if (pUnit->dwClassId < 0 || (int32_t)pUnit->dwClassId >= sgptDataTables->nCharStatsTxtRecordCount)
+        if (pUnit->dwClassId < 0 || pUnit->dwClassId >= sgptDataTables->nCharStatsTxtRecordCount)
         {
             pCharStatsTxt = NULL;
         }
@@ -850,7 +850,7 @@ void __cdecl CHAR_CharPanelDraw()
 
         case STAT_NEXTEXP:
             nLevel = D2COMMON_STATLIST_GetUnitBaseStat(pUnit, STAT_LEVEL, 0);
-            nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+            nClass = pUnit ? pUnit->dwClassId : -1;
             if (nLevel != D2COMMON_DATATBLS_GetMaxLevel(nClass))
                 nStatValue = (int32_t)D2COMMON_DATATBLS_GetLevelThreshold(nClass, nLevel);
             //  fall through: both are printed the same way
@@ -883,7 +883,7 @@ void __cdecl CHAR_CharPanelDraw()
         case STAT_LIGHTRESIST:
         case STAT_COLDRESIST:
         case STAT_POISONRESIST:
-            pDifficultyTxt = D2COMMON_DATATBLS_GetDifficultyLevelsTxtRecord((uint8_t)GAME_GetDifficulty());
+            pDifficultyTxt = D2COMMON_DATATBLS_GetDifficultyLevelsTxtRecord(GAME_GetDifficulty());
             nMaxResistBonus = 0;
             switch (pRow[3])
             {
@@ -931,7 +931,7 @@ void __cdecl CHAR_CharPanelDraw()
             {
                 //  Redundant, as in the original: it reloads 0 here from a frame slot; bCheckFits was already 0.
                 bCheckFits = 0;
-                switch ((uint8_t)GAME_GetDifficulty())
+                switch (GAME_GetDifficulty())
                 {
                 case 1:
                     nStatValue -= 20;
@@ -1089,7 +1089,7 @@ int32_t __fastcall CHAR_CharPanelChanceToHitPercent(int32_t nAttackRating)
     pPlayer = CUNIT_GetPlayer();
     nPercent = 100;
 
-    nDifficulty = (uint8_t)GAME_GetDifficulty();
+    nDifficulty = GAME_GetDifficulty();
     if (nDifficulty >= 3)
     {
         FOG_DisplayAssert(szDifficultyLevelAssert, szCharCpp, 398);

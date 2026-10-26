@@ -1153,7 +1153,7 @@ int32_t __fastcall PLAYER_OnMouseClick(int32_t nClickEvent, int32_t nX, int32_t 
         //  BUG: the player is tested for NULL (0x6FB49B50) and then its path is read untested (0x6FB49B80). UNREACHABLE: the test cannot be
         //  taken, since CUNIT_CanPlayerIssueCommand, called first, reads pInventory off the unit.
         //  The original lets the walk speed land in nMoveFlags' own stack slot (0x6FB49B61), which nothing reads again; the C gives it a local.
-        D2COMMON_UNITS_GetRunAndWalkSpeedForPlayer((int32_t)(intptr_t)tClick.pUnit, tClick.pUnit ? tClick.pUnit->dwClassId : -1, &nWalkSpeed, &nRunSpeed);
+        D2COMMON_UNITS_GetRunAndWalkSpeedForPlayer(tClick.pUnit, tClick.pUnit ? tClick.pUnit->dwClassId : -1, &nWalkSpeed, &nRunSpeed);
         nWalkSpeed <<= 8;
         pPath = tClick.pUnit->pDynamicPath;
         nWalkVelocity = nWalkSpeed * D2COMMON_STATLIST_UnitGetStatValue(tClick.pUnit, STAT_VELOCITYPERCENT, 0) / 100;
@@ -1442,7 +1442,7 @@ MOVE_OR_CAST:
         if (!PLAYER_CanUseSkill(pClick->pUnit, &pClick->pSkill, &nRangeOrUseState))
             return;
 
-        if (!pClick->pSkill || (int32_t)D2COMMON_SKILLS_GetSkillIdFromSkill(pClick->pSkill, szPlayerCpp, 1967) != (int32_t)SKILL_ATTACK || nRangeOrUseState != (int32_t)SKILLUSTATE_NOMANA || (nClickFlags & 0x20))
+        if (!pClick->pSkill || D2COMMON_SKILLS_GetSkillIdFromSkill(pClick->pSkill, szPlayerCpp, 1967) != (int32_t)SKILL_ATTACK || nRangeOrUseState != (int32_t)SKILLUSTATE_NOMANA || (nClickFlags & 0x20))
         {
             PLAYER_SendClickCommand(pClick, FALSE);
             SELECT_SetSelectedUnit(NULL);
@@ -2318,7 +2318,7 @@ void __fastcall PLAYER_AssignCorpse(D2GSPacketSrv74 *ptCmd)
             }
 
             ITEM_DetachItemFromUnit(pInvItem, pOwner, 0, 0);
-            D2COMMON_10254_Return0((int32_t)(intptr_t)pInventory, D2COMMON_ITEMS_GetBodyLocation(pInvItem));
+            D2COMMON_10254_Return0(pInventory, D2COMMON_ITEMS_GetBodyLocation(pInvItem));
             GFX_RebuildUnitAnimForMode(pOwner, 0);
 
             //  BUG: pInvItem is tested for NULL only here (0x6FB4B5C5), after D2Common's #10290, ITEMS_GetBodyLocation (twice), ITEMS_GetComponent
@@ -2371,7 +2371,7 @@ void __fastcall PLAYER_SetUnitRoomAndPos(D2UnitStrc *pUnit, D2ActiveRoomStrc *pR
             SKILLS_GetPathTargetPos(pUnit, &nTargetX, &nTargetY);
     }
 
-    D2COMMON_10230(pPath, (int32_t)(intptr_t)pUnit, pRoom, (uint32_t)nX, nY);
+    D2COMMON_10230(pPath, pUnit, pRoom, (uint32_t)nX, nY);
     if (!bWasMoving)
         return;
 

@@ -629,7 +629,7 @@ static const char szBlankTile[] = "data\\global\\tiles\\act1\\outdoors\\blank.dt
 //  byte, read and stored as one. The client block's two dwords are zeroed and then written, the block's pointer re-read for each.
 void __fastcall GAME_PreloadActData(uint8_t nAct, uint32_t dwGameSeed, int32_t nObjectSeed, int32_t nTownLevelId)
 {
-    int32_t hCellFile;
+    D2TileLibraryHashStrc *pTileHash;
     char szTrace[40];
     char szFile[60];
     const uint8_t nActPlusOne = (uint8_t)(nAct + 1);
@@ -642,12 +642,12 @@ void __fastcall GAME_PreloadActData(uint8_t nAct, uint32_t dwGameSeed, int32_t n
         {
             D2COMMON_DATATBLS_GetFileNameFromLevelTypeAndFileId(nLevelType, nFile, szFile);
             if (szFile[0] != '0' && szFile[0])
-                D2CMP_10095((uint32_t)(UINT_PTR)&hCellFile, (uint32_t)(UINT_PTR)szFile);
+                D2CMP_10095(&pTileHash, szFile);
         }
     }
 
-    D2CMP_10095((uint32_t)(UINT_PTR)&hCellFile, (uint32_t)(UINT_PTR)szWarpTile);
-    D2CMP_10095((uint32_t)(UINT_PTR)&hCellFile, (uint32_t)(UINT_PTR)szBlankTile);
+    D2CMP_10095(&pTileHash, szWarpTile);
+    D2CMP_10095(&pTileHash, szBlankTile);
 
     if (gpAct)
         D2COMMON_DUNGEON_FreeAct(gpAct);
@@ -894,7 +894,7 @@ void __fastcall GAME_DrawGameScene(int32_t bNoDefaultCursor)
 
     //  Three one-byte out-parameters, each read back as a byte out of its own dword slot (`and eax, 0FFh` three times at 0x6FAA9749).
     uint8_t pRed[4], pGreen[4], pBlue[4];
-    D2COMMON_ENVIRONMENT_GetLightColorFromAct((D2DrlgActStrc *)gpAct, pRed, pGreen, pBlue);
+    D2COMMON_ENVIRONMENT_GetLightColorFromAct(gpAct, pRed, pGreen, pBlue);
     D2GFX_SetAmbientColor(pRed[0], pGreen[0], pBlue[0]);
 
     //  0 when there is no room; otherwise the level's own BlankScreen value, passed raw.
@@ -1166,7 +1166,7 @@ static BOOL CONTROLS_IsHotkeyDown(D2HotkeyIndices eCmd, BOOL bPrimary)
 //  the seen bit. The original has two copies of it in GAME_UpdateFrame (0x6FAAA05C and 0x6FAAA193).
 static void CLIENT_PopulateRooms()
 {
-    for (D2ActiveRoomStrc *pRoom = D2COMMON_DUNGEON_GetRoomFromAct((D2DrlgActStrc *)gpAct); pRoom != NULL; pRoom = pRoom->pRoomNext)
+    for (D2ActiveRoomStrc *pRoom = D2COMMON_DUNGEON_GetRoomFromAct(gpAct); pRoom != NULL; pRoom = pRoom->pRoomNext)
     {
         if ((pRoom->dwFlags & 1) == 0)
         {
@@ -1193,17 +1193,17 @@ static void CLIENT_MainUpdate()
     QUESTSFX_TickScreenFade();
     GFX_PreloadVisibleUnits(1);
 
-    if (D2COMMON_ENVIRONMENT_UpdatePeriodOfDay((D2DrlgActStrc *)gpAct, CUNIT_GetPlayerRoom()))
+    if (D2COMMON_ENVIRONMENT_UpdatePeriodOfDay(gpAct, CUNIT_GetPlayerRoom()))
     {
         CUNIT_RefreshObjectsOnDayNightChange();
     }
 
-    D2COMMON_DRLGACTIVATE_Update(D2COMMON_DUNGEON_GetDrlgFromAct((D2DrlgActStrc *)gpAct));
+    D2COMMON_DRLGACTIVATE_Update(D2COMMON_DUNGEON_GetDrlgFromAct(gpAct));
     AUTOMAP_Tick();
 
     //  Every thirteenth tick. `xor edx, edx; div ecx` is an unsigned divide, which is what gnClientFrame's type gives.
     if ((++gnClientFrame % 13) == 0)
-        D2COMMON_DUNGEON_UpdateAndFreeInactiveRooms((D2DrlgActStrc *)gpAct);
+        D2COMMON_DUNGEON_UpdateAndFreeInactiveRooms(gpAct);
 }
 
 //1.10f: D2Client.0x6FAA9AF0
@@ -2310,7 +2310,7 @@ D2C_AppMode __fastcall GAME_AppModeGame()
     CUNIT_DestroyAllUnits();
 
     if (gpAct)
-        D2COMMON_DUNGEON_FreeAct((D2DrlgActStrc *)gpAct);
+        D2COMMON_DUNGEON_FreeAct(gpAct);
     gpAct = 0;
 
     D2CMP_SpriteFreeAsyncLoads();

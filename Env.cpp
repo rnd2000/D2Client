@@ -656,7 +656,7 @@ void __fastcall ENV_SpawnParticle(D2SeedStrc *pSeed)
         //  Both results are thrown away.
         D2COMMON_DUNGEON_GetLevelIdFromRoom(CUNIT_GetPlayerRoom());
 
-        nPeriodOfDay = D2COMMON_ENVIRONMENT_GetPeriodOfDayFromAct((D2DrlgActStrc *)gpAct, nullptr);
+        nPeriodOfDay = D2COMMON_ENVIRONMENT_GetPeriodOfDayFromAct(gpAct, nullptr);
         if ((uint32_t)nPeriodOfDay >= 4)
         {
             FOG_DisplayAssert("nPeriodOfDay >= 0 && nPeriodOfDay < NUM_ENVIRONMENTS", szSourceFile, 852);
@@ -686,7 +686,7 @@ void __fastcall ENV_SpawnParticle(D2SeedStrc *pSeed)
         //  The ramp entry is a roll and advances the seed, like the snow's: D2Common's SEED_RollLimitedRandomNumber, out of line.
         nRainColourIdx = SEED_RollLimitedRandomNumber(pSeed, 12);
 
-        switch (D2COMMON_ENVIRONMENT_GetPeriodOfDayFromAct((D2DrlgActStrc *)gpAct, nullptr))
+        switch (D2COMMON_ENVIRONMENT_GetPeriodOfDayFromAct(gpAct, nullptr))
         {
         case 0:
             pParticle->nTransIndex = 127;
@@ -750,16 +750,15 @@ void __cdecl ENV_UnloadImages()
 
 //1.10f: D2Client.0x6FAA7490
 //  Drops the weather in flight when the player moves: empties the splash and bubble pools, not the particle pool (ENV_ResetWeather does that
-//  one, and only outside act 5). The parameter feeds ENV_ResetWeather's bForce; it stays a pointer with a cast because the single caller loads
-//  ecx from a stack slot, so the bytes cannot say pointer or int.
-void __fastcall ENV_OnLevelChange(void *pParam)
+//  one, and only outside act 5). The parameter, the caller's level-change flag, feeds ENV_ResetWeather's bForce.
+void __fastcall ENV_OnLevelChange(int32_t bIsLevelChange)
 {
 
     FOG_DATAARRAYS_Reset(ghEnvSplashes);
     FOG_DATAARRAYS_Reset(ghEnvBubbles);
 
-    if (pParam)
-        ENV_ResetWeather((int32_t)(UINT_PTR)pParam);
+    if (bIsLevelChange)
+        ENV_ResetWeather(bIsLevelChange);
 }
 
 

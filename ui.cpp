@@ -383,7 +383,7 @@ int32_t __fastcall UI_SetUIToggle(D2C_UIvars nUIId, D2C_UiStates nUIState, int32
         }
 
         //  the conflict walk
-        for (nOpenId = UI_GAME; (int32_t)nOpenId < (int32_t)sgNumStateTbl; nOpenId = (D2C_UIvars)(nOpenId + 1))
+        for (nOpenId = UI_GAME; (int32_t)nOpenId < sgNumStateTbl; nOpenId = (D2C_UIvars)(nOpenId + 1))
         {
             if (gUiWindowStates[nOpenId] != 1)
                 continue;
@@ -1277,7 +1277,7 @@ void __fastcall UI_OpenGoldEntryDialog(int32_t nGoldDialogMode)
     DIALOG_AddControl(gpGoldDialog, pControl, 0, 0);
 
     pThis = STORM_SMemAlloc(0xC, szNew, -1, 0);
-    pSpinner = pThis ? EDITBOX_UiCtrlProxyConstructEditbox((uint32_t *)pThis, 0, 258, 228, 100, 1, nStatValue, 0xA, (void *)USEITEM_NullCallback, 1)
+    pSpinner = pThis ? EDITBOX_UiCtrlProxyConstructEditbox((uint32_t *)pThis, 0, 258, 228, 100, 1, nStatValue, 0xA, USEITEM_NullCallback, 1)
                      : NULL;
     gpGoldDialogSpinner = (int32_t)pSpinner;
     DIALOG_AddControl(gpGoldDialog, pSpinner, 0, 0);
@@ -1649,18 +1649,18 @@ void __cdecl UI_ResetUiSubsystems()
 //  A level's display name: levels.txt wszLevelName normally, and tbl strLevelLoadFailed when the record is missing. Level 8 is special-cased
 //  in code: it asks the quest state and answers either Den of Evil or Cave Level 1, so the first cave keeps its generic name until the quest
 //  is known (levels.txt cannot express it).
-int32_t __fastcall UI_LevelsGetLevelName(int32_t nLevelId)
+const Unicode *__fastcall UI_LevelsGetLevelName(int32_t nLevelId)
 {
     D2LevelsTxt *pRecord;
 
     pRecord = D2COMMON_DATATBLS_GetLevelsTxtRecord(nLevelId);
     if (!pRecord)
-        return (int32_t)D2LANG_GetStringFromTblIndex(STR_IDX_5389_strLevelLoadFailed);
+        return D2LANG_GetStringFromTblIndex(STR_IDX_5389_strLevelLoadFailed);
     if (nLevelId != 8)
-        return (int32_t)pRecord->wszLevelName;
+        return pRecord->wszLevelName;
     if (QUESTS_GetQuestState(0, QUEST_A1Q1_DENOFEVIL))
-        return (int32_t)D2LANG_GetStringFromTblIndex(STR_IDX_5048_Den_of_Evil);
-    return (int32_t)D2LANG_GetStringFromTblIndex(STR_IDX_5047_Cave_Level_1);
+        return D2LANG_GetStringFromTblIndex(STR_IDX_5048_Den_of_Evil);
+    return D2LANG_GetStringFromTblIndex(STR_IDX_5047_Cave_Level_1);
 }
 
 

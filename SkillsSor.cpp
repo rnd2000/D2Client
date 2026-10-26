@@ -157,7 +157,7 @@ int32_t __fastcall SKILLS_CltStFunc15(D2UnitStrc *pUnit, D2C_Skills nSkillId, in
     if (pUnit)
     {
         dwUnitId = pUnit->dwUnitId;
-        dwUnitType = (D2C_UnitTypes)pUnit->dwUnitType;
+        dwUnitType = pUnit->dwUnitType;
     }
     else
     {

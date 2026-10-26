@@ -386,7 +386,7 @@ int32_t __stdcall WALL2_WallAddRoomToSquareGrid(D2ActiveRoomStrc *pRoom, D2Clien
         pTile = pTiles;
         do
         {
-            nTileRadius = D2CMP_10084((uint32_t)(UINT_PTR)pTile->pTile);
+            nTileRadius = D2CMP_10084(pTile->pTile);
             D2COMMON_DUNGEON_ClientTileDrawPositionToGameCoords(pTile->nDrawX, pTile->nDrawY, &nGameX, &nGameY);
             --nGameY;
 
@@ -524,7 +524,7 @@ int32_t __stdcall WALL2_WallAddRoomToSquareGrid(D2ActiveRoomStrc *pRoom, D2Clien
         pTile = pTiles;
         do
         {
-            nTileRadius = D2CMP_10084((uint32_t)(UINT_PTR)pTile->pTile);
+            nTileRadius = D2CMP_10084(pTile->pTile);
             D2COMMON_DUNGEON_ClientTileDrawPositionToGameCoords(pTile->nDrawX, pTile->nDrawY, &nGameX, &nGameY);
             --nGameY;
 
@@ -624,7 +624,7 @@ int32_t __stdcall WALL2_WallAddRoomToSquareGrid(D2ActiveRoomStrc *pRoom, D2Clien
 }
 
 //  The tile fields WALL2_WallIsPlayerBehindTile reads that no other file pins, and the box its live branch compares against (D2RoomCoordListStrc).
-static_assert(offsetof(D2DrlgTileDataStrc, unk0x10) == 0x10
+static_assert(offsetof(D2DrlgTileDataStrc, pCoordList) == 0x10
               && offsetof(D2DrlgTileDataStrc, nTileType) == 0x1C,
               "mov esi, [esi+10h] at 0x6FAB8B60; mov eax, [esi+1Ch] at 0x6FAB8BE9");
 static_assert(offsetof(D2RoomCoordListStrc, pBox) == 0
@@ -662,7 +662,7 @@ BOOL __fastcall WALL2_WallIsPlayerBehindTile(D2ActiveRoomStrc *pRoom, D2DrlgTile
 
     if (gnWallEdgeTestMode)
     {
-        pCoordList = (D2RoomCoordListStrc *)(UINT_PTR)pTile->unk0x10;
+        pCoordList = pTile->pCoordList;
         if (!pCoordList || pCoordList->nIndex == gnPlayerCoordListIndex)
             return FALSE;
         if ((int32_t)gnPlayerTileX < pCoordList->pBox[0].nPosX)

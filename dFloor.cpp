@@ -596,7 +596,7 @@ void __fastcall DFLOOR_DrawViewGridFloors(D2ClientViewStrc *pView)
                     }
                     else
                     {
-                        pTileData->nAlpha = (uint8_t)(pTileData->nAlphaFrom + (int32_t)((uint32_t)(dwNow - pTileData->dwFadeEndTick + 500) * (uint32_t)(pTileData->nAlphaTo - pTileData->nAlphaFrom)) / 500);
+                        pTileData->nAlpha = (uint8_t)(pTileData->nAlphaFrom + (int32_t)((dwNow - pTileData->dwFadeEndTick + 500) * (uint32_t)(pTileData->nAlphaTo - pTileData->nAlphaFrom)) / 500);
                     }
 
                     if (pTileData->nAlpha)

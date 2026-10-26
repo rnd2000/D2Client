@@ -1602,7 +1602,7 @@ int32_t nTextWidth;
 int32_t nUnusedParam;
 int32_t nFont;
 int32_t nBaseColor;
-int32_t pfnOnSelect;
+int32_t (__cdecl *pfnOnSelect)();
 int32_t bSelectable;
 };
 
@@ -1653,7 +1653,7 @@ struct D2ClientDrawNodeStrc *pNext;
 struct D2ClientEditBoxStrc
 {
 const D2UiEditBoxImplVtbl *pVtbl;
-int32_t pfnCharFilter;
+int32_t (__fastcall *pfnCharFilter)(D2ClientEditBoxStrc *, SMSGHANDLER_PARAMS *);
 int32_t nBoxX;
 int32_t nBoxY;
 int32_t nTextX;
@@ -1669,7 +1669,7 @@ uint16_t nMaxLen;
 int32_t nCaretPos;
 int32_t nTextLength;
 int32_t bMouseDown;
-int32_t pfnCallback;
+int32_t (__cdecl *pfnCallback)();
 int32_t nBlinkTick;
 int32_t bCaretVisible;
 int32_t nFont;
@@ -1717,7 +1717,7 @@ int32_t field_14;
 
 typedef int32_t (__cdecl *ESCMENUENABLEDFN)();
 
-typedef void (__fastcall *ESCMENUITEMFN)(struct D2ClientEscMenuItemStrc *pItem, int32_t nParam);
+typedef void (__fastcall *ESCMENUITEMFN)(struct D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
 
 struct D2ClientEscMenuItemStrc
 {
@@ -1844,7 +1844,7 @@ int32_t nStringsStored;
 int32_t nDefaultColor;
 int32_t nFont;
 uint16_t wNumEntries;
-int32_t pfnOnSelect;
+int32_t (__cdecl *pfnOnSelect)();
 int32_t nVisibleRows;
 int32_t nThumbTop;
 int32_t nThumbBottom;
@@ -2802,7 +2802,7 @@ int32_t nDrawX;
 int32_t nDrawY;
 int32_t nPosX;
 int32_t nPosY;
-int32_t unk0x10;
+D2RoomCoordListStrc *pCoordList;
 uint32_t dwFlags;
 D2TileLibraryEntryStrc *pTile;
 int32_t nTileType;
@@ -6244,7 +6244,7 @@ D2InteractInfoStrc *pInteractInfo;
 
 struct D2NpcHirelingOfferStrc
 {
-int16_t wMercName;
+uint16_t wMercName;
 int16_t wUnk02;
 int32_t nSeed;
 int32_t bUsed;

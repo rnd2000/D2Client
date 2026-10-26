@@ -1006,7 +1006,7 @@ void __fastcall OBJECT_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pUn
     }
     else
     {
-        nCode = D2COMMON_DATATBLS_GetObjectsTxtRecord(pUnit ? (int32_t)pUnit->dwClassId : -1)->nShrineFunction;
+        nCode = D2COMMON_DATATBLS_GetObjectsTxtRecord(pUnit ? pUnit->dwClassId : -1)->nShrineFunction;
     }
 
     D2UnitStrc *pPlayer = CUNIT_FindUnitByGuidAndType((uint32_t)pParams[0], UNIT_PLAYER);
@@ -1530,7 +1530,7 @@ uint8_t __fastcall OBJECT_ProcessZoo(D2UnitStrc *pUnit)
 //  (xor edx, edx / div), written around the call.
 uint8_t __fastcall OBJECT_ClientProcess(D2UnitStrc *pUnit)
 {
-    uint8_t nClientFn = D2COMMON_DATATBLS_GetObjectsTxtRecord((int32_t)pUnit->dwClassId)->nClientFn;
+    uint8_t nClientFn = D2COMMON_DATATBLS_GetObjectsTxtRecord(pUnit->dwClassId)->nClientFn;
     if (nClientFn >= 19)
     {
         FOG_DisplayAssert("ptTypeData->bClientProcessFunction < sizeof( sgpfnProcessFunctions ) / sizeof( ptClientObjectProcess )", szObjectCpp, 1346);

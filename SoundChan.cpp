@@ -295,7 +295,7 @@ have_channel:
     else
     {
         SOUNDHDR_BuildSoundPath(pSoundInstance->nSoundId, szPath);
-        if (!D2SOUND_10025_PlaySampleStream(pChannel->hSound, (int32_t)szPath, pSoundInstance->nStartBlock, pRecord->bLoop))
+        if (!D2SOUND_10025_PlaySampleStream(pChannel->hSound, szPath, pSoundInstance->nStartBlock, pRecord->bLoop))
         {
             pChannel->pInstance = NULL;
             return NULL;
@@ -689,7 +689,7 @@ BOOL __fastcall SOUNDCHAN_CreateChannels(int32_t nKindMode)
         else
             pChannel->nKind = nKindMode == 2 ? 6 : 0;
 
-        pChannel->hSound = (void *)D2SOUND_10007_AllocSample((char)pChannel->nKind);
+        pChannel->hSound = D2SOUND_10007_AllocSample((char)pChannel->nKind);
         if (!pChannel->hSound)
         {
             SOUNDCHAN_ShutdownSystem();

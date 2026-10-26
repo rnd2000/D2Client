@@ -186,7 +186,7 @@ void __cdecl DRAW_GameDrawDebugOverlay()
 
     MEMPART_Nullsub1();
 
-    D2CMP_10092((uint32_t)(UINT_PTR)&nTileBytes, (uint32_t)(UINT_PTR)&nTileMisses, (uint32_t)(UINT_PTR)&nTileAccesses, (uint32_t)(UINT_PTR)&nTilePercent);
+    D2CMP_10092(&nTileBytes, (uint32_t *)&nTileMisses, (uint32_t *)&nTileAccesses, (uint32_t *)&nTilePercent);
     if (nTileAccesses > 0)
     {
         sprintf(szLine, gszTileCacheDebugFmt, (double)nTileBytes * gfOneOver1024, (double)nTileMisses * gfPercentDivisor / nTileAccesses, nTileMisses, nTilePercent);

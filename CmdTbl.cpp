@@ -2014,7 +2014,7 @@ void __fastcall CMDTBL_CommandLoadDefaultKeyBindings(void *bTryDiskFile)
     void *hFile;
     int32_t nSlot;
 
-    D2LANG_10006((uint32_t)&nLangCode, 0);
+    D2LANG_10006((char *)&nLangCode, 0);
     pFile = NULL;
 
     if (bTryDiskFile)

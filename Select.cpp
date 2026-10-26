@@ -898,7 +898,7 @@ D2UnitStrc *__fastcall SELECT_SkillsFindEnemyInFrontOfUnit(D2UnitStrc *pUnit, D2
                 {
                     if (pTarget->dwUnitType == UNIT_MONSTER)
                     {
-                        pMonStats2Txt = DATATBLS_GetMonStats2TxtRecord((int32_t)pTarget->dwClassId);
+                        pMonStats2Txt = DATATBLS_GetMonStats2TxtRecord(pTarget->dwClassId);
                         if (pMonStats2Txt && (pMonStats2Txt->nFlags[MONSTATS2FLAGINDEX_SHIFTSEL >> 3] & gdwBitMasks[MONSTATS2FLAGINDEX_SHIFTSEL & 7]))
                         {
                             bAccept = TRUE;

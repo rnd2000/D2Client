@@ -877,7 +877,7 @@ int32_t __fastcall SKILLS_CltStFunc51(D2UnitStrc *pUnit, D2C_Skills nSkillId, in
     D2COMMON_SKILLS_SetParam1(pSkill, UNITS_GetXPosition(pTarget));
 
     D2COMMON_SKILLS_SetParam2(pSkill, UNITS_GetYPosition(pTarget));
-    D2COMMON_SKILLS_SetParam3(pSkill, (int32_t)pTarget->dwClassId);
+    D2COMMON_SKILLS_SetParam3(pSkill, pTarget->dwClassId);
     return 1;
 }
 

@@ -168,12 +168,11 @@ static_assert(MISSILE_WORLD_STONE_CHIP_1 == 570 && MISSILE_WORLD_STONE_CHIP_4 ==
 //1.10f: D2Client.0x6FB3F270
 //  Visits the units near pUnit until one answers. The unit's room (D2Common's UNITS_GetRoom; none answers 0), then every room of D2Common's
 //  adjacent-room list for it (the room's own ppRoomList and nNumRooms), and in each the units from pUnitFirst by pRoomNext. Each is handed to
-//  the callback as pfnVisit(pUnit, pOther, nCallbackCtx, nCallbackParam) and its first non-zero answer is returned at once -- a find more than
+//  the callback as pfnVisit(pUnit, pOther, pCallbackCtx, pCallbackParam) and its first non-zero answer is returned at once -- a find more than
 //  a for-each. 0 when nothing answers. The room count is compared unsigned.
-//  __fastcall over `retn 8`: pUnit in ecx, nCallbackCtx in edx, nCallbackParam and the callback on the stack. The callback's last two
-//  parameters are ints and the callers cast their pointers to it; the C keeps that prototype. The original inlines this walk in
+//  __fastcall over `retn 8`: pUnit in ecx, pCallbackCtx in edx, pCallbackParam and the callback on the stack. The original inlines this walk in
 //  MONSTER_CritterTickCrawler and MONSTER_CritterTickBunny.
-int32_t __fastcall MONSTER_ForEachUnitNearby(D2UnitStrc *pUnit, int32_t nCallbackCtx, int32_t nCallbackParam, int32_t (__fastcall *pfnVisit)(D2UnitStrc *, D2UnitStrc *, int32_t, int32_t))
+int32_t __fastcall MONSTER_ForEachUnitNearby(D2UnitStrc *pUnit, void *pCallbackCtx, void *pCallbackParam, int32_t (__fastcall *pfnVisit)(D2UnitStrc *, D2UnitStrc *, void *, void *))
 {
     D2ActiveRoomStrc *pRoom;
     D2ActiveRoomStrc **ppRoomList;
@@ -193,7 +192,7 @@ int32_t __fastcall MONSTER_ForEachUnitNearby(D2UnitStrc *pUnit, int32_t nCallbac
         //  are active and counts what it stores, so the first nNumRooms entries are never NULL.
         for (pOther = ppRoomList[i]->pUnitFirst; pOther; pOther = pOther->pRoomNext)
         {
-            nAnswer = pfnVisit(pUnit, pOther, nCallbackCtx, nCallbackParam);
+            nAnswer = pfnVisit(pUnit, pOther, pCallbackCtx, pCallbackParam);
             if (nAnswer)
                 return nAnswer;
         }
@@ -397,7 +396,7 @@ void __fastcall MONSTER_CritterTickAmbient(D2UnitStrc *pMonster)
         {
             pThreat = NULL;
             nThreatDist = 0x7FFFFFFF;
-            MONSTER_ForEachUnitNearby(pMonster, (int32_t)&pThreat, (int32_t)&nThreatDist, (int32_t (__fastcall *)(D2UnitStrc *, D2UnitStrc *, int32_t, int32_t)) MONSTER_CritterFindNearestThreatCallback);
+            MONSTER_ForEachUnitNearby(pMonster, &pThreat, &nThreatDist, (int32_t (__fastcall *)(D2UnitStrc *, D2UnitStrc *, void *, void *)) MONSTER_CritterFindNearestThreatCallback);
             if (pThreat)
             {
                 pDynamicPath = pMonster->pDynamicPath;
@@ -860,7 +859,7 @@ void __fastcall MONSTER_CritterTickCrawler(D2UnitStrc *pUnit, D2UnitStrc *pTarge
     nCorpseDistance = 0;
     if (nNearest > 7)
     {
-        MONSTER_ForEachUnitNearby(pUnit, (int32_t)&pFound, (int32_t)&nCorpseDistance, (int32_t (__fastcall *)(D2UnitStrc *, D2UnitStrc *, int32_t, int32_t)) MONSTER_CritterPickRandomCorpseCallback);
+        MONSTER_ForEachUnitNearby(pUnit, &pFound, &nCorpseDistance, (int32_t (__fastcall *)(D2UnitStrc *, D2UnitStrc *, void *, void *)) MONSTER_CritterPickRandomCorpseCallback);
     }
 
     pClientFlag = MONSTER_GetClientFlagPtr(pUnit);
@@ -1037,7 +1036,7 @@ void __fastcall MONSTER_CritterTickBunny(D2UnitStrc *pBunny, D2UnitStrc *pTarget
 
     pThreat = NULL;
     nThreatDist = 0x7FFFFFFF;
-    MONSTER_ForEachUnitNearby(pBunny, (int32_t)&pThreat, (int32_t)&nThreatDist, (int32_t (__fastcall *)(D2UnitStrc *, D2UnitStrc *, int32_t, int32_t)) MONSTER_CritterFindNearestThreatCallback);
+    MONSTER_ForEachUnitNearby(pBunny, &pThreat, &nThreatDist, (int32_t (__fastcall *)(D2UnitStrc *, D2UnitStrc *, void *, void *)) MONSTER_CritterFindNearestThreatCallback);
     if (!pThreat)
         return;
 
@@ -1552,7 +1551,7 @@ void __fastcall MONSTER_InitClientUnit(D2UnitStrc *pUnit, D2ActiveRoomStrc *pRoo
             D2COMMON_SKILLS_SetSkillMode(D2COMMON_SKILLS_GetHighestLevelSkillFromUnitAndId(pUnit, (D2C_Skills)pMonStatsTxt->nSkill[i]), (int8_t)pMonStatsTxt->nSkillMode[i]);
         }
     }
-    D2COMMON_11062_Return((int32_t)pUnit, (int32_t)nSkillBonus);
+    D2COMMON_11062_Return(pUnit, (int32_t)nSkillBonus);
 
     pClassMonStatsTxt = DATATBLS_GetMonStatsTxtRecord(pUnit->dwClassId);
     if (pClassMonStatsTxt && (pClassMonStatsTxt->nMonStatsFlags[MONSTATSFLAGINDEX_NPC >> 3] & gdwBitMasks[MONSTATSFLAGINDEX_NPC & 7]))
@@ -1706,13 +1705,13 @@ void __fastcall MONSTER_LinkOwnedUnits(D2UnitStrc *pUnit, D2C_MonsterIds nClassI
 //  table below turns them, and #11055 gives the step. Otherwise 0 -- which a mother facing 0 also answers. MONSTER_ForEachUnitNearby stops
 //  at the first non-zero answer and answers 0 when there is none, so the walk goes on past a mother facing 0. The answer is the direction
 //  byte zero-extended.
-//  `retn 8`: the callback's two stack arguments, nUnused1 and nUnused2 -- the walker's own second and third arguments, 0 and 0 from
+//  `retn 8`: the callback's two stack arguments, pUnused1 and pUnused2 -- the walker's own second and third arguments, 0 and 0 from
 //  MONSTER_InitClientUnit -- are purged and never read. The expected position is the mother's plus twice the step plus the step, computed for
 //  both axes before the child's are read. The original inlines MONSTER_GetBaseMonsterId and UNITS_GetXPosition here.
 //  BUG: the server spits the child three steps away along the direction to the mother's target, and this test follows the mother's own
 //  facing through {6, 7, 0, 1, 2, 3, 4, 5} instead; where the two disagree the match fails and the child faces 0. REACHABLE: stock
 //  levels.txt places vilemother1..5 in Act 4 and Act 5 areas.
-int32_t __fastcall MONSTER_MatchVileMotherDirection(D2UnitStrc *pChild, D2UnitStrc *pOther, int32_t nUnused1, int32_t nUnused2)
+int32_t __fastcall MONSTER_MatchVileMotherDirection(D2UnitStrc *pChild, D2UnitStrc *pOther, void *pUnused1, void *pUnused2)
 {
     uint8_t aDirRemap[8];
     uint8_t nMotherDirection;
@@ -1722,8 +1721,8 @@ int32_t __fastcall MONSTER_MatchVileMotherDirection(D2UnitStrc *pChild, D2UnitSt
     int32_t nExpectedX;
     int32_t nExpectedY;
 
-    (void)nUnused1;
-    (void)nUnused2;
+    (void)pUnused1;
+    (void)pUnused2;
 
     nBaseId = MONSTER_GetBaseMonsterId(pOther);
     if (nBaseId < 0 || nBaseId >= sgptDataTables->nMonStatsTxtRecordCount || nBaseId != (int32_t)MONSTER_VILEMOTHER1)
@@ -2419,7 +2418,7 @@ void __fastcall MONSTER_SpawnAttackMissile(D2UnitStrc *pUnit)
     tParams.dwFlags = MISSILESPAWN_TARGETPOS;
     if (nMissileId >= (int32_t)MISSILE_MUMMY1 && nMissileId <= (int32_t)MISSILE_MUMMY4)
     {
-        tParams.dwFlags = (D2C_MissileSpawnFlags)(MISSILESPAWN_VELOCITY | MISSILESPAWN_VELOCITYSCALED | MISSILESPAWN_TARGETPOS);
+        tParams.dwFlags = (MISSILESPAWN_VELOCITY | MISSILESPAWN_VELOCITYSCALED | MISSILESPAWN_TARGETPOS);
         tParams.nVelocity = 2;
     }
     tParams.pOwner = pUnit;
@@ -3251,7 +3250,7 @@ void __fastcall MONSTER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pU
                 //  CUNIT_CreateMonsterUnit, MONSTER_ChangeMonsterClass); whether a stat-list remove callback can fire there was not looked for.
                 nShatterMissileId = (int32_t)MISSILE_ICEBREAKSMALL - 1 + pShatterMonStats2Txt->nHeight;
                 memset(&tMissileParams, 0, sizeof(tMissileParams));
-                tMissileParams.dwFlags = (D2C_MissileSpawnFlags)(MISSILESPAWN_TARGETPOS | MISSILESPAWN_RANDOMDIR);
+                tMissileParams.dwFlags = (MISSILESPAWN_TARGETPOS | MISSILESPAWN_RANDOMDIR);
                 tMissileParams.pOwner = pUnit;
                 tMissileParams.pOrigin = pUnit;
                 tMissileParams.nSkillLevel = 1;

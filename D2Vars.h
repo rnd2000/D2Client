@@ -599,7 +599,7 @@
 // OURS, waypoint.h: D2VAR(D2CLIENT, gnWaypointActCount, int32_t, 0xF07B0)
 // OURS, waypoint.h: D2VAR(D2CLIENT, gWaypointCoords, D2WaypointCoordTableStrc, 0xF07B8)   // [9]
 // OURS, CUnit.h: D2VAR(D2CLIENT, gdwNextClientUnitId, uint32_t, 0xF08FC)
-// OURS, CUnit.h: using D2CLIENT_gpSkillSelectProcs_ft = int32_t (__fastcall *)(int32_t, D2UnitStrc *);
+// OURS, CUnit.h: using D2CLIENT_gpSkillSelectProcs_ft = int32_t (__fastcall *)(D2UnitStrc *, D2UnitStrc *);
 // OURS, CUnit.h: D2VAR(D2CLIENT, gpSkillSelectProcs, D2CLIENT_gpSkillSelectProcs_ft, 0xF0900)   // [7]
 // OURS, CUnit.h: D2VAR(D2CLIENT, gnSkillSelectProcCount, int32_t, 0xF091C)
 // OURS, Item.h: D2VAR(D2CLIENT, gaItemCursors, int32_t, 0xF0C28)   // [2]

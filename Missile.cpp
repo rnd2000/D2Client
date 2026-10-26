@@ -6049,7 +6049,7 @@ int32_t __fastcall MISSILE_CltHitFunc52(D2UnitStrc *pMissile, D2UnitStrc *pTarge
         if (pTarget->dwUnitType != UNIT_MONSTER)
             return 0;
 
-        pMonStats2Txt = DATATBLS_GetMonStats2TxtRecord((int32_t)pTarget->dwClassId);
+        pMonStats2Txt = DATATBLS_GetMonStats2TxtRecord(pTarget->dwClassId);
         if (!pMonStats2Txt || !(pMonStats2Txt->nFlags[MONSTATS2FLAGINDEX_LARGE >> 3] & gdwBitMasks[MONSTATS2FLAGINDEX_LARGE & 7]))
             return 0;
     }
@@ -7032,7 +7032,7 @@ void __fastcall MISSILE_CltDoFunc42(D2UnitStrc *pMissile)
     MISSILE_ClientSpawn(&tParams);
 
     //  BUG: izual control's row is read with no NULL test. The Param columns are taken as int in the signed compares (`jge`, `jle`).
-    if (nFrame < (int16_t)pControlTxt->wRange - (int32_t)pControlTxt->dwParam[0] && nFrame > (int16_t)pControlTxt->wRange - (int32_t)pControlTxt->dwParam[1])
+    if (nFrame < (int16_t)pControlTxt->wRange - pControlTxt->dwParam[0] && nFrame > (int16_t)pControlTxt->wRange - pControlTxt->dwParam[1])
     {
         pOwner = CUNIT_GetOwnerUnit(pMissile);
         if (pOwner)
@@ -7663,7 +7663,7 @@ int32_t __fastcall MISSILE_CltHitFunc39(D2UnitStrc *pMissile, D2UnitStrc *pTarge
 
     //  BUG: a NULL test of the glob after its seed was already used (an inlined accessor's own check). UNREACHABLE: the use above would have faulted
     //  first.
-    nClassId = pMissile ? (int32_t)pMissile->dwClassId : -1;
+    nClassId = pMissile ? pMissile->dwClassId : -1;
 
     nSplat = (int32_t)((uint32_t)SEED_RollRandomNumber(&pMissile->pSeed) & 1) + nClassId + 1;
     nLevel = (int32_t)D2COMMON_MISSILE_GetLevel(pMissile);
@@ -9026,7 +9026,7 @@ int32_t __fastcall MISSILE_CltHitFunc62(D2UnitStrc *pMissile, D2UnitStrc *pTarge
 
     nRange = 2 * nSpread + 1;
 
-    nTargetX = (int32_t)SEED_RollLimitedRandomNumber(&pMissile->pSeed, nRange) - nSpread + nX;
+    nTargetX = SEED_RollLimitedRandomNumber(&pMissile->pSeed, nRange) - nSpread + nX;
 
     nRollY = SEED_RollLimitedRandomNumber(&pMissile->pSeed, nRange);
 

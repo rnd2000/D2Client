@@ -47,7 +47,7 @@ static_assert(sizeof(D2ClientEditBoxStrc) == 90,
 //  nLineCount <= 0 is forced to 1 and raises bDrawBackground, which is what turns on the filled rectangle in Draw.
 //  bNumericOnly starts at 1, so an edit box is numeric until something says otherwise; the only thing that could is vtable slot 18, which
 //  no code in the module indexes.
-char *__fastcall EDITBOX_UiEditBoxConstruct(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, void *pfnCallback, int32_t nFont)
+char *__fastcall EDITBOX_UiEditBoxConstruct(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont)
 {
     uint32_t nBufferBytes;
     Unicode *pwszAltBuffer;
@@ -64,7 +64,7 @@ char *__fastcall EDITBOX_UiEditBoxConstruct(D2ClientEditBoxStrc *pEditBox, int32
     pEditBox->nBoxX = nX;
     pEditBox->nBoxY = nY;
     pEditBox->bMouseDown = 0;
-    pEditBox->pfnCallback = (int32_t)pfnCallback;
+    pEditBox->pfnCallback = pfnCallback;
     pEditBox->nBlinkTick = 0;
     pEditBox->pwszText = (Unicode *)FOG_Alloc(nBufferBytes, szEditBoxCpp, 93, 0);
     pwszAltBuffer = (Unicode *)FOG_Alloc(nBufferBytes, szEditBoxCpp, 94, 0);
@@ -280,7 +280,7 @@ void __fastcall EDITBOX_UiEditBoxDraw(D2ClientEditBoxStrc *pEditBox)
             if (Unicode::strlen(pSplitText->wszLine))
             {
                 //  BUG: a line longer than 199 characters abandons the loop and leaks the rest of the split list (the local is 200 elements).
-                if ((int32_t)Unicode::strlen(pSplitText->wszLine) > 199)
+                if (Unicode::strlen(pSplitText->wszLine) > 199)
                 {
                     return;
                 }
@@ -452,8 +452,7 @@ int32_t __fastcall EDITBOX_UiEditBoxOnChar(D2ClientEditBoxStrc *pEditBox, int32_
     }
 
     c = (int8_t)pMsg->wParam;
-    pfnCharFilter = (int32_t(__fastcall *)(D2ClientEditBoxStrc *, SMSGHANDLER_PARAMS *))
-        pEditBox->pfnCharFilter;
+    pfnCharFilter = pEditBox->pfnCharFilter;
     if (pfnCharFilter)
     {
         bAccept = pfnCharFilter(pEditBox, pMsg);
@@ -468,7 +467,7 @@ int32_t __fastcall EDITBOX_UiEditBoxOnChar(D2ClientEditBoxStrc *pEditBox, int32_
         if (c == 13 || c == 27)
         {
             //  the box's "done" keys -- only on this arm
-            ((void (*)(void))pEditBox->pfnCallback)();
+            pEditBox->pfnCallback();
             goto CONSUME;
         }
     }
@@ -720,7 +719,7 @@ uint32_t **__fastcall EDITBOX_UiCtrlProxyVecDelDtor(uint32_t **pProxy, int32_t n
 //  SMemAlloc(0x5A, "new", -1, 0) is the edit box, 0x5A being sizeof(D2ClientEditBoxStrc) (the static_assert at the head of this file ties the
 //  two together). The allocation is checked, and a failure stores a null control rather than halting, which every forwarder would then
 //  dereference. Its nine parameters are the edit box's own, passed through untouched.
-uint32_t *__fastcall EDITBOX_UiCtrlProxyConstructEditbox(uint32_t *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, void *pfnCallback, int32_t nFont)
+uint32_t *__fastcall EDITBOX_UiCtrlProxyConstructEditbox(uint32_t *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont)
 {
     D2ClientEditBoxStrc *pEditBox;
     char *pConstructed;

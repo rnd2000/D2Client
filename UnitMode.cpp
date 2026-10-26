@@ -266,7 +266,7 @@ void __fastcall UNITMODE_SyncUnitPosition(D2UnitStrc *pUnit, uint16_t nX, uint16
     }
 
     if (pUnit->dwUnitType != UNIT_PLAYER)
-        D2COMMON_10230(pUnit->pDynamicPath, (int32_t)pUnit, pDestRoom, nX, (int16_t)nY);
+        D2COMMON_10230(pUnit->pDynamicPath, pUnit, pDestRoom, nX, (int16_t)nY);
     else
         PLAYER_SetUnitRoomAndPos(pUnit, pDestRoom, nX, (int16_t)nY);
 }

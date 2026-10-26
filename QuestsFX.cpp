@@ -844,7 +844,7 @@ int32_t __fastcall QUESTSFX_GetQuestLightOverride(D2ActiveRoomStrc *pRoom, uint8
         *pnBlue = 48;
         if (gnDenOfEvilPulseFrame == -1)
             return 80;
-        return (int32_t)(FOG_10083_Cos_LUT((uint32_t)((int32_t)((uint32_t)gnDenOfEvilPulseFrame << 7) / 30)) * gfConst80);
+        return (int32_t)(FOG_10083_Cos_LUT((int32_t)((uint32_t)gnDenOfEvilPulseFrame << 7) / 30) * gfConst80);
     }
     if (nLevelId <= 106 || nLevelId > 108)
     {

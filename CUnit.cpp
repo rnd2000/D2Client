@@ -414,7 +414,7 @@ void __fastcall CUNIT_WarpUnit(D2UnitStrc *pUnit, int32_t nX, int32_t nY, int32_
     AUTOMAP_DelayReveal();
 
     if (pUnit == pPlayerUnit)
-        ENV_OnLevelChange((void *)(UINT_PTR)bIsLevelChange);
+        ENV_OnLevelChange(bIsLevelChange);
 
     if (pUnit->dwUnitType == UNIT_PLAYER)
     {
@@ -483,7 +483,7 @@ D2UnitStrc *__fastcall CUNIT_InitUnit(D2UnitStrc *pUnit, uint32_t dwUnitId, int3
     if (nPosX || nPosY)
     {
         pRoom = CUNIT_FindRoomForCoords(nPosX, nPosY);
-        pUnit->nAct = (uint8_t)D2COMMON_DRLG_GetActNoFromLevelId((D2C_Levels)D2COMMON_DUNGEON_GetLevelIdFromRoom(pRoom));
+        pUnit->nAct = D2COMMON_DRLG_GetActNoFromLevelId((D2C_Levels)D2COMMON_DUNGEON_GetLevelIdFromRoom(pRoom));
         pUnit->pDrlgAct = gpAct;
     }
 
@@ -585,7 +585,7 @@ D2UnitStrc *__fastcall CUNIT_RegisterUnit(D2UnitStrc *pUnit)
     if (CUNIT_AddUnitToTable(pUnit))
         return pUnit;
 
-    pExisting = CUNIT_FindUnitInTable(gpUnitTableById[pUnit->dwUnitType], pUnit->dwUnitId & 0x7F, pUnit->dwUnitId, (D2C_UnitTypes)pUnit->dwUnitType);
+    pExisting = CUNIT_FindUnitInTable(gpUnitTableById[pUnit->dwUnitType], pUnit->dwUnitId & 0x7F, pUnit->dwUnitId, pUnit->dwUnitType);
 
     if (pExisting == pUnit)
     {
@@ -596,7 +596,7 @@ D2UnitStrc *__fastcall CUNIT_RegisterUnit(D2UnitStrc *pUnit)
     if (pExisting)
     {
         dwUnitId = pExisting->dwUnitId;
-        nUnitType = (D2C_UnitTypes)pExisting->dwUnitType;
+        nUnitType = pExisting->dwUnitType;
 
         if (((pExisting->dwFlags >> 21) & 1) == 0)
             ppTable = gpUnitTableById[nUnitType];
@@ -669,12 +669,12 @@ int32_t __fastcall CUNIT_AddUnitToTable(D2UnitStrc *pUnit)
 
     if (pUnit && ((pUnit->dwFlags >> 21) & 1) == 1)
     {
-        if (CUNIT_FindUnitInTable(gpUnitTableByClientId[pUnit->dwUnitType], pUnit->dwUnitId & 0x7F, pUnit->dwUnitId, (D2C_UnitTypes)pUnit->dwUnitType))
+        if (CUNIT_FindUnitInTable(gpUnitTableByClientId[pUnit->dwUnitType], pUnit->dwUnitId & 0x7F, pUnit->dwUnitId, pUnit->dwUnitType))
         {
             return 0;
         }
 
-        if (CUNIT_FindUnitInTable(gpUnitTableByClientId[pUnit->dwUnitType], pUnit->dwUnitId & 0x7F, pUnit->dwUnitId, (D2C_UnitTypes)pUnit->dwUnitType))
+        if (CUNIT_FindUnitInTable(gpUnitTableByClientId[pUnit->dwUnitType], pUnit->dwUnitId & 0x7F, pUnit->dwUnitId, pUnit->dwUnitType))
         {
             FOG_DisplayAssert("!UnitGetFromClientId(ptUnit->dwId, ptUnit->eType)", szCUnitCpp, 154);
             exit(-1);
@@ -697,7 +697,7 @@ int32_t __fastcall CUNIT_AddUnitToTable(D2UnitStrc *pUnit)
     UNITSND_AdjustUnitSoundRefCounts(pUnit, 1);
 
     nBucket = pUnit->dwUnitId & 0x7F;
-    nUnitType = (D2C_UnitTypes)pUnit->dwUnitType;
+    nUnitType = pUnit->dwUnitType;
 
     if (((pUnit->dwFlags >> 21) & 1) == 1)
         ppBuckets = gpUnitTableByClientId[nUnitType];
@@ -1116,9 +1116,9 @@ D2UnitStrc *__fastcall CUNIT_CreateMonsterUnit(int32_t *pAssign, uint8_t *pCompo
         if (nMonStatsEx >= 0 && nMonStatsEx < sgptDataTables->nMonStats2TxtRecordCount)
         {
             pMonStats2Again = &sgptDataTables->pMonStats2Txt[nMonStatsEx];
-            if (pMonStats2Again && pMonStats2Again->nUtrans[(uint8_t) GAME_GetDifficulty()])
+            if (pMonStats2Again && pMonStats2Again->nUtrans[GAME_GetDifficulty()])
             {
-                nShift = pMonStats2Again->nUtrans[(uint8_t) GAME_GetDifficulty()];
+                nShift = pMonStats2Again->nUtrans[GAME_GetDifficulty()];
                 if (nShift == 255)
                     nShift = ROSTERPETS_IsPetOwnerHostile(pMonster) == 0;
             }
@@ -1133,9 +1133,9 @@ D2UnitStrc *__fastcall CUNIT_CreateMonsterUnit(int32_t *pAssign, uint8_t *pCompo
         //  The id is the one the server sent (nBossHcIdx, stored only when type flag 2 says superunique). LATENT: packet 0xAC reads the id with
         //  no bound and CUNIT_CreateClientOnlyUnit passes 0 with no flags, so only a server whose superuniques.txt differs from the client's, or a
         //  malformed packet, reaches the NULL.
-        if (pSuperUniquesTxt->nUtrans[(uint8_t) GAME_GetDifficulty()])
+        if (pSuperUniquesTxt->nUtrans[GAME_GetDifficulty()])
         {
-            nShift = pSuperUniquesTxt->nUtrans[(uint8_t) GAME_GetDifficulty()];
+            nShift = pSuperUniquesTxt->nUtrans[GAME_GetDifficulty()];
         }
     }
 
@@ -1958,7 +1958,7 @@ BOOL __fastcall CUNIT_IsPointInWarpSelectBox(D2UnitStrc *pWarp, int32_t nScreenX
 //  gpSkillSelectProcs[1]: the target test of every skill whose skills.txt SelectProc is 1 -- Corpse Explosion (74), Poison Explosion (83) and
 //  NihlathakCorpseExplosion (351) in the stock table. `push edx` / `call D2COMMON_11021` / `retn`. The first argument is the table's and is not
 //  read; the unit comes in edx.
-BOOL __fastcall CUNIT_SkillsSelectProc1_CorpseExplosion(int32_t nUnused, D2UnitStrc *pUnit)
+BOOL __fastcall CUNIT_SkillsSelectProc1_CorpseExplosion(D2UnitStrc *pUnused, D2UnitStrc *pUnit)
 {
     return D2COMMON_11021(pUnit);
 }
@@ -1967,7 +1967,7 @@ BOOL __fastcall CUNIT_SkillsSelectProc1_CorpseExplosion(int32_t nUnused, D2UnitS
 //1.10f: D2Client.0x6FB285E0
 //  gpSkillSelectProcs[2], Raise Skeleton's and Raise Skeletal Mage's: the corpse must still be consumeable, D2Common #11017 with 0 as its
 //  second argument.
-BOOL __fastcall CUNIT_SkillsSelectProc2_RaiseSkeleton(int32_t nUnused, D2UnitStrc *pUnit)
+BOOL __fastcall CUNIT_SkillsSelectProc2_RaiseSkeleton(D2UnitStrc *pUnused, D2UnitStrc *pUnit)
 {
     return D2COMMON_11017_CheckUnitIfConsumeable(pUnit, 0);
 }
@@ -1982,7 +1982,7 @@ BOOL __fastcall CUNIT_SkillsSelectProc2_RaiseSkeleton(int32_t nUnused, D2UnitStr
 //  in-range base of exactly 78 refuses. A negative class id jumps straight to "allowed" (0x6FB2862C): the compiler threaded the inlined sign
 //  test into the second one, and the C writes that jump as a return.
 //  The two early answers return what the callee returned, zero, as the bytes do (`test eax, eax` / `jnz` / `retn`, 0x6FB28603 and 0x6FB28610).
-BOOL __fastcall CUNIT_SkillsSelectProc3_Revive(int32_t nUnused, D2UnitStrc *pUnit)
+BOOL __fastcall CUNIT_SkillsSelectProc3_Revive(D2UnitStrc *pUnused, D2UnitStrc *pUnit)
 {
     D2MonStatsTxt *pMonStatsTxt;
     BOOL bResult;
@@ -2022,7 +2022,7 @@ BOOL __fastcall CUNIT_SkillsSelectProc3_Revive(int32_t nUnused, D2UnitStrc *pUni
 
 //1.10f: D2Client.0x6FB28680
 //  gpSkillSelectProcs[4], Find Potion's: `return D2COMMON_11018(pUnit)`.
-BOOL __fastcall CUNIT_SkillsSelectProc4_FindPotion(int32_t nUnused, D2UnitStrc *pUnit)
+BOOL __fastcall CUNIT_SkillsSelectProc4_FindPotion(D2UnitStrc *pUnused, D2UnitStrc *pUnit)
 {
     return D2COMMON_11018(pUnit);
 }
@@ -2030,7 +2030,7 @@ BOOL __fastcall CUNIT_SkillsSelectProc4_FindPotion(int32_t nUnused, D2UnitStrc *
 
 //1.10f: D2Client.0x6FB28690
 //  gpSkillSelectProcs[6], Grim Ward's: `return D2COMMON_11020(pUnit)`. It sits before slot 5's function in the image.
-BOOL __fastcall CUNIT_SkillsSelectProc6_GrimWard(int32_t nUnused, D2UnitStrc *pUnit)
+BOOL __fastcall CUNIT_SkillsSelectProc6_GrimWard(D2UnitStrc *pUnused, D2UnitStrc *pUnit)
 {
     return D2COMMON_11020(pUnit);
 }
@@ -2038,7 +2038,7 @@ BOOL __fastcall CUNIT_SkillsSelectProc6_GrimWard(int32_t nUnused, D2UnitStrc *pU
 
 //1.10f: D2Client.0x6FB286A0
 //  gpSkillSelectProcs[5], Find Item's: `return D2COMMON_11019(pUnit)` (`push edx` / `call` / `retn`).
-BOOL __fastcall CUNIT_SkillsSelectProc5_FindItem(int32_t nUnused, D2UnitStrc *pUnit)
+BOOL __fastcall CUNIT_SkillsSelectProc5_FindItem(D2UnitStrc *pUnused, D2UnitStrc *pUnit)
 {
     return D2COMMON_11019(pUnit);
 }
@@ -2216,7 +2216,7 @@ BOOL __fastcall CUNIT_HitTestUnit(D2UnitStrc *pUnit, int32_t nScreenX, int32_t n
         if (pSkillsTxt)
         {
             nSelectProc = pSkillsTxt->nSelectProc;
-            if (nSelectProc != 0 && nSelectProc < gnSkillSelectProcCount && gpSkillSelectProcs[nSelectProc]((int32_t)pPlayer, pUnit))
+            if (nSelectProc != 0 && nSelectProc < gnSkillSelectProcCount && gpSkillSelectProcs[nSelectProc](pPlayer, pUnit))
             {
                 bProcAccepts = TRUE;
             }
@@ -2514,7 +2514,7 @@ BOOL __fastcall CUNIT_SkillsRunSelectProcById(D2UnitStrc *pPlayer, D2UnitStrc *p
     if (nSelectProc >= gnSkillSelectProcCount)
         return FALSE;
 
-    if (gpSkillSelectProcs[nSelectProc]((int32_t)pPlayer, pUnit))
+    if (gpSkillSelectProcs[nSelectProc](pPlayer, pUnit))
         return TRUE;
 
     return FALSE;

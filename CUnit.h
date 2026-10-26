@@ -9,7 +9,7 @@
 
 //  D2Client 0x6FB90900
 //  The dispatch table indexed by skills.txt's SelectProc column: entry 0 is NULL, 1..6 are corpse tests. Count in gnSkillSelectProcCount.
-inline int32_t (__fastcall *gpSkillSelectProcs[7])(int32_t, D2UnitStrc *) =
+inline int32_t (__fastcall *gpSkillSelectProcs[7])(D2UnitStrc *, D2UnitStrc *) =
 {
     NULL,   // [0]
     &CUNIT_SkillsSelectProc1_CorpseExplosion,   // [1]

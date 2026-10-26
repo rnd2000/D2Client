@@ -328,7 +328,7 @@ BOOL __fastcall SKILLS_StartChannelState(D2UnitStrc *pUnit, D2C_Skills nSkillId,
     if (pUnit)
     {
         dwUnitId = pUnit->dwUnitId;
-        dwUnitType = (D2C_UnitTypes)pUnit->dwUnitType;
+        dwUnitType = pUnit->dwUnitType;
     }
     else
     {
@@ -542,7 +542,7 @@ int32_t __fastcall SKILLS_CltDoFunc8(D2UnitStrc *pUnit, D2C_Skills nSkillId, int
     pMissile = MISSILE_ClientSpawn(&tParams);
     if (pMissile)
     {
-        D2COMMON_MISSILE_SetStreamMissile(pMissile, (uint16_t)(int16_t)pSkillsTxt->wCltMissileB);
+        D2COMMON_MISSILE_SetStreamMissile(pMissile, pSkillsTxt->wCltMissileB);
         D2COMMON_MISSILE_SetStreamRange(pMissile, (int16_t)nStreamRange);
     }
 

@@ -281,7 +281,7 @@ void __fastcall TRADE_HandleStateMessage(uint8_t *pMessage)
         pwszText = D2LANG_GetStringFromTblIndex(STR_IDX_4043_strWaitingForOtherPlayer);
         DIALOG_AddLine(gpTradeWaitDialog, pwszText, 15, 0, 0, 1, NULL, 0);
         pwszText = D2LANG_GetStringFromTblIndex(STR_IDX_3400_Back);
-        DIALOG_AddLine(gpTradeWaitDialog, pwszText, 15, 0, 0, 1, (DIALOGCALLBACK)TRADE_SendCancelEarlyStamp, 1);
+        DIALOG_AddLine(gpTradeWaitDialog, pwszText, 15, 0, 0, 1, TRADE_SendCancelEarlyStamp, 1);
         DIALOG_SetSelectedLine(gpTradeWaitDialog, -1);
         INV_TradeSetPanelMode(0);
         return;
@@ -314,9 +314,9 @@ void __fastcall TRADE_HandleStateMessage(uint8_t *pMessage)
         pwszText = D2LANG_GetStringFromTblIndex(STR_IDX_4042_strTradeAgreeTo);
         DIALOG_AddLine(gpTradeConfirmDialog, pwszText, 15, 0, 0, 1, NULL, 0);
         pwszText = D2LANG_GetStringFromTblIndex(STR_IDX_3401_ok);
-        DIALOG_AddLine(gpTradeConfirmDialog, pwszText, 15, 0, 0, 1, (DIALOGCALLBACK)TRADE_SendAgreeToTrade, 1);
+        DIALOG_AddLine(gpTradeConfirmDialog, pwszText, 15, 0, 0, 1, TRADE_SendAgreeToTrade, 1);
         pwszText = D2LANG_GetStringFromTblIndex(STR_IDX_3400_Back);
-        DIALOG_AddLine(gpTradeConfirmDialog, pwszText, 15, 0, 0, 1, (DIALOGCALLBACK)TRADE_SendCancel, 1);
+        DIALOG_AddLine(gpTradeConfirmDialog, pwszText, 15, 0, 0, 1, TRADE_SendCancel, 1);
         DIALOG_SetSelectedLine(gpTradeConfirmDialog, -1);
 
         if (UI_GetUiWindowState(UI_CHATBOX))

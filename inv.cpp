@@ -956,7 +956,7 @@ void __stdcall INV_ItemPanelOnRButtonDown(SMSGHANDLER_PARAMS *pMsg)
                 //  the original passes the parameter slot itself as the out-buffer
                 if (NPCMENU_GetInteractingNpc(&nNpcGUID))
                 {
-                    pNpc = CUNIT_FindUnitByGuidAndType((uint32_t)nNpcGUID, UNIT_MONSTER);
+                    pNpc = CUNIT_FindUnitByGuidAndType(nNpcGUID, UNIT_MONSTER);
                     if (pNpc)
                     {
                         if (!gpHoverItem || !NPCMENU_BeginTransaction(pNpc, gpHoverItem, 0, nMouseX, nMouseY, pMsg->nKey, 1, 0))
@@ -2014,7 +2014,7 @@ void __stdcall INV_NpcShopOnMouseMove(SMSGHANDLER_PARAMS *pMsg)
         INV_OnMouseMove(pMsg);
         return;
     }
-    pNpc = CUNIT_FindUnitByGuidAndType((uint32_t)nNpcGUID, UNIT_MONSTER);
+    pNpc = CUNIT_FindUnitByGuidAndType(nNpcGUID, UNIT_MONSTER);
     if (!pNpc)
     {
         INV_OnMouseMove(pMsg);
@@ -2210,9 +2210,9 @@ void __stdcall INV_NpcShopOnLButtonDown(SMSGHANDLER_PARAMS *pMsg)
         nTabPrevSelected = 0;
         bHadSelection = 0;
         nTabHit = -1;
-        if ((int32_t)gnNpcShopTabCount > 0)
+        if (gnNpcShopTabCount > 0)
         {
-            for (iTab = 0; iTab < (int32_t)gnNpcShopTabCount; ++iTab)
+            for (iTab = 0; iTab < gnNpcShopTabCount; ++iTab)
             {
                 if (gNpcShopTabs[iTab].bPressed == 1)
                 {
@@ -2342,9 +2342,9 @@ void __stdcall INV_NpcShopOnLButtonUp(SMSGHANDLER_PARAMS *pMsg)
         bTabActionTaken = 0;
         nTabStripTop = gnBorderYDifference + gnScreenHeight - 109;
 
-        if (nXpos >= gInvNpcShopRect.nLeft && nXpos <= gInvNpcShopRect.nRight && nYpos >= nTabStripTop && nYpos <= gInvNpcShopRect.nBottom && (int32_t)gnNpcShopTabCount > 0)
+        if (nXpos >= gInvNpcShopRect.nLeft && nXpos <= gInvNpcShopRect.nRight && nYpos >= nTabStripTop && nYpos <= gInvNpcShopRect.nBottom && gnNpcShopTabCount > 0)
         {
-            for (iTab = 0; iTab < (int32_t)gnNpcShopTabCount; ++iTab)
+            for (iTab = 0; iTab < gnNpcShopTabCount; ++iTab)
             {
                 //  the original's cursor starts ten bytes into the record (+0Ah, the mode) and reads the rest at -10, -6, +4 and +6;
                 //  ours reads the record by its fields
@@ -2439,7 +2439,7 @@ void __stdcall INV_NpcShopOnLButtonUp(SMSGHANDLER_PARAMS *pMsg)
         }
 
         //  the original counts down over the tab count here instead of using the end-address sentinel of the other copies
-        for (iTab = 0; iTab < (int32_t)gnNpcShopTabCount; ++iTab)
+        for (iTab = 0; iTab < gnNpcShopTabCount; ++iTab)
         {
             if (gNpcShopTabs[iTab].bPressed == 1)
             {
@@ -2654,7 +2654,7 @@ void __stdcall INV_OnMouseMove(SMSGHANDLER_PARAMS *pMsg)
     if (sgInventoryMode == 11)
     {
         //  the low byte only
-        nVendorPageSaved = (uint8_t)gnVendorPage;
+        nVendorPageSaved = gnVendorPage;
         if (nX > gInvTradePage1Grid.nGridLeft && nX < gInvTradePage1Grid.nGridRight && nY >= gInvTradePage1Grid.nGridTop && nY <= gInvTradePage1Grid.nGridBottom)
         {
             gnVendorPage = 1;
@@ -2667,7 +2667,7 @@ void __stdcall INV_OnMouseMove(SMSGHANDLER_PARAMS *pMsg)
             INV_PixelToGridCell(pPlayer, pInventory, D2COMMON_INVENTORY_GetCursorItem(pInventory), nX, nY, &gInvTradePage2Grid, INVPAGE_TRADE);
             bHoverFound = 1;
         }
-        gnVendorPage = (uint8_t)nVendorPageSaved;
+        gnVendorPage = nVendorPageSaved;
         if (!bHoverFound)
         {
             pMsg->bReturn = 0;
@@ -2682,7 +2682,7 @@ void __stdcall INV_OnMouseMove(SMSGHANDLER_PARAMS *pMsg)
 
     if (sgInventoryMode == 12)
     {
-        nVendorPageSaved = (uint8_t)gnVendorPage;
+        nVendorPageSaved = gnVendorPage;
         if (GAME_IsExpansionGame())
         {
             if (nX <= gInvBigStashGrid.nGridLeft || nX > gInvBigStashGrid.nGridRight || nY < gInvBigStashGrid.nGridTop || nY > gInvBigStashGrid.nGridBottom)
@@ -2724,7 +2724,7 @@ void __stdcall INV_OnMouseMove(SMSGHANDLER_PARAMS *pMsg)
         return;
     }
 
-    nVendorPageSaved = (uint8_t)gnVendorPage;
+    nVendorPageSaved = gnVendorPage;
     if (nX >= gInvCubeGrid.nGridLeft && nX < gInvCubeGrid.nGridRight && nY >= gInvCubeGrid.nGridTop && nY <= gInvCubeGrid.nGridBottom)
     {
         gnVendorPage = 3;
@@ -2741,7 +2741,7 @@ BLANK_AND_RESTORE:
 
 RESTORE_AND_RETURN:
     gnNpcTradeMode = 1;
-    gnVendorPage = (uint8_t)nVendorPageSaved;
+    gnVendorPage = nVendorPageSaved;
     return;
 
 IN_PANEL:
@@ -3809,7 +3809,7 @@ void __fastcall INV_GetVendorPageInventory(int32_t nInvPage)
         }
     }
 
-    nVendorTabCount = (int32_t)gnVendorTabCount;
+    nVendorTabCount = gnVendorTabCount;
     nTries = 0;
     nPage = nStartPage;
     iTab = 0;
@@ -3908,7 +3908,7 @@ void __cdecl INV_NpcShopBuildTabs(void)
     D2UnitGUID dwNpcGUID;
     D2UnitGUID dwPageNpcGUID;
 
-    nVendorTabCount = (int32_t)gnVendorTabCount;
+    nVendorTabCount = gnVendorTabCount;
     gnNpcShopTabHit = -1;
     gnVendorPage = 0;
     gbDropGoldBtnPressed = 0;
@@ -4187,7 +4187,7 @@ void __cdecl INV_NpcShopApplyTabSelection(void)
         if (gNpcShopTabs[gnNpcShopTabHit].nHoverTextId != STR_IDX_10095_x_REPAIR_ALL_EQUIPMENT_FMT)
         {
             //  light every tab whose action matches, not just the one hit
-            nWantedAction = (int32_t)gnNpcShopTabAction;
+            nWantedAction = gnNpcShopTabAction;
             //  the original's cursor is &[i].bPressed, with the action word read at +0Ah from it (0x6FAEACEA..0x6FAEAD02, cmp eax, 6FBB37FCh / jl):
             //  an integer cursor over our records, as in ITEMPANEL_ClearShopTabs
             nTab = (UINT_PTR)&gNpcShopTabs[0];
@@ -4303,8 +4303,8 @@ int32_t __stdcall INV_AnvilOnInvCloseButtonRelease(SMSGHANDLER_PARAMS *pMsg)
         return 0;
     }
 
-    if (nXpos >= (int32_t)(gnScreenWidth - gnBorderXDifference - 302) && nXpos <= (int32_t)(gnScreenWidth - gnBorderXDifference - 270) && nYpos >= (int32_t)(gnBorderYDifference + gnScreenHeight - 96)
-        && nYpos <= (int32_t)(gnBorderYDifference + gnScreenHeight - 64))
+    if (nXpos >= (gnScreenWidth - gnBorderXDifference - 302) && nXpos <= (gnScreenWidth - gnBorderXDifference - 270) && nYpos >= (gnBorderYDifference + gnScreenHeight - 96)
+        && nYpos <= (gnBorderYDifference + gnScreenHeight - 64))
     {
         if (gbInvCloseBtnArmed)
         {
@@ -4341,8 +4341,8 @@ int32_t __fastcall INV_AnvilOnInvCloseButtonPress(SMSGHANDLER_PARAMS *pMsg)
 
     //  all four bounds are signed (cmp edi, ecx / jl at 0x6FAEAF78..0x6FAEAF7A on the zero-extended word, then jg, jl, jg); an unsigned first
     //  compare would give the same answer while the bound is positive, which it is for both resolutions (258..498)
-    if (nXpos < (int32_t)(gnScreenWidth - gnBorderXDifference - 302) || nXpos > (int32_t)(gnScreenWidth - gnBorderXDifference - 270) || nYpos < (int32_t)(gnBorderYDifference + gnScreenHeight - 96)
-        || nYpos > (int32_t)(gnBorderYDifference + gnScreenHeight - 64))
+    if (nXpos < (gnScreenWidth - gnBorderXDifference - 302) || nXpos > (gnScreenWidth - gnBorderXDifference - 270) || nYpos < (gnBorderYDifference + gnScreenHeight - 96)
+        || nYpos > (gnBorderYDifference + gnScreenHeight - 64))
     {
         return 0;
     }
@@ -4529,7 +4529,7 @@ BOOL __cdecl INV_IsInventoryMode4(void)
 //  and the readers are on the far side of a server round trip, where the click's own argument is gone.
 int32_t __cdecl INV_GetTransactionItemIsPlayers(void)
 {
-    return (int32_t)gbTransactionItemIsPlayers;
+    return gbTransactionItemIsPlayers;
 }
 
 //1.10f: D2Client.0x6FAEB950
@@ -5375,7 +5375,7 @@ int32_t __fastcall INV_UseItemAtGridCell(D2UnitStrc *pUnit, D2InventoryStrc *pIn
 
     bExpansion = GAME_IsExpansionGame();
     nPage = (uint8_t)nInvPage;
-    nInventoryRecordId = D2COMMON_UNITS_GetInventoryRecordId(pUnit, (D2C_ItemInvPage)nInvPage, bExpansion);
+    nInventoryRecordId = D2COMMON_UNITS_GetInventoryRecordId(pUnit, nInvPage, bExpansion);
 
     if (nPage)
     {
@@ -5722,7 +5722,7 @@ void __fastcall INV_DrawInventoryGridItems(D2UnitStrc *pUnit)
     else
     {
         //  the page zero-extended: the bytes load the dword gnVendorPage and mask it with 0FFh (0x6FAE0F69); ours is a byte load (movzx)
-        switch ((uint8_t)gnVendorPage)
+        switch (gnVendorPage)
         {
         case 1:
             pPanel = &gInvTradePage1Grid;
@@ -5954,19 +5954,19 @@ TEST_INV_RECT:
     }
 
     //  the Y gate is tested twice, once inside each mode gate (the compiler's doing, not two different tests)
-    if (sgInventoryMode == 1 && CURSOR_GetMouseX() < (int32_t)(gnScreenWidth / 2))
+    if (sgInventoryMode == 1 && CURSOR_GetMouseX() < (gnScreenWidth / 2))
     {
         return;
     }
-    if (CURSOR_GetMouseY() >= (int32_t)(gnScreenHeight - 39))
+    if (CURSOR_GetMouseY() >= (gnScreenHeight - 39))
     {
         return;
     }
-    if (sgInventoryMode == 19 && CURSOR_GetMouseX() < (int32_t)(gnScreenWidth / 2))
+    if (sgInventoryMode == 19 && CURSOR_GetMouseX() < (gnScreenWidth / 2))
     {
         return;
     }
-    if (CURSOR_GetMouseY() >= (int32_t)(gnScreenHeight - 39))
+    if (CURSOR_GetMouseY() >= (gnScreenHeight - 39))
     {
         return;
     }
@@ -5987,7 +5987,7 @@ TEST_INV_RECT:
 
         nUnitType = pExchangeTarget->dwUnitType;
         //  signed, as the image compares it (jle, jle); no unit type 0..5 tells it from unsigned
-        if (pExchangeTarget->dwUnitType == UNIT_OBJECT || (int32_t)nUnitType > (int32_t)UNIT_MISSILE && (int32_t)nUnitType <= (int32_t)UNIT_TILE)
+        if (pExchangeTarget->dwUnitType == UNIT_OBJECT || nUnitType > (int32_t)UNIT_MISSILE && nUnitType <= (int32_t)UNIT_TILE)
         {
             nY = *(int32_t *)&pExchangeTarget->pDynamicPath->tTargetCoord;
         }
@@ -7182,7 +7182,7 @@ AFTER_SOCKET:
 
 AFTER_TOME:
         //  into the cube
-        if (D2COMMON_DATATBLS_GetItemsTxtRecord(pHoveredItem ? (int32_t)pHoveredItem->dwClassId : -1)->dwCode != 544763746)
+        if (D2COMMON_DATATBLS_GetItemsTxtRecord(pHoveredItem ? pHoveredItem->dwClassId : -1)->dwCode != 544763746)
         {
             goto TRY_EXCHANGE;
         }
@@ -7310,7 +7310,7 @@ GREEN_CHECK_HANDLED:
             {
                 dwClassId = pNpc->dwClassId;
                 pQuestRecord = NPCMENU_QuestGetQuestRecord();
-                nDifficulty = (D2C_Difficulties)(uint8_t)GAME_GetDifficulty();
+                nDifficulty = (D2C_Difficulties)GAME_GetDifficulty();
                 nTransactionCost = D2COMMON_ITEMS_GetTransactionCost(CUNIT_GetPlayer(), pSlotItem, nDifficulty, pQuestRecord, dwClassId, TRANSACTIONTYPE_SELL);
                 MSG_SendCmd4Dwords(51, pNpc->dwUnitId, pSlotItem->dwUnitId, pSlotItem->dwAnimMode, nTransactionCost);
                 ITEM_SetUninterruptableState(pSlotItem);
@@ -7956,7 +7956,7 @@ void __fastcall INV_AppendAttackSpeedText(D2UnitStrc *pItem, Unicode *wszOut, D2
     {
         pPlayer = CUNIT_GetPlayer();
         bIsDistanceWeapon = D2COMMON_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_CROSSBOW) || D2COMMON_ITEMS_CheckItemTypeId(pItem, ITEMTYPE_BOW);
-        nClassId = pPlayer ? (int32_t)pPlayer->dwClassId : -1;
+        nClassId = pPlayer ? pPlayer->dwClassId : -1;
 
         //  class -1 reads offsets[-2 + bDistance], i.e. matrix[17][3..4]. The bytes index both tables flat (add ecx,
         //  gptAttackSpeedClassOffsets[eax*4], mov edx, gptAttackSpeedMatrix[ecx*4], 0x6FAE5629) and the offsets table begins where the matrix ends;
@@ -8726,7 +8726,7 @@ void __fastcall INV_BuildItemNameText(D2UnitStrc *pItem, Unicode *wszOut, int32_
     {
         //  red for a quest item carried down from a harder difficulty; gold for every other quest item, including a difficulty-checked one
         //  that is not below, except Wirt's Leg
-        if (pItemsTxt->nQuestDiffCheck && D2COMMON_STATLIST_UnitGetStatValue(pItem, STAT_QUESTITEMDIFFICULTY, 0) < (uint8_t)GAME_GetDifficulty())
+        if (pItemsTxt->nQuestDiffCheck && D2COMMON_STATLIST_UnitGetStatValue(pItem, STAT_QUESTITEMDIFFICULTY, 0) < GAME_GetDifficulty())
         {
             UI_AddColorCodeToWstring((wchar_t *)wszOut, 1);
         }
@@ -8846,7 +8846,7 @@ static void __fastcall INV_DrawBookDescription(void)
         D2WIN_10129_DrawFramedText(wszOut, gnDescPopupX, gnDescPopupY, 0, 0);
         return;
     }
-    D2WIN_10129_DrawFramedText(wszOut, gnDescPopupAltX, (int32_t)(gnDescPopupBottomY + nHeight), 0, 0);
+    D2WIN_10129_DrawFramedText(wszOut, gnDescPopupAltX, (gnDescPopupBottomY + nHeight), 0, 0);
 }
 
 
@@ -9133,7 +9133,7 @@ static void __fastcall INV_DrawSetItemDescription(D2UnitStrc *pUnit)
         D2WIN_10129_DrawFramedText(wszPopup, gnDescPopupX, gnDescPopupY, 0, 1);
         return;
     }
-    D2WIN_10129_DrawFramedText(wszPopup, gnDescPopupAltX, (int32_t)(gnDescPopupBottomY + nHeight), 0, 1);
+    D2WIN_10129_DrawFramedText(wszPopup, gnDescPopupAltX, (gnDescPopupBottomY + nHeight), 0, 1);
 }
 
 
@@ -9201,7 +9201,7 @@ static void __fastcall INV_DrawTransmogrifyDescription(void)
         D2WIN_10129_DrawFramedText(wszOut, gnDescPopupX, gnDescPopupY, 0, 0);
         return;
     }
-    D2WIN_10129_DrawFramedText(wszOut, gnDescPopupAltX, (int32_t)(gnDescPopupBottomY + nHeight), 0, 0);
+    D2WIN_10129_DrawFramedText(wszOut, gnDescPopupAltX, (gnDescPopupBottomY + nHeight), 0, 0);
 }
 
 
@@ -9360,12 +9360,12 @@ void __fastcall INV_DrawItemDescription(D2UnitStrc *pUnit, BOOL bVendorUnit)
                     if ((uint16_t)CMDTBL_ControlsFindBoundKey(HOTKEY_SWITCHWEAP, TRUE) != 0xFFFF)
                     {
                         Unicode::strcat(wszSwapHint, D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon));
-                        Unicode::strcat(wszSwapHint, (const Unicode *)CMDTBL_ControlsGetBoundKeyName(HOTKEY_SWITCHWEAP, TRUE));
+                        Unicode::strcat(wszSwapHint, CMDTBL_ControlsGetBoundKeyName(HOTKEY_SWITCHWEAP, TRUE));
                     }
                     else if ((uint16_t)CMDTBL_ControlsFindBoundKey(HOTKEY_SWITCHWEAP, FALSE) != 0xFFFF)
                     {
                         Unicode::strcat(wszSwapHint, D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon));
-                        Unicode::strcat(wszSwapHint, (const Unicode *)CMDTBL_ControlsGetBoundKeyName(HOTKEY_SWITCHWEAP, FALSE));
+                        Unicode::strcat(wszSwapHint, CMDTBL_ControlsGetBoundKeyName(HOTKEY_SWITCHWEAP, FALSE));
                     }
 
                     nX = 368;
@@ -9457,7 +9457,7 @@ void __fastcall INV_DrawItemDescription(D2UnitStrc *pUnit, BOOL bVendorUnit)
             D2WIN_10129_DrawFramedText(wszPopupText, gnDescPopupX, gnDescPopupY, 0, 1);
             return;
         }
-        D2WIN_10129_DrawFramedText(wszPopupText, gnDescPopupAltX, (int32_t)(gnDescPopupBottomY + nHeight), 0, 1);
+        D2WIN_10129_DrawFramedText(wszPopupText, gnDescPopupAltX, (gnDescPopupBottomY + nHeight), 0, 1);
         return;
     }
 
@@ -9793,7 +9793,7 @@ void __fastcall INV_DrawItemDescription(D2UnitStrc *pUnit, BOOL bVendorUnit)
         D2WIN_10129_DrawFramedText(wszPopupText, gnDescPopupX, gnDescPopupY, nDrawColor, 1);
         return;
     }
-    D2WIN_10129_DrawFramedText(wszPopupText, gnDescPopupAltX, (int32_t)(gnDescPopupBottomY + nHeight), nDrawColor, 1);
+    D2WIN_10129_DrawFramedText(wszPopupText, gnDescPopupAltX, (gnDescPopupBottomY + nHeight), nDrawColor, 1);
 }
 
 //  The description's last two callees in this unit: the damage lines (0x6FAE43D0, 2159 bytes) and the price footer (0x6FAE5A40, 399 bytes).
@@ -10297,7 +10297,7 @@ void __fastcall INV_MercInvDrawStatRows(D2UnitStrc *pMerc)
         case STAT_LIGHTRESIST:
         case STAT_COLDRESIST:
         case STAT_POISONRESIST:
-            pDifficultyTxt = D2COMMON_DATATBLS_GetDifficultyLevelsTxtRecord((uint8_t)GAME_GetDifficulty());
+            pDifficultyTxt = D2COMMON_DATATBLS_GetDifficultyLevelsTxtRecord(GAME_GetDifficulty());
             nMaxResist = 0;
             switch (gMercStatRows[i].nStatId)
             {
@@ -10353,7 +10353,7 @@ void __fastcall INV_MercInvDrawStatRows(D2UnitStrc *pMerc)
             }
             else
             {
-                switch ((uint8_t)GAME_GetDifficulty())
+                switch (GAME_GetDifficulty())
                 {
                 case 1:
                     nValue -= 20;
@@ -10876,7 +10876,7 @@ void __cdecl INV_UpdateAndDrawPanels(void)
         //  the vendor's side tabs, 18-byte records
         nPrevFont = D2WIN_10127_SetFont(D2FONT_FONT16);
         iVendorTab = 0;
-        if ((int32_t)gnVendorTabCount > 0)
+        if (gnVendorTabCount > 0)
         {
             nTabX = 0;
             //  the bytes' cursor is &[i].bActive (set at 0x6FADED4C, stepped by `add esi, 12h` at 0x6FADEE31) and
@@ -10914,7 +10914,7 @@ void __cdecl INV_UpdateAndDrawPanels(void)
                 //  D2ExpRes: BuySellTabs2 at 0x6FADEE2E
                 nTabX += 80;
             }
-            while (iVendorTab < (int32_t)gnVendorTabCount);
+            while (iVendorTab < gnVendorTabCount);
         }
         D2WIN_10127_SetFont(nPrevFont);
         INV_DrawGoldAmount(2);
@@ -10967,10 +10967,10 @@ void __cdecl INV_UpdateAndDrawPanels(void)
                 D2WIN_10117_DrawText(wszText, gnBorderXDifference + 78, gnBorderYDifference + gnScreenHeight - 219, 0, 0);
             }
 
-            nVendorPageSaved = (uint8_t)gnVendorPage;
+            nVendorPageSaved = gnVendorPage;
             gnVendorPage = 4;
             INV_DrawInventoryGridItems(CUNIT_GetPlayer());
-            gnVendorPage = (uint8_t)nVendorPageSaved;
+            gnVendorPage = nVendorPageSaved;
 
             tPanel.pCellFile = UI_GetBuySellButtonImage();
             tPanel.nFrame = gbStashCloseBtnPressed + 10;
@@ -11065,12 +11065,12 @@ void __cdecl INV_UpdateAndDrawPanels(void)
                 D2GFX_TEXTURE_CelDraw(&tPanel, gnBorderXDifference + 256, gnBorderYDifference + gnScreenHeight - 48, 0xFFFFFFFF, 5, NULL);
             }
 
-            nVendorPageSaved = (uint8_t)gnVendorPage;
+            nVendorPageSaved = gnVendorPage;
             if (!gbHoradricAnimActive || (uint32_t)gnHoradricAnimFrame >= 14)
             {
                 gnVendorPage = 3;
                 INV_DrawInventoryGridItems(CUNIT_GetPlayer());
-                gnVendorPage = (uint8_t)nVendorPageSaved;
+                gnVendorPage = nVendorPageSaved;
             }
 
             tPanel.pCellFile = UI_GetBuySellButtonImage();
@@ -11327,12 +11327,12 @@ TRADE_PANEL:
         tPanel.nFrame = gbTradeCancelPending == 1 ? 11 : 10;
         D2GFX_TEXTURE_CelDraw(&tPanel, gnBorderXDifference + 275, gnBorderYDifference + gnScreenHeight - 64, 0xFFFFFFFF, 5, NULL);
 
-        nVendorPageSaved = (uint8_t)gnVendorPage;
+        nVendorPageSaved = gnVendorPage;
         gnVendorPage = 1;
         INV_DrawInventoryGridItems(CUNIT_GetPlayer());
         gnVendorPage = 2;
         INV_DrawInventoryGridItems(CUNIT_GetPlayer());
-        gnVendorPage = (uint8_t)nVendorPageSaved;
+        gnVendorPage = nVendorPageSaved;
 
         D2WIN_10127_SetFont(D2FONT_FONT16);
 
@@ -11412,10 +11412,10 @@ TRADE_PANEL:
     }
 
     //  the inventory grid itself
-    nVendorPageSaved = (uint8_t)gnVendorPage;
+    nVendorPageSaved = gnVendorPage;
     gnVendorPage = 0;
     INV_DrawInventoryGridItems(CUNIT_GetPlayer());
-    gnVendorPage = (uint8_t)nVendorPageSaved;
+    gnVendorPage = nVendorPageSaved;
 
     nSwapOffsetX = 0;
     nSwapOffsetY = 0;
@@ -11652,7 +11652,7 @@ NEXT_BODYLOC:
                     if (pPlayer && pActiveNpc)
                     {
                         pQuestFlags = NPCMENU_QuestGetQuestRecord();
-                        nRepairCost = D2COMMON_ITEMS_GetAllRepairCosts(NULL, pPlayer, pActiveNpc->dwClassId, (D2C_Difficulties)(uint8_t)GAME_GetDifficulty(), pQuestFlags, NULL);
+                        nRepairCost = D2COMMON_ITEMS_GetAllRepairCosts(NULL, pPlayer, pActiveNpc->dwClassId, (D2C_Difficulties)GAME_GetDifficulty(), pQuestFlags, NULL);
                         Unicode::sprintf(256, wszRepairAll, D2LANG_GetStringFromTblIndex(STR_IDX_10095_x_REPAIR_ALL_EQUIPMENT_FMT), nRepairCost);
                         //  D2ExpRes: BuySellRepairAllString at 0x6FAE08D0
                         D2WIN_10129_DrawFramedText(wszRepairAll, gnBorderXDifference + gatButtonsOffsetX[gnNpcShopCloseTab][iShopTab], gnBorderYDifference + gnScreenHeight - 100, 0, 0);

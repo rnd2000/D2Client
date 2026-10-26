@@ -146,7 +146,7 @@ LRESULT __stdcall WNDPROC_WndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPa
 
     RECORD_LogEvent(Msg, wParam, lParam);
 
-    if ((!RECORD_GetRecordPlaybackLoaded() || Msg == WM_CLOSE) && STORM_SMsgDispatchMessage(hWnd, Msg, (uint32_t)wParam, (int32_t)lParam, &bReturn, &lResult) && bReturn)
+    if ((!RECORD_GetRecordPlaybackLoaded() || Msg == WM_CLOSE) && STORM_SMsgDispatchMessage(hWnd, Msg, wParam, (int32_t)lParam, &bReturn, &lResult) && bReturn)
     {
         return lResult;
     }

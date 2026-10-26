@@ -715,7 +715,7 @@ void __fastcall PARTY_DrawRowButtons(D2ClientPartyRowStrc *pRow, int32_t nUnused
 void __fastcall PARTY_DrawAreaLabel(D2ClientPartyRowStrc *pRow, int32_t nY, int32_t nColor)
 {
     Unicode wszText[255];
-    Unicode::strcpy(wszText, (const Unicode *)(UINT_PTR)UI_LevelsGetLevelName(pRow->nLevelId));
+    Unicode::strcpy(wszText, UI_LevelsGetLevelName(pRow->nLevelId));
     Unicode *pCut = &wszText[254];
 
     if (D2WIN_10121_GetTextWidth(wszText) > 140)

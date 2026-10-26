@@ -276,9 +276,9 @@ static_assert(offsetof(D2ClientEscMenuItemStrc, pfnRefresh) == 0x118
 //1.10f: D2Client.0x6FB070F0
 //  The Sound slider moved: rescale the step to 0..100 and hand it to D2Sound, which stores the setting itself (no registry write here,
 //  unlike the automap rows).
-void __fastcall ESCMENU_SoundVolumeOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_SoundVolumeOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     D2SOUND_10047_SetMasterVolumeSetting((int32_t)(gfPercentDivisor / (double)(pItem->dwCount - 1) * pItem->nValue));
 }
@@ -286,11 +286,11 @@ void __fastcall ESCMENU_SoundVolumeOnChange(D2ClientEscMenuItemStrc *pItem, int3
 
 //1.10f: D2Client.0x6FB07130
 //  The Sound slider's value back into the row, at menu load. D2Sound is asked before dwCount is read, as the bytes order it.
-void __fastcall ESCMENU_SoundVolumeRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_SoundVolumeRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
     int32_t nVolume;
 
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     nVolume = D2SOUND_10046_GetMasterVolumeSetting();
     pItem->nValue = (int32_t)((double)(pItem->dwCount - 1) * (nVolume + 1) * 0.01f);
@@ -299,9 +299,9 @@ void __fastcall ESCMENU_SoundVolumeRefresh(D2ClientEscMenuItemStrc *pItem, int32
 
 //1.10f: D2Client.0x6FB07180
 //  The Music slider moved: the Sound slider's shape into D2Sound #10049.
-void __fastcall ESCMENU_MusicVolumeOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_MusicVolumeOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     D2SOUND_10049_SetMusicVolumeSetting((int32_t)(gfPercentDivisor / (double)(pItem->dwCount - 1) * pItem->nValue));
 }
@@ -309,11 +309,11 @@ void __fastcall ESCMENU_MusicVolumeOnChange(D2ClientEscMenuItemStrc *pItem, int3
 
 //1.10f: D2Client.0x6FB071C0
 //  The Music slider's value back into the row, from D2Sound #10048.
-void __fastcall ESCMENU_MusicVolumeRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_MusicVolumeRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
     int32_t nVolume;
 
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     nVolume = D2SOUND_10048_GetMusicVolumeSetting();
     pItem->nValue = (int32_t)((double)(pItem->dwCount - 1) * (nVolume + 1) * 0.01f);
@@ -339,9 +339,9 @@ void __cdecl j_SOUNDCHAN_Toggle3dSound(void)
 
 //1.10f: D2Client.0x6FB07230
 //  The 3D row's value is the live switch; runs at menu load and on every draw of the row, since both of its slots hold this.
-void __fastcall ESCMENU_Sound3DRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_Sound3DRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     pItem->nValue = SOUNDCHAN_Is3DEnabled();
 }
@@ -357,9 +357,9 @@ BOOL __cdecl j_SOUNDCHAN_Is3DEnabled(void)
 
 //1.10f: D2Client.0x6FB07250
 //  The 3D bias slider moved: the Sound slider's shape into D2Sound #10051.
-void __fastcall ESCMENU_Sound3DBiasOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_Sound3DBiasOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     D2SOUND_10051_SetPositionalBiasSetting((int32_t)(gfPercentDivisor / (double)(pItem->dwCount - 1) * pItem->nValue));
 }
@@ -367,11 +367,11 @@ void __fastcall ESCMENU_Sound3DBiasOnChange(D2ClientEscMenuItemStrc *pItem, int3
 
 //1.10f: D2Client.0x6FB07290
 //  The 3D bias slider's value back into the row, from D2Sound #10050.
-void __fastcall ESCMENU_Sound3DBiasRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_Sound3DBiasRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
     int32_t nBias;
 
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     nBias = D2SOUND_10050_GetPositionalBiasSetting();
     pItem->nValue = (int32_t)((double)(pItem->dwCount - 1) * (nBias + 1) * 0.01f);
@@ -396,9 +396,9 @@ void __cdecl j_SOUNDCHAN_ToggleEaxEffects(void)
 
 //1.10f: D2Client.0x6FB07300
 //  The EAX row's value is the live switch; runs at menu load and on every draw.
-void __fastcall ESCMENU_SoundEaxRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_SoundEaxRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     pItem->nValue = SOUNDCHAN_IsEaxEnabled();
 }
@@ -406,9 +406,9 @@ void __fastcall ESCMENU_SoundEaxRefresh(D2ClientEscMenuItemStrc *pItem, int32_t 
 
 //1.10f: D2Client.0x6FB07310
 //  The NPC speech row changed. A value past 2 has no arm, and only D2Sound hears about it.
-void __fastcall ESCMENU_NpcSpeechOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_NpcSpeechOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     D2SOUND_10053_SetNpcSpeechSetting(pItem->nValue);
 
@@ -435,9 +435,9 @@ void __fastcall ESCMENU_NpcSpeechOnChange(D2ClientEscMenuItemStrc *pItem, int32_
 //1.10f: D2Client.0x6FB07370
 //  Loads the stored NPC speech choice and re-applies it, at menu load. The original inlines ESCMENU_NpcSpeechOnChange here; ours calls it with
 //  edx 0, which OnChange never reads. It calls SOUNDCHAN_IsSystemReady_2 directly, not through the page's wrapper.
-void __fastcall ESCMENU_NpcSpeechRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_NpcSpeechRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     pItem->nValue = D2SOUND_10052_GetNpcSpeechSetting();
 
@@ -497,9 +497,9 @@ void __fastcall ESCMENU_NpcSpeechRefresh(D2ClientEscMenuItemStrc *pItem, int32_t
 //  switch is written twice, as the bytes have it. The same goes for Resolution's two-way mapping and BlendShadow's one call.
 //
 //  The Light Quality row changed: save the choice, then the three-way switch above; a value past 2 is saved and applies nothing.
-void __fastcall ESCMENU_LightQualityOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_LightQualityOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     STORM_SRegSaveValue(szDiabloIIKey, "Light Quality", 0, pItem->nValue);
 
@@ -525,9 +525,9 @@ void __fastcall ESCMENU_LightQualityOnChange(D2ClientEscMenuItemStrc *pItem, int
 
 //1.10f: D2Client.0x6FB07440
 //  Loads the Light Quality choice into the row and applies it, once per game. No default: an absent value leaves the table's 2.
-void __fastcall ESCMENU_LightQualityRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_LightQualityRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     STORM_SRegLoadValue(szDiabloIIKey, "Light Quality", 0, (uint32_t *)&pItem->nValue);
 
@@ -553,9 +553,9 @@ void __fastcall ESCMENU_LightQualityRefresh(D2ClientEscMenuItemStrc *pItem, int3
 
 //1.10f: D2Client.0x6FB074A0
 //  The Blended Shadows row changed.
-void __fastcall ESCMENU_BlendShadowOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_BlendShadowOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     STORM_SRegSaveValue(szDiabloIIKey, "Blended Shadows", 0, pItem->nValue);
     D2GFX_SetBlendShadows(pItem->nValue);
@@ -564,9 +564,9 @@ void __fastcall ESCMENU_BlendShadowOnChange(D2ClientEscMenuItemStrc *pItem, int3
 
 //1.10f: D2Client.0x6FB074D0
 //  Loads and applies the Blended Shadows choice, once per game; the table's 1 when absent.
-void __fastcall ESCMENU_BlendShadowRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_BlendShadowRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     STORM_SRegLoadValue(szDiabloIIKey, "Blended Shadows", 0, (uint32_t *)&pItem->nValue);
     D2GFX_SetBlendShadows(pItem->nValue);
@@ -575,11 +575,11 @@ void __fastcall ESCMENU_BlendShadowRefresh(D2ClientEscMenuItemStrc *pItem, int32
 
 //1.10f: D2Client.0x6FB07500
 //  The Resolution row changed, expansion only. Choice 1 is 800x600 and anything else 640x480: `xor ecx, ecx / dec esi / jnz`, then `mov ecx, 2`.
-void __fastcall ESCMENU_ResolutionOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_ResolutionOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
     D2GameResolutionMode nMode;
 
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     STORM_SRegSaveValue(szDiabloIIKey, "Resolution", 0, pItem->nValue);
 
@@ -593,11 +593,11 @@ void __fastcall ESCMENU_ResolutionOnChange(D2ClientEscMenuItemStrc *pItem, int32
 
 //1.10f: D2Client.0x6FB07540
 //  Loads and applies the resolution, once per game in an expansion game; the table's 0, 640x480, when absent.
-void __fastcall ESCMENU_ResolutionRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_ResolutionRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
     D2GameResolutionMode nMode;
 
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     STORM_SRegLoadValue(szDiabloIIKey, "Resolution", 0, (uint32_t *)&pItem->nValue);
 
@@ -620,9 +620,9 @@ int32_t __stdcall j_D2gfx_10007(void)
 //1.10f: D2Client.0x6FB07580
 //  The Perspective row changed: save, switch D2Gfx's perspective, and set the view's rectangle again, since the projection changes the drawable
 //  area.
-void __fastcall ESCMENU_PerspectiveOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_PerspectiveOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     STORM_SRegSaveValue(szDiabloIIKey, "Perspective", 0, pItem->nValue);
     D2GFX_SetPerspective(pItem->nValue);
@@ -634,9 +634,9 @@ void __fastcall ESCMENU_PerspectiveOnChange(D2ClientEscMenuItemStrc *pItem, int3
 //  Loads the Perspective choice and applies it only if the renderer can, once per game. When D2GFX_CheckUnitPerspective says yes, the loaded
 //  value is saved back (a no-op for a stored value, but for an absent one it writes the table's 1) and applied as the change applies it. When
 //  it says no, the row is forced to 0 and the stored preference is left alone.
-void __fastcall ESCMENU_PerspectiveRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_PerspectiveRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     STORM_SRegLoadValue(szDiabloIIKey, "Perspective", 0, (uint32_t *)&pItem->nValue);
 
@@ -663,11 +663,11 @@ int32_t __stdcall j_D2gfx_10019(void)
 
 //1.10f: D2Client.0x6FB07650
 //  The Gamma slider moved: 21 steps onto 55..255, saved and applied.
-void __fastcall ESCMENU_GammaOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_GammaOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
     int32_t nGamma;
 
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     nGamma = (int32_t)(200.0f / (double)(pItem->dwCount - 1) * pItem->nValue + 55.0f);
     STORM_SRegSaveValue(szDiabloIIKey, "Gamma", 0, nGamma);
@@ -678,12 +678,12 @@ void __fastcall ESCMENU_GammaOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nA
 //1.10f: D2Client.0x6FB076C0
 //  Places the Gamma slider and re-applies what it shows, once per game. 155 when the value is absent. Only when the hardware can set gamma is
 //  the step turned back into a gamma, saved and applied; otherwise the row still shows a position and nothing is written.
-void __fastcall ESCMENU_GammaRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_GammaRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
     uint32_t nStoredGamma;
     int32_t nGamma;
 
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     nStoredGamma = 155;
     STORM_SRegLoadValue(szDiabloIIKey, "Gamma", 0, &nStoredGamma);
@@ -702,9 +702,9 @@ void __fastcall ESCMENU_GammaRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nAr
 //1.10f: D2Client.0x6FB07780
 //  The Contrast slider moved. The registry gets the step rescaled to 0..100; D2Gfx option 11 gets the step itself, re-read from the row;
 //  D2GFX_SetGamma(0) follows.
-void __fastcall ESCMENU_ContrastOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_ContrastOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     STORM_SRegSaveValue(szDiabloIIKey, "Contrast", 0, (int32_t)(gfPercentDivisor / (double)(pItem->dwCount - 1) * pItem->nValue));
     D2GFX_SetOption(11, pItem->nValue);
@@ -716,12 +716,12 @@ void __fastcall ESCMENU_ContrastOnChange(D2ClientEscMenuItemStrc *pItem, int32_t
 //  Places the Contrast slider, re-saves and applies, once per game. The default depends on the renderer; the stored value goes to a step and
 //  is saved back from it, so an off-grid value snaps. The bytes keep (double)(dwCount - 1) on the x87 stack across both expressions, which is
 //  one local here.
-void __fastcall ESCMENU_ContrastRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_ContrastRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
     uint32_t nStoredContrast;
     double dSteps;
 
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     nStoredContrast = D2GFX_GetDisplayType() != 4 ? 100 : 0;
     STORM_SRegLoadValue(szDiabloIIKey, "Contrast", 0, &nStoredContrast);
@@ -758,9 +758,9 @@ void __fastcall ESCMENU_ContrastRefresh(D2ClientEscMenuItemStrc *pItem, int32_t 
 //  PartyNames are eleven bytes each, `mov ecx, [ecx+124h]` and a tail jump into an AUTOMAP_Set*AndSave that does both.
 //
 //  The Automap Mode row changed: three choices, so a value above 2 wraps to 0; the unsigned compare makes that catch an underflow too.
-void __fastcall ESCMENU_AutomapModeOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_AutomapModeOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     if ((uint32_t)pItem->nValue > 2u)
         pItem->nValue = 0;
@@ -781,12 +781,12 @@ void __fastcall ESCMENU_AutomapModeOnChange(D2ClientEscMenuItemStrc *pItem, int3
 //  our stack holds different garbage from the original's; the difference exists and cannot be closed.
 //  The second store to nStoredMode, inside the clamp, goes to a local nothing reads again -- reproduced. The row does not take the clamped
 //  value directly: it applies it and then reads AUTOMAP_GetMode back, so whatever the automap decides is what the row shows.
-void __fastcall ESCMENU_AutomapModeRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_AutomapModeRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
     uint32_t nMode;
     uint32_t nStoredMode;
 
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     STORM_SRegLoadValue(szDiabloIIKey, szAutoMapMode, 0, &nStoredMode);
 
@@ -806,9 +806,9 @@ void __fastcall ESCMENU_AutomapModeRefresh(D2ClientEscMenuItemStrc *pItem, int32
 //  The Automap Fade row changed: five choices.
 //  BUG: the registry is written twice. AUTOMAP_SetFade saves `AutoMapFade` itself and this saves it again on the next line, with the same
 //  value. HARMLESS: the second write stores what the first did.
-void __fastcall ESCMENU_AutomapFadeOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_AutomapFadeOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     if ((uint32_t)pItem->nValue > 4u)
         pItem->nValue = 0;
@@ -826,11 +826,11 @@ void __fastcall ESCMENU_AutomapFadeOnChange(D2ClientEscMenuItemStrc *pItem, int3
 //  DIFFERENCE: as in the Mode refresh, the local stays uninitialised and our stack holds different garbage from the original's.
 //  It differs from Mode in the shape of the clamp: where Mode computes a corrected value and applies it either way, Fade only calls
 //  AUTOMAP_SetFade when the stored value was out of range, so a value in 0..4 is read back from the automap without being applied to it first.
-void __fastcall ESCMENU_AutomapFadeRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_AutomapFadeRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
     uint32_t nStoredFade;
 
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     STORM_SRegLoadValue(szDiabloIIKey, szAutoMapFade, 0, &nStoredFade);
 
@@ -846,9 +846,9 @@ void __fastcall ESCMENU_AutomapFadeRefresh(D2ClientEscMenuItemStrc *pItem, int32
 
 //1.10f: D2Client.0x6FB079B0
 //  The Centre-on-player row changed: `mov ecx, [ecx+124h]` and a tail jump into AUTOMAP_SetCentersAndSave.
-void __fastcall ESCMENU_AutomapCenterOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_AutomapCenterOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     AUTOMAP_SetCentersAndSave(pItem->nValue);
 }
@@ -857,9 +857,9 @@ void __fastcall ESCMENU_AutomapCenterOnChange(D2ClientEscMenuItemStrc *pItem, in
 //1.10f: D2Client.0x6FB079C0
 //  Loads the Centre flag back, at menu load and on every draw of its row (both slots hold it). There is no registry read of its own:
 //  AUTOMAP_GetCenters returns the live flag, which AUTOMAP_LoadSettings has already filled from the registry.
-void __fastcall ESCMENU_AutomapCenterRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_AutomapCenterRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     pItem->nValue = AUTOMAP_GetCenters();
 }
@@ -867,9 +867,9 @@ void __fastcall ESCMENU_AutomapCenterRefresh(D2ClientEscMenuItemStrc *pItem, int
 
 //1.10f: D2Client.0x6FB079D0
 //  The Show-party row changed: `mov ecx, [ecx+124h]` and a tail jump, like Center.
-void __fastcall ESCMENU_AutomapPartyOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_AutomapPartyOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     AUTOMAP_SetShowPartyAndSave(pItem->nValue);
 }
@@ -877,9 +877,9 @@ void __fastcall ESCMENU_AutomapPartyOnChange(D2ClientEscMenuItemStrc *pItem, int
 
 //1.10f: D2Client.0x6FB079E0
 //  Loads the Show-party flag back, at menu load and on every draw of its row.
-void __fastcall ESCMENU_AutomapPartyRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_AutomapPartyRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     pItem->nValue = AUTOMAP_GetShowParty();
 }
@@ -896,9 +896,9 @@ int32_t __cdecl j_AUTOMAP_GetShowParty(void)
 
 //1.10f: D2Client.0x6FB07A00
 //  The Party-names row changed: `mov ecx, [ecx+124h]` and a tail jump.
-void __fastcall ESCMENU_AutomapPartyNamesOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_AutomapPartyNamesOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     AUTOMAP_SetPartyNamesAndSave(pItem->nValue);
 }
@@ -908,9 +908,9 @@ void __fastcall ESCMENU_AutomapPartyNamesOnChange(D2ClientEscMenuItemStrc *pItem
 //  Loads the Party-names flag back, at menu load and on every draw of its row; the only one of the five that is not a single accessor.
 //  Party names are shown only when the party markers are: the row reads `AUTOMAP_GetShowParty() && AUTOMAP_GetPartyNames()`, so turning the
 //  party display off makes this row read 0 whatever its own setting says. The dependency is one-way: nothing here writes the party flag.
-void __fastcall ESCMENU_AutomapPartyNamesRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg)
+void __fastcall ESCMENU_AutomapPartyNamesRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg)
 {
-    UNREFERENCED_PARAMETER(nArg);
+    UNREFERENCED_PARAMETER(pMsg);
 
     if (AUTOMAP_GetShowParty() && AUTOMAP_GetPartyNames())
         pItem->nValue = 1;
@@ -1049,22 +1049,22 @@ void __fastcall ESCMENU_DragSlider(int32_t nMouseX, int32_t nMouseY)
 
     if (gbEscMenuSliderDragging)
     {
-        nSelected = (int32_t)gnEscMenuSelectedItem;
+        nSelected = gnEscMenuSelectedItem;
     }
     else
     {
-        if (ESCMENU_HitTestRow(nMouseY) != (int32_t)gnEscMenuSelectedItem)
+        if (ESCMENU_HitTestRow(nMouseY) != gnEscMenuSelectedItem)
         {
             return;
         }
-        nSelected = (int32_t)gnEscMenuSelectedItem;
+        nSelected = gnEscMenuSelectedItem;
     }
 
     pRow = &sgptMenuItem[nSelected];
     nValueBefore = pRow->nValue;
     pfnEnabled = pRow->pfnIsEnabled;
 
-    if (!pfnEnabled || (bEnabled = pfnEnabled(), nSelected = (int32_t)gnEscMenuSelectedItem, bEnabled))
+    if (!pfnEnabled || (bEnabled = pfnEnabled(), nSelected = gnEscMenuSelectedItem, bEnabled))
     {
         pRow = &sgptMenuItem[nSelected];
         if (pRow->dwType == 2)
@@ -1097,7 +1097,7 @@ void __fastcall ESCMENU_DragSlider(int32_t nMouseX, int32_t nMouseY)
                     pRow->nValue = 0;
                 }
 
-                nSelected = (int32_t)gnEscMenuSelectedItem;
+                nSelected = gnEscMenuSelectedItem;
                 gbEscMenuSliderDragging = 1;
             }
         }
@@ -1126,7 +1126,7 @@ void __stdcall ESCMENU_OnLButtonUp(SMSGHANDLER_PARAMS *pMsg)
 
     if (gnEscMenuDragging)
     {
-        if (ESCMENU_HitTestRow(nMouseY) == (int32_t)gnEscMenuSelectedItem)
+        if (ESCMENU_HitTestRow(nMouseY) == gnEscMenuSelectedItem)
         {
             ESCMENU_ActivateSelectedRow(pMsg);
         }
@@ -1164,14 +1164,14 @@ void __fastcall ESCMENU_ActivateSelectedRow(SMSGHANDLER_PARAMS *pMsg)
     ESCMENUENABLEDFN pfnIsEnabled;
     D2ClientEscMenuItemStrc *pRow;
 
-    nSelected = (int32_t)gnEscMenuSelectedItem;
+    nSelected = gnEscMenuSelectedItem;
     pfnIsEnabled = sgptMenuItem[nSelected].pfnIsEnabled;
 
     if (pfnIsEnabled)
     {
         if (!pfnIsEnabled())
             return;
-        nSelected = (int32_t)gnEscMenuSelectedItem;
+        nSelected = gnEscMenuSelectedItem;
     }
 
     pRow = &sgptMenuItem[nSelected];
@@ -1182,17 +1182,17 @@ void __fastcall ESCMENU_ActivateSelectedRow(SMSGHANDLER_PARAMS *pMsg)
         {
             ++pRow->nValue;
 
-            nSelected = (int32_t)gnEscMenuSelectedItem;
+            nSelected = gnEscMenuSelectedItem;
             pRow = &sgptMenuItem[nSelected];
             if ((uint32_t)pRow->nValue > pRow->dwCount - 1)
             {
                 pRow->nValue = 0;
-                nSelected = (int32_t)gnEscMenuSelectedItem;
+                nSelected = gnEscMenuSelectedItem;
             }
 
             pRow = &sgptMenuItem[nSelected];
             if (pRow->pfnOnChange)
-                pRow->pfnOnChange(pRow, (int32_t)(UINT_PTR)pMsg);
+                pRow->pfnOnChange(pRow, pMsg);
 
             SOUNDINST_PlaySound(SOUND_CURSOR_PASS, NULL, 0, 0, 0);
         }
@@ -1201,7 +1201,7 @@ void __fastcall ESCMENU_ActivateSelectedRow(SMSGHANDLER_PARAMS *pMsg)
     {
         if (pRow->pfnOnChange)
         {
-            pRow->pfnOnChange(pRow, (int32_t)(UINT_PTR)pMsg);
+            pRow->pfnOnChange(pRow, pMsg);
             SOUNDINST_PlaySound(SOUND_CURSOR_SELECT, NULL, 0, 0, 0);
         }
     }
@@ -1225,7 +1225,7 @@ void __stdcall ESCMENU_OnDownKey(SMSGHANDLER_PARAMS *pMsg)
 
     do
     {
-        nSelected = (int32_t)gnEscMenuSelectedItem;
+        nSelected = gnEscMenuSelectedItem;
         do
         {
             gnEscMenuSelectedItem = ++nSelected;
@@ -1262,7 +1262,7 @@ void __stdcall ESCMENU_OnUpKey(SMSGHANDLER_PARAMS *pMsg)
 
     do
     {
-        nSelected = (int32_t)gnEscMenuSelectedItem;
+        nSelected = gnEscMenuSelectedItem;
         do
         {
             gnEscMenuSelectedItem = --nSelected;
@@ -1476,7 +1476,7 @@ void __fastcall ESCMENU_LoadPageImages(D2ClientEscMenuInfoStrc *ptMenuInfo, D2Cl
     szLang[0] = gszEmptyString;
     memset(&szLang[1], 0, 3);
 
-    D2LANG_10006((uint32_t)szLang, 0);
+    D2LANG_10006(szLang, 0);
 
     for (ii = 0; ii < ptMenuInfo->nItemCount; ++ii)
     {
@@ -1563,7 +1563,7 @@ void __cdecl ESCMENU_LoadImages(void)
     nCelCount = D2CMP_CelFileGetCelsPerDirection(tCelContext.pCellFile);
 
     nWidestCel = 0;
-    for (tCelContext.nFrame = 0; (uint32_t)tCelContext.nFrame < nCelCount; ++tCelContext.nFrame)
+    for (tCelContext.nFrame = 0; tCelContext.nFrame < nCelCount; ++tCelContext.nFrame)
     {
         nCelWidth = D2CMP_CelGetWidth(D2CMP_CelGetHandle(&tCelContext));
         if (nWidestCel <= nCelWidth)
@@ -1987,7 +1987,7 @@ void __cdecl ESCMENU_Draw(void)
 
     nPentagramY = sgptMenuItem[gnEscMenuSelectedItem].nScreenY + sgptMenuInfo->nPentYOffset;
 
-    D2GFX_TEXTURE_CelDraw(&tPentagram, gnScreenWidth / 2 - (int32_t)gnEscMenuPentagramWidth - 249, nPentagramY, 0xFFFFFFFF, DRAWMODE_NORMAL, NULL);
+    D2GFX_TEXTURE_CelDraw(&tPentagram, gnScreenWidth / 2 - gnEscMenuPentagramWidth - 249, nPentagramY, 0xFFFFFFFF, DRAWMODE_NORMAL, NULL);
 
     tPentagram.nFrame = gnEscMenuPentagramFrame;
     D2GFX_TEXTURE_CelDraw(&tPentagram, gnScreenWidth / 2 + 249, nPentagramY, 0xFFFFFFFF, DRAWMODE_NORMAL, NULL);

@@ -362,7 +362,7 @@ void __stdcall QUESTLOG_QuestScreenOnMouseDown(SMSGHANDLER_PARAMS *pMsg)
                 }
 
                 //  every unread quest is marked seen before the act changes
-                for (iEntry = 0; iEntry < (int32_t)gnQuestLogEntryCount; ++iEntry)
+                for (iEntry = 0; iEntry < gnQuestLogEntryCount; ++iEntry)
                 {
                     if (!gQuestLogEntries[iEntry].nState)
                     {
@@ -395,11 +395,11 @@ ICONS:
         exit(-1);
     }
 
-    if ((int32_t)gnQuestLogEntryCount > 0)
+    if (gnQuestLogEntryCount > 0)
     {
         for (iButton = 0; ; ++iButton)
         {
-            if (iButton >= (int32_t)gnQuestLogEntryCount)
+            if (iButton >= gnQuestLogEntryCount)
             {
                 goto BOTTOM_BUTTONS;
             }
@@ -411,9 +411,9 @@ ICONS:
         }
 
         //  iButton cannot be -1 here either
-        if (iButton != -1 && iButton < (int32_t)gnQuestLogEntryCount)
+        if (iButton != -1 && iButton < gnQuestLogEntryCount)
         {
-            for (iEntry = 0; iEntry < (int32_t)gnQuestLogEntryCount; ++iEntry)
+            for (iEntry = 0; iEntry < gnQuestLogEntryCount; ++iEntry)
             {
                 if (iButton == gQuestLogEntries[iEntry].nSlotInPage && gQuestLogEntries[iEntry].bHasText)
                 {
@@ -489,11 +489,11 @@ void __stdcall QUESTLOG_QuestScreenOnMouseUp(SMSGHANDLER_PARAMS *pMsg)
     {
         if (gnQuestScreenPressedQuest == -1)
         {
-            if (gbQuestScreenSpeechButtonDown == 1 && nPanelX > 229 && nPanelX < 260 && nPanelY > 390 && nPanelY < 424 && gnQuestLogSelectedQuest != -1 && (int32_t)gnQuestLogEntryCount > 0)
+            if (gbQuestScreenSpeechButtonDown == 1 && nPanelX > 229 && nPanelX < 260 && nPanelY > 390 && nPanelY < 424 && gnQuestLogSelectedQuest != -1 && gnQuestLogEntryCount > 0)
             {
                 for (iEntry = 0; ; ++iEntry)
                 {
-                    if (iEntry >= (int32_t)gnQuestLogEntryCount)
+                    if (iEntry >= gnQuestLogEntryCount)
                     {
                         goto RESET;
                     }
@@ -527,11 +527,11 @@ void __stdcall QUESTLOG_QuestScreenOnMouseUp(SMSGHANDLER_PARAMS *pMsg)
             }
 
             iButton = -1;
-            if ((int32_t)gnQuestLogEntryCount > 0)
+            if (gnQuestLogEntryCount > 0)
             {
                 for (iButton = 0; ; ++iButton)
                 {
-                    if (iButton >= (int32_t)gnQuestLogEntryCount)
+                    if (iButton >= gnQuestLogEntryCount)
                     {
                         iButton = -1;
                         break;
@@ -544,7 +544,7 @@ void __stdcall QUESTLOG_QuestScreenOnMouseUp(SMSGHANDLER_PARAMS *pMsg)
                 }
             }
 
-            if (iButton == (int32_t)gnQuestScreenPressedQuest)
+            if (iButton == gnQuestScreenPressedQuest)
             {
                 gnQuestLogLastClickedPerAct[gnQuestLogActTab] = iButton;
                 gnQuestLogSelectedQuest = iButton;
@@ -767,7 +767,7 @@ void __cdecl QUESTLOG_AcknowledgeAndClose(void)
 
     if (gnQuestLogActTab < 5)
     {
-        for (iEntry = 0; iEntry < (int32_t)gnQuestLogEntryCount; ++iEntry)
+        for (iEntry = 0; iEntry < gnQuestLogEntryCount; ++iEntry)
         {
             if (!gQuestLogEntries[iEntry].nState)
             {
@@ -2201,7 +2201,7 @@ TAB_GATE:
 
                 tCelContext.pCellFile = gQuestLogSocketsImage;
                 nSlot = pDef->nSlotInPage;
-                if (nHoveredSlot == (int32_t)gnQuestLogSelectedQuest)
+                if (nHoveredSlot == gnQuestLogSelectedQuest)
                 {
                     tCelContext.nFrame = 1;
                     nSocketYOffset = gnQuestLogSelectedSocketYOffset;
@@ -2230,7 +2230,7 @@ TAB_GATE:
         {
             tCelContext.pCellFile = gQuestLogInvPsImage;
             tCelContext.nFrame = gnQuestLogPictureFrame;
-            if ((int32_t)gnQuestLogPictureFrame < 0 || (int32_t)gnQuestLogPictureFrame > 6)
+            if (gnQuestLogPictureFrame < 0 || gnQuestLogPictureFrame > 6)
             {
                 tCelContext.nFrame = 0;
             }
@@ -2241,15 +2241,15 @@ TAB_GATE:
 
     D2WIN_10127_SetFont((enum Font)8);
 
-    if ((int32_t)gnQuestLogSelectedQuest != -1 && (int32_t)gnQuestLogSelectedQuest < 6 && (int32_t)gnQuestLogSelectedQuest < (int32_t)gnQuestLogEntryCount && (int32_t)gnQuestLogEntryCount > 0)
+    if (gnQuestLogSelectedQuest != -1 && gnQuestLogSelectedQuest < 6 && gnQuestLogSelectedQuest < gnQuestLogEntryCount && gnQuestLogEntryCount > 0)
     {
         iEntry = 0;
         pEntrySlot = &gQuestLogEntries[0].nSlotInPage;
-        while (*pEntrySlot != (int32_t)gnQuestLogSelectedQuest)
+        while (*pEntrySlot != gnQuestLogSelectedQuest)
         {
             ++iEntry;
             pEntrySlot += 618;
-            if (iEntry >= (int32_t)gnQuestLogEntryCount)
+            if (iEntry >= gnQuestLogEntryCount)
             {
                 goto BOTTOM_BUTTONS;
             }

@@ -1363,7 +1363,7 @@ void __cdecl PANEL_DrawQuantityWarningIcons()
                     {
                         continue;
                     }
-                    nClassId = pOther ? (int32_t)pOther->dwClassId : -1;
+                    nClassId = pOther ? pOther->dwClassId : -1;
                     if (D2COMMON_DATATBLS_GetItemsTxtRecord(nClassId)->dwCode == pItemsTxt->dwCode)
                     {
                         nQuantity += D2COMMON_STATLIST_UnitGetStatValue(pOther, STAT_QUANTITY, 0);
@@ -1429,7 +1429,7 @@ void __cdecl PANEL_DrawBeltItemHint()
         return;
     }
 
-    nClassId = gpBeltHoverItem ? (int32_t)gpBeltHoverItem->dwClassId : -1;
+    nClassId = gpBeltHoverItem ? gpBeltHoverItem->dwClassId : -1;
     if (!D2COMMON_DATATBLS_GetItemsTxtRecord(nClassId))
     {
         FOG_DisplayAssert(szPtItemStats, szPanelCpp, 1556);
@@ -1814,9 +1814,9 @@ void __cdecl PANEL_DrawBelt()
         {
             memset(wszKey, 0, sizeof(wszKey));
 
-            if (CMDTBL_ControlsFindBoundKey((D2HotkeyIndices)gnBeltSlotHotkeys[nSlotId], 1) != -1 || CMDTBL_ControlsFindBoundKey((D2HotkeyIndices)gnBeltSlotHotkeys[nSlotId], 0) != -1)
+            if (CMDTBL_ControlsFindBoundKey(gnBeltSlotHotkeys[nSlotId], 1) != -1 || CMDTBL_ControlsFindBoundKey(gnBeltSlotHotkeys[nSlotId], 0) != -1)
             {
-                Unicode::strcpy(wszKey, CMDTBL_ControlsGetBoundKeyName((D2HotkeyIndices)gnBeltSlotHotkeys[nSlotId], 1));
+                Unicode::strcpy(wszKey, CMDTBL_ControlsGetBoundKeyName(gnBeltSlotHotkeys[nSlotId], 1));
 
                 nTextLen = Unicode::strlen(wszKey);
                 if (D2WIN_10121_GetTextWidth(wszKey) > 28)

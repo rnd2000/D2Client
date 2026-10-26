@@ -720,10 +720,10 @@ int32_t __fastcall GFXUTIL_GetEffectiveClassId(D2UnitStrc *pUnit)
         return -1;
 
     if (!((pUnit->dwFlagEx >> 3) & 1))
-        return (int32_t)pUnit->dwClassId;
+        return pUnit->dwClassId;
 
     nType = (int32_t)pUnit->dwUnitType;
-    nClass = (int32_t)pUnit->dwClassId;
+    nClass = pUnit->dwClassId;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szEngineH, 278);
     return nClass;

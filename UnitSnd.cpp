@@ -646,7 +646,7 @@ void __fastcall UNITSND_PlayFootstep(D2UnitStrc *pUnit)
     nType = UNITSND_GetSoundUnitType(pUnit);
 
     nModeType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nModeClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nModeClass = pUnit ? pUnit->dwClassId : -1;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     if (!nModeType)
         D2COMMON_11013_ConvertMode(pUnit, &nModeType, &nModeClass, &nMode, szUnitSndCpp, 2841);
@@ -820,7 +820,7 @@ void __fastcall UNITSND_UpdateUnitModeSound(D2UnitStrc *pUnit)
     D2ActiveRoomStrc *pRoom;
 
     nSoundType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nSoundClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nSoundClass = pUnit ? pUnit->dwClassId : -1;
     nUnitMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     if (!nSoundType)
         D2COMMON_11013_ConvertMode(pUnit, &nSoundType, &nSoundClass, &nUnitMode, szUnitSndCpp, 2841);
@@ -982,7 +982,7 @@ int32_t __fastcall UNITSND_GetSoundClassId(D2UnitStrc *pUnit)
     int32_t nMode;
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     if (!nType)
         D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szUnitSndCpp, 2817);
@@ -1000,7 +1000,7 @@ int32_t __fastcall UNITSND_GetSoundUnitType(D2UnitStrc *pUnit)
     int32_t nMode;
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     if (!nType)
         D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szUnitSndCpp, 2829);
@@ -1243,7 +1243,7 @@ void __fastcall UNITSND_PlayModeSound(D2UnitStrc *pUnit, int32_t nMode, int32_t 
     if (!bModeGiven)
     {
         nModeType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-        nModeClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+        nModeClass = pUnit ? pUnit->dwClassId : -1;
         nUnitMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
         if (!nModeType)
             D2COMMON_11013_ConvertMode(pUnit, &nModeType, &nModeClass, &nUnitMode, szUnitSndCpp, 2841);
@@ -2052,7 +2052,7 @@ void __fastcall UNITSND_PlayMonsterInitSound(D2UnitStrc *pUnit)
     }
 
     nSoundType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nSoundClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nSoundClass = pUnit ? pUnit->dwClassId : -1;
     nSoundMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     if (!nSoundType)
         D2COMMON_11013_ConvertMode(pUnit, &nSoundType, &nSoundClass, &nSoundMode, szUnitSndCpp, 2841);

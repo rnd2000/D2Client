@@ -218,7 +218,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, ENV_ResetWeather, int32_t, __fastcall, (int32_t bForce), 0x6D40)
 //D2FUNC(D2CLIENT, ENV_LoadImages, void, __fastcall, (D2C_Levels nLevelId), 0x7050)
 //D2FUNC(D2CLIENT, ENV_UnloadImages, void, __cdecl, (), 0x7440)
-//D2FUNC(D2CLIENT, ENV_OnLevelChange, void, __fastcall, (void *pParam), 0x7490)
+//D2FUNC(D2CLIENT, ENV_OnLevelChange, void, __fastcall, (int32_t bIsLevelChange), 0x7490)
 //D2FUNC(D2CLIENT, ENV_TriggerLightningFlash, void, __fastcall, (int32_t bPlayThunder), 0x74C0)
 //D2FUNC(D2CLIENT, ENV_UpdateBubbles, void, __cdecl, (), 0x74F0)
 //D2FUNC(D2CLIENT, ENV_SpawnSplash, void, __fastcall, (int32_t nX, int32_t nY, int32_t nPerspX, int32_t nPerspY), 0x7590)
@@ -1127,11 +1127,11 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, DIALOG_Draw, void, __fastcall, (D2ClientDialogStrc *pDialog), 0x36EB0)
 //D2FUNC(D2CLIENT, DIALOG_SetSelectedLine, void, __fastcall, (D2ClientDialogStrc *pDialog, int32_t nIndex), 0x37090)
 //D2FUNC(D2CLIENT, DIALOG_SetHighlight, void, __fastcall, (D2ClientDialogStrc *pDialog, int32_t eHighlight), 0x37150)
-//D2FUNC(D2CLIENT, DIALOG_AddLine, void, __fastcall, (D2ClientDialogStrc *pDialog, const struct Unicode *wszText, int32_t nLineHeight, int32_t nUnused1, int32_t nBaseColor, int32_t nFont, DIALOGCALLBACK pfnOnClick, int32_t bSelectable), 0x37180)
+//D2FUNC(D2CLIENT, DIALOG_AddLine, void, __fastcall, (D2ClientDialogStrc *pDialog, const struct Unicode *wszText, int32_t nLineHeight, int32_t nUnused1, int32_t nBaseColor, int32_t nFont, int32_t (__cdecl *pfnOnClick)(), int32_t bSelectable), 0x37180)
 //D2FUNC(D2CLIENT, DIALOG_AutoSize, void, __fastcall, (D2ClientDialogStrc *pDialog), 0x37320)
 //D2FUNC(D2CLIENT, DIALOG_GetSelectedLine, int32_t, __fastcall, (D2ClientDialogStrc *pDialog), 0x37520)
 //D2FUNC(D2CLIENT, DIALOG_GetNestDepth, int32_t, __cdecl, (), 0x37530)
-//D2FUNC(D2CLIENT, EDITBOX_UiEditBoxConstruct, char *, __thiscall, (D2ClientEditBoxStrc *pEditBox, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, void *pfnCallback, int32_t nFont), 0x37540)
+//D2FUNC(D2CLIENT, EDITBOX_UiEditBoxConstruct, char *, __thiscall, (D2ClientEditBoxStrc *pEditBox, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont), 0x37540)
 //D2FUNC(D2CLIENT, EDITBOX_UiEditBoxVecDelDtor, D2ClientEditBoxStrc *, __thiscall, (D2ClientEditBoxStrc *pEditBox, uint8_t bFreeObject), 0x37730)
 //D2FUNC(D2CLIENT, EDITBOX_UiEditBoxDestruct, void, __thiscall, (D2ClientEditBoxStrc *pEditBox), 0x37760)
 //D2FUNC(D2CLIENT, EDITBOX_UiEditBoxSetNumericOnly, int32_t, __thiscall, (D2ClientEditBoxStrc *pEditBox, int32_t bNumericOnly), 0x377F0)
@@ -1151,7 +1151,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, EDITBOX_UiEditBoxOnArrowLeft, int32_t, __thiscall, (D2ClientEditBoxStrc *pEditBox, SMSGHANDLER_PARAMS *pMsg), 0x37FB0)
 //D2FUNC(D2CLIENT, EDITBOX_UiCtrlProxyDestruct, void, __thiscall, (int32_t *thisptr), 0x37FD0)
 //D2FUNC(D2CLIENT, EDITBOX_UiCtrlProxyVecDelDtor, uint32_t **, __thiscall, (uint32_t **pProxy, uint8_t bFreeObject), 0x38030)
-//D2FUNC(D2CLIENT, EDITBOX_UiCtrlProxyConstructEditbox, uint32_t *, __thiscall, (uint32_t *thisptr, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, void *pfnCallback, int32_t nFont), 0x38060)
+//D2FUNC(D2CLIENT, EDITBOX_UiCtrlProxyConstructEditbox, uint32_t *, __thiscall, (uint32_t *thisptr, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont), 0x38060)
 //D2FUNC(D2CLIENT, EDITBOX_UiCtrlProxyFwdSlot4, int32_t, __thiscall, (uint32_t **thisptr, SMSGHANDLER_PARAMS *pMsg), 0x38100)
 //D2FUNC(D2CLIENT, EDITBOX_UiCtrlProxyFwdSlot5, int32_t, __thiscall, (uint32_t **thisptr, SMSGHANDLER_PARAMS *pMsg), 0x38110)
 //D2FUNC(D2CLIENT, EDITBOX_UiCtrlProxyFwdSlot6, int32_t, __thiscall, (uint32_t **thisptr, SMSGHANDLER_PARAMS *pMsg), 0x38120)
@@ -1362,7 +1362,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, NEWSTATS_PanelDrawNewSkillButton, void, __cdecl, (), 0x4F730)
 //D2FUNC(D2CLIENT, LISTBOX_LoadScrollBarImage, void, __cdecl, (), 0x4FA40)
 //D2FUNC(D2CLIENT, LISTBOX_UnloadScrollBarImage, void, __cdecl, (), 0x4FA80)
-//D2FUNC(D2CLIENT, LISTBOX_ImplConstruct, D2ClientListBoxStrc *, __thiscall, (D2ClientListBoxStrc *pListBox, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, void *pfnOnSelect, uint8_t bWideLayout), 0x4FAA0)
+//D2FUNC(D2CLIENT, LISTBOX_ImplConstruct, D2ClientListBoxStrc *, __thiscall, (D2ClientListBoxStrc *pListBox, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, int32_t (__cdecl *pfnOnSelect)(), uint8_t bWideLayout), 0x4FAA0)
 //D2FUNC(D2CLIENT, LISTBOX_ImplVecDelDtor, D2ClientListBoxStrc *, __thiscall, (D2ClientListBoxStrc *pListBox, uint8_t bDelete), 0x4FD00)
 //D2FUNC(D2CLIENT, LISTBOX_UiCtrlBaseDestruct, void, __fastcall, (int32_t *thisptr), 0x4FD30)
 //D2FUNC(D2CLIENT, LISTBOX_ImplGetNumEntries, int32_t, __thiscall, (D2ClientListBoxStrc *pListBox), 0x4FD40)
@@ -1384,7 +1384,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, LISTBOX_ImplGetSelection, int32_t, __thiscall, (D2ClientListBoxStrc *pListBox), 0x510A0)
 //D2FUNC(D2CLIENT, LISTBOX_ProxyDestruct, void, __thiscall, (uint32_t *thisptr), 0x510B0)
 //D2FUNC(D2CLIENT, LISTBOX_ProxyVecDelDtor, uint32_t **, __thiscall, (uint32_t **pProxy, uint8_t bFreeObject), 0x51100)
-//D2FUNC(D2CLIENT, LISTBOX_Construct, void *, __thiscall, (void *thisptr, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, void *pfnOnSelect, uint8_t bWideLayout), 0x51130)
+//D2FUNC(D2CLIENT, LISTBOX_Construct, void *, __thiscall, (void *thisptr, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, int32_t (__cdecl *pfnOnSelect)(), uint8_t bWideLayout), 0x51130)
 //D2FUNC(D2CLIENT, LISTBOX_UiCtrlProxyFwdSlot1, int32_t, __thiscall, (uint32_t **thisptr), 0x511D0)
 //D2FUNC(D2CLIENT, LISTBOX_GetEntryUserData, int32_t, __thiscall, (uint32_t **pProxy, int32_t nEntryIndex), 0x511E0)
 //D2FUNC(D2CLIENT, LISTBOX_UiCtrlProxyFwdSlot13, int32_t, __thiscall, (uint32_t **thisptr), 0x512A0)
@@ -1499,7 +1499,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, NPCMENU_QuestGetQuestRecord, D2BitBufferStrc *, __cdecl, (), 0x5BD20)
 //D2FUNC(D2CLIENT, NPCMENU_QuestGetQuestRecordSecondary, D2BitBufferStrc *, __cdecl, (), 0x5BD30)
 //D2FUNC(D2CLIENT, NPCMENU_Reset, void, __cdecl, (), 0x5BD40)
-//D2FUNC(D2CLIENT, NPCMENU_RefreshHireIconsForOffer, void, __fastcall, (int16_t wMercName), 0x5BE30)
+//D2FUNC(D2CLIENT, NPCMENU_RefreshHireIconsForOffer, void, __fastcall, (uint16_t wMercName), 0x5BE30)
 //D2FUNC(D2CLIENT, NPCMENU_NoteOpenedEunuchObject, void, __fastcall, (D2UnitStrc *pObject), 0x5BE50)
 //D2FUNC(D2CLIENT, NPCMENU_ShowNpcAlert, void, __fastcall, (D2GSPacketSrv8A *pPacket), 0x5BE70)
 //D2FUNC(D2CLIENT, NPCMENU_EndInteraction, void, __fastcall, (uint32_t dwNpcGUID), 0x5BF80)
@@ -1645,46 +1645,46 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, ESCMENU_GotoVideoPage, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x670A0)
 //D2FUNC(D2CLIENT, ESCMENU_GotoAutomapPage, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x670B0)
 //D2FUNC(D2CLIENT, ESCMENU_OpenConfigPanel, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x670C0)
-//D2FUNC(D2CLIENT, ESCMENU_SoundVolumeOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x670F0)
-//D2FUNC(D2CLIENT, ESCMENU_SoundVolumeRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67130)
-//D2FUNC(D2CLIENT, ESCMENU_MusicVolumeOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67180)
-//D2FUNC(D2CLIENT, ESCMENU_MusicVolumeRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x671C0)
+//D2FUNC(D2CLIENT, ESCMENU_SoundVolumeOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x670F0)
+//D2FUNC(D2CLIENT, ESCMENU_SoundVolumeRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67130)
+//D2FUNC(D2CLIENT, ESCMENU_MusicVolumeOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67180)
+//D2FUNC(D2CLIENT, ESCMENU_MusicVolumeRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x671C0)
 //D2FUNC(D2CLIENT, j_SOUNDCHAN_Get3DEnabled, int32_t, __cdecl, (), 0x67210)
 //D2FUNC(D2CLIENT, j_SOUNDCHAN_Toggle3dSound, void, __cdecl, (), 0x67220)
-//D2FUNC(D2CLIENT, ESCMENU_Sound3DRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67230)
+//D2FUNC(D2CLIENT, ESCMENU_Sound3DRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67230)
 //D2FUNC(D2CLIENT, j_SOUNDCHAN_Is3DEnabled, BOOL, __cdecl, (), 0x67240)
-//D2FUNC(D2CLIENT, ESCMENU_Sound3DBiasOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67250)
-//D2FUNC(D2CLIENT, ESCMENU_Sound3DBiasRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67290)
+//D2FUNC(D2CLIENT, ESCMENU_Sound3DBiasOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67250)
+//D2FUNC(D2CLIENT, ESCMENU_Sound3DBiasRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67290)
 //D2FUNC(D2CLIENT, j_SOUNDCHAN_GetEaxEnabled, int32_t, __cdecl, (), 0x672E0)
 //D2FUNC(D2CLIENT, j_SOUNDCHAN_ToggleEaxEffects, void, __cdecl, (), 0x672F0)
-//D2FUNC(D2CLIENT, ESCMENU_SoundEaxRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67300)
-//D2FUNC(D2CLIENT, ESCMENU_NpcSpeechOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67310)
-//D2FUNC(D2CLIENT, ESCMENU_NpcSpeechRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67370)
-//D2FUNC(D2CLIENT, ESCMENU_LightQualityOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x673E0)
-//D2FUNC(D2CLIENT, ESCMENU_LightQualityRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67440)
-//D2FUNC(D2CLIENT, ESCMENU_BlendShadowOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x674A0)
-//D2FUNC(D2CLIENT, ESCMENU_BlendShadowRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x674D0)
-//D2FUNC(D2CLIENT, ESCMENU_ResolutionOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67500)
-//D2FUNC(D2CLIENT, ESCMENU_ResolutionRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67540)
+//D2FUNC(D2CLIENT, ESCMENU_SoundEaxRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67300)
+//D2FUNC(D2CLIENT, ESCMENU_NpcSpeechOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67310)
+//D2FUNC(D2CLIENT, ESCMENU_NpcSpeechRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67370)
+//D2FUNC(D2CLIENT, ESCMENU_LightQualityOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x673E0)
+//D2FUNC(D2CLIENT, ESCMENU_LightQualityRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67440)
+//D2FUNC(D2CLIENT, ESCMENU_BlendShadowOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x674A0)
+//D2FUNC(D2CLIENT, ESCMENU_BlendShadowRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x674D0)
+//D2FUNC(D2CLIENT, ESCMENU_ResolutionOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67500)
+//D2FUNC(D2CLIENT, ESCMENU_ResolutionRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67540)
 //D2FUNC(D2CLIENT, j_D2gfx_10007, int32_t, __stdcall, (), 0x67570)
-//D2FUNC(D2CLIENT, ESCMENU_PerspectiveOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67580)
-//D2FUNC(D2CLIENT, ESCMENU_PerspectiveRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x675D0)
+//D2FUNC(D2CLIENT, ESCMENU_PerspectiveOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67580)
+//D2FUNC(D2CLIENT, ESCMENU_PerspectiveRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x675D0)
 //D2FUNC(D2CLIENT, j_D2gfx_10019, int32_t, __stdcall, (), 0x67640)
-//D2FUNC(D2CLIENT, ESCMENU_GammaOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67650)
-//D2FUNC(D2CLIENT, ESCMENU_GammaRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x676C0)
-//D2FUNC(D2CLIENT, ESCMENU_ContrastOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67780)
-//D2FUNC(D2CLIENT, ESCMENU_ContrastRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x677F0)
-//D2FUNC(D2CLIENT, ESCMENU_AutomapModeOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x678B0)
-//D2FUNC(D2CLIENT, ESCMENU_AutomapModeRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x678F0)
-//D2FUNC(D2CLIENT, ESCMENU_AutomapFadeOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67930)
-//D2FUNC(D2CLIENT, ESCMENU_AutomapFadeRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67970)
-//D2FUNC(D2CLIENT, ESCMENU_AutomapCenterOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x679B0)
-//D2FUNC(D2CLIENT, ESCMENU_AutomapCenterRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x679C0)
-//D2FUNC(D2CLIENT, ESCMENU_AutomapPartyOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x679D0)
-//D2FUNC(D2CLIENT, ESCMENU_AutomapPartyRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x679E0)
+//D2FUNC(D2CLIENT, ESCMENU_GammaOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67650)
+//D2FUNC(D2CLIENT, ESCMENU_GammaRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x676C0)
+//D2FUNC(D2CLIENT, ESCMENU_ContrastOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67780)
+//D2FUNC(D2CLIENT, ESCMENU_ContrastRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x677F0)
+//D2FUNC(D2CLIENT, ESCMENU_AutomapModeOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x678B0)
+//D2FUNC(D2CLIENT, ESCMENU_AutomapModeRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x678F0)
+//D2FUNC(D2CLIENT, ESCMENU_AutomapFadeOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67930)
+//D2FUNC(D2CLIENT, ESCMENU_AutomapFadeRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67970)
+//D2FUNC(D2CLIENT, ESCMENU_AutomapCenterOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x679B0)
+//D2FUNC(D2CLIENT, ESCMENU_AutomapCenterRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x679C0)
+//D2FUNC(D2CLIENT, ESCMENU_AutomapPartyOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x679D0)
+//D2FUNC(D2CLIENT, ESCMENU_AutomapPartyRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x679E0)
 //D2FUNC(D2CLIENT, j_AUTOMAP_GetShowParty, int32_t, __cdecl, (), 0x679F0)
-//D2FUNC(D2CLIENT, ESCMENU_AutomapPartyNamesOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67A00)
-//D2FUNC(D2CLIENT, ESCMENU_AutomapPartyNamesRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, int32_t nArg), 0x67A10)
+//D2FUNC(D2CLIENT, ESCMENU_AutomapPartyNamesOnChange, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67A00)
+//D2FUNC(D2CLIENT, ESCMENU_AutomapPartyNamesRefresh, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67A10)
 //D2FUNC(D2CLIENT, ESCMENU_GotoMainPage, void, __fastcall, (D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg), 0x67A40)
 //D2FUNC(D2CLIENT, ESCMENU_OnLButtonDown, void, __stdcall, (SMSGHANDLER_PARAMS *pMsg), 0x67A50)
 //D2FUNC(D2CLIENT, ESCMENU_HitTestRow, int32_t, __fastcall, (int32_t nMouseY), 0x67AA0)
@@ -1727,7 +1727,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, SKILLDESC_AttFunc5, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnAttackRatingA, int32_t *pnColorA, int32_t *pnAttackRatingB, int32_t *pnColorB), 0x6A610)
 //D2FUNC(D2CLIENT, SKILLDESC_AttFunc2, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnAttackRatingA, int32_t *pnColorA, int32_t *pnAttackRatingB, int32_t *pnColorB), 0x6A730)
 //D2FUNC(D2CLIENT, SKILLDESC_AttackRatingCallback, void, __fastcall, (D2UnitStrc *pUnit, int32_t *pnValue, int32_t *pnColor, int32_t nUnusedA, int32_t nUnusedB, int32_t nSkillLevel, D2SkillStrc *pSkill, int32_t nUnusedC, D2UnitStrc *pWeapon), 0x6A7B0)
-//D2FUNC(D2CLIENT, SKILLDESC_ForEachWieldedWeapon, int32_t, __fastcall, (D2UnitStrc *pUnit, int32_t *pnValueA, int32_t *pnColorA, int32_t nArgA, int32_t *pnValueB, int32_t *pnColorB, int32_t nArgB, int32_t nShared, void *pfnCompute, int32_t nExtraA, int32_t nExtraB), 0x6A7D0)
+//D2FUNC(D2CLIENT, SKILLDESC_ForEachWieldedWeapon, int32_t, __fastcall, (D2UnitStrc *pUnit, int32_t *pnValueA, int32_t *pnColorA, int32_t *pnArgA, int32_t *pnValueB, int32_t *pnColorB, int32_t *pnArgB, D2SkillStrc *pSkill, void *pfnCompute, int32_t nExtraA, int32_t nExtraB), 0x6A7D0)
 //D2FUNC(D2CLIENT, SKILLDESC_PrepareOffHandWeapon, D2UnitStrc *, __fastcall, (D2UnitStrc *pUnit), 0x6A950)
 //D2FUNC(D2CLIENT, SKILLDESC_PrepareMainHandWeapon, D2UnitStrc *, __fastcall, (D2UnitStrc *pUnit), 0x6AA00)
 //D2FUNC(D2CLIENT, SKILLDESC_AttFunc3, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnAttackRatingA, int32_t *pnColorA, int32_t *pnAttackRatingB, int32_t *pnColorB), 0x6AAB0)
@@ -1739,13 +1739,13 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, SKILLDESC_FormatRangeOrValue, int32_t, __fastcall, (struct Unicode *pwszOut, int32_t nMin, int32_t nMax, int32_t bSigned), 0x6B250)
 //D2FUNC(D2CLIENT, SKILLDESC_AddWeaponPhysDamage, int32_t, __fastcall, (D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nExtraDamagePercent, int32_t nFlatBonus, D2SkillStrc *pSkill, int32_t nSrcDamOverride, D2UnitStrc *pWeapon, int32_t bUseItemOwnStats), 0x6B2C0)
 //D2FUNC(D2CLIENT, SKILLDESC_GetChargeUpDamagePercent, int32_t, __cdecl, (), 0x6B580)
-//D2FUNC(D2CLIENT, SKILLDESC_AddItemElemDamage, void, __fastcall, (D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nUnused, D2SkillStrc *pSkill), 0x6B6F0)
+//D2FUNC(D2CLIENT, SKILLDESC_AddItemElemDamage, void, __fastcall, (D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, D2UnitStrc *pUnused, D2SkillStrc *pSkill), 0x6B6F0)
 //D2FUNC(D2CLIENT, SKILLDESC_AddChargeUpElemDamage, int32_t, __fastcall, (D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor), 0x6BB10)
 //D2FUNC(D2CLIENT, SKILLDESC_AddElemDamageByType, void, __fastcall, (D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, uint8_t nEType), 0x6BD60)
 //D2FUNC(D2CLIENT, SKILLDESC_DamFunc7, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nLeft, int32_t nY, int32_t nRight), 0x6BEC0)
 //D2FUNC(D2CLIENT, SKILLDESC_DamFunc1, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nLeft, int32_t nY, int32_t nRight), 0x6C270)
 //D2FUNC(D2CLIENT, SKILLDESC_AddTotalDamageCallback, void, __fastcall, (D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nExtraDamagePercent, int32_t nFlatBonus, D2SkillStrc *pSkill, int32_t nSrcDamOverride, D2UnitStrc *pWeapon), 0x6C3A0)
-//D2FUNC(D2CLIENT, SKILLDESC_DrawDualWieldDamage, void, __fastcall, (D2UnitStrc *pUnit, int32_t nShared, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, void *pfnCompute, int32_t nExtraA, int32_t nExtraB, int32_t nX, int32_t nY, int32_t nRight, int32_t bAddElemDamage), 0x6C400)
+//D2FUNC(D2CLIENT, SKILLDESC_DrawDualWieldDamage, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, void *pfnCompute, int32_t nExtraA, int32_t nExtraB, int32_t nX, int32_t nY, int32_t nRight, int32_t bAddElemDamage), 0x6C400)
 //D2FUNC(D2CLIENT, SKILLDESC_AddElemDamageAndColor, void, __fastcall, (D2UnitStrc *pUnit, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnMinTotal, int32_t *pnMaxTotal, int32_t *pnColor), 0x6C840)
 //D2FUNC(D2CLIENT, SKILLDESC_DamFunc20, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nLeft, int32_t nY, int32_t nRight), 0x6C930)
 //D2FUNC(D2CLIENT, SKILLDESC_DamFunc19, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nLeft, int32_t nY, int32_t nRight), 0x6CA60)
@@ -1763,7 +1763,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, SKILLDESC_DamFunc9, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nLeft, int32_t nY, int32_t nRight), 0x6EAB0)
 //D2FUNC(D2CLIENT, SKILLDESC_DamFunc10, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nLeft, int32_t nY, int32_t nRight), 0x6ED40)
 //D2FUNC(D2CLIENT, SKILLDESC_DamFunc11, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nLeft, int32_t nY, int32_t nRight), 0x6F080)
-//D2FUNC(D2CLIENT, SKILLDESC_DrawDamageValue, void, __fastcall, (int32_t nUnused, int32_t nMin, int32_t nMax, int32_t nColor, int32_t nLeft, int32_t nY, int32_t nRight), 0x6F5E0)
+//D2FUNC(D2CLIENT, SKILLDESC_DrawDamageValue, void, __fastcall, (D2UnitStrc *pUnused, int32_t nMin, int32_t nMax, int32_t nColor, int32_t nLeft, int32_t nY, int32_t nRight), 0x6F5E0)
 //D2FUNC(D2CLIENT, SKILLDESC_DamFunc12, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nLeft, int32_t nY, int32_t nRight), 0x6F700)
 //D2FUNC(D2CLIENT, SKILLDESC_DamFunc14, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nLeft, int32_t nY, int32_t nRight), 0x6FA50)
 //D2FUNC(D2CLIENT, SKILLDESC_DamFunc15, void, __fastcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nLeft, int32_t nY, int32_t nRight), 0x6FC60)
@@ -1976,7 +1976,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, UI_PostSyntheticMouseMove, void, __cdecl, (), 0x838D0)
 //D2FUNC(D2CLIENT, UI_InitUiForPlayerUnit, void, __cdecl, (), 0x83910)
 //D2FUNC(D2CLIENT, UI_ResetUiSubsystems, void, __cdecl, (), 0x83960)
-//D2FUNC(D2CLIENT, UI_LevelsGetLevelName, int32_t, __fastcall, (int32_t nLevelId), 0x839F0)
+//D2FUNC(D2CLIENT, UI_LevelsGetLevelName, const Unicode *, __fastcall, (int32_t nLevelId), 0x839F0)
 //D2FUNC(D2CLIENT, UI_CursorSendUseHeldItem, void, __cdecl, (), 0x83A40)
 //D2FUNC(D2CLIENT, UI_CloseGoldEntryDialog, void, __cdecl, (), 0x83A60)
 //D2FUNC(D2CLIENT, UI_OpenGoldEntryDialog, void, __fastcall, (int32_t nGoldDialogMode), 0x83B40)
@@ -2058,12 +2058,12 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, CUNIT_SetUnitPaletteShift2, void, __fastcall, (D2UnitStrc *pUnit, int32_t nShift), 0x88470)
 //D2FUNC(D2CLIENT, CUNIT_GetUnitPaletteShift2, int32_t, __fastcall, (D2UnitStrc *pUnit), 0x884A0)
 //D2FUNC(D2CLIENT, CUNIT_IsPointInWarpSelectBox, BOOL, __fastcall, (D2UnitStrc *pWarp, int32_t nScreenX, int32_t nScreenY), 0x884D0)
-//D2FUNC(D2CLIENT, CUNIT_SkillsSelectProc1_CorpseExplosion, BOOL, __fastcall, (int32_t nUnused, D2UnitStrc *pUnit), 0x885D0)
-//D2FUNC(D2CLIENT, CUNIT_SkillsSelectProc2_RaiseSkeleton, BOOL, __fastcall, (int32_t nUnused, D2UnitStrc *pUnit), 0x885E0)
-//D2FUNC(D2CLIENT, CUNIT_SkillsSelectProc3_Revive, BOOL, __fastcall, (int32_t nUnused, D2UnitStrc *pUnit), 0x885F0)
-//D2FUNC(D2CLIENT, CUNIT_SkillsSelectProc4_FindPotion, BOOL, __fastcall, (int32_t nUnused, D2UnitStrc *pUnit), 0x88680)
-//D2FUNC(D2CLIENT, CUNIT_SkillsSelectProc6_GrimWard, BOOL, __fastcall, (int32_t nUnused, D2UnitStrc *pUnit), 0x88690)
-//D2FUNC(D2CLIENT, CUNIT_SkillsSelectProc5_FindItem, BOOL, __fastcall, (int32_t nUnused, D2UnitStrc *pUnit), 0x886A0)
+//D2FUNC(D2CLIENT, CUNIT_SkillsSelectProc1_CorpseExplosion, BOOL, __fastcall, (D2UnitStrc *pUnused, D2UnitStrc *pUnit), 0x885D0)
+//D2FUNC(D2CLIENT, CUNIT_SkillsSelectProc2_RaiseSkeleton, BOOL, __fastcall, (D2UnitStrc *pUnused, D2UnitStrc *pUnit), 0x885E0)
+//D2FUNC(D2CLIENT, CUNIT_SkillsSelectProc3_Revive, BOOL, __fastcall, (D2UnitStrc *pUnused, D2UnitStrc *pUnit), 0x885F0)
+//D2FUNC(D2CLIENT, CUNIT_SkillsSelectProc4_FindPotion, BOOL, __fastcall, (D2UnitStrc *pUnused, D2UnitStrc *pUnit), 0x88680)
+//D2FUNC(D2CLIENT, CUNIT_SkillsSelectProc6_GrimWard, BOOL, __fastcall, (D2UnitStrc *pUnused, D2UnitStrc *pUnit), 0x88690)
+//D2FUNC(D2CLIENT, CUNIT_SkillsSelectProc5_FindItem, BOOL, __fastcall, (D2UnitStrc *pUnused, D2UnitStrc *pUnit), 0x886A0)
 //D2FUNC(D2CLIENT, CUNIT_ShouldHighlightUnit, BOOL, __fastcall, (D2UnitStrc *pUnit), 0x886B0)
 //D2FUNC(D2CLIENT, CUNIT_HitTestUnit, BOOL, __fastcall, (D2UnitStrc *pUnit, int32_t nScreenX, int32_t nScreenY, int32_t bTestGeometry), 0x886F0)
 //D2FUNC(D2CLIENT, CUNIT_GetComponentScreenBox, BOOL, __fastcall, (D2UnitStrc *pUnit, int32_t nUnused1, int32_t nComponent, int32_t nAnimFrame, D2BoundingBoxStrc *pBox, int32_t nUnused2), 0x88D90)
@@ -2308,7 +2308,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, MISSILE_ClientSpawnAtPathTarget, D2UnitStrc *, __fastcall, (D2UnitStrc *pUnit, int32_t nMissileId, int32_t nSkillId, int32_t nSkillLevel), 0x9ED40)
 //D2FUNC(D2CLIENT, UNITS_FindFreeSpotForMonster, void, __fastcall, (D2UnitStrc *pUnit, int32_t nMonStatsId, int32_t nCount), 0x9EDF0)
 //D2FUNC(D2CLIENT, ENV_SpawnRoomCritters, void, __fastcall, (D2ActiveRoomStrc *pRoom), 0x9EFB0)
-//D2FUNC(D2CLIENT, MONSTER_ForEachUnitNearby, int32_t, __fastcall, (D2UnitStrc *pUnit, int32_t, int32_t, int32_t (__fastcall *)(D2UnitStrc *, D2UnitStrc *, int32_t, int32_t)), 0x9F270)
+//D2FUNC(D2CLIENT, MONSTER_ForEachUnitNearby, int32_t, __fastcall, (D2UnitStrc *pUnit, void *pCallbackCtx, void *pCallbackParam, int32_t (__fastcall *pfnVisit)(D2UnitStrc *, D2UnitStrc *, void *, void *)), 0x9F270)
 //D2FUNC(D2CLIENT, MONSTER_RegisterPlayerSlot, void, __fastcall, (D2UnitStrc *pPlayer), 0x9F2F0)
 //D2FUNC(D2CLIENT, MONSTER_UnregisterPlayerSlot, void, __fastcall, (D2UnitStrc *pPlayer), 0x9F310)
 //D2FUNC(D2CLIENT, MONSTER_ClearPlayerSlots, void, __cdecl, (), 0x9F330)
@@ -2341,7 +2341,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //D2FUNC(D2CLIENT, MONSTER_IsSuperUnique, BOOL, __fastcall, (D2UnitStrc *pUnit), 0xA0D40)
 //D2FUNC(D2CLIENT, MONSTER_InitClientUnit, void, __fastcall, (D2UnitStrc *pUnit, D2ActiveRoomStrc *pRoom, int32_t nX, int32_t nY, D2C_MonsterIds nMonClassId, int32_t nAnimMode), 0xA0D60)
 //D2FUNC(D2CLIENT, MONSTER_LinkOwnedUnits, void, __fastcall, (D2UnitStrc *pUnit, D2C_MonsterIds nClassId), 0xA12D0)
-//D2FUNC(D2CLIENT, MONSTER_MatchVileMotherDirection, int32_t, __fastcall, (D2UnitStrc *pChild, D2UnitStrc *pOther, int32_t nUnused1, int32_t nUnused2), 0xA1690)
+//D2FUNC(D2CLIENT, MONSTER_MatchVileMotherDirection, int32_t, __fastcall, (D2UnitStrc *pChild, D2UnitStrc *pOther, void *pUnused1, void *pUnused2), 0xA1690)
 //D2FUNC(D2CLIENT, MONSTER_FreeUnitData, void, __fastcall, (D2UnitStrc *pUnit), 0xA1860)
 //D2FUNC(D2CLIENT, MONSTER_ChangeMonsterClass, void, __fastcall, (D2UnitStrc *pUnit, D2C_MonsterIds nNewMonClassId), 0xA1900)
 //D2FUNC(D2CLIENT, MONSTER_AdvanceAnimForMode, int32_t, __fastcall, (D2UnitStrc *pUnit, const D2ClientMonModeDescStrc *pModeDesc), 0xA1D70)
@@ -2792,7 +2792,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, STORM_SRegSaveString, int, __stdcall, (const char *szKeyName, const char *szValueName, unsigned int dwFlags, const char *szValue), 0xC01BE)   -- now STORM_SRegSaveString
 //  D2FUNC(D2CLIENT, STORM_SErrGetErrorStr, int, __stdcall, (unsigned int dwMessageId, char *pBuffer, unsigned int nSize), 0xC01C4)   -- now STORM_SErrGetErrorStr
 //  D2FUNC(D2CLIENT, STORM_SFileCloseFile, int, __stdcall, (void *hFile), 0xC01CA)   -- now STORM_SFileCloseFile
-//  D2FUNC(D2CLIENT, STORM_SFileOpenFileEx, int, __stdcall, (int hMpq, char *szFileName, char nSearchScope, int *phFile), 0xC01D0)   -- now STORM_SFileOpenFileEx
+//  D2FUNC(D2CLIENT, STORM_SFileOpenFileEx, int, __stdcall, (int hMpq, char *szFileName, char nSearchScope, void **phFile), 0xC01D0)   -- now STORM_SFileOpenFileEx
 //  D2FUNC(D2CLIENT, STORM_SStrCmp, int, __stdcall, (const char *pStr1, const char *pStr2, size_t nMaxCount), 0xC01D6)   -- now STORM_SStrCmp
 //  D2FUNC(D2CLIENT, STORM_SCmdProcess, int, __stdcall, (const char *szCommandLine, int a2, BOOL (__stdcall *a3)(int), BOOL (__stdcall *a4)(int)), 0xC01DC)   -- now STORM_SCmdProcess
 //  D2FUNC(D2CLIENT, STORM_SCmdRegisterArgList, BOOL, __stdcall, (const SCmdArg *pArgs, int nArgsCount), 0xC01E2)   -- now STORM_SCmdRegisterArgList
@@ -2892,22 +2892,22 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2CMP_10089, void, __stdcall, (void *pPool, uint32_t dwCacheBytes), 0xCA848)   -- now D2CMP_10089
 //  D2FUNC(D2CLIENT, D2CMP_FlushSpriteCache, int, __stdcall, (int a1), 0xCA84E)   -- now D2CMP_FlushSpriteCache
 //  D2FUNC(D2CLIENT, D2CMP_10090, int, __stdcall, (_DWORD), 0xCA854)   -- now D2CMP_10090
-//  D2FUNC(D2CLIENT, D2CMP_10092, int, __stdcall, (_DWORD, _DWORD, _DWORD, _DWORD), 0xCA85A)   -- now D2CMP_10092
+//  D2FUNC(D2CLIENT, D2CMP_10092, void, __stdcall, (uint32_t *pConfiguredBytes, uint32_t *pAllocRequests, uint32_t *pAccessRequests, uint32_t *pPercentAllocated), 0xCA85A)   -- now D2CMP_10092
 //  D2FUNC(D2CLIENT, D2CMP_10063, int, __cdecl, (), 0xCA860)   -- now D2CMP_10063
 //  D2FUNC(D2CLIENT, D2CMP_10064, int, __cdecl, (), 0xCA866)   -- now D2CMP_10064
 //  D2FUNC(D2CLIENT, D2CMP_10060, int, __cdecl, (), 0xCA86C)   -- now D2CMP_10060
 //  D2FUNC(D2CLIENT, D2CMP_10061, int, __cdecl, (), 0xCA872)   -- now D2CMP_10061
 //  D2FUNC(D2CLIENT, D2CMP_10093, int, __cdecl, (), 0xCA878)   -- now D2CMP_10093
 //  D2FUNC(D2CLIENT, D2CMP_CelFileGetCelsPerDirection, int, __stdcall, (D2CellFileStrc *pCelFile), 0xCA87E)   -- now D2CMP_CelFileGetCelsPerDirection
-//  D2FUNC(D2CLIENT, D2CMP_10095, int, __stdcall, (_DWORD, _DWORD), 0xCA884)   -- now D2CMP_10095
+//  D2FUNC(D2CLIENT, D2CMP_10095, void *, __stdcall, (D2TileLibraryHashStrc **ppHash, const char *szFileName), 0xCA884)   -- now D2CMP_10095
 //  D2FUNC(D2CLIENT, D2CMP_10096, int, __stdcall, (), 0xCA88A)   -- now D2CMP_10096
 //  D2FUNC(D2CLIENT, D2CMP_TileFreeAsyncLoads, int, __cdecl, (), 0xCA890)   -- now D2CMP_TileFreeAsyncLoads
 //  D2FUNC(D2CLIENT, D2CMP_SpriteFreeAsyncLoads, int, __cdecl, (), 0xCA896)   -- now D2CMP_SpriteFreeAsyncLoads
 //  D2FUNC(D2CLIENT, D2CMP_SetCompressedDataMode, int, __stdcall, (_DWORD), 0xCA89C)   -- now D2CMP_SetCompressedDataMode
-//  D2FUNC(D2CLIENT, D2CMP_10084, int, __stdcall, (_DWORD), 0xCA8A2)   -- now D2CMP_10084
-//  D2FUNC(D2CLIENT, D2CMP_10082_GetTileSequence, int, __stdcall, (_DWORD), 0xCA8A8)   -- now D2CMP_10082_GetTileSequence
-//  D2FUNC(D2CLIENT, D2CMP_10078_GetTileStyle, int, __stdcall, (_DWORD), 0xCA8AE)   -- now D2CMP_10078_GetTileStyle
-//  D2FUNC(D2CLIENT, D2CMP_10077_GetTileType, int, __stdcall, (_DWORD), 0xCA8B4)   -- now D2CMP_10077_GetTileType
+//  D2FUNC(D2CLIENT, D2CMP_10084, int32_t, __stdcall, (D2TileLibraryEntryStrc *hTile), 0xCA8A2)   -- now D2CMP_10084
+//  D2FUNC(D2CLIENT, D2CMP_10082_GetTileSequence, int32_t, __stdcall, (D2TileLibraryEntryStrc *hTile), 0xCA8A8)   -- now D2CMP_10082_GetTileSequence
+//  D2FUNC(D2CLIENT, D2CMP_10078_GetTileStyle, int32_t, __stdcall, (D2TileLibraryEntryStrc *hTile), 0xCA8AE)   -- now D2CMP_10078_GetTileStyle
+//  D2FUNC(D2CLIENT, D2CMP_10077_GetTileType, int32_t, __stdcall, (D2TileLibraryEntryStrc *hTile), 0xCA8B4)   -- now D2CMP_10077_GetTileType
 //  D2FUNC(D2CLIENT, D2CMP_CelGetWidth, int, __stdcall, (D2GfxCellStrc *pCel), 0xCA8BA)   -- now D2CMP_CelGetWidth
 //  D2FUNC(D2CLIENT, D2CMP_CelGetHeight, int, __stdcall, (D2GfxCellStrc *pCel), 0xCA8C0)   -- now D2CMP_CelGetHeight
 //  D2FUNC(D2CLIENT, D2CMP_CelGetHandle, D2GfxCellStrc *, __stdcall, (D2GfxDataStrc *pGfxData), 0xCA8C6)   -- now D2CMP_CelGetHandle
@@ -2917,7 +2917,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2CMP_CelGetOffsetX, int, __stdcall, (D2GfxCellStrc *pCel), 0xCA8DE)   -- now D2CMP_CelGetOffsetX
 //  D2FUNC(D2CLIENT, D2CMP_10058, int, __stdcall, (_DWORD, _DWORD, _DWORD), 0xCA8E4)   -- now D2CMP_10058
 //  D2FUNC(D2CLIENT, D2CMP_10057, int, __cdecl, (), 0xCA8EA)   -- now D2CMP_10057
-//  D2FUNC(D2CLIENT, D2CMP_10056, int, __stdcall, (_DWORD), 0xCA8F0)   -- now D2CMP_10056
+//  D2FUNC(D2CLIENT, D2CMP_10056, int32_t, __stdcall, (D2GfxDataStrc *ptCelContext), 0xCA8F0)   -- now D2CMP_10056
 //  D2FUNC(D2CLIENT, D2CMP_10022, int, __stdcall, (_DWORD, _DWORD), 0xCA8F6)   -- now D2CMP_10022
 //  D2FUNC(D2CLIENT, D2CMP_10019, int, __stdcall, (_DWORD, _DWORD, _DWORD, _DWORD), 0xCA8FC)   -- now D2CMP_10019
 //  D2FUNC(D2CLIENT, D2COMMON_LOG_11105, void, __cdecl, (), 0xCA902)   -- now D2COMMON_LOG_11105
@@ -3271,7 +3271,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2COMMON_ITEMS_GetNoOfSetItemsFromItem, int, __stdcall, (D2UnitStrc *pItem), 0xCB12A)   -- now D2COMMON_ITEMS_GetNoOfSetItemsFromItem
 //  D2FUNC(D2CLIENT, D2COMMON_ITEMS_GetSetItemsMask, uint32_t, __stdcall, (D2UnitStrc *pPlayer, D2UnitStrc *pSetItem, BOOL bDontIgnoreInputItem), 0xCB130)   -- now D2COMMON_ITEMS_GetSetItemsMask
 //  D2FUNC(D2CLIENT, D2COMMON_ITEMS_GetSetItemsTxtRecordFromItem, D2SetItemsTxt *, __stdcall, (D2UnitStrc *pItem), 0xCB136)   -- now D2COMMON_ITEMS_GetSetItemsTxtRecordFromItem
-//  D2FUNC(D2CLIENT, D2COMMON_10251_Return, void, __stdcall, (int a1), 0xCB13C)   -- now D2COMMON_10251_Return
+//  D2FUNC(D2CLIENT, D2COMMON_10251_Return, void, __stdcall, (D2InventoryStrc *pInventory), 0xCB13C)   -- now D2COMMON_10251_Return
 //  D2FUNC(D2CLIENT, D2COMMON_INVENTORY_RemoveInventoryItems, void, __stdcall, (D2InventoryStrc *pInventory), 0xCB142)   -- now D2COMMON_INVENTORY_RemoveInventoryItems
 //  D2FUNC(D2CLIENT, D2COMMON_TEXT_GetStringIdOfMenuType1Or2Node, __int16, __stdcall, (D2TextHeaderStrc *pTextHeader, int nNodeId), 0xCB148)   -- now D2COMMON_TEXT_GetStringIdOfMenuType1Or2Node
 //  D2FUNC(D2CLIENT, D2COMMON_TEXT_GetStringIdOfMenuType2Node, __int16, __stdcall, (D2TextHeaderStrc *pTextHeader, int nNodeId), 0xCB14E)   -- now D2COMMON_TEXT_GetStringIdOfMenuType2Node
@@ -3334,8 +3334,8 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2COMMON_TEXT_CreateTextHeaderFromMessageList, void, __stdcall, (D2TextHeaderStrc *pTextHeader, D2MessageListStrc *pMsgList), 0xCB2A4)   -- now D2COMMON_TEXT_CreateTextHeaderFromMessageList
 //  D2FUNC(D2CLIENT, D2COMMON_TEXT_AllocTextHeader, D2TextHeaderStrc *, __stdcall, (void *pMemPool), 0xCB2AA)   -- now D2COMMON_TEXT_AllocTextHeader
 //  D2FUNC(D2CLIENT, D2COMMON_CHAT_AllocHoverMsg, D2HoverTextStrc *, __stdcall, (void *pMemPool, const char *szText, int nTimeout), 0xCB2B0)   -- now D2COMMON_CHAT_AllocHoverMsg
-//  D2FUNC(D2CLIENT, D2COMMON_CHAT_SetUsedInHoverMsg, void, __stdcall, (D2HoverTextStrc *pHoverMsg, BOOL bUsed), 0xCB2B6)   -- now D2COMMON_CHAT_SetUsedInHoverMsg
-//  D2FUNC(D2CLIENT, D2COMMON_CHAT_GetUsedFromHoverMsg, BOOL, __stdcall, (D2HoverTextStrc *pHoverMsg), 0xCB2BC)   -- now D2COMMON_CHAT_GetUsedFromHoverMsg
+//  D2FUNC(D2CLIENT, D2COMMON_CHAT_SetUsedInHoverMsg, void, __stdcall, (D2HoverTextStrc *pHoverMsg, D2ClientTextLineStrc **ppParsedText), 0xCB2B6)   -- now D2COMMON_CHAT_SetUsedInHoverMsg
+//  D2FUNC(D2CLIENT, D2COMMON_CHAT_GetUsedFromHoverMsg, D2ClientTextLineStrc **, __stdcall, (D2HoverTextStrc *pHoverMsg), 0xCB2BC)   -- now D2COMMON_CHAT_GetUsedFromHoverMsg
 //  D2FUNC(D2CLIENT, D2COMMON_CHAT_SetLangIdInHoverMsg, void, __stdcall, (D2HoverTextStrc *pHoverMsg, uint8_t nLangId), 0xCB2C2)   -- now D2COMMON_CHAT_SetLangIdInHoverMsg
 //  D2FUNC(D2CLIENT, D2COMMON_DUNGEON_IsTownLevelId, BOOL, __stdcall, (D2C_Levels nLevelId), 0xCB2C8)   -- now D2COMMON_DUNGEON_IsTownLevelId
 //  D2FUNC(D2CLIENT, D2COMMON_DUNGEON_GetWarpDestinationLevel, int, __stdcall, (D2ActiveRoomStrc *pRoom, int nSourceLevel), 0xCB2CE)   -- now D2COMMON_DUNGEON_GetWarpDestinationLevel
@@ -3394,7 +3394,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2COMMON_ITEMS_CheckIfFlagIsSet, int, __stdcall, (int nFlags, D2C_ItemFlags nFlag), 0xCB40C)   -- now D2COMMON_ITEMS_CheckIfFlagIsSet
 //  D2FUNC(D2CLIENT, D2COMMON_ITEMS_DecodeItemFromBitstream, size_t, __stdcall, (D2UnitStrc *pItem, uint8_t *pBitstream, size_t nSize, BOOL bCheckForHeader, int *pSocketedItemCount, uint32_t dwVersion, BOOL *pFail), 0xCB412)   -- now D2COMMON_ITEMS_DecodeItemFromBitstream
 //  D2FUNC(D2CLIENT, D2COMMON_ITEMS_SetInvPage, void, __stdcall, (D2UnitStrc *pItem, uint8_t nPage), 0xCB418)   -- now D2COMMON_ITEMS_SetInvPage
-//  D2FUNC(D2CLIENT, D2COMMON_10254_Return0, void, __stdcall, (int a1, int a2), 0xCB41E)   -- now D2COMMON_10254_Return0
+//  D2FUNC(D2CLIENT, D2COMMON_10254_Return0, void, __stdcall, (D2InventoryStrc *pInventory, int32_t nBodyLoc), 0xCB41E)   -- now D2COMMON_10254_Return0
 //  D2FUNC(D2CLIENT, D2COMMON_INVENTORY_GetSecondWieldingWeapon, void, __stdcall, (D2UnitStrc *pPlayer, D2InventoryStrc *pInventory, D2UnitStrc **ppItem, D2C_PlayerBodyLocs nBodyLoc), 0xCB424)   -- now D2COMMON_INVENTORY_GetSecondWieldingWeapon
 //  D2FUNC(D2CLIENT, D2COMMON_UNITS_GetItemComponentId, uint8_t, __stdcall, (D2UnitStrc *pUnit, D2UnitStrc *pItem), 0xCB42A)   -- now D2COMMON_UNITS_GetItemComponentId
 //  D2FUNC(D2CLIENT, D2COMMON_INVENTORY_UpdateWeaponGUIDOnRemoval, void, __stdcall, (D2InventoryStrc *pInventory, D2UnitStrc *pItem), 0xCB430)   -- now D2COMMON_INVENTORY_UpdateWeaponGUIDOnRemoval
@@ -3413,7 +3413,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2COMMON_ITEMS_SetBodyLocation, void, __stdcall, (D2UnitStrc *pItem, uint8_t nBodyLoc), 0xCB47E)   -- now D2COMMON_ITEMS_SetBodyLocation
 //  D2FUNC(D2CLIENT, D2COMMON_ITEMS_GetItemFlags, D2C_ItemFlags, __stdcall, (D2UnitStrc *pItem), 0xCB484)   -- now D2COMMON_ITEMS_GetItemFlags
 //  D2FUNC(D2CLIENT, D2COMMON_INVENTORY_PlaceItemInBeltSlot, BOOL, __stdcall, (D2InventoryStrc *pInventory, D2UnitStrc *pItem, int nSlot), 0xCB48A)   -- now D2COMMON_INVENTORY_PlaceItemInBeltSlot
-//  D2FUNC(D2CLIENT, D2COMMON_10267_Return, void, __stdcall, (int a1, int a2), 0xCB490)   -- now D2COMMON_10267_Return
+//  D2FUNC(D2CLIENT, D2COMMON_10267_Return, void, __stdcall, (D2InventoryStrc *pInventory, int32_t nX), 0xCB490)   -- now D2COMMON_10267_Return
 //  D2FUNC(D2CLIENT, D2COMMON_STATLIST_SetBaseStat2, void, __stdcall, (D2StatListStrc *pStatList, D2C_ItemStats nStatId, int nValue, uint16_t nLayer, D2UnitStrc *pUnit), 0xCB496)   -- now D2COMMON_STATLIST_SetBaseStat2
 //  D2FUNC(D2CLIENT, D2COMMON_STATLIST_GetStatListFromFlag, D2StatListStrc *, __stdcall, (D2StatListStrc *pStatList, int nFlag), 0xCB49C)   -- now D2COMMON_STATLIST_GetStatListFromFlag
 //  D2FUNC(D2CLIENT, D2COMMON_STATLIST_GetStatListFromUnitAndFlag, D2StatListStrc *, __stdcall, (D2UnitStrc *pUnit, int nFlag), 0xCB4A2)   -- now D2COMMON_STATLIST_GetStatListFromUnitAndFlag
@@ -3456,7 +3456,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2COMMON_PATH_GetType, int, __stdcall, (D2DynamicPathStrc *pDynamicPath), 0xCB580)   -- now D2COMMON_PATH_GetType
 //  D2FUNC(D2CLIENT, D2COMMON_DATATBLS_GetMonSoundsTxtRecordFromSoundId, D2MonSoundsTxt *, __stdcall, (int nSoundId), 0xCB586)   -- now D2COMMON_DATATBLS_GetMonSoundsTxtRecordFromSoundId
 //  D2FUNC(D2CLIENT, D2COMMON_MONSTERS_GetMaximalLightRadius, uint8_t, __stdcall, (D2UnitStrc *pMonster), 0xCB58C)   -- now D2COMMON_MONSTERS_GetMaximalLightRadius
-//  D2FUNC(D2CLIENT, D2COMMON_11062_Return, void, __stdcall, (int a1, int a2), 0xCB592)   -- now D2COMMON_11062_Return
+//  D2FUNC(D2CLIENT, D2COMMON_11062_Return, void, __stdcall, (D2UnitStrc *pUnit, int32_t nSkillBonus), 0xCB592)   -- now D2COMMON_11062_Return
 //  D2FUNC(D2CLIENT, D2COMMON_SKILLS_SetSkillMode, void, __stdcall, (D2SkillStrc *pSkill, int nSkillMode), 0xCB598)   -- now D2COMMON_SKILLS_SetSkillMode
 //  D2FUNC(D2CLIENT, D2COMMON_SKILLS_AllocSkillList, D2SkillListStrc *, __stdcall, (void *pMemPool), 0xCB59E)   -- now D2COMMON_SKILLS_AllocSkillList
 //  D2FUNC(D2CLIENT, D2COMMON_PATH_SetUnitCollisionPattern, void, __stdcall, (D2UnitStrc *pUnit, int nCollisionPattern), 0xCB5A4)   -- now D2COMMON_PATH_SetUnitCollisionPattern
@@ -3504,14 +3504,14 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2COMMON_UNITS_IsCurrentRoomInvalid, int, __stdcall, (D2UnitStrc *pUnit), 0xCB6A0)   -- now D2COMMON_UNITS_IsCurrentRoomInvalid
 //  D2FUNC(D2CLIENT, D2COMMON_STATES_IsUnitShapeShifted, BOOL, __stdcall, (D2UnitStrc *pUnit), 0xCB6A6)   -- now D2COMMON_STATES_IsUnitShapeShifted
 //  D2FUNC(D2CLIENT, D2COMMON_UNITS_TestCollisionBetweenInteractingUnits, BOOL, __stdcall, (D2UnitStrc *pUnit1, D2UnitStrc *pUnit2, int nCollisionMask), 0xCB6AC)   -- now D2COMMON_UNITS_TestCollisionBetweenInteractingUnits
-//  D2FUNC(D2CLIENT, D2COMMON_UNITS_GetRunAndWalkSpeedForPlayer, void, __stdcall, (int nUnused, int nCharId, int *pWalkSpeed, int *pRunSpeed), 0xCB6B2)   -- now D2COMMON_UNITS_GetRunAndWalkSpeedForPlayer
+//  D2FUNC(D2CLIENT, D2COMMON_UNITS_GetRunAndWalkSpeedForPlayer, void, __stdcall, (D2UnitStrc *pUnused, int nCharId, int *pWalkSpeed, int *pRunSpeed), 0xCB6B2)   -- now D2COMMON_UNITS_GetRunAndWalkSpeedForPlayer
 //  D2FUNC(D2CLIENT, D2COMMON_10178_PATH_GetLastPointY, int, __stdcall, (D2DynamicPathStrc *pDynamicPath), 0xCB6B8)   -- now D2COMMON_10178_PATH_GetLastPointY
 //  D2FUNC(D2CLIENT, D2COMMON_10177_PATH_GetLastPointX, int, __stdcall, (D2DynamicPathStrc *pDynamicPath), 0xCB6BE)   -- now D2COMMON_10177_PATH_GetLastPointX
 //  D2FUNC(D2CLIENT, D2COMMON_UNITS_IsObjectInInteractRange, BOOL, __stdcall, (D2UnitStrc *pUnit, D2UnitStrc *pObject), 0xCB6C4)   -- now D2COMMON_UNITS_IsObjectInInteractRange
 //  D2FUNC(D2CLIENT, D2COMMON_11016, int, __stdcall, (D2UnitStrc *pUnit, D2SkillStrc *pSkill), 0xCB6CA)   -- now D2COMMON_11016
 //  D2FUNC(D2CLIENT, D2COMMON_UNITS_IsInMovingModeEx, BOOL, __stdcall, (D2UnitStrc *pUnit), 0xCB6D0)   -- now D2COMMON_UNITS_IsInMovingModeEx
 //  D2FUNC(D2CLIENT, D2COMMON_ITEMS_GetComponent, uint8_t, __stdcall, (D2UnitStrc *pItem), 0xCB6D6)   -- now D2COMMON_ITEMS_GetComponent
-//  D2FUNC(D2CLIENT, D2COMMON_10230, BOOL, __stdcall, (D2DynamicPathStrc *pDynamicPath, int a2, D2ActiveRoomStrc *pRoom, unsigned int a4, __int16 a5), 0xCB6DC)   -- now D2COMMON_10230
+//  D2FUNC(D2CLIENT, D2COMMON_10230, BOOL, __stdcall, (D2DynamicPathStrc *pDynamicPath, D2UnitStrc *pUnused, D2ActiveRoomStrc *pRoom, unsigned int a4, __int16 a5), 0xCB6DC)   -- now D2COMMON_10230
 //  D2FUNC(D2CLIENT, D2COMMON_DATATBLS_Get1OfNFromOverlayTxt, uint32_t, __stdcall, (int nOverlayId), 0xCB6E2)   -- now D2COMMON_DATATBLS_Get1OfNFromOverlayTxt
 //  D2FUNC(D2CLIENT, D2COMMON_STATES_CheckStateMaskAuraOnUnit, BOOL, __stdcall, (D2UnitStrc *pUnit), 0xCB6E8)   -- now D2COMMON_STATES_CheckStateMaskAuraOnUnit
 //  D2FUNC(D2CLIENT, D2COMMON_STATES_CheckStateMaskAuraByStateId, BOOL, __stdcall, (D2C_States nState), 0xCB6EE)   -- now D2COMMON_STATES_CheckStateMaskAuraByStateId
@@ -3608,7 +3608,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2GFX_TEXTURE_CelDrawHilight, void, __stdcall, (D2GfxDataStrc *pData, int32_t nXPos, int32_t nYPos, uint8_t nPaletteIndex), 0xCB910)   -- now D2GFX_TEXTURE_CelDrawHilight
 //  D2FUNC(D2CLIENT, D2GFX_TEXTURE_CelFlatSpriteDraw, void, __stdcall, (D2GfxDataStrc *pData, int32_t nXPos, int32_t nYPos, uint32_t dwGamma, int eDrawMode, int32_t nScreenMode, uint8_t *pPalette), 0xCB916)   -- now D2GFX_TEXTURE_CelFlatSpriteDraw
 
-//D2FUNC(D2CLIENT, ARCHIVE_OpenFileOrTrace, int32_t, __fastcall, (int32_t nUnused, const char *pszFileName, void **phFile, int32_t bQuietIfMissing), 0xCB91C)
+//D2FUNC(D2CLIENT, ARCHIVE_OpenFileOrTrace, int32_t, __fastcall, (void *hArchive, const char *pszFileName, void **phFile, int32_t bQuietIfMissing), 0xCB91C)
 //D2FUNC(D2CLIENT, ARCHIVE_CloseFile, void, __fastcall, (void *hArchive, void *hFile), 0xCB958)
 //D2FUNC(D2CLIENT, ARCHIVE_GetFileSize, uint32_t, __fastcall, (void *hArchive, void *hFile, uint32_t *pdwSizeHigh), 0xCB97E)
 //D2FUNC(D2CLIENT, ARCHIVE_ReadFile, void, __fastcall, (void *hArchive, void *hFile, void *pBuffer, uint32_t dwBytesToRead), 0xCB9ED)
@@ -3628,13 +3628,13 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 
 //  D2FUNC(D2CLIENT, STORM_SFileGetFileName, int, __stdcall, (void *hFile, char *szFileName, int nMaxLen), 0xCBDBA)   -- now STORM_SFileGetFileName
 //  D2FUNC(D2CLIENT, D2LANG_STRTABLE_GetLanguage, D2C_Language, __cdecl, (), 0xCBDC0)   -- now D2LANG_STRTABLE_GetLanguage
-//  D2FUNC(D2CLIENT, D2LANG_10006, int, __stdcall, (_DWORD, _DWORD), 0xCBDC6)   -- now D2LANG_10006
+//  D2FUNC(D2CLIENT, D2LANG_10006, void, __stdcall, (char *szLangString, int32_t nUnk), 0xCBDC6)   -- now D2LANG_10006
 //  D2FUNC(D2CLIENT, D2LANG_10001, int, __cdecl, (), 0xCBDCC)   -- now D2LANG_10001
-//  D2FUNC(D2CLIENT, D2LANG_10000, int, __fastcall, (_DWORD, _DWORD, _DWORD), 0xCBDD2)   -- now D2LANG_10000
+//  D2FUNC(D2CLIENT, D2LANG_10000, BOOL, __fastcall, (HD2ARCHIVE hArchive, char *szLanguageString, BOOL bLoadExpansion), 0xCBDD2)   -- now D2LANG_10000
 //  D2FUNC(D2CLIENT, D2LANG_GetStringFromTblIndex, const Unicode *, __fastcall, (D2C_StringIndices nStringIndex), 0xCBDD8)   -- now D2LANG_GetStringFromTblIndex
 //  D2FUNC(D2CLIENT, D2LANG_STR_GroupUintDigits, void, __stdcall, (Unicode *pUnicode, unsigned int dwValue, int nMaxLength), 0xCBDDE)   -- now D2LANG_STR_GroupUintDigits
 //  D2FUNC(D2CLIENT, D2LANG_STR_GroupIntDigits, void, __stdcall, (Unicode *pUnicode, int nValue, int nMaxLength), 0xCBDE4)   -- now D2LANG_STR_GroupIntDigits
-//  D2FUNC(D2CLIENT, D2LANG_GetStringByReferenceString, int, __fastcall, (_DWORD), 0xCBDEA)   -- now D2LANG_GetStringByReferenceString
+//  D2FUNC(D2CLIENT, D2LANG_GetStringByReferenceString, const Unicode *, __fastcall, (const char *szString), 0xCBDEA)   -- now D2LANG_GetStringByReferenceString
 //  D2FUNC(D2CLIENT, D2MCPCLIENT_10003, int, __cdecl, (), 0xCBDF0)   -- now D2MCPCLIENT_10003
 //  D2FUNC(D2CLIENT, D2NET_10017, int32_t, __stdcall, (), 0xCBDF6)   -- now D2NET_10017
 //  D2FUNC(D2CLIENT, D2NET_CLIENT_DequeueGamePacket, int32_t, __stdcall, (uint8_t *pBuffer, uint32_t nBufferSize), 0xCBDFC)   -- now D2NET_CLIENT_DequeueGamePacket
@@ -3648,8 +3648,8 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2NET_SERVER_Release, void, __stdcall, (), 0xCBE2C)   -- now D2NET_SERVER_Release
 //  D2FUNC(D2CLIENT, D2NET_CLIENT_Release, void, __stdcall, (), 0xCBE32)   -- now D2NET_CLIENT_Release
 //  D2FUNC(D2CLIENT, D2NET_SERVER_GetServerPacketSize, int32_t, __fastcall, (D2PacketBufferStrc *pBuffer, uint32_t nBufferSize, int32_t *pSize), 0xCBE38)   -- now D2NET_SERVER_GetServerPacketSize
-//  D2FUNC(D2CLIENT, D2NET_10040, int, __stdcall, (), 0xCBE3E)   -- now D2NET_10040
-//  D2FUNC(D2CLIENT, D2NET_10039, int, __stdcall, (), 0xCBE44)   -- now D2NET_10039
+//  D2FUNC(D2CLIENT, D2NET_10040, void *, __stdcall, (), 0xCBE3E)   -- now D2NET_10040
+//  D2FUNC(D2CLIENT, D2NET_10039, void *, __stdcall, (), 0xCBE44)   -- now D2NET_10039
 //  D2FUNC(D2CLIENT, D2SOUND_10027_ApplyMasterVolume, void, __fastcall, (unsigned int nVolume), 0xCBE4A)   -- now D2SOUND_10027_ApplyMasterVolume
 //  D2FUNC(D2CLIENT, D2SOUND_10031_StopStreamSample, void, __cdecl, (), 0xCBE50)   -- now D2SOUND_10031_StopStreamSample
 //  D2FUNC(D2CLIENT, D2SOUND_10029_FadeOutMasterVolume, void, __fastcall, (int nDurationMs), 0xCBE56)   -- now D2SOUND_10029_FadeOutMasterVolume
@@ -3668,7 +3668,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2SOUND_10006_SetListenerPosition, int, __thiscall, (float *pfCoords), 0xCBEA4)   -- now D2SOUND_10006_SetListenerPosition
 //  D2FUNC(D2CLIENT, D2SOUND_10004_Is3dListenerAllowed, int, __cdecl, (), 0xCBEAA)   -- now D2SOUND_10004_Is3dListenerAllowed
 //  D2FUNC(D2CLIENT, D2SOUND_10044_GetSoundMixerSetting, int, __cdecl, (), 0xCBEB0)   -- now D2SOUND_10044_GetSoundMixerSetting
-//  D2FUNC(D2CLIENT, D2SOUND_10025_PlaySampleStream, int, __fastcall, (void *ptSample, int nFileId, int nStartBlock, int bLoop), 0xCBEB6)   -- now D2SOUND_10025_PlaySampleStream
+//  D2FUNC(D2CLIENT, D2SOUND_10025_PlaySampleStream, int, __fastcall, (void *ptSample, const char *szFile, int nStartBlock, int bLoop), 0xCBEB6)   -- now D2SOUND_10025_PlaySampleStream
 //  D2FUNC(D2CLIENT, D2SOUND_10011_PlaySampleLooping, int, __thiscall, (void *ptSample), 0xCBEBC)   -- now D2SOUND_10011_PlaySampleLooping
 //  D2FUNC(D2CLIENT, D2SOUND_10022_SetSampleEaxLevel, int, __thiscall, (void *ptSample, float fLevel), 0xCBEC2)   -- now D2SOUND_10022_SetSampleEaxLevel
 //  D2FUNC(D2CLIENT, D2SOUND_10010_SetSampleWaveData, int, __fastcall, (void *ptSample, void *pbWaveData, unsigned int dwWaveSize), 0xCBEC8)   -- now D2SOUND_10010_SetSampleWaveData
@@ -3685,7 +3685,7 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2SOUND_10057_ComputeVolumeAndPan, int, __fastcall, (int *pnVolume, int *pnPan, float fX, float fY, float fZ), 0xCBF10)   -- now D2SOUND_10057_ComputeVolumeAndPan
 //  D2FUNC(D2CLIENT, D2SOUND_10023_IsSampleStreaming, int, __thiscall, (void *ptSample), 0xCBF16)   -- now D2SOUND_10023_IsSampleStreaming
 //  D2FUNC(D2CLIENT, D2SOUND_10045_SetSoundMixerSetting, int, __thiscall, (int nValue), 0xCBF1C)   -- now D2SOUND_10045_SetSoundMixerSetting
-//  D2FUNC(D2CLIENT, D2SOUND_10007_AllocSample, int, __fastcall, (char nFlags), 0xCBF22)   -- now D2SOUND_10007_AllocSample
+//  D2FUNC(D2CLIENT, D2SOUND_10007_AllocSample, void *, __fastcall, (char nFlags), 0xCBF22)   -- now D2SOUND_10007_AllocSample
 //  D2FUNC(D2CLIENT, D2SOUND_10008_FreeSample, int, __thiscall, (void *ptSample), 0xCBF28)   -- now D2SOUND_10008_FreeSample
 //  D2FUNC(D2CLIENT, D2SOUND_10003_Is3dSampleAllowed, int, __cdecl, (), 0xCBF2E)   -- now D2SOUND_10003_Is3dSampleAllowed
 //  D2FUNC(D2CLIENT, D2SOUND_10064_IsSampleBufferPlaying, int, __thiscall, (void *ptSample), 0xCBF34)   -- now D2SOUND_10064_IsSampleBufferPlaying
@@ -3728,8 +3728,8 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, D2WIN_10116, void, __stdcall, (), 0xCC012)   -- now D2WIN_10116
 //  D2FUNC(D2CLIENT, D2WIN_10130_DrawFramedTextEx, void, __fastcall, (const Unicode *wszText, int nX, int nY, int nTextColor, int nAlign, int nRectangleColor), 0xCC018)   -- now D2WIN_10130_DrawFramedTextEx
 //  D2FUNC(D2CLIENT, D2WIN_10124, void, __stdcall, (), 0xCC01E)   -- now D2WIN_10124
-//  D2FUNC(D2CLIENT, D2WIN_10207, int, __stdcall, (), 0xCC024)   -- now D2WIN_10207
-//  D2FUNC(D2CLIENT, D2WIN_10206, int, __stdcall, (), 0xCC02A)   -- now D2WIN_10206
+//  D2FUNC(D2CLIENT, D2WIN_10207, void *, __stdcall, (), 0xCC024)   -- now D2WIN_10207
+//  D2FUNC(D2CLIENT, D2WIN_10206, void *, __stdcall, (), 0xCC02A)   -- now D2WIN_10206
 //  D2FUNC(D2CLIENT, D2WIN_10185, int, __stdcall, (), 0xCC030)   -- now D2WIN_10185
 //  D2FUNC(D2CLIENT, D2WIN_10175_GetPL2Shift, uint8_t *, __fastcall, (int nIndex), 0xCC036)   -- now D2WIN_10175_GetPL2Shift
 //  D2FUNC(D2CLIENT, FOG_DisplayError, void, __cdecl, (int32_t nCategory, const char *szMsg, const char *szFile, int32_t nLine), 0xCC03C)   -- now FOG_DisplayError

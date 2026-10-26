@@ -61,22 +61,22 @@ void __stdcall D2CMP_InitSpriteCache(void *pPool, int32_t nSpriteCacheBytes, int
 int __stdcall D2CMP_FlushSpriteCache(int a1);   /* #10053 */
 int __stdcall D2CMP_SetCompressedDataMode(_DWORD);   /* #10054 */
 BOOL __stdcall D2CMP_SpriteValidate(D2GfxDataStrc *pGfxData, BOOL bAsyncWait, BOOL bAsyncLoad);   /* #10055 */
-int __stdcall D2CMP_10056(_DWORD);   /* #10056 */
+int32_t __stdcall D2CMP_10056(D2GfxDataStrc *ptCelContext);   /* #10056 */
 int __stdcall D2CMP_10057(void);   /* #10057 */
 int __stdcall D2CMP_10058(_DWORD, _DWORD, _DWORD);   /* #10058 */
 int __cdecl D2CMP_10060(void);   /* #10060 */
 int __stdcall D2CMP_10061(void);   /* #10061 */
 int __cdecl D2CMP_10063(void);   /* #10063 */
 int __stdcall D2CMP_10064(void);   /* #10064 */
-int __stdcall D2CMP_10077_GetTileType(_DWORD);   /* #10077 */
-int __stdcall D2CMP_10078_GetTileStyle(_DWORD);   /* #10078 */
-int __stdcall D2CMP_10082_GetTileSequence(_DWORD);   /* #10082 */
-int __stdcall D2CMP_10084(_DWORD);   /* #10084 */
+int32_t __stdcall D2CMP_10077_GetTileType(D2TileLibraryEntryStrc *hTile);   /* #10077 */
+int32_t __stdcall D2CMP_10078_GetTileStyle(D2TileLibraryEntryStrc *hTile);   /* #10078 */
+int32_t __stdcall D2CMP_10082_GetTileSequence(D2TileLibraryEntryStrc *hTile);   /* #10082 */
+int32_t __stdcall D2CMP_10084(D2TileLibraryEntryStrc *hTile);   /* #10084 */
 void __stdcall D2CMP_10089(void *pPool, uint32_t dwCacheBytes);   /* #10089 */
 int __stdcall D2CMP_10090(_DWORD);   /* #10090 */
-int __stdcall D2CMP_10092(_DWORD, _DWORD, _DWORD, _DWORD);   /* #10092 */
+void __stdcall D2CMP_10092(uint32_t *pConfiguredBytes, uint32_t *pAllocRequests, uint32_t *pAccessRequests, uint32_t *pPercentAllocated);   /* #10092 */
 int __stdcall D2CMP_10093(void);   /* #10093 */
-int __stdcall D2CMP_10095(_DWORD, _DWORD);   /* #10095 */
+void * __stdcall D2CMP_10095(D2TileLibraryHashStrc **ppHash, const char *szFileName);   /* #10095 */
 int __stdcall D2CMP_10096(void);   /* #10096 */
 int __stdcall D2CMP_10097(_DWORD);   /* #10097 */
 int __stdcall D2CMP_SpriteFreeAsyncLoads(void);   /* #10099 */
@@ -202,7 +202,7 @@ BOOL __stdcall D2COMMON_PATH_RemoveCollisionFootprintForUnit(D2UnitStrc *pUnit, 
 BOOL __stdcall D2COMMON_10226(D2UnitStrc *pUnit, signed int a2);   /* #10226 */
 void __stdcall D2COMMON_10228(D2UnitStrc *pUnit);   /* #10228 */
 BOOL __stdcall D2COMMON_10229(D2DynamicPathStrc *pDynamicPath, D2UnitStrc *pUnit, D2ActiveRoomStrc *pDestRoom, uint32_t nDestX, uint32_t nDestY);   /* #10229 */
-BOOL __stdcall D2COMMON_10230(D2DynamicPathStrc *pDynamicPath, int a2, D2ActiveRoomStrc *pRoom, unsigned int a4, __int16 a5);   /* #10230 */
+BOOL __stdcall D2COMMON_10230(D2DynamicPathStrc *pDynamicPath, D2UnitStrc *pUnused, D2ActiveRoomStrc *pRoom, unsigned int a4, __int16 a5);   /* #10230 */
 int __stdcall D2COMMON_10231(D2DynamicPathStrc *pDynamicPath, D2UnitStrc *pUnit_unused, D2ActiveRoomStrc *pRooms, uint16_t nX, uint16_t nY);   /* #10231 */
 void __stdcall D2COMMON_PATH_RecacheRoomIfNeeded(D2DynamicPathStrc *pDynamicPath);   /* #10233 */
 BOOL __stdcall D2COMMON_PATH_HasMovedThisFrame(D2DynamicPathStrc *pDynamicPath);   /* #10234 */
@@ -217,10 +217,10 @@ BOOL __stdcall D2COMMON_INVENTORY_CanItemBePlaced(D2InventoryStrc *pInventory, D
 BOOL __stdcall D2COMMON_INVENTORY_CanItemsBeExchanged(D2InventoryStrc *pInventory, D2UnitStrc *pItem, int nXPos, int nYPos, D2C_InventoryRecords nInventoryRecordId, D2UnitStrc **ppExchangeItem, uint8_t nPage, BOOL bCheckIfCube);   /* #10248 */
 BOOL __stdcall D2COMMON_INVENTORY_PlaceItemAtInventoryPage(D2InventoryStrc *pInventory, D2UnitStrc *pItem, int nXPos, int nYPos, D2C_InventoryRecords nInventoryRecordId, BOOL bUnused, uint8_t nPage);   /* #10249 */
 void __stdcall D2COMMON_INVENTORY_Return(const char *szFile, int nLine, D2InventoryStrc *pInventory, int nX, int nY, D2C_InventoryRecords nInventoryRecordId, BOOL bClient, uint8_t nPage);   /* #10250 */
-void __stdcall D2COMMON_10251_Return(int a1);   /* #10251 */
+void __stdcall D2COMMON_10251_Return(D2InventoryStrc *pInventory);   /* #10251 */
 D2UnitStrc * __stdcall D2COMMON_INVENTORY_GetItemFromInventoryPage(D2InventoryStrc *pInventory, int nGridX, int nGridY, int *pX, int *pY, D2C_InventoryRecords nInventoryRecordId, uint8_t nPage);   /* #10252 */
 BOOL __stdcall D2COMMON_INVENTORY_PlaceItemInBodyLoc(D2InventoryStrc *pInventory, D2UnitStrc *pItem, D2C_PlayerBodyLocs nBodyLoc);   /* #10253 */
-void __stdcall D2COMMON_10254_Return0(int a1, int a2);   /* #10254 */
+void __stdcall D2COMMON_10254_Return0(D2InventoryStrc *pInventory, int32_t nBodyLoc);   /* #10254 */
 void __stdcall D2COMMON_INVENTORY_GetSecondWieldingWeapon(D2UnitStrc *pPlayer, D2InventoryStrc *pInventory, D2UnitStrc **ppItem, D2C_PlayerBodyLocs nBodyLoc);   /* #10255 */
 D2UnitStrc * __stdcall D2COMMON_INVENTORY_GetItemFromBodyLoc(D2InventoryStrc *pInventory, D2C_PlayerBodyLocs nBodyLoc);   /* #10257 */
 D2UnitStrc * __stdcall D2COMMON_INVENTORY_GetLeftHandWeapon(D2InventoryStrc *pInventory);   /* #10258 */
@@ -229,7 +229,7 @@ int __stdcall D2COMMON_INVENTORY_GetBodyLocFromEquippedItem(D2InventoryStrc *pIn
 void __stdcall D2COMMON_INVENTORY_SetCursorItem(D2InventoryStrc *pInventory, D2UnitStrc *pItem);   /* #10261 */
 D2UnitStrc * __stdcall D2COMMON_INVENTORY_GetCursorItem(D2InventoryStrc *pInventory);   /* #10262 */
 BOOL __stdcall D2COMMON_INVENTORY_PlaceItemInBeltSlot(D2InventoryStrc *pInventory, D2UnitStrc *pItem, int nSlot);   /* #10266 */
-void __stdcall D2COMMON_10267_Return(int a1, int a2);   /* #10267 */
+void __stdcall D2COMMON_10267_Return(D2InventoryStrc *pInventory, int32_t nX);   /* #10267 */
 D2UnitStrc * __stdcall D2COMMON_INVENTORY_GetItemFromBeltSlot(D2InventoryStrc *pInventory, int nSlotId);   /* #10271 */
 BOOL __stdcall D2COMMON_INVENTORY_GetUseableItemFromBeltSlot(D2InventoryStrc *pInventory, D2UnitStrc *pItem, int nSlotId, D2UnitStrc **ppItem);   /* #10272 */
 BOOL __stdcall D2COMMON_INVENTORY_GetEquippedShield(D2InventoryStrc *pInventory, D2UnitStrc **ppItem);   /* #10273 */
@@ -273,7 +273,7 @@ void __stdcall D2COMMON_UNITS_InitializeStaticPath(D2UnitStrc *pUnit, D2ActiveRo
 void __stdcall D2COMMON_UNITS_BlockCollisionPath(D2UnitStrc *pUnit, D2ActiveRoomStrc *pRoom, int nX, int nY);   /* #10351 */
 void __stdcall D2COMMON_UNITS_FreeCollisionPath(D2UnitStrc *pUnit);   /* #10352 */
 uint32_t __stdcall D2COMMON_UNITS_GetNameOffsetFromObject(D2UnitStrc *pUnit);   /* #10353 */
-void __stdcall D2COMMON_UNITS_GetRunAndWalkSpeedForPlayer(int nUnused, int nCharId, int *pWalkSpeed, int *pRunSpeed);   /* #10354 */
+void __stdcall D2COMMON_UNITS_GetRunAndWalkSpeedForPlayer(D2UnitStrc *pUnused, int nCharId, int *pWalkSpeed, int *pRunSpeed);   /* #10354 */
 int __stdcall D2COMMON_UNITS_IsCurrentRoomInvalid(D2UnitStrc *pUnit);   /* #10355 */
 void __stdcall D2COMMON_UNITS_SetCurrentRoomInvalid(D2UnitStrc *pUnit, int a2);   /* #10356 */
 BOOL __stdcall D2COMMON_UNITS_IsSoftMonster(D2UnitStrc *pUnit);   /* #10359 */
@@ -528,8 +528,8 @@ D2HoverTextStrc * __stdcall D2COMMON_CHAT_AllocHoverMsg(void *pMemPool, const ch
 void __stdcall D2COMMON_CHAT_FreeHoverMsg(void *pMemPool, D2HoverTextStrc *pHoverMsg);   /* #10893 */
 uint32_t __stdcall D2COMMON_CHAT_GetTimeoutFromHoverMsg(D2HoverTextStrc *pHoverMsg);   /* #10895 */
 void __stdcall D2COMMON_CHAT_CopyHoverMsgToBuffer(D2HoverTextStrc *pHoverMsg, char *szMessage);   /* #10896 */
-BOOL __stdcall D2COMMON_CHAT_GetUsedFromHoverMsg(D2HoverTextStrc *pHoverMsg);   /* #10897 */
-void __stdcall D2COMMON_CHAT_SetUsedInHoverMsg(D2HoverTextStrc *pHoverMsg, BOOL bUsed);   /* #10898 */
+D2ClientTextLineStrc ** __stdcall D2COMMON_CHAT_GetUsedFromHoverMsg(D2HoverTextStrc *pHoverMsg);   /* #10897 */
+void __stdcall D2COMMON_CHAT_SetUsedInHoverMsg(D2HoverTextStrc *pHoverMsg, D2ClientTextLineStrc **ppParsedText);   /* #10898 */
 uint8_t __stdcall D2COMMON_CHAT_GetLangIdFromHoverMsg(D2HoverTextStrc *pHoverMsg);   /* #10899 */
 void __stdcall D2COMMON_CHAT_SetLangIdInHoverMsg(D2HoverTextStrc *pHoverMsg, uint8_t nLangId);   /* #10900 */
 D2TextHeaderStrc * __stdcall D2COMMON_TEXT_AllocTextHeader(void *pMemPool);   /* #10901 */
@@ -622,7 +622,7 @@ BOOL __stdcall D2COMMON_MONSTERS_IsSandLeaper(D2UnitStrc *pMonster, BOOL bAlways
 BOOL __stdcall D2COMMON_MONSTERS_IsDemon(D2UnitStrc *pMonster);   /* #11058 */
 BOOL __stdcall D2COMMON_MONSTERS_IsUndead(D2UnitStrc *pMonster);   /* #11059 */
 BOOL __stdcall D2COMMON_MONSTERS_IsBoss(D2MonStatsTxt *pMonStatsTxtRecord, D2UnitStrc *pMonster);   /* #11060 */
-void __stdcall D2COMMON_11062_Return(int a1, int a2);   /* #11062 */
+void __stdcall D2COMMON_11062_Return(D2UnitStrc *pUnit, int32_t nSkillBonus);   /* #11062 */
 BOOL __stdcall D2COMMON_MONSTERS_IsDead(D2UnitStrc *pMonster);   /* #11064 */
 BOOL __stdcall D2COMMON_MONSTERS_IsPrimeEvil(D2UnitStrc *pMonster);   /* #11065 */
 void __stdcall D2COMMON_11066(D2UnitStrc *pMonster, int *pDirectionX, int *pDirectionY);   /* #11066 */
@@ -776,11 +776,11 @@ int32_t __stdcall D2GFX_TILE_TileDrawTrans(D2TileLibraryEntryStrc *pTile, int32_
 int32_t __stdcall D2GFX_TILE_ShadowTileDraw(D2TileLibraryEntryStrc *pTile, int32_t nXPos, int32_t nYPos, int32_t nDrawMode, int32_t nScreenPanels);   /* #10082 */
 
 /*  ---- D2Lang ---- */
-int __fastcall D2LANG_10000(_DWORD, _DWORD, _DWORD);   /* #10000 */
+BOOL __fastcall D2LANG_10000(HD2ARCHIVE hArchive, char *szLanguageString, BOOL bLoadExpansion);   /* #10000 */
 int __stdcall D2LANG_10001(void);   /* #10001 */
-int __fastcall D2LANG_GetStringByReferenceString(_DWORD);   /* #10003 */
+const Unicode * __fastcall D2LANG_GetStringByReferenceString(const char *szString);   /* #10003 */
 const Unicode * __fastcall D2LANG_GetStringFromTblIndex(D2C_StringIndices nStringIndex);   /* #10004 */
-int __stdcall D2LANG_10006(_DWORD, _DWORD);   /* #10006 */
+void __stdcall D2LANG_10006(char *szLangString, int32_t nUnk);   /* #10006 */
 D2C_Language __stdcall D2LANG_STRTABLE_GetLanguage(void);   /* #10007 */
 void __stdcall D2LANG_STR_GroupIntDigits(Unicode *pUnicode, int nValue, int nMaxLength);   /* #10009 */
 void __stdcall D2LANG_STR_GroupUintDigits(Unicode *pUnicode, unsigned int dwValue, int nMaxLength);   /* #10010 */
@@ -801,15 +801,15 @@ void __stdcall D2NET_SERVER_SetHackListEnabled(BOOL bEnabled);   /* #10023 */
 int32_t __stdcall D2NET_10025(void);   /* #10025 */
 void __stdcall D2NET_SERVER_SetMaxClientsPerGame(int32_t nMaxClients);   /* #10026 */
 int32_t __fastcall D2NET_SERVER_GetServerPacketSize(D2PacketBufferStrc *pBuffer, uint32_t nBufferSize, int32_t *pSize);   /* #10030 */
-int __stdcall D2NET_10039(void);   /* #10039 */
-int __stdcall D2NET_10040(void);   /* #10040 */
+void * __stdcall D2NET_10039(void);   /* #10039 */
+void * __stdcall D2NET_10040(void);   /* #10040 */
 
 /*  ---- D2Sound ---- */
 LPDIRECTSOUND __cdecl D2SOUND_10002_GetDirectSound(void);   /* #10002 */
 int __cdecl D2SOUND_10003_Is3dSampleAllowed(void);   /* #10003 */
 int __cdecl D2SOUND_10004_Is3dListenerAllowed(void);   /* #10004 */
 int __fastcall D2SOUND_10006_SetListenerPosition(float *pfCoords);   /* #10006 */
-int __fastcall D2SOUND_10007_AllocSample(char nFlags);   /* #10007 */
+void * __fastcall D2SOUND_10007_AllocSample(char nFlags);   /* #10007 */
 int __fastcall D2SOUND_10008_FreeSample(void *ptSample);   /* #10008 */
 void __fastcall D2SOUND_10009_ResetSample(void *ptSample);   /* #10009 */
 int __fastcall D2SOUND_10010_SetSampleWaveData(void *ptSample, void *pbWaveData, unsigned int dwWaveSize);   /* #10010 */
@@ -825,7 +825,7 @@ void __fastcall D2SOUND_10020_SetSampleLoopBlockStart(void *ptSample, int dwLoop
 void __fastcall D2SOUND_10021_SetSampleReverbMix(void *ptSample, float fReverbMix);   /* #10021 */
 int __fastcall D2SOUND_10022_SetSampleEaxLevel(void *ptSample, float fLevel);   /* #10022 */
 int __fastcall D2SOUND_10023_IsSampleStreaming(void *ptSample);   /* #10023 */
-int __fastcall D2SOUND_10025_PlaySampleStream(void *ptSample, int nFileId, int nStartBlock, int bLoop);   /* #10025 */
+int __fastcall D2SOUND_10025_PlaySampleStream(void *ptSample, const char *szFile, int nStartBlock, int bLoop);   /* #10025 */
 void __fastcall D2SOUND_10027_ApplyMasterVolume(unsigned int nVolume);   /* #10027 */
 void __fastcall D2SOUND_10029_FadeOutMasterVolume(int nDurationMs);   /* #10029 */
 void __cdecl D2SOUND_10031_StopStreamSample(void);   /* #10031 */
@@ -888,8 +888,8 @@ void __stdcall D2WIN_10179(void);   /* #10179 */
 int __stdcall D2WIN_10185(void);   /* #10185 */
 D2SplittedTextStrc * __fastcall D2WIN_10199(const Unicode *wszText, int *pLines, int nMaxLength);   /* #10199 */
 void __fastcall D2WIN_10200(D2SplittedTextStrc *pSplitText);   /* #10200 */
-int __stdcall D2WIN_10206(void);   /* #10206 */
-int __stdcall D2WIN_10207(void);   /* #10207 */
+void * __stdcall D2WIN_10206(void);   /* #10206 */
+void * __stdcall D2WIN_10207(void);   /* #10207 */
 
 /*  ---- Fog ---- */
 const char * __fastcall FOG_GetHostIPAddress(void);   /* #10013 */
@@ -949,7 +949,7 @@ int __stdcall FOG_IsExpansion(void);   /* #10227 */
 
 /*  ---- Storm ---- */
 int __stdcall STORM_SFileCloseFile(void *hFile);   /* #253 */
-int __stdcall STORM_SFileOpenFileEx(int hMpq, char *szFileName, char nSearchScope, int *phFile);   /* #268 */
+int __stdcall STORM_SFileOpenFileEx(int hMpq, char *szFileName, char nSearchScope, void **phFile);   /* #268 */
 int __stdcall STORM_SFileGetFileName(void *hFile, char *szFileName, int nMaxLen);   /* #276 */
 void * __stdcall STORM_SMemAlloc(size_t nSize, const char *szFile, int nLine, unsigned int dwFlags);   /* #401 */
 BOOL __stdcall STORM_SMemFree(void *pMemory, const char *szLogFile, int nLogLine, unsigned int dwFlags);   /* #403 */

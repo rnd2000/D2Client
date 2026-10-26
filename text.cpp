@@ -395,7 +395,7 @@ void __fastcall TEXT_MeasureMessageBox(D2ClientPopupStrc *pPopup)
 //  Between the header free and CHAT_SetUsedInHoverMsg the field holds a dangling pointer; nothing runs in between.
 void __fastcall TEXT_FreeUnitHoverMsg(D2HoverTextStrc *pHoverMsg)
 {
-    D2ClientTextLineStrc **ppParsedText = (D2ClientTextLineStrc **)D2COMMON_CHAT_GetUsedFromHoverMsg(pHoverMsg);
+    D2ClientTextLineStrc **ppParsedText = D2COMMON_CHAT_GetUsedFromHoverMsg(pHoverMsg);
 
     if (ppParsedText)
     {
@@ -1453,7 +1453,7 @@ void __fastcall TEXT_TickStaticInfoPanel(D2ClientViewStrc *pView)
 
     VIEW_GetRect(pView, &pnLeft, &pnTop, &pnRight, &pnBottom);
     VIEW_GetOrigin(pView, &xLeft, &yTop);
-    SetRect((LPRECT)&sgTextState.rcTextInfoPanel, xLeft, yTop, xLeft + pnRight - pnLeft, pnBottom + yTop - pnTop);
+    SetRect(&sgTextState.rcTextInfoPanel, xLeft, yTop, xLeft + pnRight - pnLeft, pnBottom + yTop - pnTop);
 
     if (sgTextState.bPopupActive == 1)
     {
@@ -1823,7 +1823,7 @@ void __fastcall TEXT_PlaceHoverMsg(D2UnitStrc *pUnit, D2HoverTextStrc *pHoverMsg
     pMsg->wWidth = (uint16_t)(nMaxTextWidth + 20);
     pMsg->wHeight = (uint16_t)(15 * (uint16_t)pMsg->nLineCount + 6);
 
-    const int32_t nBoxLeft = *pnPos - (int32_t)((uint16_t)(nMaxTextWidth + 20) >> 1);
+    const int32_t nBoxLeft = *pnPos - ((uint16_t)(nMaxTextWidth + 20) >> 1);
     const int32_t nBoxTop = pnPos[1] - 50;
     *pnPos = nBoxLeft;
     pnPos[1] = nBoxTop;
@@ -1891,7 +1891,7 @@ void __fastcall TEXT_PlaceHoverMsg(D2UnitStrc *pUnit, D2HoverTextStrc *pHoverMsg
             {
                 for (int32_t nOffsetY = 35; nOffsetY < 280 && !bTaken; nOffsetY += 35)
                 {
-                    const int32_t nSignCount = (int32_t)gnHoverMsgOffsetSignCount;
+                    const int32_t nSignCount = gnHoverMsgOffsetSignCount;
                     for (int32_t iSign = 0; iSign < nSignCount && !bTaken; ++iSign)
                     {
                         //  BUG: one load of gnHoverMsgOffsetSigns is spent on both axes, so the eight passes only ever try (+dx, +dy) and
@@ -3071,7 +3071,7 @@ void __cdecl TEXT_OpenMessageLog()
 
     //  computed before the string lookup, as the bytes have it
     const int32_t nCloseLineY = gnScreenHeight - 165;
-    DIALOG_AddLine((D2ClientDialogStrc *)sgTextState.pMessageLogDialog, D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose), nCloseLineY, 0, 0, 1, (DIALOGCALLBACK)TEXT_OnMessageLogClose, 1);
+    DIALOG_AddLine((D2ClientDialogStrc *)sgTextState.pMessageLogDialog, D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose), nCloseLineY, 0, 0, 1, TEXT_OnMessageLogClose, 1);
 
     void *pBlock = STORM_SMemAlloc(12, szNew, -1, 0);
     void *pListBox = pBlock ? LISTBOX_Construct(pBlock, 0, 5, 65, gnScreenWidth - 20, gnScreenHeight - 200, 2, 0, 13, nullptr, 1)
@@ -3263,7 +3263,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
     switch (pPacket->nType)
     {
     case 0:
-        if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3639_sysmsg1)) >= 260)
+        if (Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3639_sysmsg1)) >= 260)
         {
             FOG_DisplayAssert(szAssertLenDropped1, szTextCpp, 4410);
             exit(-1);
@@ -3274,7 +3274,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
         break;
 
     case 1:
-        if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3640_sysmsg2)) >= 260)
+        if (Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3640_sysmsg2)) >= 260)
         {
             FOG_DisplayAssert(szAssertLenDropped2, szTextCpp, 4416);
             exit(-1);
@@ -3290,7 +3290,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
         {
             break;
         }
-        if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3641_sysmsg3)) >= 260)
+        if (Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3641_sysmsg3)) >= 260)
         {
             FOG_DisplayAssert(szAssertLenJoined, szTextCpp, 4426);
             exit(-1);
@@ -3310,7 +3310,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
         break;
 
     case 3:
-        if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3642_sysmsg4)) >= 260)
+        if (Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3642_sysmsg4)) >= 260)
         {
             FOG_DisplayAssert(szAssertLenQuit, szTextCpp, 4440);
             exit(-1);
@@ -3329,7 +3329,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
         break;
 
     case 4:
-        if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3645_sysmsg5)) >= 260)
+        if (Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3645_sysmsg5)) >= 260)
         {
             FOG_DisplayAssert(szAssertLenNotInGame, szTextCpp, 4454);
             exit(-1);
@@ -3340,7 +3340,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
         break;
 
     case 5:
-        if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3646_sysmsg6)) >= 260)
+        if (Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3646_sysmsg6)) >= 260)
         {
             FOG_DisplayAssert(szAssertLenNotInBattlenet, szTextCpp, 4466);
             exit(-1);
@@ -3415,12 +3415,12 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
         }
 
         //  the same 306-character budget, spent as a sum rather than a cap
-        const int32_t nLineLen = (int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(nSlainStrId));
-        if ((int32_t)Unicode::strlen(pwszKiller) + nLineLen + 16 >= 306)
+        const int32_t nLineLen = Unicode::strlen(D2LANG_GetStringFromTblIndex(nSlainStrId));
+        if (Unicode::strlen(pwszKiller) + nLineLen + 16 >= 306)
         {
-            const int32_t nKillerNameLen = (int32_t)Unicode::strlen(pwszKiller);
-            const int32_t nSlainCheckLen = (int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(nSlainStrId));
-            const int32_t nNameLen = (int32_t)Unicode::strlen(src);
+            const int32_t nKillerNameLen = Unicode::strlen(pwszKiller);
+            const int32_t nSlainCheckLen = Unicode::strlen(D2LANG_GetStringFromTblIndex(nSlainStrId));
+            const int32_t nNameLen = Unicode::strlen(src);
             FOG_Trace(szTraceSlainLens, (uint16_t)nSlainStrId, nNameLen, nSlainCheckLen, nKillerNameLen);
             return;
         }
@@ -3545,7 +3545,7 @@ void __fastcall TEXT_HandleSystemMessage(D2GSPacketSrv5A *pPacket)
         break;
 
     case 13:
-        if ((int32_t)Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3652_sysmsg12)) >= 260)
+        if (Unicode::strlen(D2LANG_GetStringFromTblIndex(STR_IDX_3652_sysmsg12)) >= 260)
         {
             FOG_DisplayAssert(szAssertLenNotListening, szTextCpp, 4460);
             exit(-1);
@@ -3670,7 +3670,7 @@ void __fastcall TEXT_OnMessageListPacket(D2GSPacketSrv27 *pPacket)
     //  one dword store across two uint16 members, as the bytes have it
     *(uint32_t *)&sgPopup.pParsedText->field_16 = 1;
 
-    const int32_t nTimeoutBase = 25 * ((int32_t)Unicode::strlen(pwszText) + 25);
+    const int32_t nTimeoutBase = 25 * (Unicode::strlen(pwszText) + 25);
     gnStaticInfoDeadline = GetTickCount() + 8 * nTimeoutBase;
     sgTextState.bDisplayingStaticInfo = 1;
     sgTextState.bKeepNpcInteraction = 1;
@@ -3748,7 +3748,7 @@ void __fastcall TEXT_HandleChatMessage(D2GSPacketSrv26 *pPacket)
     case 2:
     {
         const int32_t nNameLen = (int32_t)strlen(pPacket->szName);
-        const uint32_t nMessageLen = (uint32_t)strlen(pPacket->szMessage) + 1;
+        const uint32_t nMessageLen = strlen(pPacket->szMessage) + 1;
         if (nNameLen <= 0 || nNameLen >= 16)
         {
             if ((int32_t)(nMessageLen - 1) <= 305)
@@ -3782,7 +3782,7 @@ void __fastcall TEXT_HandleChatMessage(D2GSPacketSrv26 *pPacket)
             return;
         }
         const int32_t nNameLen = (int32_t)strlen(pPacket->szName);
-        const uint32_t nMessageLen = (uint32_t)strlen(pPacket->szMessage) + 1;
+        const uint32_t nMessageLen = strlen(pPacket->szMessage) + 1;
         if (nNameLen <= 0 || nNameLen >= 16)
         {
             if ((int32_t)(nMessageLen - 1) <= 305)
@@ -3814,7 +3814,7 @@ void __fastcall TEXT_HandleChatMessage(D2GSPacketSrv26 *pPacket)
         //  the speech bubble: an empty message clears it rather than setting one, and both arms free the previous bubble first
         if (pUnit)
         {
-            const uint32_t nMessageLen = (uint32_t)strlen(pPacket->szMessage) + 1;
+            const uint32_t nMessageLen = strlen(pPacket->szMessage) + 1;
             const uint8_t nLangId = pPacket->nLang;
             if (nMessageLen == 1)
             {

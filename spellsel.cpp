@@ -1014,7 +1014,7 @@ void __fastcall SPELLSEL_CycleSkill(int32_t nDirection)
 
     nFoundSlot = -1;
     nTries = 0;
-    nSlot = (int32_t)gnSpellSelHotkeySlot + nStep;
+    nSlot = gnSpellSelHotkeySlot + nStep;
     do
     {
         if (nSlot < 0)

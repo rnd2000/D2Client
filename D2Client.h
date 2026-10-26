@@ -712,7 +712,7 @@ void __fastcall ENV_SpawnParticle(D2SeedStrc *pSeed);
 void __cdecl ENV_UnloadImages();
 
 //  D2Client.0x6FAA7490, GAME\Env.cpp -- drop the weather in flight when the player warps. Its `void *` parameter is kept.
-void __fastcall ENV_OnLevelChange(void *pParam);
+void __fastcall ENV_OnLevelChange(int32_t bIsLevelChange);
 
 //  D2Client.0x6FAA74C0, GAME\Env.cpp -- arm one lightning flash. Its one caller is Thunder Storm's client effect, and it always passes 0.
 void __fastcall ENV_TriggerLightningFlash(int32_t bPlayThunder);
@@ -840,7 +840,7 @@ void __cdecl DLIGHTMAP_EnvUpdateAmbientLightCache();
 
 //  D2Client.0x6FB6B91C, D2Hell\SRC\Archive.cpp -- FOG_FOpenFile with a trace on failure. Not an import despite the FOG_ prefix. The last argument
 //  suppresses the trace only for a missing file.
-int32_t __fastcall ARCHIVE_OpenFileOrTrace(int32_t nUnused, const char *pszFileName, void **phFile, int32_t bQuietIfMissing);
+int32_t __fastcall ARCHIVE_OpenFileOrTrace(void *hArchive, const char *pszFileName, void **phFile, int32_t bQuietIfMissing);
 
 //  D2Client.0x6FB6B958, D2Hell\SRC\Archive.cpp -- FOG_FCloseFile behind an hFile assert. hArchive is unused, here and in the whole file.
 void __fastcall ARCHIVE_CloseFile(void *hArchive, void *hFile);
@@ -964,12 +964,12 @@ int32_t __fastcall CUNIT_GetUnitPaletteShift2(D2UnitStrc *pUnit);
 BOOL __fastcall CUNIT_IsPointInWarpSelectBox(D2UnitStrc *pWarp, int32_t nScreenX, int32_t nScreenY);
 
 //  D2Client.0x6FB285D0..0x6FB286A0, UNIT\CUnit.cpp -- gpSkillSelectProcs[1..6], the skills.txt SelectProc target tests. The first argument is unread.
-BOOL __fastcall CUNIT_SkillsSelectProc1_CorpseExplosion(int32_t nUnused, D2UnitStrc *pUnit);
-BOOL __fastcall CUNIT_SkillsSelectProc2_RaiseSkeleton(int32_t nUnused, D2UnitStrc *pUnit);
-BOOL __fastcall CUNIT_SkillsSelectProc3_Revive(int32_t nUnused, D2UnitStrc *pUnit);
-BOOL __fastcall CUNIT_SkillsSelectProc4_FindPotion(int32_t nUnused, D2UnitStrc *pUnit);
-BOOL __fastcall CUNIT_SkillsSelectProc6_GrimWard(int32_t nUnused, D2UnitStrc *pUnit);
-BOOL __fastcall CUNIT_SkillsSelectProc5_FindItem(int32_t nUnused, D2UnitStrc *pUnit);
+BOOL __fastcall CUNIT_SkillsSelectProc1_CorpseExplosion(D2UnitStrc *pUnused, D2UnitStrc *pUnit);
+BOOL __fastcall CUNIT_SkillsSelectProc2_RaiseSkeleton(D2UnitStrc *pUnused, D2UnitStrc *pUnit);
+BOOL __fastcall CUNIT_SkillsSelectProc3_Revive(D2UnitStrc *pUnused, D2UnitStrc *pUnit);
+BOOL __fastcall CUNIT_SkillsSelectProc4_FindPotion(D2UnitStrc *pUnused, D2UnitStrc *pUnit);
+BOOL __fastcall CUNIT_SkillsSelectProc6_GrimWard(D2UnitStrc *pUnused, D2UnitStrc *pUnit);
+BOOL __fastcall CUNIT_SkillsSelectProc5_FindItem(D2UnitStrc *pUnused, D2UnitStrc *pUnit);
 
 //  D2Client.0x6FB286B0, UNIT\CUnit.cpp -- this unit is the selected one, and the selected one is not a door.
 BOOL __fastcall CUNIT_ShouldHighlightUnit(D2UnitStrc *pUnit);
@@ -1282,7 +1282,7 @@ void __cdecl UI_InitUiForPlayerUnit();
 void __cdecl UI_ResetUiSubsystems();
 
 //  D2Client.0x6FB239F0 -- a level's display name; level 8 is special-cased in code, so Den of Evil is not something levels.txt can express.
-int32_t __fastcall UI_LevelsGetLevelName(int32_t nLevelId);
+const Unicode *__fastcall UI_LevelsGetLevelName(int32_t nLevelId);
 
 //  D2Client.0x6FB23A40 -- client packet 0x27 for the item on the cursor, its id passed as both parameters.
 void __cdecl UI_CursorSendUseHeldItem();
@@ -1584,16 +1584,16 @@ void __fastcall ESCMENU_ActivateSelectedRow(SMSGHANDLER_PARAMS *pMsg);
 //  D2Client.0x6FB078B0 .. 0x6FB07A3C, UI\Restart.cpp -- the automap page's five rows, an OnChange and a Refresh each. The five Refresh ones
 //  run at menu load (ESCMENU_LoadPageImages calls +0x118 backwards off &dwCount) and four of them on every draw too, from the +0x11C slot.
 //  All ten return void, which is the row callback's contract.
-void __fastcall ESCMENU_AutomapModeOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_AutomapModeRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_AutomapFadeOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_AutomapFadeRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_AutomapCenterOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_AutomapCenterRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_AutomapPartyOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_AutomapPartyRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_AutomapPartyNamesOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_AutomapPartyNamesRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
+void __fastcall ESCMENU_AutomapModeOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_AutomapModeRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_AutomapFadeOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_AutomapFadeRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_AutomapCenterOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_AutomapCenterRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_AutomapPartyOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_AutomapPartyRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_AutomapPartyNamesOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_AutomapPartyNamesRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
 
 //  D2Client.0x6FB08700 / 0x6FB08860 / 0x6FB07030 / 0x6FB06FC0, UI\Restart.cpp -- open the menu on a page, close it, and the main page's
 //  Return to Game and Exit rows: the only original code that walks every UI window id. SetPage turns off every window but 0 and 9 and
@@ -1617,38 +1617,38 @@ void __fastcall ESCMENU_OpenConfigPanel(D2ClientEscMenuItemStrc *pItem, SMSGHAND
 //  constants, the 3D and EAX switches read live on every draw, the NPC speech choice (whose Refresh is its OnChange inlined), and six jmp
 //  wrappers into other units, each with its target's signature.
 int32_t __cdecl j_SOUNDCHAN_IsSystemReady_2(void);
-void __fastcall ESCMENU_SoundVolumeOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_SoundVolumeRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_MusicVolumeOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_MusicVolumeRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
+void __fastcall ESCMENU_SoundVolumeOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_SoundVolumeRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_MusicVolumeOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_MusicVolumeRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
 int32_t __cdecl j_SOUNDCHAN_Get3DEnabled(void);
 void __cdecl j_SOUNDCHAN_Toggle3dSound(void);
-void __fastcall ESCMENU_Sound3DRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
+void __fastcall ESCMENU_Sound3DRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
 BOOL __cdecl j_SOUNDCHAN_Is3DEnabled(void);
-void __fastcall ESCMENU_Sound3DBiasOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_Sound3DBiasRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
+void __fastcall ESCMENU_Sound3DBiasOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_Sound3DBiasRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
 int32_t __cdecl j_SOUNDCHAN_GetEaxEnabled(void);
 void __cdecl j_SOUNDCHAN_ToggleEaxEffects(void);
-void __fastcall ESCMENU_SoundEaxRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_NpcSpeechOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_NpcSpeechRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
+void __fastcall ESCMENU_SoundEaxRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_NpcSpeechOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_NpcSpeechRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
 
 //  D2Client.0x6FB073E0 .. 0x6FB078AB and 0x6FB079F0, UI\Restart.cpp -- the video page, whose every Refresh applies its setting once per game,
 //  and the automap PartyNames rows' enabling wrapper. The sliders' x87 arithmetic is float-constant exact at 53 bits.
-void __fastcall ESCMENU_LightQualityOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_LightQualityRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_BlendShadowOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_BlendShadowRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_ResolutionOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_ResolutionRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
+void __fastcall ESCMENU_LightQualityOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_LightQualityRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_BlendShadowOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_BlendShadowRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_ResolutionOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_ResolutionRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
 int32_t __stdcall j_D2gfx_10007(void);
-void __fastcall ESCMENU_PerspectiveOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_PerspectiveRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
+void __fastcall ESCMENU_PerspectiveOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_PerspectiveRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
 int32_t __stdcall j_D2gfx_10019(void);
-void __fastcall ESCMENU_GammaOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_GammaRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_ContrastOnChange(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
-void __fastcall ESCMENU_ContrastRefresh(D2ClientEscMenuItemStrc *pItem, int32_t nArg);
+void __fastcall ESCMENU_GammaOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_GammaRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_ContrastOnChange(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall ESCMENU_ContrastRefresh(D2ClientEscMenuItemStrc *pItem, SMSGHANDLER_PARAMS *pMsg);
 int32_t __cdecl j_AUTOMAP_GetShowParty(void);
 
 //  D2Client.0x6FB081D0 / 0x6FB083C0 / 0x6FB08540 / 0x6FB08640, UI\Restart.cpp -- load the menu once per game (every page's images, and every
@@ -2144,7 +2144,7 @@ void __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog);                   // 
 void __fastcall DIALOG_Draw(D2ClientDialogStrc *pDialog);                 // dialog.cpp
 void __fastcall DIALOG_SetSelectedLine(D2ClientDialogStrc *pDialog, int32_t nIndex);  // dialog.cpp
 void __fastcall DIALOG_SetHighlight(D2ClientDialogStrc *pDialog, int32_t eHighlight);  // dialog.cpp
-void __fastcall DIALOG_AddLine(D2ClientDialogStrc *pDialog, const Unicode *wszText, int32_t nLineHeight, int32_t nUnused1, int32_t nBaseColor, int32_t nFont, DIALOGCALLBACK pfnOnClick, int32_t bSelectable);  // dialog.cpp
+void __fastcall DIALOG_AddLine(D2ClientDialogStrc *pDialog, const Unicode *wszText, int32_t nLineHeight, int32_t nUnused1, int32_t nBaseColor, int32_t nFont, int32_t (__cdecl *pfnOnClick)(), int32_t bSelectable);  // dialog.cpp
 void __fastcall DIALOG_AutoSize(D2ClientDialogStrc *pDialog);            // dialog.cpp
 int32_t __fastcall DIALOG_GetSelectedLine(D2ClientDialogStrc *pDialog);      // dialog.cpp
 int32_t __cdecl DIALOG_GetNestDepth(void);                                   // dialog.cpp
@@ -2237,7 +2237,7 @@ void __cdecl CMDTBL_COMMAND_PrepareMouseMappings(void);            // CmdTbl.cpp
 
 
 //  ---- editbox.cpp ----
-char *__fastcall EDITBOX_UiEditBoxConstruct(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, void *pfnCallback, int32_t nFont); // editbox.cpp
+char *__fastcall EDITBOX_UiEditBoxConstruct(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont); // editbox.cpp
 D2ClientEditBoxStrc *__fastcall EDITBOX_UiEditBoxVecDelDtor(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, uint8_t bFreeObject); // editbox.cpp
 void __fastcall EDITBOX_UiEditBoxDestruct(D2ClientEditBoxStrc *pEditBox);      // editbox.cpp
 int32_t __fastcall EDITBOX_UiEditBoxSetNumericOnly(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, int32_t bNumericOnly); // editbox.cpp
@@ -2257,7 +2257,7 @@ int32_t __fastcall EDITBOX_UiEditBoxOnArrowRight(D2ClientEditBoxStrc *pEditBox, 
 int32_t __fastcall EDITBOX_UiEditBoxOnArrowLeft(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
 void __fastcall EDITBOX_UiCtrlProxyDestruct(int32_t *pProxy);                      // editbox.cpp
 uint32_t **__fastcall EDITBOX_UiCtrlProxyVecDelDtor(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject); // editbox.cpp
-uint32_t *__fastcall EDITBOX_UiCtrlProxyConstructEditbox(uint32_t *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, void *pfnCallback, int32_t nFont); // editbox.cpp
+uint32_t *__fastcall EDITBOX_UiCtrlProxyConstructEditbox(uint32_t *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont); // editbox.cpp
 //  A jump forwarder passes whatever the caller pushed and the target's `retn` pops it, so each one's argument list is the purge of the
 //  implementation slot it jumps to. Slots 1, 11 and 13 purge 0; the rest purge 4.
 int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot4(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
@@ -2299,7 +2299,7 @@ void __fastcall NPCMENU_SetRowCount4(int32_t nRecord);                      // n
 void __fastcall NPCMENU_EnableIdentifyRow(int32_t nRecord);                 // npcmenu.cpp
 void __fastcall NPCMENU_AddHirelingOffer(D2GSPacketSrv4E *pPacket);     // npcmenu.cpp
 void __cdecl NPCMENU_ClearHirelingOffers(void);                         // npcmenu.cpp
-void __fastcall NPCMENU_RefreshHireIconsForOffer(int16_t wMercName);    // npcmenu.cpp
+void __fastcall NPCMENU_RefreshHireIconsForOffer(uint16_t wMercName);    // npcmenu.cpp
 void __fastcall NPCMENU_NoteOpenedEunuchObject(D2UnitStrc *pObject);    // npcmenu.cpp
 void __fastcall NPCMENU_SetResurrectMercOffer(D2C_StringIndices wNameTblId, int32_t nCost); // npcmenu.cpp
 void __fastcall NPCMENU_MarkEntriesFromPacket91(uint16_t *pPacket); // npcmenu.cpp
@@ -2607,7 +2607,7 @@ void __fastcall ITEM_ItemMsg16_Unknown(D2GSPacketSrv9D *pPacket);               
 //  written here by position.
 void __cdecl LISTBOX_LoadScrollBarImage(void);
 void __cdecl LISTBOX_UnloadScrollBarImage(void);
-D2ClientListBoxStrc *__fastcall LISTBOX_ImplConstruct(D2ClientListBoxStrc *pListBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, void *pfnOnSelect,
+D2ClientListBoxStrc *__fastcall LISTBOX_ImplConstruct(D2ClientListBoxStrc *pListBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, int32_t (__cdecl *pfnOnSelect)(),
                                                       uint8_t bWideLayout);
 D2ClientListBoxStrc *__fastcall LISTBOX_ImplVecDelDtor(D2ClientListBoxStrc *pListBox, int32_t nEdxUnused, uint8_t bDelete);
 void __fastcall LISTBOX_UiCtrlBaseDestruct(int32_t *pControl);
@@ -2631,7 +2631,7 @@ int32_t __fastcall LISTBOX_ImplOnChar(D2ClientListBoxStrc *pListBox, int32_t nEd
 int32_t __fastcall LISTBOX_ImplGetSelection(D2ClientListBoxStrc *pListBox);
 void __fastcall LISTBOX_ProxyDestruct(int32_t *pProxy, int32_t nEdxUnused);
 uint32_t **__fastcall LISTBOX_ProxyVecDelDtor(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
-void *__fastcall LISTBOX_Construct(void *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, void *pfnOnSelect, uint8_t bWideLayout);
+void *__fastcall LISTBOX_Construct(void *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, int32_t (__cdecl *pfnOnSelect)(), uint8_t bWideLayout);
 int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot1(uint32_t **pProxy);
 int32_t __fastcall LISTBOX_GetEntryUserData(uint32_t **pProxy, int32_t nEdxUnused, int32_t nEntryIndex);
 int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot13(uint32_t **pProxy);
@@ -2758,7 +2758,7 @@ int32_t __fastcall SKILLDESC_ComputeAttackRating(D2UnitStrc *pUnit, int32_t *pnA
 void __fastcall SKILLDESC_AttFunc5(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnAttackRatingA, int32_t *pnColorA, int32_t *pnAttackRatingB, int32_t *pnColorB);
 void __fastcall SKILLDESC_AttFunc2(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnAttackRatingA, int32_t *pnColorA, int32_t *pnAttackRatingB, int32_t *pnColorB);
 void __fastcall SKILLDESC_AttackRatingCallback(D2UnitStrc *pUnit, int32_t *pnValue, int32_t *pnColor, int32_t nUnusedA, int32_t nUnusedB, int32_t nSkillLevel, D2SkillStrc *pSkill, int32_t nUnusedC, D2UnitStrc *pWeapon);
-int32_t __fastcall SKILLDESC_ForEachWieldedWeapon(D2UnitStrc *pUnit, int32_t *pnValueA, int32_t *pnColorA, int32_t nArgA, int32_t *pnValueB, int32_t *pnColorB, int32_t nArgB, int32_t nShared, void *pfnCompute, int32_t nExtraA, int32_t nExtraB);
+int32_t __fastcall SKILLDESC_ForEachWieldedWeapon(D2UnitStrc *pUnit, int32_t *pnValueA, int32_t *pnColorA, int32_t *pnArgA, int32_t *pnValueB, int32_t *pnColorB, int32_t *pnArgB, D2SkillStrc *pSkill, void *pfnCompute, int32_t nExtraA, int32_t nExtraB);
 D2UnitStrc *__fastcall SKILLDESC_PrepareOffHandWeapon(D2UnitStrc *pUnit);
 D2UnitStrc *__fastcall SKILLDESC_PrepareMainHandWeapon(D2UnitStrc *pUnit);
 void __fastcall SKILLDESC_AttFunc3(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnAttackRatingA, int32_t *pnColorA, int32_t *pnAttackRatingB, int32_t *pnColorB);
@@ -2794,16 +2794,16 @@ int32_t __fastcall SKILLDESC_FormatRangeOrValue(struct Unicode *pwszOut, int32_t
 int32_t __fastcall SKILLDESC_AddWeaponPhysDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nExtraDamagePercent, int32_t nFlatBonus, D2SkillStrc *pSkill, int32_t nSrcDamOverride,
                                              D2UnitStrc *pWeapon, int32_t bUseItemOwnStats);
 int32_t __cdecl SKILLDESC_GetChargeUpDamagePercent(void);
-void __fastcall SKILLDESC_AddItemElemDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nUnused, D2SkillStrc *pSkill);
+void __fastcall SKILLDESC_AddItemElemDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, D2UnitStrc *pUnused, D2SkillStrc *pSkill);
 int32_t __fastcall SKILLDESC_AddChargeUpElemDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor);
 void __fastcall SKILLDESC_AddElemDamageByType(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, uint8_t nEType);
 void __fastcall SKILLDESC_AddTotalDamageCallback(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nExtraDamagePercent, int32_t nFlatBonus, D2SkillStrc *pSkill, int32_t nSrcDamOverride, D2UnitStrc *pWeapon);
 void __fastcall SKILLDESC_AddElemDamageAndColor(D2UnitStrc *pUnit, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnMinTotal, int32_t *pnMaxTotal, int32_t *pnColor);
 void __fastcall SKILLDESC_ApplyFireMasteryToRange(D2SkillsTxt *pSkillsTxt, int32_t *pnMin, int32_t *pnMax);
 void __fastcall SKILLDESC_ApplyLightningMasteryToRange(D2SkillsTxt *pSkillsTxt, int32_t *pnMin, int32_t *pnMax);
-void __fastcall SKILLDESC_DrawDualWieldDamage(D2UnitStrc *pUnit, int32_t nShared, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, void *pfnCompute, int32_t nExtraA, int32_t nExtraB, int32_t nX, int32_t nY, int32_t nRight, int32_t bAddElemDamage);
+void __fastcall SKILLDESC_DrawDualWieldDamage(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, void *pfnCompute, int32_t nExtraA, int32_t nExtraB, int32_t nX, int32_t nY, int32_t nRight, int32_t bAddElemDamage);
 void __fastcall SKILLDESC_ComputeThrowDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nExtraDamagePercent, int32_t nUnusedA, D2SkillStrc *pSkill, int32_t nUnusedB, D2UnitStrc *pWeapon);
-void __fastcall SKILLDESC_DrawDamageValue(int32_t nUnused, int32_t nMin, int32_t nMax, int32_t nColor, int32_t nLeft, int32_t nY, int32_t nRight);
+void __fastcall SKILLDESC_DrawDamageValue(D2UnitStrc *pUnused, int32_t nMin, int32_t nMax, int32_t nColor, int32_t nLeft, int32_t nY, int32_t nRight);
 int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *pwszText, D2SkillsTxt *pSkillsTxt, D2C_Skills nSkillId, int32_t nSkillLevel, int32_t nCharges, int32_t nLine, int32_t nColor);
 int32_t __fastcall SKILLDESC_FormatFixedPoint(struct Unicode *pwszOut, int32_t nWhole, int32_t nFraction, int32_t bSigned);
 int32_t __fastcall SKILLDESC_FormatFixedPointOrInt(struct Unicode *pwszOut, int32_t nWhole, int32_t nFraction, int32_t bSigned);
@@ -3223,7 +3223,7 @@ void __fastcall UNITMODE_SetAnimModeSilent(D2UnitStrc *pUnit, int32_t nMode);
 
 //  D2Client.0x6FB3F270 .. 0x6FB3F340, UNIT\Monster.cpp -- the units near one visited until a callback answers, and a player into and out of
 //  gapClientPlayers. MONSTER_ClearPlayerSlots, the fourth, is declared with the GAME_InitGame callees above.
-int32_t __fastcall MONSTER_ForEachUnitNearby(D2UnitStrc *pUnit, int32_t nCallbackCtx, int32_t nCallbackParam, int32_t (__fastcall *pfnVisit)(D2UnitStrc *, D2UnitStrc *, int32_t, int32_t));
+int32_t __fastcall MONSTER_ForEachUnitNearby(D2UnitStrc *pUnit, void *pCallbackCtx, void *pCallbackParam, int32_t (__fastcall *pfnVisit)(D2UnitStrc *, D2UnitStrc *, void *, void *));
 void __fastcall MONSTER_RegisterPlayerSlot(D2UnitStrc *pPlayer);
 void __fastcall MONSTER_UnregisterPlayerSlot(D2UnitStrc *pPlayer);
 
@@ -3267,7 +3267,7 @@ BOOL __fastcall MONSTER_IsSuperUnique(D2UnitStrc *pUnit);
 //  against its mother, and the free.
 void __fastcall MONSTER_InitClientUnit(D2UnitStrc *pUnit, D2ActiveRoomStrc *pRoom, int32_t nX, int32_t nY, D2C_MonsterIds nMonClassId, int32_t nAnimMode);
 void __fastcall MONSTER_LinkOwnedUnits(D2UnitStrc *pUnit, D2C_MonsterIds nClassId);
-int32_t __fastcall MONSTER_MatchVileMotherDirection(D2UnitStrc *pChild, D2UnitStrc *pOther, int32_t nUnused1, int32_t nUnused2);
+int32_t __fastcall MONSTER_MatchVileMotherDirection(D2UnitStrc *pChild, D2UnitStrc *pOther, void *pUnused1, void *pUnused2);
 void __fastcall MONSTER_FreeUnitData(D2UnitStrc *pUnit);
 
 //  D2Client.0x6FB41900 .. 0x6FB42403, UNIT\Monster.cpp -- a class changed in place, the animation advanced by its mode's descriptor, and a

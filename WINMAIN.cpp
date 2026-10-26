@@ -368,12 +368,12 @@ int32_t __stdcall WINMAIN_D2ClientEntrypoint(HMODULE hModule, D2ConfigStrc* pCon
     hAccTableAlt = LoadAcceleratorsA(ghClientInstance, MAKEINTRESOURCEA(101));
 
     const int32_t bIsExpansion = FOG_IsExpansion();
-    if (!D2LANG_10000((uint32_t)(UINT_PTR)D2WIN_GetArchive(), 0, bIsExpansion))
+    if (!D2LANG_10000(D2WIN_GetArchive(), 0, bIsExpansion))
     {
         return 0;
     }
 
-    D2LANG_10006((uint32_t)(UINT_PTR)szLocale, 0);
+    D2LANG_10006(szLocale, 0);
     FOG_Trace("%s is locale\n", szLocale);
 
     //  szLocale and nPlayerNameLength share one stack slot in the binary ([esp+3Ch] holds both), which is the compiler folding two dead locals

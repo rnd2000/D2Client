@@ -338,7 +338,7 @@ BOOL __fastcall GFXUTIL_UnitHasComponent(D2UnitStrc *pUnit, int32_t nComponent)
         return FALSE;
 
     nType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-    nClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+    nClass = pUnit ? pUnit->dwClassId : -1;
     nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
     D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szGfxUtilCpp, 603);
 
@@ -482,7 +482,7 @@ int32_t __fastcall GFXUTIL_ResolveUnitAnimIdentity(D2UnitStrc *pUnit, D2GfxDataS
     else
     {
         nType = (int32_t)pUnit->dwUnitType;
-        nClass = (int32_t)pUnit->dwClassId;
+        nClass = pUnit->dwClassId;
         nMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
         D2COMMON_11013_ConvertMode(pUnit, &nType, &nClass, &nMode, szGfxUtilCpp, 752);
         pGfxData->nUnitIndex = nClass;
@@ -577,7 +577,7 @@ int32_t __fastcall GFXUTIL_ResolveUnitAnimIdentity(D2UnitStrc *pUnit, D2GfxDataS
             }
             else
             {
-                pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(pTorso ? (int32_t)pTorso->dwClassId : -1);
+                pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(pTorso ? pTorso->dwClassId : -1);
                 if (pItemsTxt)
                 {
                     for (iArmor = 0; iArmor < 6; ++iArmor)
@@ -627,7 +627,7 @@ int32_t __fastcall GFXUTIL_ResolveUnitAnimIdentity(D2UnitStrc *pUnit, D2GfxDataS
                         }
                         else
                         {
-                            pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord((int32_t)pRightHand->dwClassId);
+                            pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(pRightHand->dwClassId);
                             if (!pItemsTxt)
                                 dwArmorToken = GFXUTIL_Token('l', 'i', 't', ' ');
                             else if (pItemsTxt->dwAlternateGfx)
@@ -711,7 +711,7 @@ int32_t __fastcall GFXUTIL_ResolveUnitAnimIdentity(D2UnitStrc *pUnit, D2GfxDataS
     case UNIT_MISSILE:
         if (pUnit)
         {
-            nClass = (int32_t)pUnit->dwClassId;
+            nClass = pUnit->dwClassId;
 
             if (nClass >= 0 && nClass < sgptDataTables->nMissilesTxtRecordCount)
             {
@@ -743,14 +743,14 @@ int32_t __fastcall GFXUTIL_ResolveUnitAnimIdentity(D2UnitStrc *pUnit, D2GfxDataS
         if (GFX_TestFlagEx(pUnit, UNITFLAGEX_ISSHAPESHIFTED))
         {
             nConvType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-            nConvClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+            nConvClass = pUnit ? pUnit->dwClassId : -1;
             nConvMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
             D2COMMON_11013_ConvertMode(pUnit, &nConvType, &nConvClass, &nConvMode, szEngineH, 278);
             nItemId = nConvClass;
         }
         else
         {
-            nItemId = pUnit ? (int32_t)pUnit->dwClassId : -1;
+            nItemId = pUnit ? pUnit->dwClassId : -1;
         }
 
         pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(nItemId);
@@ -1134,7 +1134,7 @@ void __fastcall GFXUTIL_SetUnitModeLoaded(D2UnitStrc *pUnit, int32_t nMode, uint
     D2ClientUnitGfxInfoStrc *pGfxInfo;
 
     pGfxInfo = CUNIT_GfxGetUnitGfxInfo(pUnit);
-    if (pGfxInfo) *(uint8_t *)&pGfxInfo->wModeLoaded[nMode] = (uint8_t)bLoaded;
+    if (pGfxInfo) *(uint8_t *)&pGfxInfo->wModeLoaded[nMode] = bLoaded;
 }
 
 
@@ -1244,7 +1244,7 @@ void __fastcall GFXUTIL_ResolveAnimDirection(D2UnitStrc *pUnit, D2C_UnitTypes nU
         nActualDirections = *pnNumDirections;
         nDirection = *pnUnitDirection;
         nConvType = pUnit ? (int32_t)pUnit->dwUnitType : (int32_t)UNIT_TYPES_COUNT;
-        nConvClass = pUnit ? (int32_t)pUnit->dwClassId : -1;
+        nConvClass = pUnit ? pUnit->dwClassId : -1;
         nConvMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
         D2COMMON_11013_ConvertMode(pUnit, &nConvType, &nConvClass, &nConvMode, szGfxUtilCpp, 1340);
         if (nConvType == UNIT_PLAYER)
@@ -1344,7 +1344,7 @@ BOOL __fastcall GFXUTIL_ResolveUnitTransLevel(D2UnitStrc *pUnit, D2Composits nCo
     else
     {
         nConvType = (int32_t)pUnit->dwUnitType;
-        nConvClass = (int32_t)pUnit->dwClassId;
+        nConvClass = pUnit->dwClassId;
         nConvMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
         D2COMMON_11013_ConvertMode(pUnit, &nConvType, &nConvClass, &nConvMode, szEngineH, 242);
         nType = nConvType;
@@ -1462,7 +1462,7 @@ uint8_t *__fastcall GFXUTIL_GetComponentColor(D2UnitStrc *pUnit, int32_t nCompon
     else
     {
         nConvType = (int32_t)pUnit->dwUnitType;
-        nConvClass = (int32_t)pUnit->dwClassId;
+        nConvClass = pUnit->dwClassId;
         nConvMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
         D2COMMON_11013_ConvertMode(pUnit, &nConvType, &nConvClass, &nConvMode, szEngineH, 242);
         nType = nConvType;
@@ -1576,7 +1576,7 @@ BOOL __fastcall GFXUTIL_IsUnitComponentVisible(D2UnitStrc *pUnit, D2Composits nC
     else
     {
         nConvType = (int32_t)pUnit->dwUnitType;
-        nConvClass = (int32_t)pUnit->dwClassId;
+        nConvClass = pUnit->dwClassId;
         nConvMode = D2COMMON_UNITS_GetAnimOrSeqMode(pUnit);
         D2COMMON_11013_ConvertMode(pUnit, &nConvType, &nConvClass, &nConvMode, szEngineH, 260);
         nMode = nConvMode;

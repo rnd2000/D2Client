@@ -554,7 +554,7 @@ BOOL __fastcall SKILLS_UnitMatchesTargetMask(D2UnitStrc *pUnit, D2UnitStrc *pTar
         if (!(nMask & AURAFILTER_FINDMISSILE))
             return FALSE;
 
-        nMissileId = (int32_t)pTarget->dwClassId;
+        nMissileId = pTarget->dwClassId;
         if (nMissileId < 0 || nMissileId >= sgptDataTables->nMissilesTxtRecordCount)
             return FALSE;
 
@@ -604,7 +604,7 @@ BOOL __fastcall SKILLS_UnitMatchesTargetMask(D2UnitStrc *pUnit, D2UnitStrc *pTar
 
         if (pTarget->dwUnitType == UNIT_MONSTER)
         {
-            pMonStatsTxt = DATATBLS_GetMonStatsTxtRecord((int32_t)pTarget->dwClassId);
+            pMonStatsTxt = DATATBLS_GetMonStatsTxtRecord(pTarget->dwClassId);
             if (!pMonStatsTxt)
                 return FALSE;
 
@@ -753,7 +753,7 @@ void __fastcall SKILLS_ForEachNearbyTarget(D2UnitStrc *pUnit, int32_t nX, int32_
 
             if (bSkipNoAuraMonsters && pCandidate->dwUnitType == UNIT_MONSTER)
             {
-                pMonStatsTxt = DATATBLS_GetMonStatsTxtRecord((int32_t)pCandidate->dwClassId);
+                pMonStatsTxt = DATATBLS_GetMonStatsTxtRecord(pCandidate->dwClassId);
                 if (pMonStatsTxt && (pMonStatsTxt->nMonStatsFlags[MONSTATSFLAGINDEX_NOAURA >> 3] & gdwBitMasks[MONSTATSFLAGINDEX_NOAURA & 7]))
                 {
                     continue;
@@ -1323,7 +1323,7 @@ int32_t __fastcall SKILLS_RunCltStFunc(D2UnitStrc *pUnit, D2C_Skills nSkillId, D
         pTarget = CUNIT_GetPathTargetUnit(pUnit);
         if (pTarget && pTarget->dwUnitType == UNIT_MONSTER)
         {
-            pMonStats2Txt = DATATBLS_GetMonStats2TxtRecord((int32_t)pTarget->dwClassId);
+            pMonStats2Txt = DATATBLS_GetMonStats2TxtRecord(pTarget->dwClassId);
 
             //  BUG: the MonStats2 row is read with no NULL test (`mov al, [eax+0Bh]`, 0x6FABC351): a monster whose class or wMonStatsEx is out of
             //  range reads address 0x0B. LATENT: every stock monstats.txt row with an hcIdx names a MonStats2.txt row in MonStatsEx.
@@ -1802,7 +1802,7 @@ int32_t __fastcall SKILLS_CltStartSkillAtCoords(D2UnitStrc *pUnit, int32_t *pPar
     D2COMMON_UNITS_UpdateDirectionAndSpeed(pUnit, nX, nY);
     if (pUnit->dwUnitType == UNIT_MONSTER)
     {
-        pMonStatsTxt = DATATBLS_GetMonStatsTxtRecord((int32_t)pUnit->dwClassId);
+        pMonStatsTxt = DATATBLS_GetMonStatsTxtRecord(pUnit->dwClassId);
         if (pMonStatsTxt && pMonStatsTxt->dwCode == 0x20204250)
         {
             nDirection = (uint8_t)((D2COMMON_PATH_GetNewDirection(pUnit->pDynamicPath) + 56) % 64);

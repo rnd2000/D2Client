@@ -23,13 +23,13 @@ static_assert(260 == 0x104,
 //  The last parameter suppresses the trace only for a missing file: the test is `!bQuietIfMissing || GetLastError() != 2` (2 is
 //  ERROR_FILE_NOT_FOUND), so a caller that expects an absent file (PALSHIFT_EnsureMonsterPalette) stays quiet about that one case and still
 //  reports a bad path or a denied read.
-//  ecx is never read: the file name arrives in edx, so parameter one (nUnused) exists only to put the second there; every caller passes the
+//  ecx (hArchive) is never read: the file name arrives in edx, so parameter one exists only to put the second there; every caller passes the
 //  archive handle into it. The third parameter is an out-handle: the opened file's handle, which the callers pass on to ARCHIVE_ReadFile.
-int32_t __fastcall ARCHIVE_OpenFileOrTrace(int32_t nUnused, const char *pszFileName, void **phFile, int32_t bQuietIfMissing)
+int32_t __fastcall ARCHIVE_OpenFileOrTrace(void *hArchive, const char *pszFileName, void **phFile, int32_t bQuietIfMissing)
 {
     uint32_t dwLastError;
 
-    UNREFERENCED_PARAMETER(nUnused);
+    UNREFERENCED_PARAMETER(hArchive);
 
     if (FOG_FOpenFile(pszFileName, phFile))
         return 1;
@@ -153,7 +153,7 @@ void *__fastcall ARCHIVE_LoadFile(void *hArchive, const char *szFilename, uint32
     uint32_t dwSizeHigh;
     void *hFile;
 
-    if (!ARCHIVE_OpenFileOrTrace((int32_t)(INT_PTR)hArchive, szFilename, &hFile, 0))
+    if (!ARCHIVE_OpenFileOrTrace(hArchive, szFilename, &hFile, 0))
         return NULL;
 
     dwFileSize = ARCHIVE_GetFileSize(hArchive, hFile, &dwSizeHigh);

@@ -189,7 +189,7 @@ void __fastcall UIPANELS_DrawInGamePanels(D2ClientViewStrc *pView)
     {
         eRoomLevelId = (D2C_Levels)D2COMMON_DUNGEON_GetLevelIdFromRoom(pPlayerRoom);
 
-        if (eRoomLevelId == (D2C_Levels)gLevelId)
+        if (eRoomLevelId == gLevelId)
         {
             pTitleImage = gpImgLevelEntryTitle;
             nTitleFrame = gLevelEntryFrameCount;
@@ -237,7 +237,7 @@ void __fastcall UIPANELS_DrawInGamePanels(D2ClientViewStrc *pView)
             }
 
             //  The four-byte language buffer: a language code is three characters plus the NUL.
-            D2LANG_10006((uint32_t)&pXAdjust, 0);
+            D2LANG_10006((char *)&pXAdjust, 0);
             sprintf(szPath, "%s\\UI\\%s\\%s\\%s", szDataLocal, (const char *)&pXAdjust, Buffer, pLevelsTxt->szEntryFile);
 
             //  ...unless a quest owns this level's title art, in which case the ACT1 tree wins. Two records, both act 1.
@@ -737,7 +737,7 @@ void __cdecl UIPANELS_GameShowDeathMessage()
     }
 
     nCenterY = gnScreenHeight / 2 - 94;
-    D2LANG_10006((uint32_t)(UINT_PTR)szLangCode, 0);
+    D2LANG_10006(szLangCode, 0);
 
     //  Six arguments, two of them in registers (the image handle and gnScreenWidth / 2).
     if (gpImgYouDiedHardcore || (sprintf(szPath, "%s\\UI\\%s\\youdiedhardcore", szDataLocal, szLangCode), (gpImgYouDiedHardcore = ARCHIVE_CellFileLoad(szPath, 0)) != NULL))
@@ -876,7 +876,7 @@ const Unicode *__fastcall UIPANELS_TextStripColorCodes(Unicode *pszText)
     int32_t nCodeLen;
     int32_t nTailLen;
 
-    if ((int32_t)Unicode::strlen(pszText) >= 500)
+    if (Unicode::strlen(pszText) >= 500)
     {
         FOG_DisplayAssert("Unicode::strlen(pszSrc) < 500", szUiCppFile, 895);
         exit(-1);
@@ -1042,7 +1042,7 @@ void __fastcall UIPANELS_BuildUnitLabel(D2UnitStrc *pUnit, int32_t *pnLifeBarFil
         Unicode wszRosterName[128];
 
         Unicode::win2Unicode(wszRosterName, szDisplayName, 128);
-        eLanguage = (D2C_Language)D2LANG_STRTABLE_GetLanguage();
+        eLanguage = D2LANG_STRTABLE_GetLanguage();
         pwszCorpse = D2LANG_GetStringFromTblIndex(STR_IDX_2315_Corpse);
         Unicode::Personalize(pOutBuffer, wszRosterName, pwszCorpse, nMaxChars, (ELANGUAGE)eLanguage);
         *pbHostileOrCorpse = 1;
@@ -1800,7 +1800,7 @@ void __fastcall UIPANELS_DrawUnitNameLabel(D2UnitStrc *pUnit)
                 Unicode::strcpy(wszObjectLabel, pwszName);
                 Unicode::strcat(wszObjectLabel, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
                 Unicode::strcat(wszObjectLabel, D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline));
-                Unicode::strcat(wszObjectLabel, (const Unicode *)D2LANG_GetStringByReferenceString((uint32_t)pLevelsTxt->szLevelName));
+                Unicode::strcat(wszObjectLabel, D2LANG_GetStringByReferenceString(pLevelsTxt->szLevelName));
 
                 D2WIN_10129_DrawFramedText(wszObjectLabel, gnLabelScreenX, nNameOffset + gnLabelScreenY, 0, 1);
             }

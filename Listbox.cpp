@@ -142,7 +142,7 @@ void __cdecl LISTBOX_UnloadScrollBarImage(void)
 //  closure (`mov word ptr [ecx], 0`, which also stores 0); the vector-constructor frames are absent.
 //  DIFFERENCE: the original's prologue (0x6FAEFAA0..0x6FAEFAAE) registers an exception-handling frame whose one unwind action runs
 //  LISTBOX_UiCtrlBaseDestruct on the half-built body if a member construction throws; ours has none.
-D2ClientListBoxStrc *__fastcall LISTBOX_ImplConstruct(D2ClientListBoxStrc *pListBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, void *pfnOnSelect,
+D2ClientListBoxStrc *__fastcall LISTBOX_ImplConstruct(D2ClientListBoxStrc *pListBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, int32_t (__cdecl *pfnOnSelect)(),
                                                       uint8_t bWideLayout)
 {
     int32_t nEntry;
@@ -200,7 +200,7 @@ D2ClientListBoxStrc *__fastcall LISTBOX_ImplConstruct(D2ClientListBoxStrc *pList
         pEntry->nUserData = 0;
     }
 
-    pListBox->pfnOnSelect = (int32_t)(INT_PTR)pfnOnSelect;
+    pListBox->pfnOnSelect = pfnOnSelect;
     pListBox->nEntryGap = nEntryGap;
     pListBox->nLineHeight = 14;
     pListBox->nScrollBarX = pListBox->nX + pListBox->nWidth - 18;
@@ -943,7 +943,7 @@ int32_t __fastcall LISTBOX_ImplOnMouseUp(D2ClientListBoxStrc *pListBox, int32_t 
     if (pListBox->nHoveredEntry != nHitEntry || pListBox->nHoveredEntry == -1)
         return 0;
     pListBox->nHoveredEntry = -1;
-    ((void(__cdecl *)(void))(INT_PTR)pListBox->pfnOnSelect)();
+    pListBox->pfnOnSelect();
     return 1;
 }
 
@@ -1111,7 +1111,7 @@ int32_t __fastcall LISTBOX_ImplOnChar(D2ClientListBoxStrc *pListBox, int32_t nEd
     if (pListBox->nDrawCount < 2)
         return 0;
     if (pListBox->nSelection != -1 && pMsg->wParam == VK_RETURN)
-        ((void(__cdecl *)(void))(INT_PTR)pListBox->pfnOnSelect)();
+        pListBox->pfnOnSelect();
     return 1;
 }
 
@@ -1135,7 +1135,7 @@ void __fastcall LISTBOX_ProxyDestruct(int32_t *pProxy, int32_t nEdxUnused)
     int32_t(__thiscall ***pBody)(int32_t, int32_t);
 
     *pProxy = (int32_t)(INT_PTR)&gVtblListBox;
-    pBody = (int32_t(__thiscall ***)(int32_t, int32_t))(INT_PTR)pProxy[2];
+    pBody = (int32_t(__thiscall ***)(int32_t, int32_t))pProxy[2];
     if (pBody)
         (**pBody)((int32_t)pBody, 1);
     *pProxy = (int32_t)(INT_PTR)&gVtblUiControlBase;
@@ -1161,7 +1161,7 @@ uint32_t **__fastcall LISTBOX_ProxyVecDelDtor(uint32_t **pProxy, int32_t nEdxUnu
 //  DIFFERENCE: the original's prologue registers an exception-handling frame with two unwind actions: state 1, around ImplConstruct, frees the
 //  block with the CRT's operator delete (not with Storm's SMemFree, which matches the SMemAlloc), and state 0 runs LISTBOX_UiCtrlBaseDestruct on
 //  the proxy. Neither runs unless ImplConstruct throws; ours has no frame.
-void *__fastcall LISTBOX_Construct(void *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, void *pfnOnSelect, uint8_t bWideLayout)
+void *__fastcall LISTBOX_Construct(void *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, int32_t (__cdecl *pfnOnSelect)(), uint8_t bWideLayout)
 {
     D2ClientListBoxStrc *pBody;
     D2ClientListBoxStrc *pConstructed;

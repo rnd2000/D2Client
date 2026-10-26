@@ -106,8 +106,8 @@ void __cdecl CONFIG_SelectControlsList(void)
     (void)nPanelTop;
 
     nBase = 18;
-    gnCfgScrollThumbRows = ((18 * nBase - 78) / 12 + 1) * (nBase - 3) / (int32_t)gnCfgControlsRowCount;
-    gnCfgMaxFirstVisibleRow = (int32_t)gnCfgControlsRowCount - (nBase - 3);
+    gnCfgScrollThumbRows = ((18 * nBase - 78) / 12 + 1) * (nBase - 3) / gnCfgControlsRowCount;
+    gnCfgMaxFirstVisibleRow = gnCfgControlsRowCount - (nBase - 3);
 }
 
 
@@ -177,7 +177,7 @@ void __fastcall CONFIG_ScrollList(int32_t nDelta)
         return;
     }
 
-    nMaxFirstRow = (int32_t)gnCfgControlsRowCount;
+    nMaxFirstRow = gnCfgControlsRowCount;
     nPanelTop = (gnViewportBottom - 420) / 2;
     nBase = 18;
     for (i = 0; i < nBase - 3; ++i)
@@ -189,7 +189,7 @@ void __fastcall CONFIG_ScrollList(int32_t nDelta)
         }
     }
 
-    nFirstRow = (int32_t)gnCfgFirstVisibleRow;
+    nFirstRow = gnCfgFirstVisibleRow;
     if (nDelta < 0)
     {
         nNewFirstRow = nFirstRow > 0 ? nFirstRow - 1 : nFirstRow;
@@ -211,7 +211,7 @@ void __fastcall CONFIG_ScrollList(int32_t nDelta)
 
     //  BUG: nMaxFirstRow is 0 for a list of fifteen rows or fewer, and this is the `idiv esi` at 0x6FAFC57E, a divide error on the first call.
     //  UNREACHABLE: the row count is stored only by SelectControlsList, as 62 or 51, and every path into ScrollList runs it first.
-    gnCfgScrollThumbTop = (18 * nBase - 12 * (int32_t)gnCfgScrollThumbRows - 78) * nFirstRow / nMaxFirstRow + nPanelTop + 47;
+    gnCfgScrollThumbTop = (18 * nBase - 12 * gnCfgScrollThumbRows - 78) * nFirstRow / nMaxFirstRow + nPanelTop + 47;
 }
 
 
@@ -293,8 +293,8 @@ void __fastcall CONFIG_MoveSelection(int32_t nDelta)
         return;
     }
 
-    nRowCount = (int32_t)gnCfgControlsRowCount;
-    nRow = (int32_t)gnCfgSelectedRow;
+    nRowCount = gnCfgControlsRowCount;
+    nRow = gnCfgSelectedRow;
     if (nDelta < 0)
     {
         nNewRow = nRow > 0 ? nRow - 1 : nRow;
@@ -314,7 +314,7 @@ void __fastcall CONFIG_MoveSelection(int32_t nDelta)
         }
     }
 
-    nFirstRow = (int32_t)gnCfgFirstVisibleRow;
+    nFirstRow = gnCfgFirstVisibleRow;
     if (nRow < nFirstRow)
     {
         gnCfgFirstVisibleRow = nRow;
@@ -329,7 +329,7 @@ void __fastcall CONFIG_MoveSelection(int32_t nDelta)
         if (nRow < nFirstRow)
             return;
         CONFIG_ScrollList(1);
-        nFirstRow = (int32_t)gnCfgFirstVisibleRow;
+        nFirstRow = gnCfgFirstVisibleRow;
     }
 }
 
@@ -422,17 +422,17 @@ void __cdecl CONFIG_DrawKeyBindingsPanel(void)
     D2WIN_10117_DrawText(D2LANG_GetStringFromTblIndex(STR_IDX_3922_CfgPrimaryKey), nColumn + nPanelLeft + 18, nPanelTop + 30, 4, FALSE);
     D2WIN_10117_DrawText(D2LANG_GetStringFromTblIndex(STR_IDX_3923_CfgSecondaryKey), nPanelLeft + 2 * nColumn + 18, nPanelTop + 30, 4, FALSE);
 
-    for (i = 0; i < 15 && i < (int32_t)gnCfgControlsRowCount; ++i)
+    for (i = 0; i < 15 && i < gnCfgControlsRowCount; ++i)
     {
         nRowY = nPanelTop + 34 + 18 * i;
-        nRow = (int32_t)gnCfgFirstVisibleRow + i;
-        bDrawBoundKey = !gbCfgCapturingBind || nRow != (int32_t)gnCfgSelectedRow || (gnCfgFrameCounter & 0xF) > 4;
+        nRow = gnCfgFirstVisibleRow + i;
+        bDrawBoundKey = !gbCfgCapturingBind || nRow != gnCfgSelectedRow || (gnCfgFrameCounter & 0xF) > 4;
 
         if (gpCfgControlsList[nRow].eCmd == HOTKEY_MAX_COUNT)
             continue;
 
         nTextY = nRowY + 18;
-        if (nRow == (int32_t)gnCfgSelectedRow)
+        if (nRow == gnCfgSelectedRow)
         {
             GFX_DrawFilledRect(nPanelLeft + 18, nRowY + 1, 3 * nColumn, 18, 0, 1);
             D2WIN_10117_DrawText(D2LANG_GetStringFromTblIndex((D2C_StringIndices) gpCfgControlsList[nRow].nTblIndex), nPanelLeft + 30, nTextY, gbCfgCapturingBind ? 3 : 0, FALSE);
@@ -445,7 +445,7 @@ void __cdecl CONFIG_DrawKeyBindingsPanel(void)
         //  the primary binding, under "Key/Button One"
         if (bDrawBoundKey || !gnCfgBindColumn)
         {
-            if (nRow == (int32_t)gnCfgSelectedRow && (gbCfgCapturingBind || gnCfgBindColumn == 1))
+            if (nRow == gnCfgSelectedRow && (gbCfgCapturingBind || gnCfgBindColumn == 1))
                 nColor = 3;
             else if (CMDTBL_ControlsIsActionBound(gpCfgControlsList[nRow].eCmd, TRUE) || CMDTBL_ControlsIsActionBound(gpCfgControlsList[nRow].eCmd, FALSE))
                 nColor = CMDTBL_ControlsIsActionBound(gpCfgControlsList[nRow].eCmd, TRUE) ? 4 : 5;
@@ -457,7 +457,7 @@ void __cdecl CONFIG_DrawKeyBindingsPanel(void)
         //  the secondary binding, under "Key/Button Two"
         if (bDrawBoundKey || gnCfgBindColumn)
         {
-            if (nRow == (int32_t)gnCfgSelectedRow && (gbCfgCapturingBind || !gnCfgBindColumn))
+            if (nRow == gnCfgSelectedRow && (gbCfgCapturingBind || !gnCfgBindColumn))
                 nColor = 3;
             else if (CMDTBL_ControlsIsActionBound(gpCfgControlsList[nRow].eCmd, TRUE) || CMDTBL_ControlsIsActionBound(gpCfgControlsList[nRow].eCmd, FALSE))
                 nColor = CMDTBL_ControlsIsActionBound(gpCfgControlsList[nRow].eCmd, FALSE) ? 4 : 5;
@@ -476,9 +476,9 @@ void __cdecl CONFIG_DrawKeyBindingsPanel(void)
     }
 
     tCelContext.nFrame = 14;
-    for (i = 0; i < (int32_t)gnCfgScrollThumbRows; ++i)
+    for (i = 0; i < gnCfgScrollThumbRows; ++i)
     {
-        D2GFX_TEXTURE_CelDraw(&tCelContext, gnScreenWidth - nPanelLeft - 32, (int32_t)gnCfgScrollThumbTop + 12 + 12 * i, 0xFFFFFFFF, 5, NULL);
+        D2GFX_TEXTURE_CelDraw(&tCelContext, gnScreenWidth - nPanelLeft - 32, gnCfgScrollThumbTop + 12 + 12 * i, 0xFFFFFFFF, 5, NULL);
     }
 
     tCelContext.nFrame = (gaCfgRegionPressed[1] && nMouseX >= gnScreenWidth - nPanelLeft - 31 && nMouseX <= gnScreenWidth - nPanelLeft - 18 && nMouseY >= nPanelTop + 35 && nMouseY <= nPanelTop + 47) ? 9 : 11;
@@ -586,8 +586,8 @@ void __fastcall CONFIG_UpdateControlsMouseState(int32_t nMouseX, int32_t nMouseY
     nPanelTop = (gnViewportBottom - 420) / 2;
     nStripLeft = gnScreenWidth - nPanelLeft - 31;
     nStripRight = gnScreenWidth - nPanelLeft - 18;
-    nThumbTop = (int32_t)gnCfgScrollThumbTop;
-    nThumbEnd = nThumbTop + 12 * (int32_t)gnCfgScrollThumbRows;
+    nThumbTop = gnCfgScrollThumbTop;
+    nThumbEnd = nThumbTop + 12 * gnCfgScrollThumbRows;
 
     bOverList = nMouseX >= nPanelLeft + 18 && nMouseX <= nPanelLeft + 2 * nListColumn + nListColumn && nMouseY >= nPanelTop + 40 && nMouseY <= nPanelTop + 310;
     bOverScrollUp = nMouseX >= nStripLeft && nMouseX <= nStripRight && nMouseY >= nPanelTop + 35 && nMouseY <= nPanelTop + 47;
@@ -614,7 +614,7 @@ void __fastcall CONFIG_UpdateControlsMouseState(int32_t nMouseX, int32_t nMouseY
             if (nMouseY > nPanelTop + 310)
                 CONFIG_MoveSelection(1);
 
-            nPrevSelectedRow = (int32_t)gnCfgSelectedRow;
+            nPrevSelectedRow = gnCfgSelectedRow;
             nPrevBindColumn = gnCfgBindColumn;
 
             nRow = CONFIG_HitTestRow(nMouseY);
@@ -669,7 +669,7 @@ void __fastcall CONFIG_UpdateControlsMouseState(int32_t nMouseX, int32_t nMouseY
     {
         if (bOverThumb && !gaCfgRegionPressed[4] && gbCfgMouseButtonDown)
         {
-            nDragThumbTop = (int32_t)gnCfgScrollThumbTop;
+            nDragThumbTop = gnCfgScrollThumbTop;
             gnCfgThumbDragStartY = nMouseY;
             gnCfgThumbDragStartTop = nDragThumbTop;
         }
@@ -681,7 +681,7 @@ void __fastcall CONFIG_UpdateControlsMouseState(int32_t nMouseX, int32_t nMouseY
         gaCfgRegionPressed[4] = gbCfgMouseButtonDown;
         if (gbCfgMouseButtonDown)
         {
-            CONFIG_ScrollList((nDragThumbTop - nPanelTop - gnCfgThumbDragStartY + nMouseY - 47) * (gnCfgMaxFirstVisibleRow + 1) / (246 - 12 * (int32_t)gnCfgScrollThumbRows) - (int32_t)gnCfgFirstVisibleRow);
+            CONFIG_ScrollList((nDragThumbTop - nPanelTop - gnCfgThumbDragStartY + nMouseY - 47) * (gnCfgMaxFirstVisibleRow + 1) / (246 - 12 * gnCfgScrollThumbRows) - gnCfgFirstVisibleRow);
         }
     }
 
@@ -751,7 +751,7 @@ void __stdcall CONFIG_OnArrowUp(SMSGHANDLER_PARAMS *pMsg)
         CONFIG_MoveSelection(-1);
     while (pControlsList[gnCfgSelectedRow].eCmd == HOTKEY_MAX_COUNT);
 
-    if (nRowBefore != (int32_t)gnCfgSelectedRow)
+    if (nRowBefore != gnCfgSelectedRow)
         SOUNDINST_PlaySound(SOUND_CURSOR_PASS, NULL, 0, 0, 0);
 
     pMsg->bReturn = 1;
@@ -781,7 +781,7 @@ void __stdcall CONFIG_OnArrowDown(SMSGHANDLER_PARAMS *pMsg)
         CONFIG_MoveSelection(1);
     while (pControlsList[gnCfgSelectedRow].eCmd == HOTKEY_MAX_COUNT);
 
-    if (nRowBefore != (int32_t)gnCfgSelectedRow)
+    if (nRowBefore != gnCfgSelectedRow)
         SOUNDINST_PlaySound(SOUND_CURSOR_PASS, NULL, 0, 0, 0);
 
     pMsg->bReturn = 1;
@@ -1006,7 +1006,7 @@ void __stdcall CONFIG_OnMouseUp(SMSGHANDLER_PARAMS *pMsg)
                 nPanelTop = (gnViewportBottom - 420) / 2;
                 if (nMouseY >= nPanelTop + 40
                     && nMouseY <= nPanelTop + 310
-                    && CONFIG_HitTestRow(nMouseY) == (int32_t)gnCfgSelectedRow
+                    && CONFIG_HitTestRow(nMouseY) == gnCfgSelectedRow
                     //  `(x < boundary) == column`: column 1 is the LEFT one
                     && (nMouseX < (gnScreenWidth - 620) / 2
                                   + 2 * ((gnScreenWidth
@@ -1051,7 +1051,7 @@ void __stdcall CONFIG_OnMouseUp(SMSGHANDLER_PARAMS *pMsg)
     {
         nMissed = CONFIG_HitTestButton(nMouseX, nMouseY);
 
-        if (nMissed == (int32_t)gnCfgHoveredButton)
+        if (nMissed == gnCfgHoveredButton)
         {
             gCfgControlsButtons[gnCfgHoveredButton].pfnOnClick();
             SOUNDINST_PlaySound(SOUND_CURSOR_SELECT, NULL, 0, 0, 0);
@@ -1120,11 +1120,11 @@ int32_t __fastcall CONFIG_HitTestRow(int32_t nMouseY)
             return nRow;
         ++nRowsScanned;
         nRowBottom += 18;
-        if (++nRow >= (int32_t)gnCfgControlsRowCount)
+        if (++nRow >= gnCfgControlsRowCount)
             goto out_of_range;
     }
 
-    if (nRow >= (int32_t)gnCfgControlsRowCount)
+    if (nRow >= gnCfgControlsRowCount)
         goto out_of_range;
     return nRow;
 

@@ -578,7 +578,7 @@ void __fastcall MSG_SendCmd1(uint8_t nCmd)
 {
     uint8_t nPacket;
 
-    nPacket = (uint8_t)nCmd;
+    nPacket = nCmd;
     MSG_SendPacketToServer(&nPacket, 1);
 }
 
@@ -666,7 +666,7 @@ void __fastcall MSG_SendCmdWord(uint8_t nCmd, int16_t nValue)
 {
     D2ClientPacketCmdWord tPacket;
 
-    tPacket.nCmd = (uint8_t)nCmd;
+    tPacket.nCmd = nCmd;
     tPacket.nValue = (uint16_t)nValue;
     MSG_SendPacketToServer((uint8_t *)&tPacket, (int32_t)sizeof(tPacket));
 }
@@ -679,7 +679,7 @@ void __fastcall MSG_SendCmdXY(uint8_t nCmd, int16_t nX, int16_t nY)
 {
     D2ClientPacketCmdXY tPacket;
 
-    tPacket.nCmd = (uint8_t)nCmd;
+    tPacket.nCmd = nCmd;
     tPacket.nX = (uint16_t)nX;
     tPacket.nY = (uint16_t)nY;
     MSG_SendPacketToServer((uint8_t *)&tPacket, (int32_t)sizeof(tPacket));
@@ -693,7 +693,7 @@ void __fastcall MSG_SendCmd3Words(uint8_t nCmd, int16_t nWord1, int16_t nWord2, 
 {
     D2ClientPacketCmd3Words tPacket;
 
-    tPacket.nCmd = (uint8_t)nCmd;
+    tPacket.nCmd = nCmd;
     tPacket.nWord1 = (uint16_t)nWord1;
     tPacket.nWord2 = (uint16_t)nWord2;
     tPacket.nWord3 = (uint16_t)nWord3;
@@ -709,7 +709,7 @@ void __fastcall MSG_SendServerItemMessage(uint8_t nCmd, int32_t nUnitGUID)
 {
     D2ClientPacketCmdDword tPacket;
 
-    tPacket.nCmd = (uint8_t)nCmd;
+    tPacket.nCmd = nCmd;
     tPacket.nUnitGUID = (uint32_t)nUnitGUID;
     MSG_SendPacketToServer((uint8_t *)&tPacket, (int32_t)sizeof(tPacket));
 }
@@ -723,7 +723,7 @@ void __fastcall MSG_SendCmdUnit(uint8_t nCmd, int32_t nUnitType, int32_t nUnitGU
 {
     D2ClientPacketCmdUnit tPacket;
 
-    tPacket.nCmd = (uint8_t)nCmd;
+    tPacket.nCmd = nCmd;
     tPacket.nUnitType = (uint32_t)nUnitType;
     tPacket.nUnitGUID = (uint32_t)nUnitGUID;
     MSG_SendPacketToServer((uint8_t *)&tPacket, (int32_t)sizeof(tPacket));
@@ -737,7 +737,7 @@ void __fastcall MSG_SendCmdUnitParam(uint8_t nCmd, int32_t nUnitType, int32_t nU
 {
     D2ClientPacketCmdUnitParam tPacket;
 
-    tPacket.nCmd = (uint8_t)nCmd;
+    tPacket.nCmd = nCmd;
     tPacket.nUnitType = (uint32_t)nUnitType;
     tPacket.nUnitGUID = (uint32_t)nUnitGUID;
     tPacket.nParam = (uint32_t)nParam;
@@ -753,7 +753,7 @@ void __fastcall MSG_SendCmd4Dwords(uint8_t nCmd, int32_t nDword1, int32_t nDword
 {
     D2ClientPacketCmd4Dwords tPacket;
 
-    tPacket.nCmd = (uint8_t)nCmd;
+    tPacket.nCmd = nCmd;
     tPacket.nDword1 = (uint32_t)nDword1;
     tPacket.nDword2 = (uint32_t)nDword2;
     tPacket.nDword3 = (uint32_t)nDword3;
@@ -845,7 +845,7 @@ void __fastcall MSG_SendChatMessage(const void *pMsg)
     }
     *pszAfterName = 0;
 
-    MSG_SendPacketToServer(uPacket.pFrame, (int32_t)(pszAfterName - (char *)uPacket.pFrame) + 1);
+    MSG_SendPacketToServer(uPacket.pFrame, (pszAfterName - (char *)uPacket.pFrame) + 1);
 }
 
 static_assert(sizeof(D2GSPacketClt15) == 275

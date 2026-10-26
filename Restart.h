@@ -3,12 +3,11 @@
 //  Each is a C++17 inline variable, one object for every file that includes this header. The comment line "D2Client 0x6F..." above a global
 //  gives its address in the original. The values are the image's, written by name: a function pointer as the function at that address, an
 //  enum value by its member. The state past the end of .data's raw data (0x6FB9B000) is zero-filled by the loader and so zero-initialised here.
-//  Some slots of the page tables take a cast, each the image's own pairing of a function with a slot of another type, to an ABI the function
-//  meets: ESCMENU_GotoMainPage, _GotoOptionsPage (six slots), _GotoSoundPage, _GotoVideoPage, _GotoAutomapPage, _OpenConfigPanel, _OnExitGame
-//  and _OnReturnToGame are declared `(D2ClientEscMenuItemStrc *, SMSGHANDLER_PARAMS *)` in an ESCMENUITEMFN slot, `(D2ClientEscMenuItemStrc *,
-//  int)` -- both __fastcall, both in ecx and edx. j_SOUNDCHAN_Toggle3dSound and j_SOUNDCHAN_ToggleEaxEffects are `int __cdecl()` in that slot:
-//  they read neither register and pop nothing, and the slot pushes nothing. j_D2gfx_10007 and j_D2gfx_10019 (two slots each) are
-//  `int __stdcall()` in an ESCMENUENABLEDFN slot, `int __cdecl()`: no argument, so nothing to pop either way.
+//  Six slots of the page tables take a cast, each the image's own pairing of a function with a slot of another type, to an ABI the function
+//  meets: j_SOUNDCHAN_Toggle3dSound and j_SOUNDCHAN_ToggleEaxEffects are `int __cdecl()` in an ESCMENUITEMFN slot, `void
+//  __fastcall(D2ClientEscMenuItemStrc *, SMSGHANDLER_PARAMS *)`: they read neither register and pop nothing, and the slot pushes nothing.
+//  j_D2gfx_10007 and j_D2gfx_10019 (two slots each) are `int __stdcall()` in an ESCMENUENABLEDFN slot, `int __cdecl()`: no argument, so
+//  nothing to pop either way.
 //  The run-time fields start as the image has them: hImage and the four hChoiceImage are NULL until ESCMENU_LoadPageImages fills them, and
 //  nValue is 0 until a page reads its setting. The page pointer sgptMenuItem is set by ESCMENU_SetPage, so it points here.
 //  Include it after D2Client.h.
@@ -25,7 +24,7 @@ inline D2ClientEscMenuItemStrc gEscMenuMainItems[3] =
         .nScreenY = 0,
         .szImageFile = "Options",
         .pfnIsEnabled = NULL,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_GotoOptionsPage,
+        .pfnOnChange = &ESCMENU_GotoOptionsPage,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,
@@ -41,7 +40,7 @@ inline D2ClientEscMenuItemStrc gEscMenuMainItems[3] =
         .nScreenY = 0,
         .szImageFile = "Exit",
         .pfnIsEnabled = NULL,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_OnExitGame,
+        .pfnOnChange = &ESCMENU_OnExitGame,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,
@@ -57,7 +56,7 @@ inline D2ClientEscMenuItemStrc gEscMenuMainItems[3] =
         .nScreenY = 0,
         .szImageFile = "ReturnToGame",
         .pfnIsEnabled = NULL,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_OnReturnToGame,
+        .pfnOnChange = &ESCMENU_OnReturnToGame,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,
@@ -80,7 +79,7 @@ inline D2ClientEscMenuItemStrc gEscMenuOptionsItems[5] =
         .nScreenY = 0,
         .szImageFile = "SoundOptions",
         .pfnIsEnabled = &j_SOUNDCHAN_IsSystemReady_2,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_GotoSoundPage,
+        .pfnOnChange = &ESCMENU_GotoSoundPage,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,
@@ -96,7 +95,7 @@ inline D2ClientEscMenuItemStrc gEscMenuOptionsItems[5] =
         .nScreenY = 0,
         .szImageFile = "VideoOptions",
         .pfnIsEnabled = NULL,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_GotoVideoPage,
+        .pfnOnChange = &ESCMENU_GotoVideoPage,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,
@@ -112,7 +111,7 @@ inline D2ClientEscMenuItemStrc gEscMenuOptionsItems[5] =
         .nScreenY = 0,
         .szImageFile = "AutoMapOptions",
         .pfnIsEnabled = NULL,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_GotoAutomapPage,
+        .pfnOnChange = &ESCMENU_GotoAutomapPage,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,
@@ -128,7 +127,7 @@ inline D2ClientEscMenuItemStrc gEscMenuOptionsItems[5] =
         .nScreenY = 0,
         .szImageFile = "CfgOptions",
         .pfnIsEnabled = NULL,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_OpenConfigPanel,
+        .pfnOnChange = &ESCMENU_OpenConfigPanel,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,
@@ -144,7 +143,7 @@ inline D2ClientEscMenuItemStrc gEscMenuOptionsItems[5] =
         .nScreenY = 0,
         .szImageFile = "Previous",
         .pfnIsEnabled = NULL,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_GotoMainPage,
+        .pfnOnChange = &ESCMENU_GotoMainPage,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,
@@ -290,7 +289,7 @@ inline D2ClientEscMenuItemStrc gEscMenuSoundItems[8] =
         .nScreenY = 0,
         .szImageFile = "SPrevious",
         .pfnIsEnabled = NULL,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_GotoOptionsPage,
+        .pfnOnChange = &ESCMENU_GotoOptionsPage,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,
@@ -411,7 +410,7 @@ inline D2ClientEscMenuItemStrc gEscMenuVideoClassicItems[7] =
         .nScreenY = 0,
         .szImageFile = "SPrevious",
         .pfnIsEnabled = NULL,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_GotoOptionsPage,
+        .pfnOnChange = &ESCMENU_GotoOptionsPage,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,
@@ -548,7 +547,7 @@ inline D2ClientEscMenuItemStrc gEscMenuVideoExpansionItems[8] =
         .nScreenY = 0,
         .szImageFile = "SPrevious",
         .pfnIsEnabled = NULL,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_GotoOptionsPage,
+        .pfnOnChange = &ESCMENU_GotoOptionsPage,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,
@@ -652,7 +651,7 @@ inline D2ClientEscMenuItemStrc gEscMenuAutomapClassicItems[6] =
         .nScreenY = 0,
         .szImageFile = "SPrevious",
         .pfnIsEnabled = NULL,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_GotoOptionsPage,
+        .pfnOnChange = &ESCMENU_GotoOptionsPage,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,
@@ -772,7 +771,7 @@ inline D2ClientEscMenuItemStrc gEscMenuAutomapExpansionItems[7] =
         .nScreenY = 0,
         .szImageFile = "SPrevious",
         .pfnIsEnabled = NULL,
-        .pfnOnChange = (ESCMENUITEMFN)&ESCMENU_GotoOptionsPage,
+        .pfnOnChange = &ESCMENU_GotoOptionsPage,
         .pfnRefresh = NULL,
         .pfnOnDraw = NULL,
         .dwCount = 0,

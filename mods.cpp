@@ -149,7 +149,7 @@ void __fastcall MODS_BuildSocketFillerText(D2UnitStrc *pItem, Unicode *wszOut, i
         FOG_DisplayAssert(szAssertSocketFiller, szModsCpp, 538);
         exit(-1);
     }
-    pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(pItem ? (int32_t)pItem->dwClassId : -1);
+    pItemsTxt = D2COMMON_DATATBLS_GetItemsTxtRecord(pItem ? pItem->dwClassId : -1);
     if (!pItemsTxt)
     {
         FOG_DisplayAssert(szPtItemStats, szModsCpp, 540);
@@ -452,7 +452,7 @@ void __fastcall MODS_BuildStatsText(D2UnitStrc *pUnit, Unicode *wszOut, int32_t 
     if (!pStateStats)
         return;
 
-    pMergedStats = D2COMMON_STATLIST_AllocStatList(pUnit ? pUnit->pMemoryPool : NULL, 0, 0, pUnit ? pUnit->dwUnitType : UNIT_TYPES_COUNT, pUnit ? (D2UnitGUID)pUnit->dwUnitId : (D2UnitGUID)-1);
+    pMergedStats = D2COMMON_STATLIST_AllocStatList(pUnit ? pUnit->pMemoryPool : NULL, 0, 0, pUnit ? pUnit->dwUnitType : UNIT_TYPES_COUNT, pUnit ? pUnit->dwUnitId : (D2UnitGUID)-1);
     D2COMMON_STATLIST_MergeBaseStats(pMergedStats, pStateStats);
     if (nSourceState)
     {
@@ -1354,7 +1354,7 @@ BOOL __fastcall MODS_FormatPropertyLine(D2UnitStrc *pUnit, D2StatListStrc *pStat
         pOwner = pUnit;
         if (!pUnit || pUnit->dwUnitType != UNIT_PLAYER)
             pOwner = CUNIT_GetPlayer();
-        nOwnerClass = pOwner ? (int32_t)pOwner->dwClassId : -1;
+        nOwnerClass = pOwner ? pOwner->dwClassId : -1;
         if (pSkillsTxt->nCharClass == nOwnerClass && nVal > 3)
             nShown = 3;
         pwszTo = D2LANG_GetStringFromTblIndex(STR_IDX_4003_to);

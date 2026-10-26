@@ -128,7 +128,7 @@ void __fastcall MONUNIQUE_BuildMonsterNameText(D2UnitStrc *pMonster, D2C_MonUMod
     }
     else
     {
-        nClassId = pMonster ? (int32_t)pMonster->dwClassId : -1;
+        nClassId = pMonster ? pMonster->dwClassId : -1;
 
         if (MONSTER_IsChampion(pMonster))
         {
@@ -245,7 +245,7 @@ void __fastcall MONUNIQUE_ModLight(D2UnitStrc *pMonster, D2C_MonUMods nModId, in
     }
     else
     {
-        pMonStats2Txt = DATATBLS_GetMonStats2TxtRecord((int32_t)pMonster->dwClassId);
+        pMonStats2Txt = DATATBLS_GetMonStats2TxtRecord(pMonster->dwClassId);
         if (!pMonStats2Txt)
             return;
 
@@ -971,7 +971,7 @@ void __fastcall MONUNIQUE_MonUModCltMultishotSpawn(D2UnitStrc *pMissile, D2C_Mon
     if (!bUnique || !pMissile || pMissile->dwUnitType != UNIT_MISSILE)
         return;
 
-    nMissileId = (int32_t)pMissile->dwClassId;
+    nMissileId = pMissile->dwClassId;
     pOwner = CUNIT_GetOwnerUnit(pMissile);
     if (!pOwner)
         return;
@@ -1091,7 +1091,7 @@ void __fastcall MONUNIQUE_MonUModCltSuicideMinionExplode(D2UnitStrc *pUnit, D2C_
     UNREFERENCED_PARAMETER(nModId);
     UNREFERENCED_PARAMETER(bUnique);
 
-    pMonStatsTxt = DATATBLS_GetMonStatsTxtRecord(pUnit ? (int32_t)pUnit->dwClassId : -1);
+    pMonStatsTxt = DATATBLS_GetMonStatsTxtRecord(pUnit ? pUnit->dwClassId : -1);
             //  BUG: pMonStatsTxt is read with no NULL test (0x6FB45EF7).
     nAiParam0 = pMonStatsTxt->wAiParam[0][GAME_GetDifficulty()];
 
