@@ -812,10 +812,10 @@ void __fastcall UNITMODE_PerformClientCommand(int32_t nClientCmd, D2UnitStrc *pU
 
     if (pUnit->dwUnitType == UNIT_PLAYER && pUnit->pPlayerData)
     {
-        pUnit->pPlayerData->unk0xA8[42] = 0;
-        pUnit->pPlayerData->unk0xA8[43] = 0;
-        pUnit->pPlayerData->unk0xA8[44] = 0;
-        pUnit->pPlayerData->unk0xA8[45] = 0;
+        pUnit->pPlayerData->bInteract = 0;
+        pUnit->pPlayerData->nInteractAction = 0;
+        pUnit->pPlayerData->nInteractUnitType = 0;
+        pUnit->pPlayerData->nInteractUnitGUID = 0;
     }
 }
 
@@ -858,7 +858,7 @@ void __fastcall UNITMODE_DispatchActionByUnitType(D2C_ClientActions nAction, D2U
 
 
 //1.10f: D2Client.0x6FB4EE70
-//  Runs the player's queued command. Its one caller is GAME_UpdateFrame. The queue is four dwords of the player data, unk0xA8[42..45]
+//  Runs the player's queued command. Its one caller is GAME_UpdateFrame. The queue is four dwords of the player data, bInteract..nInteractUnitGUID
 //  (+150h..+15Ch): pending, the command, the target's type, its GUID. The original inlines PLAYER_GetQueuedCommand, PLAYER_GetQueuedTargetType,
 //  PLAYER_GetQueuedTargetGuid and PLAYER_ClearQueuedCommand here, each read behind its own test of the unit's type though the function has
 //  already returned for any other type.
@@ -896,7 +896,7 @@ void __fastcall UNITMODE_RunQueuedCommand(D2UnitStrc *pUnit)
         return;
 
     pPlayerData = pUnit->pPlayerData;
-    if (!pPlayerData || !pPlayerData->unk0xA8[42])
+    if (!pPlayerData || !pPlayerData->bInteract)
         return;
 
     nQueuedCmd = PLAYER_GetQueuedCommand(pUnit);

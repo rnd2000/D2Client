@@ -885,7 +885,7 @@ BOOL __stdcall MSG_JoinGameMessageLoop(int32_t nUnused)
             gbConnectedToGame = 0;
             return TRUE;
         }
-        if (!D2NET_10017())
+        if (!D2NET_CLIENT_IsConnected())
         {
             return TRUE;
         }
@@ -943,7 +943,7 @@ BOOL __stdcall MSG_JoinGameIdlePoll(int32_t nUnused)
         return FALSE;
     }
 
-    nNetState = D2NET_10025();
+    nNetState = D2NET_CLIENT_GetConnectionStatus();
     if (nNetState)
     {
         return nNetState == 2;
@@ -979,7 +979,7 @@ D2C_AppMode __fastcall MSG_AppModeJoinGame()
     {
     case GAMETYPE_SINGLEPLAYER:
         D2NET_SERVER_Initialize(1, 1);
-        D2NET_CLIENT_Initialize(1, NULL);
+        D2NET_CLIENT_Initialize(D2NET_CONNECTION_LOCAL, NULL);
         WNDPROC_WindowRunMessagePump(MSG_JoinGameIdlePoll);
         D2NET_SERVER_SetHackListEnabled(FALSE);
         MSG_InitGame();
@@ -987,7 +987,7 @@ D2C_AppMode __fastcall MSG_AppModeJoinGame()
 
     case GAMETYPE_SINGLEPLAYER_UNCAPPED:
         D2NET_SERVER_Initialize(2, 1);
-        D2NET_CLIENT_Initialize(2, NULL);
+        D2NET_CLIENT_Initialize(D2NET_CONNECTION_LOCAL_SIMULATED_LAG, NULL);
         WNDPROC_WindowRunMessagePump(MSG_JoinGameIdlePoll);
         D2NET_SERVER_SetHackListEnabled(FALSE);
         MSG_InitGame();
@@ -995,7 +995,7 @@ D2C_AppMode __fastcall MSG_AppModeJoinGame()
 
     case GAMETYPE_BNET_INTERNAL:
         //  gszBattleNetIP holds the hardcoded "207.82.87.139" unless GAME_ApplyParamBattleNetIp wrote over it.
-        D2NET_CLIENT_Initialize(0, gszBattleNetIP);
+        D2NET_CLIENT_Initialize(D2NET_CONNECTION_REMOTE, gszBattleNetIP);
         WNDPROC_WindowRunMessagePump(MSG_JoinGameIdlePoll);
         break;
 
@@ -1004,13 +1004,13 @@ D2C_AppMode __fastcall MSG_AppModeJoinGame()
         D2NET_SERVER_Initialize(0, 1);
         D2NET_SERVER_SetMaxClientsPerGame(8);
         D2NET_SERVER_SetHackListEnabled(FALSE);
-        D2NET_CLIENT_Initialize(0, gszServerIP);
+        D2NET_CLIENT_Initialize(D2NET_CONNECTION_REMOTE, gszServerIP);
         WNDPROC_WindowRunMessagePump(MSG_JoinGameIdlePoll);
         MSG_InitGame();
         break;
 
     default:
-        D2NET_CLIENT_Initialize(0, gszServerIP);
+        D2NET_CLIENT_Initialize(D2NET_CONNECTION_REMOTE, gszServerIP);
         WNDPROC_WindowRunMessagePump(MSG_JoinGameIdlePoll);
         break;
     }

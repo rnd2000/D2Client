@@ -48,7 +48,7 @@ static_assert(offsetof(D2RosterGroupStrc, wPartyId) == 0
               && offsetof(D2RosterGroupStrc, pNext) == 8,
               "the rebuild's `cmp [eax], di`, `mov ecx, [eax+4]`, `mov eax, [eax+8]`");
 static_assert(offsetof(D2RosterCorpseStrc, dwCorpseId) == 0
-              && offsetof(D2RosterCorpseStrc, pPrev) == 4,
+              && offsetof(D2RosterCorpseStrc, pNext) == 4,
               "ROSTER_EntryHasCorpse: `cmp [eax], edx`, `mov eax, [eax+4]`");
 //  The kill count.
 static_assert(offsetof(D2RosterUnitStrc, dwKillCount) == 0x18,
@@ -248,13 +248,13 @@ void __fastcall ROSTER_AddPlayer(uint32_t dwUnitGUID, int32_t nClass, const char
 }
 
 //1.10f: D2Client.0x6FAAF050
-//  Whether dwCorpseId is on the entry's corpse list (+0x38, chained through pPrev at +4). Called by ROSTER_AddPlayer (both paths) and
+//  Whether dwCorpseId is on the entry's corpse list (+0x38, chained through pNext at +4). Called by ROSTER_AddPlayer (both paths) and
 //  ROSTER_PartySendHostileToggle; the original inlines the other walks of this list.
 int32_t __fastcall ROSTER_EntryHasCorpse(D2RosterUnitStrc *pRosterEntry, uint32_t dwCorpseId)
 {
     D2RosterCorpseStrc *pCorpse;
 
-    for (pCorpse = pRosterEntry->pCorpse; pCorpse; pCorpse = pCorpse->pPrev)
+    for (pCorpse = pRosterEntry->pCorpse; pCorpse; pCorpse = pCorpse->pNext)
     {
         if (pCorpse->dwCorpseId == dwCorpseId)
         {
@@ -352,7 +352,7 @@ void __fastcall ROSTER_RemovePlayer(uint32_t dwPlayerGUID)
     D2RosterUnitStrc *pPrev;
     D2RosterUnitStrc *pWalk;
     D2RosterCorpseStrc *pCorpse;
-    D2RosterCorpseStrc *pPrevCorpse;
+    D2RosterCorpseStrc *pNextCorpse;
     D2RosterGroupStrc *pGroup;
     D2UnitStrc *pPlayer;
     D2UnitGUID dwPlayerId;
@@ -387,9 +387,9 @@ void __fastcall ROSTER_RemovePlayer(uint32_t dwPlayerGUID)
 
         PLAYERLIST_RosterFreePlayerInfoList(pEntry->pRosterInfo);
         pEntry->pRosterInfo = NULL;
-        for (pCorpse = pEntry->pCorpse; pCorpse; pCorpse = pPrevCorpse)
+        for (pCorpse = pEntry->pCorpse; pCorpse; pCorpse = pNextCorpse)
         {
-            pPrevCorpse = pCorpse->pPrev;
+            pNextCorpse = pCorpse->pNext;
             FOG_Free(pCorpse, szRosterCpp, 269, 0);
         }
         pEntry->pCorpse = NULL;
@@ -457,16 +457,16 @@ void __cdecl ROSTER_FreeAll()
     D2RosterUnitStrc *pEntry;
     D2RosterUnitStrc *pNext;
     D2RosterCorpseStrc *pCorpse;
-    D2RosterCorpseStrc *pPrevCorpse;
+    D2RosterCorpseStrc *pNextCorpse;
 
     for (pEntry = gpPartyEntries; pEntry; pEntry = pNext)
     {
         pNext = pEntry->pNext;
         PLAYERLIST_RosterFreePlayerInfoList(pEntry->pRosterInfo);
         pEntry->pRosterInfo = NULL;
-        for (pCorpse = pEntry->pCorpse; pCorpse; pCorpse = pPrevCorpse)
+        for (pCorpse = pEntry->pCorpse; pCorpse; pCorpse = pNextCorpse)
         {
-            pPrevCorpse = pCorpse->pPrev;
+            pNextCorpse = pCorpse->pNext;
             FOG_Free(pCorpse, szRosterCpp, 269, 0);
         }
         pEntry->pCorpse = NULL;
@@ -479,9 +479,9 @@ void __cdecl ROSTER_FreeAll()
         pNext = pEntry->pNext;
         PLAYERLIST_RosterFreePlayerInfoList(pEntry->pRosterInfo);
         pEntry->pRosterInfo = NULL;
-        for (pCorpse = pEntry->pCorpse; pCorpse; pCorpse = pPrevCorpse)
+        for (pCorpse = pEntry->pCorpse; pCorpse; pCorpse = pNextCorpse)
         {
-            pPrevCorpse = pCorpse->pPrev;
+            pNextCorpse = pCorpse->pNext;
             FOG_Free(pCorpse, szRosterCpp, 269, 0);
         }
         pEntry->pCorpse = NULL;
@@ -1565,7 +1565,7 @@ BOOL __fastcall ROSTER_IsHostileTo(D2UnitGUID dwPlayerGUID, D2UnitGUID dwTargetG
             {
                 break;
             }
-            for (pCorpse = pTargetEntry->pCorpse; pCorpse; pCorpse = pCorpse->pPrev)
+            for (pCorpse = pTargetEntry->pCorpse; pCorpse; pCorpse = pCorpse->pNext)
             {
                 if (pCorpse->dwCorpseId == dwTargetGUID)
                 {
@@ -2059,7 +2059,7 @@ void __fastcall ROSTER_FindCorpseEntry(uint32_t dwUnitId, uint32_t dwCorpseId)
     }
     memset(pCorpse, 0, sizeof(D2RosterCorpseStrc));
     pCorpse->dwCorpseId = dwCorpseId;
-    pCorpse->pPrev = pEntry->pCorpse;
+    pCorpse->pNext = pEntry->pCorpse;
     pEntry->pCorpse = pCorpse;
 }
 
@@ -2081,7 +2081,7 @@ void __fastcall ROSTER_RemoveCorpseFromEntry(int32_t nUnitId, int32_t nCorpseId)
         return;
     }
 
-    for (pCorpse = pEntry->pCorpse; pCorpse; pCorpse = pCorpse->pPrev)
+    for (pCorpse = pEntry->pCorpse; pCorpse; pCorpse = pCorpse->pNext)
     {
         if (pCorpse->dwCorpseId == (D2UnitGUID)nCorpseId)
         {
@@ -2095,11 +2095,11 @@ void __fastcall ROSTER_RemoveCorpseFromEntry(int32_t nUnitId, int32_t nCorpseId)
     }
     if (pPrevCorpse)
     {
-        pPrevCorpse->pPrev = pCorpse->pPrev;
+        pPrevCorpse->pNext = pCorpse->pNext;
     }
     else
     {
-        pEntry->pCorpse = pCorpse->pPrev;
+        pEntry->pCorpse = pCorpse->pNext;
     }
     FOG_Free(pCorpse, szRosterCpp, 1715, 0);
 }
@@ -2151,7 +2151,7 @@ BOOL __fastcall ROSTER_UnitsShareParty(D2UnitGUID dwUnitIdA, D2UnitGUID dwUnitId
             {
                 break;
             }
-            for (pCorpse = pEntryB->pCorpse; pCorpse; pCorpse = pCorpse->pPrev)
+            for (pCorpse = pEntryB->pCorpse; pCorpse; pCorpse = pCorpse->pNext)
             {
                 if (pCorpse->dwCorpseId == dwUnitIdB)
                 {

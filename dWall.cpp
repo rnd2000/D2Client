@@ -48,7 +48,7 @@ static void DWALL_GatherTileCornerLight(const D2ClientDrawNodeStrc *pNode, const
     nCornerCount = (uint32_t)gaTileLightCornerCount[nLightDirection];
 
     //  Bit 0 of the fade state picks the mirrored corner set (gaTileLightOffsetsAlt).
-    if ((pTileData->dwFadeState & 1) != 0)
+    if ((pTileData->nFadeFlags & 1) != 0)
         pLightOffsets = gaTileLightOffsetsAlt[nLightDirection];
     else
         pLightOffsets = gaTileLightOffsets[nLightDirection];
@@ -114,15 +114,15 @@ static_assert(offsetof(D2DrlgTileDataStrc, pTile) == 0x18,
               "handed straight to the three TILE_ entry points");
 static_assert(offsetof(D2DrlgTileDataStrc, nTileType) == 0x1C,
               "the assert at dWall.cpp:249 compares it against 15");
-static_assert(offsetof(D2DrlgTileDataStrc, dwFadeState) == 0x24,
+static_assert(offsetof(D2DrlgTileDataStrc, nFadeFlags) == 0x24,
               "bit 0 mirrored corners, bit 1 fading, bit 2 timed expiry");
 static_assert(offsetof(D2DrlgTileDataStrc, nAlpha) == 0x28,
               "compared against 0xFF to pick Lit over Trans");
-static_assert(offsetof(D2DrlgTileDataStrc, nAlphaFrom) == 0x29,
+static_assert(offsetof(D2DrlgTileDataStrc, nFadeStartAlpha) == 0x29,
               "the ramp's start");
-static_assert(offsetof(D2DrlgTileDataStrc, nAlphaTo) == 0x2A,
+static_assert(offsetof(D2DrlgTileDataStrc, nFadeEndAlpha) == 0x2A,
               "the ramp's target");
-static_assert(offsetof(D2DrlgTileDataStrc, dwFadeEndTick) == 0x2C,
+static_assert(offsetof(D2DrlgTileDataStrc, nFadeEndTick) == 0x2C,
               "the deadline both bit 1 and bit 2 test against");
 
 //  >= DISPLAYTYPE_GLIDE (4) is the 3D-accelerated set.
@@ -171,13 +171,13 @@ void __fastcall DWALL_EnvDrawCellUnits(D2ClientViewStrc *pView)
 //  fOnlyDrawShadowLayer is copied into a local on entry and the per-tile filter compares the copy (an `unsigned int` comparison).
 //  The fade ramp is 500 ms: the original divides by a magic multiply (6FAA6492..6FAA64A1: imul by 274877907, high dword, sar 5), and
 //  2^37 / 274877907 = 500.
-//  The `+ 500` is not rounding: this arm runs only while dwTickCount < pTileData->dwFadeEndTick, so dwTickCount - dwFadeEndTick is the negative
+//  The `+ 500` is not rounding: this arm runs only while dwTickCount < pTileData->nFadeEndTick, so dwTickCount - nFadeEndTick is the negative
 //  time still to run; adding the ramp length gives the time already elapsed, and elapsed / 500 scales the alpha interval. The `+ (n < 0)` beside
 //  it is the compiler's round-toward-zero correction for a signed divide.
 //  The gate `DRAW_GetDisplayType() >= 4` is `>= DISPLAYTYPE_GLIDE`: the smooth ramp runs only under 3D acceleration, every other mode snaps
 //  straight to the end value. It is not a call of DRAW_IsDisplayType3D: the original calls DRAW_GetDisplayType at 6FAA6401 and compares (signed
 //  `setnl`, 6FAA6419), so the predicate is spelled out.
-//  dwFadeState (+0x24) carries the fade's own bits -- 1 mirrored corner set, 2 fading, 4 a timed expiry; dwFlags (+0x14) the tile's, of which
+//  nFadeFlags (+0x24) carries the fade's own bits -- 1 mirrored corner set, 2 fading, 4 a timed expiry; dwFlags (+0x14) the tile's, of which
 //  this function touches 0x400 (alpha is zero), 8 (the expiry fired), 0x408 and 0x1C000 (the filter) and 0x20000 (drawn this frame).
 //  The original writes the flags byte-wide (`and al, 0FDh`, `or al, 8`); ours writes the dword -- every bit touched lies in that byte, so the
 //  value is the same. `&= ~0x400u` is the original's bit 2 of byte 1.
@@ -191,8 +191,8 @@ void __fastcall DWALL_DrawRoomWalls(D2ClientWallSquareStrc *pRoom, uint32_t fOnl
     uint32_t nOnlyShadowCopy;
     D2ClientDrawNodeStrc *pNode;
     D2DrlgTileDataStrc *pTileData;
-    uint32_t dwFadeState;
-    uint32_t dwFadeEndTick;
+    uint32_t nFadeFlags;
+    uint32_t nFadeEndTick;
     int32_t nScaled;
     uint8_t nNewAlpha;
     uint32_t dwTileFlags;
@@ -227,22 +227,22 @@ void __fastcall DWALL_DrawRoomWalls(D2ClientWallSquareStrc *pRoom, uint32_t fOnl
         }
 
         //  Bit 1: a fade is running. Interpolate under acceleration, snap otherwise; snapping also clears the bit, so the fade ends.
-        dwFadeState = pTileData->dwFadeState;
-        if ((dwFadeState & 2) != 0)
+        nFadeFlags = pTileData->nFadeFlags;
+        if ((nFadeFlags & 2) != 0)
         {
-            dwFadeEndTick = pTileData->dwFadeEndTick;
+            nFadeEndTick = pTileData->nFadeEndTick;
 
-            if (bIs3DAccelerated && dwTickCount < dwFadeEndTick)
+            if (bIs3DAccelerated && dwTickCount < nFadeEndTick)
             {
-                nScaled = (int32_t)(((int64_t)274877907 * (int32_t)((dwTickCount - dwFadeEndTick + 500) * (pTileData->nAlphaTo - pTileData->nAlphaFrom))) >> 32) >> 5;
+                nScaled = (int32_t)(((int64_t)274877907 * (int32_t)((dwTickCount - nFadeEndTick + 500) * (pTileData->nFadeEndAlpha - pTileData->nFadeStartAlpha))) >> 32) >> 5;
 
-                nNewAlpha = (uint8_t)(pTileData->nAlphaFrom + (nScaled < 0) + nScaled);
+                nNewAlpha = (uint8_t)(pTileData->nFadeStartAlpha + (nScaled < 0) + nScaled);
             }
             else
             {
-                nNewAlpha = pTileData->nAlphaTo;
-                dwFadeState &= ~2u;
-                pTileData->dwFadeState = dwFadeState;
+                nNewAlpha = pTileData->nFadeEndAlpha;
+                nFadeFlags &= ~2u;
+                pTileData->nFadeFlags = nFadeFlags;
             }
 
             pTileData->nAlpha = nNewAlpha;
@@ -257,11 +257,11 @@ void __fastcall DWALL_DrawRoomWalls(D2ClientWallSquareStrc *pRoom, uint32_t fOnl
         }
 
         //  Bit 2: a timed expiry, independent of the ramp above and tested against the same deadline field.
-        dwFadeState = pTileData->dwFadeState;
-        if ((dwFadeState & 4) != 0 && dwTickCount >= pTileData->dwFadeEndTick)
+        nFadeFlags = pTileData->nFadeFlags;
+        if ((nFadeFlags & 4) != 0 && dwTickCount >= pTileData->nFadeEndTick)
         {
-            dwFadeState &= ~4u;
-            pTileData->dwFadeState = dwFadeState;
+            nFadeFlags &= ~4u;
+            pTileData->nFadeFlags = nFadeFlags;
 
             dwTileFlags = pTileData->dwFlags;
             dwTileFlags |= 8u;
@@ -317,7 +317,7 @@ void __fastcall DWALL_EnvDrawRoomTilesLit(D2ClientViewStrc *pView)
     uint32_t dwTickCount;
     D2ClientDrawNodeStrc *pNode;
     D2DrlgTileDataStrc *pTileData;
-    uint32_t dwFadeState;
+    uint32_t nFadeFlags;
     uint32_t dwTileFlags;
     uint8_t nAlphaNow;
     int32_t nXPos;
@@ -344,11 +344,11 @@ void __fastcall DWALL_EnvDrawRoomTilesLit(D2ClientViewStrc *pView)
                 {
                     pTileData = (D2DrlgTileDataStrc *)pNode->pObject;
 
-                    dwFadeState = pTileData->dwFadeState;
-                    if ((dwFadeState & 4) != 0 && dwTickCount >= pTileData->dwFadeEndTick)
+                    nFadeFlags = pTileData->nFadeFlags;
+                    if ((nFadeFlags & 4) != 0 && dwTickCount >= pTileData->nFadeEndTick)
                     {
-                        dwFadeState &= ~4u;
-                        pTileData->dwFadeState = dwFadeState;
+                        nFadeFlags &= ~4u;
+                        pTileData->nFadeFlags = nFadeFlags;
 
                         dwTileFlags = pTileData->dwFlags;
                         dwTileFlags |= 8u;

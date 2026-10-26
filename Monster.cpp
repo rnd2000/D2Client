@@ -16,7 +16,7 @@ static_assert(offsetof(D2MonsterDataStrc, pMonstatsTxt) == 0
                   && offsetof(D2MonsterDataStrc, pAiControl) == 0x28
                   && offsetof(D2MonsterDataStrc, nCritterIdleTicks) == 0x30
                   && offsetof(D2MonsterDataStrc, bCritterLatch) == 0x34
-                  && offsetof(D2MonsterDataStrc, unk0x3C) == 0x3C
+                  && offsetof(D2MonsterDataStrc, tLifeSync) == 0x3C
                   && offsetof(D2UnkMonsterDataStrc, unk0x00) == 0,
               "MONSTER_BindMonStatsRecord: `mov [esi], eax` (0x6FB40ABF) "
               "and `mov [esi+28h], dx` (0x6FB40A91); `lea eax, [ecx+30h]` "
@@ -1248,7 +1248,7 @@ int32_t __fastcall MONSTER_GetHirelingOwnerGUID(D2UnitStrc *pUnit)
     D2MonsterDataStrc *pMonsterData;
 
     if (pUnit && pUnit->dwUnitType == UNIT_MONSTER && (pMonsterData = pUnit->pMonsterData) != NULL)
-        return pMonsterData->unk0x3C.unk0x00;
+        return pMonsterData->tLifeSync.unk0x00;
 
     return -1;
 }
@@ -1265,7 +1265,7 @@ void __fastcall MONSTER_SetHirelingOwnerGUID(D2UnitStrc *pUnit, int32_t nOwnerGU
     {
         pMonsterData = pUnit->pMonsterData;
         if (pMonsterData)
-            pMonsterData->unk0x3C.unk0x00 = nOwnerGUID;
+            pMonsterData->tLifeSync.unk0x00 = nOwnerGUID;
     }
 }
 
@@ -1473,12 +1473,12 @@ void __fastcall MONSTER_InitClientUnit(D2UnitStrc *pUnit, D2ActiveRoomStrc *pRoo
     D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_ATTACKRATE, 100, 0);
     D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_VELOCITYPERCENT, 75, 0);
     D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_OTHER_ANIMRATE, 100, 0);
-    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_DAMAGERESIST, (int16_t)pMonStatsTxt->nResistances[0][nDifficulty], 0);
-    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_MAGICRESIST, (int16_t)pMonStatsTxt->nResistances[1][nDifficulty], 0);
-    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_FIRERESIST, (int16_t)pMonStatsTxt->nResistances[2][nDifficulty], 0);
-    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_LIGHTRESIST, (int16_t)pMonStatsTxt->nResistances[3][nDifficulty], 0);
-    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_COLDRESIST, (int16_t)pMonStatsTxt->nResistances[4][nDifficulty], 0);
-    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_POISONRESIST, (int16_t)pMonStatsTxt->nResistances[5][nDifficulty], 0);
+    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_DAMAGERESIST, pMonStatsTxt->nResistances[0][nDifficulty], 0);
+    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_MAGICRESIST, pMonStatsTxt->nResistances[1][nDifficulty], 0);
+    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_FIRERESIST, pMonStatsTxt->nResistances[2][nDifficulty], 0);
+    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_LIGHTRESIST, pMonStatsTxt->nResistances[3][nDifficulty], 0);
+    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_COLDRESIST, pMonStatsTxt->nResistances[4][nDifficulty], 0);
+    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_POISONRESIST, pMonStatsTxt->nResistances[5][nDifficulty], 0);
 
     nScalingDifficulty = GAME_GetDifficulty();
     bExpansion = GAME_IsExpansionGame();
@@ -1890,12 +1890,12 @@ void __fastcall MONSTER_ChangeMonsterClass(D2UnitStrc *pUnit, D2C_MonsterIds nNe
     D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_VELOCITYPERCENT, 100, 0);
     D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_OTHER_ANIMRATE, 100, 0);
     nDifficulty = GAME_GetDifficulty();
-    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_DAMAGERESIST, (int16_t)pMonStatsTxt->nResistances[0][nDifficulty], 0);
-    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_MAGICRESIST, (int16_t)pMonStatsTxt->nResistances[1][nDifficulty], 0);
-    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_FIRERESIST, (int16_t)pMonStatsTxt->nResistances[2][nDifficulty], 0);
-    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_LIGHTRESIST, (int16_t)pMonStatsTxt->nResistances[3][nDifficulty], 0);
-    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_COLDRESIST, (int16_t)pMonStatsTxt->nResistances[4][nDifficulty], 0);
-    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_POISONRESIST, (int16_t)pMonStatsTxt->nResistances[5][nDifficulty], 0);
+    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_DAMAGERESIST, pMonStatsTxt->nResistances[0][nDifficulty], 0);
+    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_MAGICRESIST, pMonStatsTxt->nResistances[1][nDifficulty], 0);
+    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_FIRERESIST, pMonStatsTxt->nResistances[2][nDifficulty], 0);
+    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_LIGHTRESIST, pMonStatsTxt->nResistances[3][nDifficulty], 0);
+    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_COLDRESIST, pMonStatsTxt->nResistances[4][nDifficulty], 0);
+    D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_POISONRESIST, pMonStatsTxt->nResistances[5][nDifficulty], 0);
     D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_MAXHP, 128 << 8, 0);
     D2COMMON_STATLIST_SetUnitStat(pUnit, STAT_HITPOINTS, 128 << 8, 0);
     D2COMMON_UNITS_ChangeAnimMode(pUnit, MONMODE_NEUTRAL);
@@ -3692,7 +3692,7 @@ void __fastcall MONSTER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pU
 static_assert(offsetof(D2MonsterDataStrc, wNameSeed) == 0x14 && offsetof(D2MonsterDataStrc, nTypeFlag) == 0x16
                   && sizeof(D2MonsterDataStrc::nTypeFlag) == 2 && offsetof(D2MonsterDataStrc, nMonUmod) == 0x1C
                   && offsetof(D2MonsterDataStrc, wBossHcIdx) == 0x26
-                  && offsetof(D2MonsterDataStrc, unk0x3C) + offsetof(D2UnkMonsterDataStrc, nMinionClassId) == 0x40,
+                  && offsetof(D2MonsterDataStrc, tLifeSync) + offsetof(D2UnkMonsterDataStrc, nMinionClassId) == 0x40,
               "the monster-data accessors, MONSTER_GetMonUmodArray to MONSTER_SetAuraRingEnabled: "
               "`mov [ecx+14h], dx` (0x6FB44980), `mov ax, [ecx+16h]` (0x6FB449E3), `or byte ptr "
               "[ecx+17h], 1` (0x6FB44A44), `lea eax, [ecx+1Ch]` (0x6FB44963), `mov [ecx+26h], dx` (0x6FB449A0); "
@@ -3882,7 +3882,7 @@ void __fastcall MONSTER_SetMinionSpawnClassId(const D2GSPacketSrv98 *pPacket)
 
     nMinionClassId = pPacket->nMinionSpawnClassId == 0xFFFF ? -1 : pPacket->nMinionSpawnClassId;
     if (pMonster->dwUnitType == UNIT_MONSTER && pMonster->pMonsterData)
-        pMonster->pMonsterData->unk0x3C.nMinionClassId = nMinionClassId;
+        pMonster->pMonsterData->tLifeSync.nMinionClassId = nMinionClassId;
 }
 
 

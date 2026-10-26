@@ -135,7 +135,7 @@ void __fastcall SCMD_RouteServerPackets(uint8_t *pBuffer, int32_t nSize)
         //  0x6FAB50F0; edi is nSize, and the running count at [esp+1Ch] never reaches edx). The two are equal while D2Net's dequeue copies one packet
         //  per call.
         int32_t nSizeRead;
-        if (!D2NET_SERVER_GetServerPacketSize((D2PacketBufferStrc *)pBuffer, nSize, &nSizeRead))
+        if (!D2NET_SERVER_GetServerPacketSize((D2NetReceiveBufferStrc *)pBuffer, nSize, &nSizeRead))
             return;
 
         //  A 16-bit length: every use is masked, `and <reg>, 0FFFFh`.
@@ -290,7 +290,7 @@ void __fastcall SCMD_ProcessUnitPacketQueue(D2UnitStrc *pUnit)
         //  BUG: when a queued packet's size cannot be read the drain returns (`jz` to 0x6FAB56E9 at 0x6FAB5673), past the clear and past
         //  `nUsed = 0`; the router keeps appending, and the queue grows by five slots each time it fills.
         int32_t nSizeRead;
-        if (!D2NET_SERVER_GetServerPacketSize((D2PacketBufferStrc *)pPacket, sgnMaxUnitPacketDataSize, &nSizeRead))
+        if (!D2NET_SERVER_GetServerPacketSize((D2NetReceiveBufferStrc *)pPacket, sgnMaxUnitPacketDataSize, &nSizeRead))
             return;
 
         const uint8_t bCmd = pPacket[0];
@@ -508,10 +508,10 @@ void __fastcall SCMD_HandleSrv04_LoadComplete(D2GSPacketSrv04 *pPacket)
     D2UnitStrc *pPlayer = CUNIT_GetPlayer();
     if (pPlayer && pPlayer->dwUnitType == UNIT_PLAYER && pPlayer->pPlayerData)
     {
-        pPlayer->pPlayerData->unk0xA8[42] = 0;
-        pPlayer->pPlayerData->unk0xA8[43] = 0;
-        pPlayer->pPlayerData->unk0xA8[44] = 0;
-        pPlayer->pPlayerData->unk0xA8[45] = 0;
+        pPlayer->pPlayerData->bInteract = 0;
+        pPlayer->pPlayerData->nInteractAction = 0;
+        pPlayer->pPlayerData->nInteractUnitType = 0;
+        pPlayer->pPlayerData->nInteractUnitGUID = 0;
     }
 }
 

@@ -516,20 +516,20 @@ static_assert(offsetof(D2ClientDrawNodeStrc, nX) == 4
               && offsetof(D2ClientDrawNodeStrc, pObject) == 0xC
               && offsetof(D2ClientDrawNodeStrc, pNext) == 0x10,
               "a draw node");
-static_assert(offsetof(D2DrlgTileDataStrc, dwFadeState) == 0x24
+static_assert(offsetof(D2DrlgTileDataStrc, nFadeFlags) == 0x24
               && offsetof(D2DrlgTileDataStrc, nAlpha) == 0x28
-              && offsetof(D2DrlgTileDataStrc, nAlphaFrom) == 0x29
-              && offsetof(D2DrlgTileDataStrc, nAlphaTo) == 0x2A
-              && offsetof(D2DrlgTileDataStrc, dwFadeEndTick) == 0x2C,
+              && offsetof(D2DrlgTileDataStrc, nFadeStartAlpha) == 0x29
+              && offsetof(D2DrlgTileDataStrc, nFadeEndAlpha) == 0x2A
+              && offsetof(D2DrlgTileDataStrc, nFadeEndTick) == 0x2C,
               "a tile's fade");
 
 //1.10f: D2Client.0x6FAA3B90
 //  The other floor pass: every floor node of the view's square grid, in four layer passes, with each tile's fade advanced before it is drawn.
 //  Layers: pass n (1..4, unsigned compare) draws the tiles whose flags hold ALL of `n << 14` -- so pass 3's mask is 0xC000, both of passes 1's
 //  and 2's bits, and pass 4's is 0x10000.
-//  Fade: a tile with dwFadeState bit 1 fades its alpha toward nAlphaTo. Below GLIDE (the display type is read once at entry) or at or past
-//  dwFadeEndTick (UNSIGNED compare) it snaps and clears the bit; otherwise alpha = from + (now - end + 500) * (to - from) / 500, a 500 ms fade
-//  ending at dwFadeEndTick. The product is taken in unsigned arithmetic, as the register wraps, and divided as an int (signed divide by 500).
+//  Fade: a tile with nFadeFlags bit 1 fades its alpha toward nFadeEndAlpha. Below GLIDE (the display type is read once at entry) or at or past
+//  nFadeEndTick (UNSIGNED compare) it snaps and clears the bit; otherwise alpha = from + (now - end + 500) * (to - from) / 500, a 500 ms fade
+//  ending at nFadeEndTick. The product is taken in unsigned arithmetic, as the register wraps, and divided as an int (signed divide by 500).
 //  Either way an alpha of zero sets dwFlags bit 10 (0x400) and a non-zero one clears it -- half of the 0x408 both passes skip. The fade-state
 //  store is the whole dword with bit 1 cleared.
 //  Draw: the position is the tile's draw point plus (80 - nOriginX, -80 - nOriginY), its y raised by the library entry's roof height; it is
@@ -556,7 +556,7 @@ void __fastcall DFLOOR_DrawViewGridFloors(D2ClientViewStrc *pView)
     D2DrlgTileDataStrc *pTileData;
     D2TileLibraryEntryStrc *pTileEntry;
     uint32_t dwFlags;
-    uint32_t dwFadeState;
+    uint32_t nFadeFlags;
     int32_t nXPos;
     int32_t nYPos;
     int32_t nSubtileX;
@@ -586,17 +586,17 @@ void __fastcall DFLOOR_DrawViewGridFloors(D2ClientViewStrc *pView)
                 if ((dwFlags & dwLayerMask) != dwLayerMask)
                     continue;
 
-                dwFadeState = pTileData->dwFadeState;
-                if (dwFadeState & 2)
+                nFadeFlags = pTileData->nFadeFlags;
+                if (nFadeFlags & 2)
                 {
-                    if (nDisplayType < DISPLAYTYPE_GLIDE || dwNow >= pTileData->dwFadeEndTick)
+                    if (nDisplayType < DISPLAYTYPE_GLIDE || dwNow >= pTileData->nFadeEndTick)
                     {
-                        pTileData->nAlpha = pTileData->nAlphaTo;
-                        pTileData->dwFadeState = dwFadeState & ~2u;
+                        pTileData->nAlpha = pTileData->nFadeEndAlpha;
+                        pTileData->nFadeFlags = nFadeFlags & ~2u;
                     }
                     else
                     {
-                        pTileData->nAlpha = (uint8_t)(pTileData->nAlphaFrom + (int32_t)((dwNow - pTileData->dwFadeEndTick + 500) * (uint32_t)(pTileData->nAlphaTo - pTileData->nAlphaFrom)) / 500);
+                        pTileData->nAlpha = (uint8_t)(pTileData->nFadeStartAlpha + (int32_t)((dwNow - pTileData->nFadeEndTick + 500) * (uint32_t)(pTileData->nFadeEndAlpha - pTileData->nFadeStartAlpha)) / 500);
                     }
 
                     if (pTileData->nAlpha)

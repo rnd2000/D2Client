@@ -10,7 +10,7 @@
   "tail_chunks": 26,
   "exports": 4,
   "globals": 1621,
-  "types": 2667
+  "types": 2668
  },
  "source_files": {
   "Gfx.cpp": 51,
@@ -48046,7 +48046,7 @@
   {
    "ea": "0x6FB6BDF6",
    "ordinal": null,
-   "name": "D2NET_10017",
+   "name": "D2NET_CLIENT_IsConnected",
    "demangled": null,
    "prototype": "int32_t __stdcall()",
    "source_file": null,
@@ -48094,7 +48094,7 @@
   {
    "ea": "0x6FB6BE0E",
    "ordinal": null,
-   "name": "D2NET_10025",
+   "name": "D2NET_CLIENT_GetConnectionStatus",
    "demangled": null,
    "prototype": "int32_t __stdcall()",
    "source_file": null,
@@ -48108,7 +48108,7 @@
    "ordinal": null,
    "name": "D2NET_CLIENT_Initialize",
    "demangled": null,
-   "prototype": "void __stdcall(int32_t a1, const char *szIpAddress)",
+   "prototype": "int32_t __stdcall(D2NetConnectionMode nConnectionMode, const char *szHostAddress)",
    "source_file": null,
    "asserts": null,
    "size": 6,
@@ -48180,7 +48180,7 @@
    "ordinal": null,
    "name": "D2NET_SERVER_GetServerPacketSize",
    "demangled": null,
-   "prototype": "int32_t __fastcall(D2PacketBufferStrc *pBuffer, uint32_t nBufferSize, int32_t *pSize)",
+   "prototype": "int32_t __fastcall(D2NetReceiveBufferStrc *pBuffer, uint32_t nBufferSize, int32_t *pSize)",
    "source_file": null,
    "asserts": null,
    "size": 6,
@@ -48190,7 +48190,7 @@
   {
    "ea": "0x6FB6BE3E",
    "ordinal": null,
-   "name": "D2NET_10040",
+   "name": "D2NET_SERVER_GetClientGameGUIDFunction",
    "demangled": null,
    "prototype": "void *__stdcall()",
    "source_file": null,
@@ -48202,7 +48202,7 @@
   {
    "ea": "0x6FB6BE44",
    "ordinal": null,
-   "name": "D2NET_10039",
+   "name": "D2NET_SERVER_GetClientSendFunction",
    "demangled": null,
    "prototype": "void *__stdcall()",
    "source_file": null,

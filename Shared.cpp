@@ -397,8 +397,8 @@ D2SetItemsTxt *__fastcall DATATBLS_GetSetItemsTxtRecord(int32_t nFileIndex)
 
 
 //1.10f: D2Client.0x6FAFBB10
-//  Clears a player's queued command: the four dwords of the player's data at +0x150..+0x15C (unk0xA8[42..45]) are zeroed; for a NULL unit,
-//  any other type or a player with no data, nothing. They are the queued command: PLAYER_SetQueuedCommand writes 1, the command and two
+//  Clears a player's queued command: the four dwords of the player's data at +0x150..+0x15C (bInteract..nInteractUnitGUID) are zeroed; for a NULL
+//  unit, any other type or a player with no data, nothing. They are the queued command: PLAYER_SetQueuedCommand writes 1, the command and two
 //  parameters into the same four, and PLAYER_GetQueuedCommand and PLAYER_GetQueuedTargetType answer [43] and [44].
 //  The original re-loads pPlayerData before every store (four mov eax, [ecx+14h]) rather than keeping it in a register; written that way,
 //  since the source said pUnit->pPlayerData->x = 0 four times. The original inlines this function in several units.
@@ -406,10 +406,10 @@ void __fastcall PLAYER_ClearQueuedCommand(D2UnitStrc *pPlayer)
 {
     if (pPlayer && pPlayer->dwUnitType == UNIT_PLAYER && pPlayer->pPlayerData)
     {
-        pPlayer->pPlayerData->unk0xA8[42] = 0;
-        pPlayer->pPlayerData->unk0xA8[43] = 0;
-        pPlayer->pPlayerData->unk0xA8[44] = 0;
-        pPlayer->pPlayerData->unk0xA8[45] = 0;
+        pPlayer->pPlayerData->bInteract = 0;
+        pPlayer->pPlayerData->nInteractAction = 0;
+        pPlayer->pPlayerData->nInteractUnitType = 0;
+        pPlayer->pPlayerData->nInteractUnitGUID = 0;
     }
 }
 
@@ -650,31 +650,31 @@ void __fastcall ENV_SpawnRoomCritters(D2ActiveRoomStrc *pRoom)
 
 //1.10f: D2Client.0x6FB4B720
 //  Queues a command on a player: nCmd in ecx, pPlayer in edx, the target's type and GUID on the stack (retn 8). For a player with player data:
-//  1, the command, the type and the GUID into the four dwords at +150h..+15Ch (unk0xA8[42..45]), pPlayerData read again before every store as
-//  in PLAYER_ClearQueuedCommand; anything else, nothing. +158h is the target's type and +15Ch its GUID, what PLAYER_GetQueuedTargetType and
+//  1, the command, the type and the GUID into the four dwords at +150h..+15Ch (bInteract..nInteractUnitGUID), pPlayerData read again before every
+//  store as in PLAYER_ClearQueuedCommand; anything else, nothing. +158h is the target's type and +15Ch its GUID, what PLAYER_GetQueuedTargetType and
 //  PLAYER_GetQueuedTargetGuid read back. UNITMODE_RunQueuedCommand reads the group back on a later frame, and
 //  UNITMODE_PerformClientCommand's last act clears it. The original inlines this function in more than one unit.
 void __fastcall PLAYER_SetQueuedCommand(int32_t nCmd, D2UnitStrc *pPlayer, int32_t nTargetType, D2UnitGUID nTargetGUID)
 {
     if (pPlayer && pPlayer->dwUnitType == UNIT_PLAYER && pPlayer->pPlayerData)
     {
-        pPlayer->pPlayerData->unk0xA8[42] = 1;
-        pPlayer->pPlayerData->unk0xA8[43] = (uint32_t)nCmd;
-        pPlayer->pPlayerData->unk0xA8[44] = (uint32_t)nTargetType;
-        pPlayer->pPlayerData->unk0xA8[45] = nTargetGUID;
+        pPlayer->pPlayerData->bInteract = 1;
+        pPlayer->pPlayerData->nInteractAction = nCmd;
+        pPlayer->pPlayerData->nInteractUnitType = nTargetType;
+        pPlayer->pPlayerData->nInteractUnitGUID = nTargetGUID;
     }
 }
 
 
 //1.10f: D2Client.0x6FB4B760
-//  Returns the queued command: unk0xA8[43] of a player's data (+154h), read through one load of pPlayerData; 0 for NULL, any other type or no
+//  Returns the queued command: nInteractAction of a player's data (+154h), read through one load of pPlayerData; 0 for NULL, any other type or no
 //  data. The pending flag at +150h is not read. A bare retn, pPlayer in ecx. The original inlines it in more than one unit.
 int32_t __fastcall PLAYER_GetQueuedCommand(D2UnitStrc *pPlayer)
 {
     D2PlayerDataStrc *pPlayerData;
 
     if (pPlayer && pPlayer->dwUnitType == UNIT_PLAYER && (pPlayerData = pPlayer->pPlayerData) != NULL)
-        return (int32_t)pPlayerData->unk0xA8[43];
+        return pPlayerData->nInteractAction;
     return 0;
 }
 

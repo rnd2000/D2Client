@@ -32,7 +32,7 @@ static_assert(sizeof(D2NpcHirelingOfferStrc) == 16, "the 16-byte row; 10 x 16 en
 static_assert(offsetof(D2NpcHirelingOfferStrc, bUsed) == 8, "the free-slot scan starts at +8");
 static_assert(offsetof(D2DataTablesStrc, nMonStatsTxtRecordCount) == 0xA80, "cmp ecx, [eax+0A80h]");
 static_assert(offsetof(D2UnitStrc, dwUnitId) == 0x0C, "SetInteractingNpc reads pNpc[3]");
-static_assert(offsetof(D2PlayerDataStrc, unk0xA8) == 0xA8, "the cleared group is [42..45] = +0x150..+0x15C");
+static_assert(offsetof(D2PlayerDataStrc, bInteract) == 0x150 && offsetof(D2PlayerDataStrc, nInteractUnitGUID) == 0x15C, "the cleared group is +0x150..+0x15C");
 //  The quest unlocks store into record 11 at 429 + 4 (nRows), 429 + 10 (wTblIdx) and 429 + 22 (pfnHandler); 429 = 11 * 39.
 static_assert(offsetof(D2NpcMenuDescStrc, nRows) == 4, "nRows+1ADh = 429 + 4");
 static_assert(offsetof(D2NpcMenuDescStrc, wTblIdx) == 8, "wTblIdx+1AFh = 429 + 8 + 2*1");

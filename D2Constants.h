@@ -36,10 +36,10 @@
 /* ------------------------------------------------------------------
  * GENERATED. Do not edit the first section by hand.
  *
- *   tools/d2client/sweep/gen_constants_header.py
+ *   <Tools>/sweep/gen_constants_header.py
  *   from the D2Client IDA database, via ida_dump_enum_members.py
  *
- * 171 enum(s), 20741 member(s). 71 of the database's enums are the MSVC,
+ * 172 enum(s), 20744 member(s). 69 of the database's enums are the MSVC,
  * CRT, Windows SDK, PDB and CodeView types its type library carries,
  * and are not emitted.
  *
@@ -18233,6 +18233,13 @@ enum D2HotkeyIndices : int32_t
 	HOTKEY_SPEECH8 = 55,
 	HOTKEY_ESCMENU = 56,
 	HOTKEY_MAX_COUNT = 57,
+};
+
+enum D2NetConnectionMode : int32_t
+{
+	D2NET_CONNECTION_REMOTE = 0,
+	D2NET_CONNECTION_LOCAL = 1,
+	D2NET_CONNECTION_LOCAL_SIMULATED_LAG = 2,
 };
 
 enum D2Objects : int32_t

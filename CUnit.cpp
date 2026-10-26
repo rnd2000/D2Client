@@ -810,8 +810,8 @@ static_assert(offsetof(D2MonsterDataStrc, nComponent) == 0x04
               "0x6FB2787F..0x6FB27892");
 //  The two halves of the hireling hand-over: what the roster pet holds, and what MONSTER_InitHireling reads -- the same two values in
 //  opposite order.
-static_assert(offsetof(D2ClientPetInfoStrc, nSeed) == 0
-              && offsetof(D2ClientPetInfoStrc, wName) == 4,
+static_assert(offsetof(D2ClientPetInfoStrc, dwNameSeed) == 0
+              && offsetof(D2ClientPetInfoStrc, wNameStringId) == 4,
               "`mov edx, [eax]` at 0x6FB27BAB, `mov ax, [eax+4]` at 0x6FB27BB1");
 static_assert(offsetof(D2ClientHirelingInitStrc, wNameId) == 0
               && offsetof(D2ClientHirelingInitStrc, nLowSeed) == 4,
@@ -902,7 +902,7 @@ static_assert(OVERLAY_MEPHISTO == 122 && OVERLAY_LIGHT_CAST_2 == 186
 //  (it reads [ecx+20h] and [ecx+4], pSeed and dwClassId). GAME_GetDifficulty is called twice per table (0x6FB27AE5 and 0x6FB27AFA, 0x6FB27B47
 //  and 0x6FB27B59), and twice is what the C does.
 //
-//  The hireling's two values change places: the roster pet holds `{nSeed at +0, wName at +4}` (D2ClientPetInfoStrc, reached through
+//  The hireling's two values change places: the roster pet holds `{dwNameSeed at +0, wNameStringId at +4}` (D2ClientPetInfoStrc, reached through
 //  ROSTERPETS_GetPetInfo, which hands out the address of the pet's +0x24) and MONSTER_InitHireling reads `{name at +0, seed at +4}`, handing
 //  them to D2Common's MONSTERS_GetActFromHirelingTxt as nNameId and MONSTERS_HirelingInit as nLowSeed. ROSTERPETS_OnPetPacket81 builds the
 //  same block the same way. The block is a D2ClientHirelingInitStrc.
@@ -1157,8 +1157,8 @@ D2UnitStrc *__fastcall CUNIT_CreateMonsterUnit(int32_t *pAssign, uint8_t *pCompo
         pPetInfo = ROSTERPETS_GetPetInfo(pRegistered->dwUnitId);
         if (pPetInfo)
         {
-            tHirelingInfo.nLowSeed = pPetInfo->nSeed;
-            tHirelingInfo.wNameId = pPetInfo->wName;
+            tHirelingInfo.nLowSeed = pPetInfo->dwNameSeed;
+            tHirelingInfo.wNameId = pPetInfo->wNameStringId;
             MONSTER_InitHireling(pMonster, &tHirelingInfo);
         }
     }

@@ -117,7 +117,7 @@ void __fastcall UIPANELS_DrawInGamePanels(D2ClientViewStrc *pView)
         pPlayer = CUNIT_GetPlayer();
         dwPetGUID = (uint32_t)ROSTERPETS_GetAssociatedUnitGUID(pPlayer, 7, 0);
 
-        if (dwPetGUID != (uint32_t)-1 && ROSTERPETS_GetPetInfo(dwPetGUID)->nDisplayState == 1)
+        if (dwPetGUID != (uint32_t)-1 && ROSTERPETS_GetPetInfo(dwPetGUID)->nHoverTextState == 1)
         {
             pPet = CUNIT_FindUnitByGuidAndType(dwPetGUID, UNIT_MONSTER);
             if (pPet)

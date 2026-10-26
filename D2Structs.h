@@ -709,6 +709,8 @@ struct D2MonsterInteractStrc;
 // struct D2NPCMessageListStrc;
 // struct D2NPCMessageStrc;
 // struct D2NPCMessageTableStrc;
+// struct D2NetQueuedPacketStrc;
+struct D2NetReceiveBufferStrc;
 // struct D2NpcControlStrc;
 // struct D2NpcEventStrc;
 // struct D2NpcGambleStrc;
@@ -736,10 +738,8 @@ struct D2ObjectDataStrc;
 struct D2ObjectsTxt;
 struct D2OpStatDataStrc;
 struct D2OverlayTxt;
-struct D2PacketBufferStrc;
 // struct D2PacketDataStrc;
 struct D2PacketListStrc;
-// struct D2PacketStrc;
 // struct D2PacketTableStrc;
 // struct D2PaletteStrc;
 // struct D2PaletteTableStrc;
@@ -1987,10 +1987,10 @@ D2CellFileStrc *pIcon[5];
 
 struct D2ClientPetInfoStrc
 {
-uint32_t nSeed;
-uint16_t wName;
+uint32_t dwNameSeed;
+uint16_t wNameStringId;
 int16_t unk0x06;
-int32_t nDisplayState;
+int32_t nHoverTextState;
 };
 
 struct D2ClientPopupStrc
@@ -2806,13 +2806,13 @@ D2RoomCoordListStrc *pCoordList;
 uint32_t dwFlags;
 D2TileLibraryEntryStrc *pTile;
 int32_t nTileType;
-D2DrlgTileDataStrc *unk0x20;
-uint32_t dwFadeState;
+D2DrlgTileDataStrc *pNext;
+uint32_t nFadeFlags;
 uint8_t nAlpha;
-uint8_t nAlphaFrom;
-uint8_t nAlphaTo;
+uint8_t nFadeStartAlpha;
+uint8_t nFadeEndAlpha;
 uint8_t nIntensity;
-uint32_t dwFadeEndTick;
+uint32_t nFadeEndTick;
 };
 
 struct D2DrlgActStrc
@@ -6145,7 +6145,7 @@ uint8_t unk0x10D;
 uint16_t nElMinD[3][3];
 uint16_t nElMaxD[3][3];
 uint16_t nElDur[3][3];
-uint16_t nResistances[6][3];
+int16_t nResistances[6][3];
 char nColdEffect[3];
 uint8_t unk0x16B;
 uint8_t nSendSkills[4];
@@ -6230,7 +6230,7 @@ int32_t nCritterIdleTicks;
 };
 int32_t bCritterLatch;
 uint32_t unk0x38;
-D2UnkMonsterDataStrc unk0x3C;
+D2UnkMonsterDataStrc tLifeSync;
 uint32_t unk0x4C;
 uint32_t pVision;
 uint32_t dwAiState;
@@ -6616,10 +6616,16 @@ uint32_t nWeaponGUID;
 uint32_t unk0x94;
 D2UnkPlayerDataStrc *unk0x98;
 struct D2ClientStrc *pClient;
-uint8_t unk0xA0;
+uint8_t nPositionHistoryIndex;
 uint8_t unk0xA1[3];
-uint32_t unk0xA4;
-uint32_t unk0xA8[46];
+uint32_t dwPositionHistoryTick;
+D2CoordStrc pPositionHistory[20];
+uint32_t nLastTeleportX;
+uint32_t nLastTeleportY;
+int32_t bInteract;
+int32_t nInteractAction;
+int32_t nInteractUnitType;
+D2UnitGUID nInteractUnitGUID;
 uint32_t dwHostileDelay;
 uint32_t unk0x164;
 uint32_t dwGameFrame;
@@ -6811,15 +6817,15 @@ struct D2RoomTileStrc
 D2DrlgRoomStrc *pDrlgRoom;
 D2LvlWarpTxt *pLvlWarpTxtRecord;
 int32_t bEnabled;
-D2DrlgTileDataStrc *unk0x0C;
-D2DrlgTileDataStrc *unk0x10;
+D2DrlgTileDataStrc *pSelectedTiles;
+D2DrlgTileDataStrc *pUnselectedTiles;
 D2RoomTileStrc *pNext;
 };
 
 struct D2RosterCorpseStrc
 {
 uint32_t dwCorpseId;
-struct D2RosterCorpseStrc *pPrev;
+struct D2RosterCorpseStrc *pNext;
 };
 
 struct D2RosterGroupStrc
@@ -6843,7 +6849,7 @@ int32_t nMonStatsId;
 int32_t nPetTypeId;
 uint32_t dwUnitId;
 uint32_t dwOwnerId;
-uint32_t unk0x10;
+uint32_t dwLevelId;
 uint32_t unk0x14;
 uint32_t unk0x18;
 int32_t nLifePercent;

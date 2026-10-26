@@ -20,7 +20,7 @@ static_assert(offsetof(D2RosterPetStrc, nMonStatsId) == 0
               "stored at +4 (`mov [edx+4], ebp`) and tested there (`cmp dword ptr [esi+4], 7`)");
 static_assert(offsetof(D2RosterPetStrc, dwUnitId) == 8
               && offsetof(D2RosterPetStrc, dwOwnerId) == 0xC
-              && offsetof(D2RosterPetStrc, unk0x10) == 0x10
+              && offsetof(D2RosterPetStrc, dwLevelId) == 0x10
               && offsetof(D2RosterPetStrc, nLifePercent) == 0x1C
               && offsetof(D2RosterPetStrc, bInactive) == 0x20,
               "every walk's `cmp [reg+8], id`; the owner at [reg+0Ch]; UpdateLifeAndArea's "
@@ -29,7 +29,7 @@ static_assert(offsetof(D2RosterPetStrc, tPetInfo) == 0x24
               && offsetof(D2RosterPetStrc, pNext) == 0x30,
               "OnPetPacket81's copy into [eax+24h], [eax+28h], [eax+2Ch]; "
               "GetPetInfo's `add eax, 24h`; every walk steps [reg+30h]");
-static_assert(offsetof(D2ClientPetInfoStrc, nDisplayState) == 8,
+static_assert(offsetof(D2ClientPetInfoStrc, nHoverTextState) == 8,
               "SetHirelingDisplayState's `mov [eax+8], ecx` through GetPetInfo's "
               "answer, and OnPetPacket81's copy of the third dword into +0x2C");
 static_assert(offsetof(D2DataTablesStrc, pPetTypeTxt) == 0xBE8
@@ -135,7 +135,7 @@ void __fastcall ROSTERPETS_FindOrAddPet(uint32_t dwUnitId, uint32_t dwOwnerId, i
 //    6  for a hireling whose monster unit exists, the unit re-initialised from the block's seed and name: MONSTER_InitHireling,
 //       CUNIT_SetUnitAlive, MONSTER_UpdateClientLight and D2Common's UNITS_ChangeAnimMode(pUnit, 1).
 //
-//  The block is a D2ClientPetInfoStrc {nSeed, wName, nDisplayState}: +0x24 is what ROSTERPETS_GetPetInfo hands out, and the display state is
+//  The block is a D2ClientPetInfoStrc {dwNameSeed, wNameStringId, nHoverTextState}: +0x24 is what ROSTERPETS_GetPetInfo hands out, and the third is
 //  written 0 on every packet (SCMD_HandleSrv81_AddPet stores a literal 0 there). Step 6 reads the name as the word at +4, the low half of the
 //  second dword. The block parameter stays `unsigned int *`: the copy reads three whole dwords.
 void __fastcall ROSTERPETS_OnPetPacket81(uint32_t dwUnitId, uint32_t dwOwnerId, int32_t nPetTypeId, uint32_t nMonStatsId, uint32_t *pPetInfo)
@@ -544,7 +544,7 @@ void __fastcall ROSTERPETS_UpdateLifeAndArea(uint32_t dwPetUnitId, int32_t nLife
     }
 
     pPet->nLifePercent = nLifePercent;
-    pPet->unk0x10 = wArea;
+    pPet->dwLevelId = wArea;
     if (pPet->nPetTypeId == 7)
     {
         pUnit = CUNIT_FindUnitByGuidAndType(dwPetUnitId, UNIT_MONSTER);

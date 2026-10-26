@@ -1400,7 +1400,7 @@ int32_t __stdcall GAME_UpdateFrame(int32_t nIdleIteration)
         const uint32_t dwNetNow = GetTickCount();
 
         //  The network is gone.
-        if (!D2NET_10017() && !gbDisconnecting && gbInGame)
+        if (!D2NET_CLIENT_IsConnected() && !gbDisconnecting && gbInGame)
             GAME_BeginDisconnect(D2JOINERR_Your_connection_has_been_interrupted);
 
         //  Three minutes since the connection timestamp with an exit pending.

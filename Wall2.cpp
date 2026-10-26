@@ -312,9 +312,9 @@ static void WALL_AppendNode(D2ClientDrawNodeStrc **ppHead, D2ClientDrawNodeStrc 
 //  tile wins. It has one writer and no reader anywhere in the module; field_04 is touched by nothing but WALL2_WallBuildSquareGrid's memset of
 //  the grid. Both keep their placeholder names: no reader says what they were for.
 //  A tile whose dwFlags has none of 0x1C000 goes to WALL2_WallAppendTileToShadowList -- the square's shadow list -- instead of any of these three.
-//  The wall fade: WALL2_WallIsPlayerBehindTile decides the direction. Fading out sets nAlphaFrom = 0xFF, nAlphaTo = 0x80 and `dwFadeState |= 3`
-//  (full width); fading back sets 0x80 / 0xFF and `dwFadeState = (dwFadeState & ~1) | 2`, a byte-wide pair (`and al, 0FEh` then `or al, 2` at
-//  0x6FAB8663), so the upper 24 bits ride through.
+//  The wall fade: WALL2_WallIsPlayerBehindTile decides the direction. Fading out sets nFadeStartAlpha = 0xFF, nFadeEndAlpha = 0x80 and
+//  `nFadeFlags |= 3` (full width); fading back sets 0x80 / 0xFF and `nFadeFlags = (nFadeFlags & ~1) | 2`, a byte-wide pair (`and al, 0FEh`
+//  then `or al, 2` at 0x6FAB8663), so the upper 24 bits ride through.
 //  The deadline is GetTickCount() + 500, prorated when a fade is interrupted: `+ 500 * (nAlpha - 255) / 127` outward and
 //  `+ 500 * (128 - nAlpha) / 127` back, both signed divisions, both negative in the interrupted case, so a reversal finishes in the time the
 //  remaining distance deserves. 0xFF to 0x80 is the range and 127 is the divisor.
@@ -362,7 +362,7 @@ int32_t __stdcall WALL2_WallAddRoomToSquareGrid(D2ActiveRoomStrc *pRoom, D2Clien
     int32_t nTileType;
     uint32_t dwTileFlags;
     uint32_t dwFadeDeadline;
-    uint32_t dwFadeState;
+    uint32_t nFadeFlags;
     uint8_t nAlpha;
 
     pView = pArgs->pView;
@@ -446,32 +446,32 @@ int32_t __stdcall WALL2_WallAddRoomToSquareGrid(D2ActiveRoomStrc *pRoom, D2Clien
                                     {
                                         if (WALL2_WallIsPlayerBehindTile(pRoom, pTile))
                                         {
-                                            dwFadeState = pTile->dwFadeState;
-                                            if ((dwFadeState & 1) == 0)
+                                            nFadeFlags = pTile->nFadeFlags;
+                                            if ((nFadeFlags & 1) == 0)
                                             {
                                                 nAlpha = pTile->nAlpha;
-                                                pTile->nAlphaFrom = 0xFF;
-                                                pTile->nAlphaTo = 0x80;
+                                                pTile->nFadeStartAlpha = 0xFF;
+                                                pTile->nFadeEndAlpha = 0x80;
                                                 if (nAlpha == 0xFF)
-                                                    pTile->dwFadeEndTick = dwFadeDeadline;
+                                                    pTile->nFadeEndTick = dwFadeDeadline;
                                                 else
-                                                    pTile->dwFadeEndTick = dwFadeDeadline + 500 * (nAlpha - 255) / 127;
-                                                pTile->dwFadeState = dwFadeState | 3;
+                                                    pTile->nFadeEndTick = dwFadeDeadline + 500 * (nAlpha - 255) / 127;
+                                                pTile->nFadeFlags = nFadeFlags | 3;
                                             }
                                         }
                                         else
                                         {
-                                            dwFadeState = pTile->dwFadeState;
-                                            if ((dwFadeState & 1) != 0)
+                                            nFadeFlags = pTile->nFadeFlags;
+                                            if ((nFadeFlags & 1) != 0)
                                             {
                                                 nAlpha = pTile->nAlpha;
-                                                pTile->nAlphaFrom = 0x80;
-                                                pTile->nAlphaTo = 0xFF;
+                                                pTile->nFadeStartAlpha = 0x80;
+                                                pTile->nFadeEndAlpha = 0xFF;
                                                 if (nAlpha == 0x80)
-                                                    pTile->dwFadeEndTick = dwFadeDeadline;
+                                                    pTile->nFadeEndTick = dwFadeDeadline;
                                                 else
-                                                    pTile->dwFadeEndTick = dwFadeDeadline + 500 * (128 - nAlpha) / 127;
-                                                pTile->dwFadeState = (dwFadeState & ~1u) | 2;
+                                                    pTile->nFadeEndTick = dwFadeDeadline + 500 * (128 - nAlpha) / 127;
+                                                pTile->nFadeFlags = (nFadeFlags & ~1u) | 2;
                                             }
                                         }
                                     }

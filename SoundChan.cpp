@@ -315,8 +315,8 @@ have_channel:
 //  Here the four pointers are D2Net's and D2Win's own, which this DLL does not replace, so the server reads what it would read from the original.
 void __cdecl SOUNDCHAN_SendCodeIntegrityProbe()
 {
-    uint32_t nNet1;   //  D2NET_10039's
-    uint32_t nNet2;   //  D2NET_10040's
+    uint32_t nNet1;   //  D2NET_SERVER_GetClientSendFunction's
+    uint32_t nNet2;   //  D2NET_SERVER_GetClientGameGUIDFunction's
     uint32_t nWin1;   //  D2WIN_10206's
     uint32_t nWin2;   //  D2WIN_10207's
 
@@ -329,8 +329,8 @@ void __cdecl SOUNDCHAN_SendCodeIntegrityProbe()
 
     __try
     {
-        nNet1 = *(uint32_t *)D2NET_10039();
-        nNet2 = *(uint32_t *)D2NET_10040();
+        nNet1 = *(uint32_t *)D2NET_SERVER_GetClientSendFunction();
+        nNet2 = *(uint32_t *)D2NET_SERVER_GetClientGameGUIDFunction();
     }
     __except (EXCEPTION_EXECUTE_HANDLER)
     {

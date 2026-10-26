@@ -637,7 +637,7 @@ void __cdecl SELECT_UpdateSelectedUnit()
 void __fastcall SELECT_RosterPetsSetHirelingDisplayState(D2UnitStrc *pOwner, D2UnitStrc *pPet, int32_t nState)
 {
     if (pOwner && pPet)
-        ROSTERPETS_GetPetInfo(pPet->dwUnitId)->nDisplayState = nState;
+        ROSTERPETS_GetPetInfo(pPet->dwUnitId)->nHoverTextState = nState;
 }
 
 //1.10f: D2Client.0x6FAB6450

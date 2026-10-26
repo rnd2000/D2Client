@@ -280,10 +280,10 @@ EXPORTS
     D2COMMON_INVENTORY_GetFirstItem@4              @10277  NONAME
     INVENTORY_GetLastItem@4                        @10278  NONAME
     D2COMMON_INVENTORY_RemoveInventoryItems@4      @10279  NONAME
-    INVENTORY_GetTradeInventory@4                  @10280  NONAME
-    INVENTORY_FreeTradeInventory@4                 @10281  NONAME
-    INVENTORY_CheckForItemInTradeInventory@8       @10282  NONAME
-    INVENTORY_AddItemToTradeInventory@8            @10283  NONAME
+    INVENTORY_GetCommandQueue@4                    @10280  NONAME
+    INVENTORY_FreeCommandQueue@4                   @10281  NONAME
+    INVENTORY_IsItemInCommandQueue@8               @10282  NONAME
+    INVENTORY_AddItemToCommandQueue@8              @10283  NONAME
     D2COMMON_INVENTORY_GetItemCount@4              @10284  NONAME
     INVENTORY_GetBackPackItemByType@12             @10285  NONAME
     INVENTORY_GetEquippedItemByType@12             @10286  NONAME

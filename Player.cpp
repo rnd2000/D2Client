@@ -419,7 +419,7 @@ static const int32_t *PLAYER_GetAnimModeControlRow(uint32_t dwAnimMode)
 //
 //  A mode that ends: KNOCKBACK issues action 6 (CLTACTION_GETHIT) at the unit's own position -- the two coordinate copies read the path's
 //  current point -- after the saved path is re-cached and reset to its previous type, with bInterruptKnockback TRUE. Any other mode: a player
-//  with a queued command sets its pending flag, unk0xA8[42], for UNITMODE_RunQueuedCommand to take up; anything else issues CLTACTION_NEUTRAL,
+//  with a queued command sets its pending flag, bInteract, for UNITMODE_RunQueuedCommand to take up; anything else issues CLTACTION_NEUTRAL,
 //  bInterruptKnockback TRUE.
 //
 //  And, every frame: a unit whose room has changed has the flag cleared, and the local player, in a room, takes the level's portal flags, the
@@ -561,10 +561,10 @@ void __fastcall PLAYER_AdvanceAnimMode(D2UnitStrc *pUnit)
         else
         {
             pPlayerData = pUnit->pPlayerData;
-            if (pUnit->dwUnitType == UNIT_PLAYER && pPlayerData && pPlayerData->unk0xA8[43])
+            if (pUnit->dwUnitType == UNIT_PLAYER && pPlayerData && pPlayerData->nInteractAction)
             {
                 if (pUnit->dwUnitType == UNIT_PLAYER)
-                    pPlayerData->unk0xA8[42] = 1;
+                    pPlayerData->bInteract = 1;
             }
             else
             {
@@ -843,10 +843,10 @@ BOOL __fastcall PLAYER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pUn
 
         if (pUnit->dwUnitType == UNIT_PLAYER && pUnit->pPlayerData)
         {
-            pUnit->pPlayerData->unk0xA8[42] = 0;
-            pUnit->pPlayerData->unk0xA8[43] = 0;
-            pUnit->pPlayerData->unk0xA8[44] = 0;
-            pUnit->pPlayerData->unk0xA8[45] = 0;
+            pUnit->pPlayerData->bInteract = 0;
+            pUnit->pPlayerData->nInteractAction = 0;
+            pUnit->pPlayerData->nInteractUnitType = 0;
+            pUnit->pPlayerData->nInteractUnitGUID = 0;
         }
         return TRUE;
 
@@ -2202,7 +2202,7 @@ int32_t __fastcall PLAYER_ReleaseClickAndResetHireling(D2ClientClickStrc *pClick
         pHireling = CUNIT_FindUnitByGuidAndType((uint32_t)nHirelingGuid, UNIT_MONSTER);
         //  BUG: ROSTERPETS_GetPetInfo's record is read untested (0x6FB4B399), and the display state is only ever 0 or 1, so the test for 2 is
         //  never true. UNREACHABLE.
-        if (pHireling && ROSTERPETS_GetPetInfo((uint32_t)nHirelingGuid)->nDisplayState == 2)
+        if (pHireling && ROSTERPETS_GetPetInfo((uint32_t)nHirelingGuid)->nHoverTextState == 2)
             SELECT_RosterPetsSetHirelingDisplayState(pClick->pUnit, pHireling, 0);
     }
     return 0;
@@ -2393,7 +2393,7 @@ void __fastcall PLAYER_SetUnitRoomAndPos(D2UnitStrc *pUnit, D2ActiveRoomStrc *pR
 
 
 //1.10f: D2Client.0x6FB4B780
-//  The queued command's target type: pUnit in ecx -- unk0xA8[44] of a PLAYER's data (+158h), read through one load of pPlayerData; 0 for NULL,
+//  The queued command's target type: pUnit in ecx -- nInteractUnitType of a PLAYER's data (+158h), read through one load of pPlayerData; 0 for NULL,
 //  any other type or no data. With PLAYER_GetQueuedTargetGuid below it answers "is this the click already queued"; the original inlines it in
 //  UNITMODE_RunQueuedCommand.
 int32_t __fastcall PLAYER_GetQueuedTargetType(D2UnitStrc *pUnit)
@@ -2401,18 +2401,18 @@ int32_t __fastcall PLAYER_GetQueuedTargetType(D2UnitStrc *pUnit)
     D2PlayerDataStrc *pPlayerData;
 
     if (pUnit && pUnit->dwUnitType == UNIT_PLAYER && (pPlayerData = pUnit->pPlayerData) != NULL)
-        return (int32_t)pPlayerData->unk0xA8[44];
+        return pPlayerData->nInteractUnitType;
     return 0;
 }
 
 //1.10f: D2Client.0x6FB4B7A0
-//  The queued command's target GUID: pUnit in ecx -- unk0xA8[45], +15Ch -- the same shape, callers and inlined copy as
+//  The queued command's target GUID: pUnit in ecx -- nInteractUnitGUID, +15Ch -- the same shape, callers and inlined copy as
 //  PLAYER_GetQueuedTargetType above.
 int32_t __fastcall PLAYER_GetQueuedTargetGuid(D2UnitStrc *pUnit)
 {
     D2PlayerDataStrc *pPlayerData;
 
     if (pUnit && pUnit->dwUnitType == UNIT_PLAYER && (pPlayerData = pUnit->pPlayerData) != NULL)
-        return (int32_t)pPlayerData->unk0xA8[45];
+        return (int32_t)pPlayerData->nInteractUnitGUID;
     return 0;
 }

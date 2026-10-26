@@ -789,20 +789,20 @@ void __stdcall D2LANG_STR_GroupUintDigits(Unicode *pUnicode, unsigned int dwValu
 int __stdcall D2MCPCLIENT_10003(void);   /* #10003 */
 
 /*  ---- D2Net ---- */
-void __stdcall D2NET_CLIENT_Initialize(int32_t a1, const char *szIpAddress);   /* #10000 */
+int32_t __stdcall D2NET_CLIENT_Initialize(D2NetConnectionMode nConnectionMode, const char *szHostAddress);   /* #10000 */
 void __stdcall D2NET_CLIENT_Release(void);   /* #10001 */
 void __stdcall D2NET_SERVER_Initialize(int32_t a1, int32_t a2);   /* #10003 */
 void __stdcall D2NET_SERVER_Release(void);   /* #10004 */
 int32_t __stdcall D2NET_CLIENT_Send(int32_t nUnused, const uint8_t *pBuffer, int32_t nBufferSize);   /* #10005 */
 int32_t __stdcall D2NET_CLIENT_DequeueGamePacket(uint8_t *pBuffer, uint32_t nBufferSize);   /* #10007 */
 int32_t __stdcall D2NET_CLIENT_DequeueSystemPacket(uint8_t *pBuffer, uint32_t nBufferSize);   /* #10008 */
-int32_t __stdcall D2NET_10017(void);   /* #10017 */
+int32_t __stdcall D2NET_CLIENT_IsConnected(void);   /* #10017 */
 void __stdcall D2NET_SERVER_SetHackListEnabled(BOOL bEnabled);   /* #10023 */
-int32_t __stdcall D2NET_10025(void);   /* #10025 */
+int32_t __stdcall D2NET_CLIENT_GetConnectionStatus(void);   /* #10025 */
 void __stdcall D2NET_SERVER_SetMaxClientsPerGame(int32_t nMaxClients);   /* #10026 */
-int32_t __fastcall D2NET_SERVER_GetServerPacketSize(D2PacketBufferStrc *pBuffer, uint32_t nBufferSize, int32_t *pSize);   /* #10030 */
-void * __stdcall D2NET_10039(void);   /* #10039 */
-void * __stdcall D2NET_10040(void);   /* #10040 */
+int32_t __fastcall D2NET_SERVER_GetServerPacketSize(D2NetReceiveBufferStrc *pBuffer, uint32_t nBufferSize, int32_t *pSize);   /* #10030 */
+void * __stdcall D2NET_SERVER_GetClientSendFunction(void);   /* #10039 */
+void * __stdcall D2NET_SERVER_GetClientGameGUIDFunction(void);   /* #10040 */
 
 /*  ---- D2Sound ---- */
 LPDIRECTSOUND __cdecl D2SOUND_10002_GetDirectSound(void);   /* #10002 */
