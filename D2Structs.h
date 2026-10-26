@@ -7930,7 +7930,7 @@ D2ObjectDataStrc *pObjectData;
 D2MissileDataStrc *pMissileData;
 };
 
-typedef int32_t (__fastcall *D2UnitEventCallbackFunction)(struct D2GameStrc *, int32_t, D2UnitStrc *, D2UnitStrc *, D2DamageStrc *, int32_t, int32_t);
+typedef int32_t (__fastcall *D2UnitEventCallbackFunction)(struct D2GameStrc *, int32_t, D2UnitStrc *, D2UnitStrc *, struct D2DamageStrc *, int32_t, int32_t);
 
 struct D2UnitEventStrc
 {
@@ -9272,10 +9272,8 @@ int32_t bCopyToUnitBuffer;
 // {
 // uint8_t nHeader;
 // int32_t nMercGUID;
-// uint16_t nPosX;
-// uint16_t unk0x07;
-// uint16_t nPosY;
-// uint16_t unk0x0B;
+// int32_t nPosX;
+// int32_t nPosY;
 // };
 // static_assert(sizeof(D2GSPacketClt47) == 13, "D2GSPacketClt47: layout differs from the database");
 
