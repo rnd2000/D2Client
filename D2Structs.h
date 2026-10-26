@@ -373,33 +373,69 @@ struct D2GSPacketClt15;
 // struct D2GSPacketClt17;
 // struct D2GSPacketClt18;
 // struct D2GSPacketClt19;
+// struct D2GSPacketClt1A;
+// struct D2GSPacketClt1B;
+// struct D2GSPacketClt1C;
+// struct D2GSPacketClt1D;
+// struct D2GSPacketClt1E;
+// struct D2GSPacketClt1F;
 // struct D2GSPacketClt20;
+// struct D2GSPacketClt21;
+// struct D2GSPacketClt22;
 // struct D2GSPacketClt23;
+// struct D2GSPacketClt24;
+// struct D2GSPacketClt25;
 // struct D2GSPacketClt26;
 // struct D2GSPacketClt27;
+// struct D2GSPacketClt28;
 // struct D2GSPacketClt29;
 // struct D2GSPacketClt2A;
-// struct D2GSPacketClt2B;
+// struct D2GSPacketClt2D;
+// struct D2GSPacketClt2E;
+// struct D2GSPacketClt2F;
+// struct D2GSPacketClt30;
 // struct D2GSPacketClt31;
 // struct D2GSPacketClt32;
 // struct D2GSPacketClt33;
+// struct D2GSPacketClt34;
+// struct D2GSPacketClt35;
+// struct D2GSPacketClt36;
+// struct D2GSPacketClt37;
 // struct D2GSPacketClt38;
+// struct D2GSPacketClt39;
 // struct D2GSPacketClt3A;
 // struct D2GSPacketClt3B;
 // struct D2GSPacketClt3C;
 // struct D2GSPacketClt3D;
+// struct D2GSPacketClt3E;
+// struct D2GSPacketClt3F;
+// struct D2GSPacketClt40;
 // struct D2GSPacketClt41;
 // struct D2GSPacketClt42;
+// struct D2GSPacketClt43;
 // struct D2GSPacketClt44;
 // struct D2GSPacketClt45;
+// struct D2GSPacketClt46;
+// struct D2GSPacketClt47;
+// struct D2GSPacketClt48;
 // struct D2GSPacketClt49;
+// struct D2GSPacketClt4B;
+// struct D2GSPacketClt4C;
+// struct D2GSPacketClt4D;
 // struct D2GSPacketClt4F;
+// struct D2GSPacketClt50;
 // struct D2GSPacketClt51;
+// struct D2GSPacketClt52;
+// struct D2GSPacketClt53;
+// struct D2GSPacketClt54;
 // struct D2GSPacketClt58;
 // struct D2GSPacketClt59;
 struct D2GSPacketClt5D;
 struct D2GSPacketClt5E;
 // struct D2GSPacketClt5F;
+// struct D2GSPacketClt60;
+// struct D2GSPacketClt61;
+// struct D2GSPacketClt62;
 // struct D2GSPacketClt63;
 // struct D2GSPacketClt64;
 // struct D2GSPacketClt65;
@@ -7894,7 +7930,7 @@ D2ObjectDataStrc *pObjectData;
 D2MissileDataStrc *pMissileData;
 };
 
-typedef int32_t (__fastcall *D2UnitEventCallbackFunction)(struct D2GameStrc *, int32_t, D2UnitStrc *, D2UnitStrc *, struct D2DamageStrc *, int32_t, int32_t);
+typedef int32_t (__fastcall *D2UnitEventCallbackFunction)(struct D2GameStrc *, int32_t, D2UnitStrc *, D2UnitStrc *, D2DamageStrc *, int32_t, int32_t);
 
 struct D2UnitEventStrc
 {
@@ -8887,6 +8923,55 @@ int32_t bCopyToUnitBuffer;
 // };
 // static_assert(sizeof(D2GSPacketClt19) == 5, "D2GSPacketClt19: layout differs from the database");
 
+// struct D2GSPacketClt1A
+// {
+// uint8_t nHeader;
+// int32_t nItemGUID;
+// int32_t nBodyLoc;
+// };
+// static_assert(sizeof(D2GSPacketClt1A) == 9, "D2GSPacketClt1A: layout differs from the database");
+
+// struct D2GSPacketClt1B
+// {
+// uint8_t nHeader;
+// int32_t nItemGUID;
+// int32_t nBodyLoc;
+// };
+// static_assert(sizeof(D2GSPacketClt1B) == 9, "D2GSPacketClt1B: layout differs from the database");
+
+// struct D2GSPacketClt1C
+// {
+// uint8_t nHeader;
+// uint16_t nBodyLoc;
+// };
+// static_assert(sizeof(D2GSPacketClt1C) == 3, "D2GSPacketClt1C: layout differs from the database");
+
+// struct D2GSPacketClt1D
+// {
+// uint8_t nHeader;
+// int32_t nItemGUID;
+// int32_t nBodyLoc;
+// };
+// static_assert(sizeof(D2GSPacketClt1D) == 9, "D2GSPacketClt1D: layout differs from the database");
+
+// struct D2GSPacketClt1E
+// {
+// uint8_t nHeader;
+// int32_t nItemGUID;
+// int32_t nBodyLoc;
+// };
+// static_assert(sizeof(D2GSPacketClt1E) == 9, "D2GSPacketClt1E: layout differs from the database");
+
+// struct D2GSPacketClt1F
+// {
+// uint8_t nHeader;
+// int32_t nCursorItemGUID;
+// int32_t nInventoryItemGUID;
+// int32_t nPosX;
+// int32_t nPosY;
+// };
+// static_assert(sizeof(D2GSPacketClt1F) == 17, "D2GSPacketClt1F: layout differs from the database");
+
 // struct D2GSPacketClt20
 // {
 // uint8_t nHeader;
@@ -8896,6 +8981,21 @@ int32_t bCopyToUnitBuffer;
 // };
 // static_assert(sizeof(D2GSPacketClt20) == 13, "D2GSPacketClt20: layout differs from the database");
 
+// struct D2GSPacketClt21
+// {
+// uint8_t nHeader;
+// int32_t nCursorItemGUID;
+// int32_t nTargetItemGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt21) == 9, "D2GSPacketClt21: layout differs from the database");
+
+// struct D2GSPacketClt22
+// {
+// uint8_t nHeader;
+// int32_t nItemGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt22) == 5, "D2GSPacketClt22: layout differs from the database");
+
 // struct D2GSPacketClt23
 // {
 // uint8_t nHeader;
@@ -8903,6 +9003,21 @@ int32_t bCopyToUnitBuffer;
 // int32_t nBeltSlotId;
 // };
 // static_assert(sizeof(D2GSPacketClt23) == 9, "D2GSPacketClt23: layout differs from the database");
+
+// struct D2GSPacketClt24
+// {
+// uint8_t nHeader;
+// int32_t nItemGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt24) == 5, "D2GSPacketClt24: layout differs from the database");
+
+// struct D2GSPacketClt25
+// {
+// uint8_t nHeader;
+// int32_t nCursorItemGUID;
+// int32_t nBeltItemGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt25) == 9, "D2GSPacketClt25: layout differs from the database");
 
 // struct D2GSPacketClt26
 // {
@@ -8921,6 +9036,14 @@ int32_t bCopyToUnitBuffer;
 // };
 // static_assert(sizeof(D2GSPacketClt27) == 9, "D2GSPacketClt27: layout differs from the database");
 
+// struct D2GSPacketClt28
+// {
+// uint8_t nHeader;
+// int32_t nCursorItemGUID;
+// int32_t nTargetItemGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt28) == 9, "D2GSPacketClt28: layout differs from the database");
+
 // struct D2GSPacketClt29
 // {
 // uint8_t nHeader;
@@ -8937,13 +9060,34 @@ int32_t bCopyToUnitBuffer;
 // };
 // static_assert(sizeof(D2GSPacketClt2A) == 9, "D2GSPacketClt2A: layout differs from the database");
 
-// struct D2GSPacketClt2B
+// struct D2GSPacketClt2D
 // {
 // uint8_t nHeader;
-// int32_t nUnitGUID;
-// uint8_t nOptionValues[39];
 // };
-// static_assert(sizeof(D2GSPacketClt2B) == 44, "D2GSPacketClt2B: layout differs from the database");
+// static_assert(sizeof(D2GSPacketClt2D) == 1, "D2GSPacketClt2D: layout differs from the database");
+
+// struct D2GSPacketClt2E
+// {
+// uint8_t nHeader;
+// uint8_t unk0x01[2];
+// };
+// static_assert(sizeof(D2GSPacketClt2E) == 3, "D2GSPacketClt2E: layout differs from the database");
+
+// struct D2GSPacketClt2F
+// {
+// uint8_t nHeader;
+// int32_t nUnitType;
+// int32_t nUnitGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt2F) == 9, "D2GSPacketClt2F: layout differs from the database");
+
+// struct D2GSPacketClt30
+// {
+// uint8_t nHeader;
+// int32_t unk0x01;
+// int32_t nUnitGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt30) == 9, "D2GSPacketClt30: layout differs from the database");
 
 // struct D2GSPacketClt31
 // {
@@ -8979,6 +9123,38 @@ int32_t bCopyToUnitBuffer;
 // };
 // static_assert(sizeof(D2GSPacketClt33) == 17, "D2GSPacketClt33: layout differs from the database");
 
+// struct D2GSPacketClt34
+// {
+// uint8_t nHeader;
+// int32_t nNpcGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt34) == 5, "D2GSPacketClt34: layout differs from the database");
+
+// struct D2GSPacketClt35
+// {
+// uint8_t nHeader;
+// int32_t nNpcGUID;
+// int32_t nItemGUID;
+// int32_t unk0x09;
+// int32_t unk0x0D;
+// };
+// static_assert(sizeof(D2GSPacketClt35) == 17, "D2GSPacketClt35: layout differs from the database");
+
+// struct D2GSPacketClt36
+// {
+// uint8_t nHeader;
+// int32_t nNpcGUID;
+// int32_t nHirelingId;
+// };
+// static_assert(sizeof(D2GSPacketClt36) == 9, "D2GSPacketClt36: layout differs from the database");
+
+// struct D2GSPacketClt37
+// {
+// uint8_t nHeader;
+// int32_t nItemGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt37) == 5, "D2GSPacketClt37: layout differs from the database");
+
 // struct D2GSPacketClt38
 // {
 // uint8_t nHeader;
@@ -8987,6 +9163,13 @@ int32_t bCopyToUnitBuffer;
 // int32_t nItemGUID;
 // };
 // static_assert(sizeof(D2GSPacketClt38) == 13, "D2GSPacketClt38: layout differs from the database");
+
+// struct D2GSPacketClt39
+// {
+// uint8_t nHeader;
+// int32_t nNpcGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt39) == 5, "D2GSPacketClt39: layout differs from the database");
 
 // struct D2GSPacketClt3A
 // {
@@ -9019,6 +9202,26 @@ int32_t bCopyToUnitBuffer;
 // };
 // static_assert(sizeof(D2GSPacketClt3D) == 5, "D2GSPacketClt3D: layout differs from the database");
 
+// struct D2GSPacketClt3E
+// {
+// uint8_t nHeader;
+// int32_t nItemGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt3E) == 5, "D2GSPacketClt3E: layout differs from the database");
+
+// struct D2GSPacketClt3F
+// {
+// uint8_t nHeader;
+// uint16_t nSoundId;
+// };
+// static_assert(sizeof(D2GSPacketClt3F) == 3, "D2GSPacketClt3F: layout differs from the database");
+
+// struct D2GSPacketClt40
+// {
+// uint8_t nHeader;
+// };
+// static_assert(sizeof(D2GSPacketClt40) == 1, "D2GSPacketClt40: layout differs from the database");
+
 // struct D2GSPacketClt41
 // {
 // uint8_t nHeader;
@@ -9028,9 +9231,14 @@ int32_t bCopyToUnitBuffer;
 // struct D2GSPacketClt42
 // {
 // uint8_t nHeader;
-// char szVersion[10];
 // };
-// static_assert(sizeof(D2GSPacketClt42) == 11, "D2GSPacketClt42: layout differs from the database");
+// static_assert(sizeof(D2GSPacketClt42) == 1, "D2GSPacketClt42: layout differs from the database");
+
+// struct D2GSPacketClt43
+// {
+// uint8_t nHeader;
+// };
+// static_assert(sizeof(D2GSPacketClt43) == 1, "D2GSPacketClt43: layout differs from the database");
 
 // struct D2GSPacketClt44
 // {
@@ -9051,6 +9259,32 @@ int32_t bCopyToUnitBuffer;
 // };
 // static_assert(sizeof(D2GSPacketClt45) == 9, "D2GSPacketClt45: layout differs from the database");
 
+// struct D2GSPacketClt46
+// {
+// uint8_t nHeader;
+// int32_t nMercGUID;
+// int32_t nUnitGUID;
+// int32_t nUnitType;
+// };
+// static_assert(sizeof(D2GSPacketClt46) == 13, "D2GSPacketClt46: layout differs from the database");
+
+// struct D2GSPacketClt47
+// {
+// uint8_t nHeader;
+// int32_t nMercGUID;
+// uint16_t nPosX;
+// uint16_t unk0x07;
+// uint16_t nPosY;
+// uint16_t unk0x0B;
+// };
+// static_assert(sizeof(D2GSPacketClt47) == 13, "D2GSPacketClt47: layout differs from the database");
+
+// struct D2GSPacketClt48
+// {
+// uint8_t nHeader;
+// };
+// static_assert(sizeof(D2GSPacketClt48) == 1, "D2GSPacketClt48: layout differs from the database");
+
 // struct D2GSPacketClt49
 // {
 // uint8_t nHeader;
@@ -9058,6 +9292,28 @@ int32_t bCopyToUnitBuffer;
 // int32_t nLevelId;
 // };
 // static_assert(sizeof(D2GSPacketClt49) == 9, "D2GSPacketClt49: layout differs from the database");
+
+// struct D2GSPacketClt4B
+// {
+// uint8_t nHeader;
+// int32_t nUnitType;
+// int32_t nUnitGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt4B) == 9, "D2GSPacketClt4B: layout differs from the database");
+
+// struct D2GSPacketClt4C
+// {
+// uint8_t nHeader;
+// int32_t nItemGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt4C) == 5, "D2GSPacketClt4C: layout differs from the database");
+
+// struct D2GSPacketClt4D
+// {
+// uint8_t nHeader;
+// uint16_t nMonStatsId;
+// };
+// static_assert(sizeof(D2GSPacketClt4D) == 3, "D2GSPacketClt4D: layout differs from the database");
 
 // struct D2GSPacketClt4F
 // {
@@ -9074,6 +9330,14 @@ int32_t bCopyToUnitBuffer;
 // };
 // static_assert(sizeof(D2GSPacketClt4F) == 7, "D2GSPacketClt4F: layout differs from the database");
 
+// struct D2GSPacketClt50
+// {
+// uint8_t nHeader;
+// int32_t nUnitGUID;
+// int32_t nGold;
+// };
+// static_assert(sizeof(D2GSPacketClt50) == 9, "D2GSPacketClt50: layout differs from the database");
+
 // struct D2GSPacketClt51
 // {
 // uint8_t nHeader;
@@ -9081,6 +9345,25 @@ int32_t bCopyToUnitBuffer;
 // int32_t nOwnerGUID;
 // };
 // static_assert(sizeof(D2GSPacketClt51) == 9, "D2GSPacketClt51: layout differs from the database");
+
+// struct D2GSPacketClt52
+// {
+// uint8_t nHeader;
+// uint8_t unk0x01[4];
+// };
+// static_assert(sizeof(D2GSPacketClt52) == 5, "D2GSPacketClt52: layout differs from the database");
+
+// struct D2GSPacketClt53
+// {
+// uint8_t nHeader;
+// };
+// static_assert(sizeof(D2GSPacketClt53) == 1, "D2GSPacketClt53: layout differs from the database");
+
+// struct D2GSPacketClt54
+// {
+// uint8_t nHeader;
+// };
+// static_assert(sizeof(D2GSPacketClt54) == 1, "D2GSPacketClt54: layout differs from the database");
 
 // struct D2GSPacketClt58
 // {
@@ -9106,6 +9389,26 @@ int32_t bCopyToUnitBuffer;
 // uint16_t nY;
 // };
 // static_assert(sizeof(D2GSPacketClt5F) == 5, "D2GSPacketClt5F: layout differs from the database");
+
+// struct D2GSPacketClt60
+// {
+// uint8_t nHeader;
+// };
+// static_assert(sizeof(D2GSPacketClt60) == 1, "D2GSPacketClt60: layout differs from the database");
+
+// struct D2GSPacketClt61
+// {
+// uint8_t nHeader;
+// uint16_t nBodyLoc;
+// };
+// static_assert(sizeof(D2GSPacketClt61) == 3, "D2GSPacketClt61: layout differs from the database");
+
+// struct D2GSPacketClt62
+// {
+// uint8_t nHeader;
+// int32_t nNpcGUID;
+// };
+// static_assert(sizeof(D2GSPacketClt62) == 5, "D2GSPacketClt62: layout differs from the database");
 
 // struct D2GSPacketClt63
 // {

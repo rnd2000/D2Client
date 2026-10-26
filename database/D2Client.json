@@ -10,7 +10,7 @@
   "tail_chunks": 26,
   "exports": 4,
   "globals": 1621,
-  "types": 2668
+  "types": 2705
  },
  "source_files": {
   "Gfx.cpp": 51,
