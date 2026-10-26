@@ -267,6 +267,7 @@ void __cdecl UI_EnablePanelToggleDelay()
 //1.10f: D2Client.0x6FB238B0
 //  Sets the deadline gnPanelToggleDelayUntil at now + 100 ms, if the mechanism is enabled. UI_SetUIToggle refuses a chatbox or escape-menu
 //  toggle while it is still in the future, so this is a 100 ms debounce on the click that closed a panel.
+//  void: eax is the flag on the disabled path and the deadline on the enabled one, and no caller reads it.
 void __cdecl UI_ArmPanelToggleDelay()
 {
     uint32_t nResult;
@@ -1497,6 +1498,7 @@ D2CellFileStrc *__fastcall UI_LoadImageFromUiDir(const char *szName)
 //1.10f: D2Client.0x6FB203C0
 //  Recomputes every cached palette index the UI holds: eight calls and nothing else. Sole caller GAME_PreloadActData. Every one of the eight
 //  is a nearest-match against the active palette, so an act change invalidates all of them at once.
+//  void: the tail jump to PANEL_CacheStaminaColourBlue leaves its palette index in al, and nothing reads it.
 void __cdecl UI_CachePaletteIndices()
 {
     INV_InitHighlightColors();
@@ -1578,6 +1580,7 @@ D2CellFileStrc *__cdecl UI_GetFocusImage()
 //1.10f: D2Client.0x6FB238D0
 //  Posts a synthetic WM_MOUSEMOVE, the cursor packed into lParam as `(y << 16) | x`. This is how the client makes the UI re-evaluate hover
 //  state without the mouse having moved, after a panel opens or closes for instance.
+//  void: no caller reads what the original leaves in eax.
 void __cdecl UI_PostSyntheticMouseMove()
 {
     LPARAM lParam;
@@ -1716,6 +1719,7 @@ D2CellFileStrc *__cdecl UI_GetBuySellButtonImage()
 //1.10f: D2Client.0x6FB24150
 //  The loading screen's own palette: two paths under DATA\GLOBAL, both handed to D2Win ordinal 10028. Its three callers are the disc-prompt
 //  screens, which run before the normal UI palette exists, which is why they load their own.
+//  void: no caller reads what the original leaves in eax.
 void __cdecl UI_LoadScreenLoadPalette()
 {
     char szPalDat[260];

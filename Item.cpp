@@ -339,6 +339,7 @@ void __fastcall ITEM_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pItem
 //  Stashes ITEMS_GetWeaponClassId(pItem) into one of the two hand slots: BODYLOC_RARM (4) into gnWeaponClassRArm, BODYLOC_LARM (5) into
 //  gnWeaponClassLArm, and nowhere for any other body location. ITEM_ItemMsg09_EquipOnPlayer passes the
 //  equip message's own nBodyLoc. Nothing in D2Client reads either slot.
+//  void: the weapon class is left in eax either way, and no caller reads it.
 void __fastcall ITEM_CacheWeaponClassForBodyLoc(D2UnitStrc *pItem, uint8_t nBodyLoc)
 {
     uint16_t nWeaponClassId = D2COMMON_ITEMS_GetWeaponClassId(pItem);
@@ -1940,6 +1941,7 @@ void __fastcall ITEM_ItemMsg0A_UpdateItem(D2GSPacketSrv9C *pPacket)
 //  Item message 0x12 of packet 0x9C: the forced-recreate counterpart of message 0x01. Where 0x01 asserts that the client does not already know
 //  the item, this one destroys whatever it finds and rebuilds. The creation's result is not checked, unlike every other message of the
 //  family: it goes straight into INVENTORY_SetCursorItem.
+//  void: eax is left holding CURSOR_SetHeldUnit's result (a tail return), and no caller reads it.
 void __fastcall ITEM_ItemMsg12_RecreateToCursor(D2GSPacketSrv9C *pPacket)
 {
     D2ItemSaveStrc tItemSave;
@@ -3861,6 +3863,7 @@ D2UnitStrc *__fastcall ITEM_ItemMsg15_UpdateStats(D2GSPacketSrv9D *pPacket)
 //  Item message 0x16 of packet 0x9D: the item is destroyed and rebuilt from the packet ("hNewItem"), its STAT_QUANTITY set to 1 on layer 0, and
 //  put on the cursor of the unit the packet names -- whatever that unit is: neither its type nor its inventory is tested, where 0x15 requires a
 //  player with one.
+//  void: eax is left holding CURSOR_SetHeldUnit's answer, and no caller reads it.
 void __fastcall ITEM_ItemMsg16_Unknown(D2GSPacketSrv9D *pPacket)
 {
     D2ItemSaveStrc tItemSave;

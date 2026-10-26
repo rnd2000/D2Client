@@ -105,6 +105,7 @@ static_assert(sizeof(Unicode) == 2, "push 2 / push 400h at 0x6FAEFAE2");
 //1.10f: D2Client.0x6FAEFA40
 //  Loads the scroll bar image, DATA\GLOBAL\ui\menu\textslid, into gpImgListBoxScrollBar: the one image every list box scroll bar is drawn from.
 //  Called once, by UI_InitUiSubsystems.
+//  void: eax is left holding ARCHIVE_CellFileLoad's own handle, and its one caller does not read it.
 void __cdecl LISTBOX_LoadScrollBarImage(void)
 {
     char szBuffer[260];
@@ -1130,6 +1131,7 @@ int32_t __fastcall LISTBOX_ImplGetSelection(D2ClientListBoxStrc *pListBox)
 //  levels deep, because (**ppBody)(ppBody, 1) dereferences twice to reach slot 0.
 //  DIFFERENCE: the original's prologue registers an exception-handling frame whose one unwind action runs LISTBOX_UiCtrlBaseDestruct on the proxy
 //  if the body's destructor throws; ours has none.
+//  void: eax is the body destructor's answer, or on a null body the old exception-list head (fs:0, 0x6FAF10B7); no caller reads it.
 void __fastcall LISTBOX_ProxyDestruct(int32_t *pProxy, int32_t nEdxUnused)
 {
     int32_t(__thiscall ***pBody)(int32_t, int32_t);

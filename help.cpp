@@ -677,6 +677,7 @@ void __stdcall HELP_Nullsub5(SMSGHANDLER_PARAMS *pMsg)
 
 //1.10f: D2Client.0x6FADA320
 //  Puts the mini-panel back if the help screen is what opened it (gbHelpOpenedMiniPanel); a mini-panel the player opened is left alone.
+//  void: eax is the flag on the early exit and UI_SetUIToggle's return otherwise, and no caller reads it.
 void __cdecl HELP_CloseMiniPanelIfOpened()
 {
     if (gbHelpOpenedMiniPanel)

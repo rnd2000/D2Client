@@ -62,6 +62,7 @@ void __cdecl MINIPANEL_LoadAlwaysRunFromRegistry()
 //1.10f: D2Client.0x6FB08DC0
 //  Saves the run toggle as "Always Run"; one caller, UI_ResetUiSubsystems. The value is saved as it is -- not inverted, as
 //  MINIPANEL_SaveAndUnload inverts "Mini Panel" -- and MINIPANEL_LoadAlwaysRunFromRegistry hands the same value back.
+//  void: eax is left holding Storm's answer from SRegSaveValue, which its one caller does not read.
 void __cdecl MINIPANEL_SaveAlwaysRunToRegistry()
 {
     uint32_t nRunToggled;

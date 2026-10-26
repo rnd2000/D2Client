@@ -199,6 +199,7 @@ int32_t __stdcall PARTICLE_GetUnitGfxCoordZRaw(D2UnitStrc *pUnit)
 
 //1.10f: D2Client.0x6FB5FC80
 //  Sets the position in game pixels, each shl 11; nothing is stored when the unit has no block.
+//  void: eax is left holding the block, NULL when the unit has none, and no caller reads it.
 void __stdcall PARTICLE_SetUnitGfxCoords(D2UnitStrc *pUnit, int32_t nX, int32_t nY, int32_t nZ)
 {
     D2ClientParticleStrc *pParticle;
@@ -216,6 +217,7 @@ void __stdcall PARTICLE_SetUnitGfxCoords(D2UnitStrc *pUnit, int32_t nX, int32_t 
 
 //1.10f: D2Client.0x6FB5FCB0
 //  Sets the velocity (+10h..+18h): game pixels a frame, shl 11 each when bScale is set, stored as given when it is not.
+//  void: eax is left holding the block, or NULL, and no caller reads it.
 void __stdcall PARTICLE_SetUnitGfxVector(D2UnitStrc *pUnit, int32_t nX, int32_t nY, int32_t nZ, int32_t bScale)
 {
     D2ClientParticleStrc *pParticle;
@@ -242,6 +244,7 @@ void __stdcall PARTICLE_SetUnitGfxVector(D2UnitStrc *pUnit, int32_t nX, int32_t 
 
 //1.10f: D2Client.0x6FB5FD00
 //  Sets the acceleration (+1Ch..+24h), the same shape as the velocity's setter; the step adds these three to the velocity each frame.
+//  void: no caller reads what the original leaves in eax.
 void __stdcall PARTICLE_SetUnitGfxVector2(D2UnitStrc *pUnit, int32_t nX, int32_t nY, int32_t nZ, int32_t bScale)
 {
     D2ClientParticleStrc *pParticle;
@@ -271,6 +274,7 @@ void __stdcall PARTICLE_SetUnitGfxVector2(D2UnitStrc *pUnit, int32_t nX, int32_t
 //  UNSCALED, so 0 is the flag that fits it.
 //  BUG (in a caller): MONSTER_EnvTickWorldstoneChips passes bFixedPoint 1 for a rising chip's 300 and a falling one's -100, which the step then
 //  holds as 614400 and -204800 game pixels, 2048 times out. LATENT: with no arc and 60 frames a chip ends short of even the unshifted 300 or -100.
+//  void: no caller reads what the original leaves in eax.
 void __stdcall PARTICLE_SetUnitParticleVector(D2UnitStrc *pUnit, int32_t nX, int32_t nY, int32_t nZ, int32_t bFixedPoint)
 {
     D2ClientParticleStrc *pParticle;
@@ -298,6 +302,7 @@ void __stdcall PARTICLE_SetUnitParticleVector(D2UnitStrc *pUnit, int32_t nX, int
 //1.10f: D2Client.0x6FB5FDA0
 //  Starts a bounce: the 4 flag set, the bounces left (+40h) and the restitution percentage (+44h) stored. The bytes store the restitution, then
 //  the flags, then the count: the order is the compiler's.
+//  void: no caller reads what the original leaves in eax.
 void __stdcall PARTICLE_StartUnitBounce(D2UnitStrc *pUnit, int32_t nBouncesLeft, int32_t nRestitution)
 {
     D2ClientParticleStrc *pParticle;
@@ -330,6 +335,7 @@ int32_t __stdcall PARTICLE_GetUnitBouncesLeft(D2UnitStrc *pUnit)
 //1.10f: D2Client.0x6FB5FDF0
 //  Ends the countdown: the 2 flag cleared, so nDurationFrames is no longer counted and the motion no longer ends on it. __fastcall with no load
 //  of its own: ecx, the unit, goes straight on to GFX_GetUnitParticles, and the retn is bare.
+//  void: no caller reads what the original leaves in eax.
 void __fastcall PARTICLE_ClearUnitTimedMotion(D2UnitStrc *pUnit)
 {
     D2ClientParticleStrc *pParticle;
@@ -533,6 +539,7 @@ void __fastcall PARTICLE_StartUnitArc(D2UnitStrc *pUnit, int32_t nStartHeight, i
 
 //1.10f: D2Client.0x6FB600F0
 //  Sets or clears the 10h, attached, by bAttached. __fastcall: the flag is kept in esi across GFX_GetUnitParticles.
+//  void: eax is left holding the block, and no caller reads it.
 void __fastcall PARTICLE_SetUnitAttached(D2UnitStrc *pUnit, int32_t bAttached)
 {
     D2ClientParticleStrc *pParticle;
@@ -551,6 +558,7 @@ void __fastcall PARTICLE_SetUnitAttached(D2UnitStrc *pUnit, int32_t bAttached)
 
 //1.10f: D2Client.0x6FB60110
 //  Ends the motion: the 1 set.
+//  void: no caller reads what the original leaves in eax.
 void __stdcall PARTICLE_StopUnitMotion(D2UnitStrc *pUnit)
 {
     D2ClientParticleStrc *pParticle;
@@ -565,6 +573,7 @@ void __stdcall PARTICLE_StopUnitMotion(D2UnitStrc *pUnit)
 //1.10f: D2Client.0x6FB60130
 //  Restarts the motion and sets the 8: the 1 cleared and the 8 set (and ecx, 0FFFFFFFEh / or ecx, 8). What the 8 means is open: the step never
 //  reads it.
+//  void: no caller reads what the original leaves in eax.
 void __stdcall PARTICLE_SetUnitParticleFlag(D2UnitStrc *pUnit)
 {
     D2ClientParticleStrc *pParticle;
@@ -597,6 +606,7 @@ BOOL __stdcall PARTICLE_IsUnitMotionActive(D2UnitStrc *pUnit)
 
 //1.10f: D2Client.0x6FB60180
 //  Sets or clears the 20h by bRising: with it the step's arrival test is "at or above the target", without it "at or below".
+//  void: eax is left holding the block, and no caller reads it.
 void __fastcall PARTICLE_SetUnitRisesToTarget(D2UnitStrc *pUnit, int32_t bRising)
 {
     D2ClientParticleStrc *pParticle;

@@ -118,6 +118,7 @@ void __cdecl SKILLSTREE_ClearSkillPointPending()
 //  the answer is stored back into the same record's pImage. A record is a handle plus a 30-byte file name, 34 bytes per class.
 //  BUG: the compiler puts the ADDRESS of the record's name buffer in ecx, so `if (!szFileName)` is always false and its assert path is dead;
 //  reproduced as the bytes have it. UNREACHABLE: the name is stored inline in the record, so its address is never NULL.
+//  void: eax is left holding the UI_LoadImageFromUiDir answer stored into pImage, and no caller reads it.
 void __cdecl SKILLSTREE_LoadChartImage()
 {
     char *szFileName;

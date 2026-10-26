@@ -311,6 +311,7 @@ int32_t __cdecl RECORD_GetRecordingRequested()
 //  read and written only by the installer), so this never runs: the recording is saved by GAME_AppModeGame's direct call alone.
 //  The previous handler is entered by `jmp` (0x6FAAEABE) with this call's three arguments still on the stack. It is GAME_TeardownGraphics,
 //  installed by GAME_InitGame. What the three arguments mean is not known, so they are named by position.
+//  void: eax is the previous handler's own answer (entered by a tail jump), or the null pointer's 0 with none, and no caller reads it.
 void __stdcall RECORD_CleanupHandler(int32_t nArg1, int32_t nArg2, int32_t nArg3)
 {
     RECORD_SaveToFile();

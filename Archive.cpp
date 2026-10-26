@@ -45,6 +45,7 @@ int32_t __fastcall ARCHIVE_OpenFileOrTrace(void *hArchive, const char *pszFileNa
 //1.10f: D2Client.0x6FB6B958
 //  Closes a file: FOG_FCloseFile behind an hFile assert at Archive.cpp:73. hArchive is not used here or anywhere in this file (the
 //  callers pass 0): Fog resolves the archive from the open handle.
+//  void: the tail jump to FOG_FCloseFile leaves its answer in eax, and no caller reads it.
 void __fastcall ARCHIVE_CloseFile(void *hArchive, void *hFile)
 {
     UNREFERENCED_PARAMETER(hArchive);
@@ -100,6 +101,7 @@ uint32_t __fastcall ARCHIVE_GetFileSize(void *hArchive, void *hFile, uint32_t *p
 //      FOG_FReadFile(hFile, pBuffer, dwBytesToRead, &dwBytesToRead, 0, 0, 0);
 //      if (dwBytesRequested != dwBytesToRead) -> assert
 //  bReadOk asks whether the read happened, the compare asks whether it was complete.
+//  void: eax is the last call's leftover, and no caller reads it.
 void __fastcall ARCHIVE_ReadFile(void *hArchive, void *hFile, void *pBuffer, uint32_t dwBytesToRead)
 {
     uint32_t dwBytesRequested;

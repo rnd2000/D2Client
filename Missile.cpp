@@ -185,6 +185,7 @@ void __fastcall MISSILE_CltDoFunc2(D2UnitStrc *pMissile)
 //  BUG: nLoops is overwritten: the last store before the spawn is `2 * nLevel - 2` into the same field (0x6FB303C2, 0x6FB303C6), whatever the
 //  argument was; only the 8 it set in the flags survives. REACHABLE: its one caller, pCltDoFunc 3, passes its evaluated dwCltCalc there.
 //  The original inlines UNITS_GetXPosition and UNITS_GetYPosition here.
+//  void: eax is the spawned missile, or PATH_HasMovedThisFrame's zero when the body is skipped, and no caller reads it.
 void __fastcall MISSILE_CltSpawnTrailSubMissile(D2UnitStrc *pMissile, int32_t nSubMissileId, int32_t nRange, int32_t nLoops)
 {
     D2MissileStrc tParams;

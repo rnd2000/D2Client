@@ -284,6 +284,7 @@ void __fastcall DLIGHTMAP_ReleaseLight(D2ClientLightStrc *ptLight)
 //      3. ENVIRONMENT_GetLightColorFromAct(gpAct, ...) plus ENVIRONMENT_GetIntensityFromAct(gpAct), the act's time-of-day light.
 //  So an unlit room inherits the act's environment colour rather than going dark. The intensity local stands for the argument slot of
 //  bUseRoomOverride: the flag is dead by the time DUNGEON_GetRGB_IntensityFromRoom runs and the compiler reuses its home.
+//  void: eax is left holding pnBlue, and its one caller does not read it.
 void __fastcall DLIGHTMAP_GetRoomLightColor(D2ActiveRoomStrc *pRoom, int32_t *pnIntensity, uint8_t *pnRed, uint8_t *pnGreen, uint8_t *pnBlue, int32_t bUseRoomOverride)
 {
     uint8_t nRed = 0;
@@ -480,6 +481,7 @@ void __fastcall DLIGHTMAP_RebuildAmbientLight(int32_t bClear)
 //  light falloff divides with a multiply and a >> 16.
 //  In the bytes the loop does inc ecx before the store and indexes with the already incremented value, so the element for i lands at
 //  0x6FBA29F4 + 4 * (i + 1); the array base is 0x6FBA29F8 and 0x6FBA29F4 is only the displacement.
+//  void: eax is left holding the last quotient, and its one caller does not read it.
 void __cdecl DLIGHTMAP_Init()
 {
     int32_t i;
@@ -1155,6 +1157,7 @@ void __fastcall DLIGHTMAP_SeedStaticGridFromAmbient(D2ClientLightStrc *pLight)
 //  Modes 2 and 3 carry the 8.8 interpolation weight; 1 and 4 do not, so a diagonal ray blends two neighbours while an axial one copies one.
 //  One harmless oddity, reproduced below: a pure-vertical ray still takes the arm that stores gnPropagateStepX = 1, because the dx == 0 case jumps
 //  into it; mode 4 never reads that global.
+//  void: eax is left holding the 8.8 interpolation fraction, or the -1 sentinel for modes 0, 1 and 4, and no caller reads it.
 void __fastcall DLIGHTMAP_SetupPropagation(int32_t nX, int32_t nY, D2ClientLightStrc *pLight)
 {
     int32_t nAbsDeltaX;

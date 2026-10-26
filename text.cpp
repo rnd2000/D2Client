@@ -834,6 +834,7 @@ int32_t __cdecl TEXT_OnPopupDismissed()
 
 //1.10f: D2Client.0x6FB1F310
 //  Five bytes: `jmp TEXT_OnPopupDismissed`. Written as a forwarding call; C++ has no way to spell a bare tail jump.
+//  void: no caller reads what the original leaves in eax.
 void __cdecl j_text_1AE00()
 {
     TEXT_OnPopupDismissed();
@@ -2477,6 +2478,7 @@ void __cdecl TEXT_DrawQuickMessages()
 //  rest, append at the tail, mirror into the scrollback, and drop the oldest node once the list holds more than 18 lines (not 18 nodes: the
 //  loop sums wLineCount). The tail walk asserts its own count against the list's.
 //  The original inlines TEXT_FreeMessageList's node free and the message-log listbox refresh here.
+//  void: no caller reads what the original leaves in eax.
 void __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
 {
     D2ClientTextNodeStrc *pMessage = (D2ClientTextNodeStrc *)FOG_Alloc(38, szTextCpp, 3394, 0);
@@ -2651,6 +2653,7 @@ void __fastcall TEXT_PushMessageLogEntry(D2ClientTextNodeStrc *pSrcMessage)
 //  Word-wraps a string into a node and puts it on both lists that show it. Six lines maximum, ten seconds to live, at most two on screen.
 //  The wrap has a defect (see the BUG note at the end of its loop) and a dead szUtf conversion.
 //  The original inlines TEXT_FreeMessageList's node free and the message-log listbox refresh here.
+//  void: no caller reads what the original leaves in eax.
 void __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
 {
     const enum Font ePrevFont = D2WIN_10127_SetFont(D2FONT_FONTINGAMECHAT);

@@ -643,6 +643,7 @@ void __fastcall MONSTER_CritterStandStill(D2UnitStrc *pUnit)
 //1.10f: D2Client.0x6FB3FC10
 //  Sets a critter's idle ticks: min(nTicks, 200) (signed compare) into the client timer MONSTER_CritterTickAmbient counts down, when the
 //  monster has one.
+//  void: eax is left holding the timer pointer from MONSTER_GetClientTimerPtr, and neither call site reads it.
 void __fastcall MONSTER_CritterSetCooldown(D2UnitStrc *pUnit, int32_t nTicks)
 {
     int32_t *pClientTimer;

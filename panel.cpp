@@ -216,6 +216,7 @@ void __cdecl PANEL_CacheStaminaColourAmber()
 
 //1.10f: D2Client.0x6FAFE970
 //  gnStaminaBarColours[2] = MixRGB(0, 0, 255).
+//  void: the index is left in al for UI_CachePaletteIndices' tail jump to hand on, and nothing reads it.
 void __cdecl PANEL_CacheStaminaColourBlue()
 {
     uint8_t nIndex;

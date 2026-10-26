@@ -252,6 +252,7 @@ void __fastcall SELECT_ApplySelectedUnit(D2UnitStrc *pUnit)
 
 //1.10f: D2Client.0x6FAB5D40
 //  Clears the selection and its lock.
+//  void: eax is left 0 by the `xor eax, eax` kept for the two stores, and no caller reads it.
 void __cdecl SELECT_ClearSelectedUnit()
 {
     gbSelectionLocked = 0;
@@ -642,6 +643,7 @@ void __fastcall SELECT_RosterPetsSetHirelingDisplayState(D2UnitStrc *pOwner, D2U
 //1.10f: D2Client.0x6FAB6450
 //  Sets or clears the click region -- the rectangle over which SELECT_UpdateSelectedUnit selects nothing, stored as left, top, right,
 //  bottom in memory order and compared exclusively there.
+//  void: eax is pRect[2], the last load, on the set path and never written on the clear path, and no caller reads it.
 void __fastcall SELECT_SetClickRegion(const int32_t *pRect)
 {
     if (pRect)

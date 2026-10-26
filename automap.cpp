@@ -445,6 +445,7 @@ void __cdecl AUTOMAP_LoadIconCels()
 //  The cell-group table: gaAutomapCellGroup (8192 bytes) is cleared to 0xFF, then the 49 (key, group) pairs of gaAutomapCellGroupPairs are
 //  written as table[key] = group -- a sparse table written as a dense one, 0xFF meaning not present.
 //  `nValue = 0` is done twice at the top and the first is dead. The leading `push ecx` only reserves a stack dword; it is not an argument.
+//  void: eax is left holding the last value read, and its one caller discards it.
 void __cdecl AUTOMAP_LoadSettings()
 {
     int32_t *pPair;
@@ -770,6 +771,7 @@ D2AutomapCellStrc *__cdecl AUTOMAP_AllocCell()
 //1.10f: D2Client.0x6FACD0C0
 //  AVL left rotation: promotes pNext, moves its pPrev onto the root's pNext and hangs the old root under it. The two asserts are at lines 563 and
 //  564 of the original file. The new subtree root is also written back through the parameter.
+//  void: the new subtree root is left in eax, and the one out-of-line caller ignores it.
 void __fastcall AUTOMAP_RotateLeft(D2AutomapCellStrc **pptRoot)
 {
     D2AutomapCellStrc *pRoot;
@@ -797,6 +799,7 @@ void __fastcall AUTOMAP_RotateLeft(D2AutomapCellStrc **pptRoot)
 
 //1.10f: D2Client.0x6FACD120
 //  AVL right rotation, the mirror of AUTOMAP_RotateLeft with pNext and pPrev swapped; its asserts are at lines 580 and 581.
+//  void: as in AUTOMAP_RotateLeft, the new subtree root is left in eax, and no caller reads it.
 void __fastcall AUTOMAP_RotateRight(D2AutomapCellStrc **pptRoot)
 {
     D2AutomapCellStrc *pRoot;

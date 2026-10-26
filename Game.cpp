@@ -579,6 +579,7 @@ void __stdcall GAME_WindowOnActivateApp(SMSGHANDLER_PARAMS *pMsg)
 //1.10f: D2Client.0x6FAA9230
 //  The Clear Screen key, reached through its five-byte thunk j_GAME_CmdTblActionClearScreen (0x6FAD3E50) in the key table. In a game the panels
 //  are closed without the automap; if none was open, the automap's centre offsets are recomputed and the panels closed again with the automap.
+//  void: eax is the answer of the tail jump at 0x6FAA9257, or gbInGame's 0 outside a game, and no caller reads it.
 void __stdcall GAME_CmdTblActionClearScreen()
 {
     int32_t nResult = gbInGame;
@@ -686,6 +687,7 @@ void __fastcall GAME_PreloadActData(uint8_t nAct, uint32_t dwGameSeed, int32_t n
 //1.10f: D2Client.0x6FAA9420
 //  D2Gfx's WINDOW_Destroy, then its Release. `retn 0Ch`: three stack arguments, none read (the handler slot's
 //  signature), named by position. GAME_InitGame installs it with FAULT_SetAssertHandler, whose slot nothing calls, so it never runs.
+//  void: eax is left holding the answer of D2Gfx's Release, and no caller reads it.
 void __stdcall GAME_TeardownGraphics(int32_t nArg1, int32_t nArg2, int32_t nArg3)
 {
     D2GFX_WINDOW_Destroy();

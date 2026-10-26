@@ -64,6 +64,7 @@ BOOL __stdcall INSERTDISC_DrawInsertDiscPrompt(int32_t nUnused)
 //  gpfnActiveMessageCallback and which only GAME_UpdateFrame calls -- the outer pump's idle function, which does not run while a prompt pumps
 //  its own messages; the Show functions install slot 1 just before their nested pump and slot 0 just after it, and the nested pump calls only
 //  its own idle function. UNREACHABLE: gpfnActiveMessageCallback is read only in GAME_UpdateFrame.
+//  void: eax is D2GFX_WINDOW_GetState's non-zero, D2GFX_StartDraw's zero or, by the tail jump, D2GFX_EndScene's answer, and no caller reads it.
 void __cdecl INSERTDISC_DrawInsertDiscPromptScene()
 {
     int32_t nResult = D2GFX_WINDOW_GetState();
@@ -313,6 +314,7 @@ BOOL __stdcall INSERTDISC_DrawInsertCinematicsDiscPrompt(int32_t nUnused)
 //  slot 2 is installed only around the cinematics prompt's nested pump, when GAME_UpdateFrame does not run.
 //  gnDiscPromptButton2Frame is loaded before the first button is drawn: the compiler cannot carry a global's load across a call into another
 //  module, so the source read it first, and so does this C.
+//  void: eax is D2GFX_WINDOW_GetState's non-zero, D2GFX_StartDraw's zero or, by the tail jump, D2GFX_EndScene's answer, and no caller reads it.
 void __cdecl INSERTDISC_DrawInsertCinematicsDiscPromptScene()
 {
     int32_t nResult = D2GFX_WINDOW_GetState();

@@ -1001,6 +1001,7 @@ void __cdecl DIALOG_Shutdown(void)
 //  BUG: FOG_Alloc is unchecked: a failed allocation stores null as the list head and dereferences it on the next line.
 //  Four parameters over a retn 8; nUnused1 and nUnused2 are read by nothing in the body (the call sites pass values that read like
 //  coordinates, and they are ignored).
+//  void: no caller reads what the original leaves in eax.
 void __fastcall DIALOG_AddControl(D2ClientDialogStrc *pDialog, void *pControl, int32_t nUnused1, int32_t nUnused2)
 {
     void *pOldHead;
@@ -1300,6 +1301,7 @@ void __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog)
 //  eHighlight == 1 instead recolours the line to 3 and draws no cel. The two are exclusive in effect but tested independently, so a third
 //  value gives neither.
 //  The font is saved once around the whole pass and restored at the end.
+//  void: no caller reads what the original leaves in eax.
 void __fastcall DIALOG_Draw(D2ClientDialogStrc *pDialog)
 {
     D2GfxDataStrc pData;

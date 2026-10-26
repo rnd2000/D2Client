@@ -2156,6 +2156,7 @@ void __fastcall SKILLS_SpawnMissileRingFromUnit(D2UnitStrc *pOwner, D2UnitStrc *
 //  0x6FABD665), so the bit alternates from one missile to the next; the block SKILLS_SpawnMissileRingFromUnit builds starts with it clear, so the
 //  first missile and every other one after it carry it.
 //  The original inlines SEED_RollRandomNumber here.
+//  void: eax is left holding the last spawn, which no caller reads.
 void __fastcall SKILLS_SpawnMissileRing(D2MissileStrc *pParams, D2MissileStrc *pAltParams)
 {
     D2MissileStrc *pSpawnParams;
@@ -2213,6 +2214,7 @@ void __fastcall SKILLS_SpawnMissileRing(D2MissileStrc *pParams, D2MissileStrc *p
 //  `sar edx, 1`, the sign bit added; 0x6FABD693..0x6FABD6AC), line 2120 of this file (`push 848h`); 41 or more ends the process. The axis tables
 //  hold eight pairs and the loop reads seven: the eighth, (14, -14), is the first missile's, which the code writes as two immediates (0x6FABD6CE,
 //  0x6FABD6D5).
+//  void: eax is the first spawn's unit, or the last axis missile's, and no caller reads it.
 void __fastcall SKILLS_SpawnMissileArray(int32_t nMissiles, D2MissileStrc *pParams)
 {
     int32_t nRemaining;

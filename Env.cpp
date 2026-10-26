@@ -751,6 +751,7 @@ void __cdecl ENV_UnloadImages()
 //1.10f: D2Client.0x6FAA7490
 //  Drops the weather in flight when the player moves: empties the splash and bubble pools, not the particle pool (ENV_ResetWeather does that
 //  one, and only outside act 5). The parameter, the caller's level-change flag, feeds ENV_ResetWeather's bForce.
+//  void: eax is DATAARRAYS_Reset(ghEnvBubbles)'s answer, or on the argument path ENV_ResetWeather's tail; its one caller does not read it.
 void __fastcall ENV_OnLevelChange(int32_t bIsLevelChange)
 {
 
@@ -767,6 +768,7 @@ void __fastcall ENV_OnLevelChange(int32_t bIsLevelChange)
 //  cltprgfunc1 of Thunder Storm), passes 0: it is the sorceress's Thunder Storm making the sky flash, and the thunderclap behind it is sound 202,
 //  event_thunder_1. bPlayThunder is stored into gbEnvPlayThunder, the flag deciding whether the next flash gets a thunderclap, so the first flash
 //  of every Thunder Storm is silent and the ones after it thunder (ENV_UpdateLightningAndThunder sets the flag to 1).
+//  void: eax holds the flag read for the test or the 1 just stored, and its one caller does not read it.
 void __fastcall ENV_TriggerLightningFlash(int32_t bPlayThunder)
 {
     if (!gbEnvLightningActive)

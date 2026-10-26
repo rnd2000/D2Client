@@ -189,6 +189,7 @@ void __fastcall CURSOR_SetCursorBuySell(int32_t nFrame, int32_t bAltFrame)
 //1.10f: D2Client.0x6FB575B0
 //  Puts an item on the cursor, or takes it off with NULL. Both go through CURSOR_PRotate with frame 0; the state is HandOpened when something
 //  is held and Default when nothing is.
+//  void: eax is left holding the 0 of `xor eax, eax`, and no caller reads it.
 void __fastcall CURSOR_SetHeldUnit(D2UnitStrc *pUnit)
 {
 

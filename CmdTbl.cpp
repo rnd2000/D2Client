@@ -609,6 +609,7 @@ void __cdecl CMDTBL_ActionShowItems(void)
 
 //1.10f: D2Client.0x6FAD3E50
 //  Command 38, a five-byte thunk: jmp GAME_CmdTblActionClearScreen, whose body is in another translation unit.
+//  void: no caller reads what the original leaves in eax.
 void __cdecl j_GAME_CmdTblActionClearScreen(void)
 {
     GAME_CmdTblActionClearScreen();
@@ -964,6 +965,7 @@ void __fastcall CMDTBL_UnbindCommand(int32_t eCmd, int32_t bPrimary)
 //1.10f: D2Client.0x6FAD4E90
 //  The snapshot pair: Configure Controls edits the live array and can be cancelled, so the screen takes a copy on the way in and puts it back on
 //  the way out. Both halves re-run the mouse mapping afterwards, because a restored binding changes which command each mouse button reaches.
+//  void: no caller reads what the original leaves in eax.
 void __cdecl CMDTBL_SaveBindingsSnapshot(void)
 {
     memcpy(sgSavedCmdMapping, gKeyBindings, 114 * sizeof(HotkeyMappingEntry));
@@ -979,6 +981,7 @@ void __cdecl CMDTBL_CommitBindings(void)
 }
 
 //1.10f: D2Client.0x6FAD4EC0
+//  void: no caller reads what the original leaves in eax.
 void __cdecl CMDTBL_RestoreBindingsSnapshot(void)
 {
     memcpy(gKeyBindings, sgSavedCmdMapping, 114 * sizeof(HotkeyMappingEntry));
@@ -2000,6 +2003,7 @@ void __cdecl CMDTBL_SaveBindingsToFiles(void)
 //  code first). Either way the buffer is validated on its three header words (magic 21335, version 37, length 1146), and a file that fails is
 //  freed and ignored rather than replaced: gDefaultCommandTable keeps whatever it had. Then the live array is cleared to -1, overwritten from
 //  the defaults, and the mouse mapping re-run. The `this` parameter is a flag, not an object: zero skips the disk file and goes to the MPQ.
+//  void: no caller reads what the original leaves in eax.
 void __fastcall CMDTBL_CommandLoadDefaultKeyBindings(void *bTryDiskFile)
 {
     int32_t nLangCode;
@@ -2071,6 +2075,7 @@ void __fastcall CMDTBL_CommandLoadDefaultKeyBindings(void *bTryDiskFile)
 //  handler (the tests CMDTBL_BindKey makes when the binding is created, repeated because a binding file can carry a code this machine cannot serve).
 //  The original's jump table gives each pseudo-code its own arm that re-tests the same value; here the validity switch is written once and the
 //  assignment is switched, the same in effect.
+//  void: no caller reads what the original leaves in eax.
 void __cdecl CMDTBL_COMMAND_PrepareMouseMappings(void)
 {
     int32_t nSlot;

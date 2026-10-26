@@ -52,6 +52,7 @@ static const char aDataGlobal[] = "DATA\\GLOBAL";
 //  Allocates the panel's own copy of the waypoint flags (WAYPOINTS_AllocWaypointData with a NULL pool; 16 bytes, uint16 nFlags[8], the shape of
 //  the pData field of server packet 0x63 that is copied into it) and clears gbWaypointCloseSent. That clear is not redundant with the one in
 //  WAYPOINT_OnOpenPacket: this runs once, when the client builds its panels, and the handler's runs per session.
+//  void: no caller reads what the original leaves in eax.
 void __cdecl WAYPOINT_AllocPanelData(void)
 {
     D2WaypointDataStrc *pData;

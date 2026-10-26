@@ -422,6 +422,7 @@ void __fastcall SKILLDESC_AttFunc2(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Ski
 //1.10f: D2Client.0x6FB0A7B0
 //  The nine-argument adapter: five slots dropped, the rest forwarded to SKILLDESC_ComputeAttackRating. It is only ever a callback (handed to the
 //  walker by SKILLDESC_AttFunc2 and SKILLDESC_AttFunc4); SKILLDESC_AddTotalDamageCallback is the other implementation of the same signature.
+//  void: no caller reads what the original leaves in eax.
 void __fastcall SKILLDESC_AttackRatingCallback(D2UnitStrc *pUnit, int32_t *pnValue, int32_t *pnColor, int32_t nUnusedA, int32_t nUnusedB, int32_t nSkillLevel, D2SkillStrc *pSkill, int32_t nUnusedC, D2UnitStrc *pWeapon)
 {
     SKILLDESC_ComputeAttackRating(pUnit, pnValue, pnColor, nSkillLevel, pSkill, pWeapon);
@@ -873,6 +874,7 @@ int32_t __fastcall SKILLDESC_FormatInt(struct Unicode *pwszOut, int32_t nValue, 
 //  %s is gszPlus ("+") when bSigned and gszEmptyString otherwise, chosen in each K arm on its own. The tests are signed (jge / jl against 2710h,
 //  0x6FB0B160, 0x6FB0B167), and so is the division (imul by 10624DD3h, sar edx, 6, the sign bit added: truncation towards zero). The text is
 //  built by wsprintfA into 32 bytes and widened by Unicode::toUnicode with a count of 32; the longest the formats can make is 26.
+//  void: eax is left holding what toUnicode returns, wszOut, and no caller reads it.
 void __fastcall SKILLDESC_FormatDamageRange(struct Unicode *wszOut, int32_t nMin, int32_t nMax, int32_t bSigned, int32_t bAllowK)
 {
     const char *pszSignPrefix;
@@ -1177,6 +1179,7 @@ int32_t __cdecl SKILLDESC_GetChargeUpDamagePercent(void)
 //  state checks override the colour last, DamBlue 3 then DamRed 1. The last block is a display guard, not arithmetic: when the max came out
 //  above zero, `if (*pnMin < 1) *pnMin = 1; if (*pnMax <= *pnMin) *pnMax = *pnMin + 1;`, so a panel line never reads 0-0 and never shows a max
 //  below its min; the damage the game deals is untouched. pUnused is accepted and never read.
+//  void: no caller reads what the original leaves in eax.
 void __fastcall SKILLDESC_AddItemElemDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, D2UnitStrc *pUnused, D2SkillStrc *pSkill)
 {
     D2SkillsTxt *pSkillsTxtRec;
@@ -1431,6 +1434,7 @@ int32_t __fastcall SKILLDESC_AddChargeUpElemDamage(D2UnitStrc *pUnit, int32_t *p
 //      *pnMin += (nPoisonLength * STAT_POISONMINDAM) >> 8
 //      *pnMax += (nPoisonLength * STAT_POISONMAXDAM) >> 8
 //  The poison stats are damage per frame in 8.8 fixed point, so what is added is the total over the duration.
+//  void: eax is the last maximum read, or nEType - 1 on the default arm, and no caller reads it.
 void __fastcall SKILLDESC_AddElemDamageByType(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, uint8_t nEType)
 {
     int32_t nPoisonLength;
@@ -1637,6 +1641,7 @@ void __fastcall SKILLDESC_DamFunc1(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Ski
 //  min/max pair and colour. One of the three implementations
 //  of the shared nine-argument callback (see SKILLDESC_ForEachWieldedWeapon), only ever taken as a function pointer. bUseItemOwnStats is 0, so
 //  the physical half reads the unit's damage stats rather than the item's, and pWeapon is handed on to the elemental half's unused fifth parameter.
+//  void: eax is left holding what SKILLDESC_AddItemElemDamage leaves, 1 on every path, and no caller reads it.
 void __fastcall SKILLDESC_AddTotalDamageCallback(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nExtraDamagePercent, int32_t nFlatBonus, D2SkillStrc *pSkill, int32_t nSrcDamOverride, D2UnitStrc *pWeapon)
 {
     SKILLDESC_AddWeaponPhysDamage(pUnit, pnMin, pnMax, pnColor, nExtraDamagePercent, nFlatBonus, pSkill, nSrcDamOverride, pWeapon, 0);
@@ -1813,6 +1818,7 @@ void __fastcall SKILLDESC_DrawDualWieldDamage(D2UnitStrc *pUnit, D2SkillStrc *pS
 //  before the >> 8, because poison damage in the txt is per frame and the panel shows the total. The poison branch also writes *pnColor = 2
 //  before the switch reaches the same answer (redundant, as found). Both getters take the last argument 1, so Fire, Lightning, Cold and Poison
 //  mastery are already in the numbers when they are added.
+//  void: eax is the maximum elemental damage the skill contributes (also stored in *pnMaxTotal), and no caller reads it.
 void __fastcall SKILLDESC_AddElemDamageAndColor(D2UnitStrc *pUnit, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnMinTotal, int32_t *pnMaxTotal, int32_t *pnColor)
 {
     int32_t nMinElem;
@@ -2246,6 +2252,7 @@ void __fastcall SKILLDESC_DamFunc3(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Ski
 //  multiply below applies. The max half clamps the maximum up to the minimum (`if (nMaxAfterBonus < *pnMin) *pnMax = *pnMin;`).
 //  Both out-parameters are zeroed on entry. result is a multi-role slot (pSkill, the inventory pointer, the left-hand weapon through the guard
 //  chain, the throwable test, and in the potion arm the switch selector itself); the `result = (int)pnColor` in case 1 is a register reuse.
+//  void: eax is the `result` slot: the switch selector, or a stack address for lightning and max/ticks for poison; no caller reads it.
 void __fastcall SKILLDESC_ComputeThrowDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nExtraDamagePercent, int32_t nUnusedA, D2SkillStrc *pSkill, int32_t nUnusedB, D2UnitStrc *pWeapon)
 {
     int32_t result;
@@ -5096,6 +5103,7 @@ void __fastcall SKILLDESC_ApplyFireMasteryToRange(D2SkillsTxt *pSkillsTxt, int32
 //1.10f: D2Client.0x6FB13120
 //  The Lightning arm: identical in shape to SKILLDESC_ApplyFireMasteryToRange, differing only in the element tested and the stat read. The two
 //  are the whole of this pair; there is no cold or poison arm. The original inlines DATATBLS_ApplyRatio here.
+//  void: no caller reads what the original leaves in eax.
 void __fastcall SKILLDESC_ApplyLightningMasteryToRange(D2SkillsTxt *pSkillsTxt, int32_t *pnMin, int32_t *pnMax)
 {
     D2UnitStrc *pPlayer;
@@ -5185,6 +5193,7 @@ int32_t __fastcall SKILLDESC_FormatFixedPointOrInt(struct Unicode *pwszOut, int3
 //1.10f: D2Client.0x6FB133C0
 //  "<min int>.<min frac>-<max int>.<max frac>", or the same with a leading '+'. The halves arrive already split; the caller does the /25 or the
 //  /256 itself. The sign test is bSigned alone: unlike the rest of the family there is no nMinInt >= 0 beside it.
+//  void: eax is Unicode::toUnicode's own answer, passed straight on, and its one caller ignores it.
 void __fastcall SKILLDESC_FormatFracRange(struct Unicode *pwszOut, int32_t nMinInt, int32_t nMinFrac, int32_t nMaxInt, int32_t nMaxFrac, int32_t bSigned)
 {
     char src[32];

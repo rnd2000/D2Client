@@ -331,6 +331,7 @@ int32_t __cdecl j_SOUNDCHAN_Get3DEnabled(void)
 //1.10f: D2Client.0x6FB07220
 //  `jmp SOUNDCHAN_Toggle3dSound` -- the 3DSound row's pfnOnChange. The row has already stepped its nValue when this runs, and the toggle
 //  takes no argument: SoundChan decides the new state itself, and Sound3DRefresh reads it back into the row on the next draw.
+//  void: no caller reads what the original leaves in eax.
 void __cdecl j_SOUNDCHAN_Toggle3dSound(void)
 {
     SOUNDCHAN_Toggle3dSound();
