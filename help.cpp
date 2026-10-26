@@ -676,20 +676,15 @@ void __stdcall HELP_Nullsub5(SMSGHANDLER_PARAMS *pMsg)
 
 
 //1.10f: D2Client.0x6FADA320
-//  Puts the mini-panel back if the help screen is what opened it (gbHelpOpenedMiniPanel); a mini-panel the player opened is left alone. Returns
-//  the flag when it was clear, otherwise UI_SetUIToggle's result; no caller reads it.
-int32_t __cdecl HELP_CloseMiniPanelIfOpened()
+//  Puts the mini-panel back if the help screen is what opened it (gbHelpOpenedMiniPanel); a mini-panel the player opened is left alone.
+void __cdecl HELP_CloseMiniPanelIfOpened()
 {
-    int32_t result;
-
-    result = gbHelpOpenedMiniPanel;
     if (gbHelpOpenedMiniPanel)
     {
-        result = UI_SetUIToggle(UI_MINIPANEL, UI_TURNOFF, 0);
+        UI_SetUIToggle(UI_MINIPANEL, UI_TURNOFF, 0);
         gbHelpOpenedMiniPanel = 0;
     }
 
-    return result;
 }
 
 

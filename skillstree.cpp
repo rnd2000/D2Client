@@ -115,10 +115,10 @@ void __cdecl SKILLSTREE_ClearSkillPointPending()
 
 //1.10f: D2Client.0x6FB16310
 //  Loads the current class's chart image: the file name of the class's record in sgptPlayerSkillTreeChart goes through UI_LoadImageFromUiDir, and
-//  the answer is stored back into the same record's pImage and returned. A record is a handle plus a 30-byte file name, 34 bytes per class.
+//  the answer is stored back into the same record's pImage. A record is a handle plus a 30-byte file name, 34 bytes per class.
 //  BUG: the compiler puts the ADDRESS of the record's name buffer in ecx, so `if (!szFileName)` is always false and its assert path is dead;
 //  reproduced as the bytes have it. UNREACHABLE: the name is stored inline in the record, so its address is never NULL.
-D2CellFileStrc *__cdecl SKILLSTREE_LoadChartImage()
+void __cdecl SKILLSTREE_LoadChartImage()
 {
     char *szFileName;
     D2CellFileStrc *hChartImage;
@@ -131,7 +131,6 @@ D2CellFileStrc *__cdecl SKILLSTREE_LoadChartImage()
     }
     hChartImage = UI_LoadImageFromUiDir(szFileName);
     sgptPlayerSkillTreeChart[gnPlayerClass].pImage = hChartImage;
-    return hChartImage;
 }
 
 
@@ -481,16 +480,15 @@ void __fastcall SKILLSTREE_DrawSkillIcon(D2C_Skills nSkillId, D2SkillsTxt *pSkil
 }
 
 //1.10f: D2Client.0x6FB16BE0
-//  Caches the palette index that renders as black: D2WIN_10034_MixRGB(0, 0, 0) answers it, it is kept in gnBlackPaletteIndex and returned as well.
+//  Caches the palette index that renders as black: D2WIN_10034_MixRGB(0, 0, 0) answers it, and it is kept in gnBlackPaletteIndex.
 //  Nothing reads the cache: SKILLSTREE_DrawTabLabel stores its own MixRGB(0, 0, 0) into the same global on every call, before the global is read,
 //  so what this function stores is overwritten before anything reads it.
-uint8_t __cdecl SKILLSTREE_CacheBlackIndex()
+void __cdecl SKILLSTREE_CacheBlackIndex()
 {
     uint8_t result;
 
     result = D2WIN_10034_MixRGB(0, 0, 0);
     gnBlackPaletteIndex = result;
-    return result;
 }
 
 

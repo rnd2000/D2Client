@@ -251,13 +251,11 @@ void __fastcall SELECT_ApplySelectedUnit(D2UnitStrc *pUnit)
 }
 
 //1.10f: D2Client.0x6FAB5D40
-//  Clears the selection and its lock and returns 0 -- the original's xor eax, eax, kept for the two stores. The int return is kept because
-//  PLAYER_DoClientAction's call at 0x6FB4956B leaves it live to its own exit, so it can carry this 0 out.
-int32_t __cdecl SELECT_ClearSelectedUnit()
+//  Clears the selection and its lock.
+void __cdecl SELECT_ClearSelectedUnit()
 {
     gbSelectionLocked = 0;
     gbHasSelectedUnit = 0;
-    return 0;
 }
 
 //1.10f: D2Client.0x6FAB5D50
@@ -644,11 +642,7 @@ void __fastcall SELECT_RosterPetsSetHirelingDisplayState(D2UnitStrc *pOwner, D2U
 //1.10f: D2Client.0x6FAB6450
 //  Sets or clears the click region -- the rectangle over which SELECT_UpdateSelectedUnit selects nothing, stored as left, top, right,
 //  bottom in memory order and compared exclusively there.
-//  On the set path the original's eax is the last load, pRect[2]; on the clear path it never writes eax, so the caller gets back whatever
-//  eax held when it called. C cannot say that.
-//  DIFFERENCE: ours answers 0 on the clear path. INERT: no caller of USEITEM_AnvilOpenPanel, which returns this answer as its own, reads a
-//  value the original left undefined.
-int32_t __fastcall SELECT_SetClickRegion(const int32_t *pRect)
+void __fastcall SELECT_SetClickRegion(const int32_t *pRect)
 {
     if (pRect)
     {
@@ -657,11 +651,10 @@ int32_t __fastcall SELECT_SetClickRegion(const int32_t *pRect)
         gnClickRegionRight = pRect[2];
         gnClickRegionBottom = pRect[3];
         gbClickRegionValid = 1;
-        return pRect[2];
+        return;
     }
 
     gbClickRegionValid = 0;
-    return 0;
 }
 
 //  The skills.txt flags and the skill id SELECT_SkillsResolveClientTarget reads as literals: bit 24, bits 21..23 of dwFlags[0], and skill 90.

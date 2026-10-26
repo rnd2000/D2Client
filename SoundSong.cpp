@@ -184,11 +184,9 @@ void __fastcall SOUNDSONG_UpdateMusic(uint32_t nTick)
 //  UpdateMusic plays the two and holds the song until the end.
 //  __fastcall with five arguments on the stack (`retn 14h`). The index is 0 or 1 at every call, so no other block is read; the slot is
 //  addressed as the bytes address it, from Block 1, which the C writes from the member's offset.
-//  The return is the end frame, eax as the bytes leave it. No caller was found that reads it; the `int` is kept because the tail-call chain
-//  was not followed to every end.
 //  BUG: the sounds.txt row is read untested (`mov esi, [esi+eax*4+50h]`, 0x6FB5706A, after SOUNDHDR_GetRecord at 0x6FB57041). LATENT: the row is
 //  read off an id that is bounded below only.
-int32_t __fastcall SOUNDSONG_ScheduleSting(D2C_Sounds nSound1, int32_t nDelay1, int32_t nDuration, int32_t nSongStateIndex, D2C_Sounds nSound2, int32_t nDelay2, int32_t bPlaySound2)
+void __fastcall SOUNDSONG_ScheduleSting(D2C_Sounds nSound1, int32_t nDelay1, int32_t nDuration, int32_t nSongStateIndex, D2C_Sounds nSound2, int32_t nDelay2, int32_t bPlaySound2)
 {
     D2SoundsTxt *pRecord;
     int32_t hSong;
@@ -224,7 +222,6 @@ int32_t __fastcall SOUNDSONG_ScheduleSting(D2C_Sounds nSound1, int32_t nDelay1, 
     gnSting2Frame = nFrame + nDelay2;
     nFrame = GAME_GetFrameCount() + nDuration;
     gnStingEndFrame = nFrame;
-    return nFrame;
 }
 
 

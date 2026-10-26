@@ -59,20 +59,19 @@ BOOL __stdcall INSERTDISC_DrawInsertDiscPrompt(int32_t nUnused)
 
 //1.10f: D2Client.0x6FADC180
 //  The prompt's frame, out of line: WINDOW_GetState, StartDraw, the panel, the cursor, EndScene -- the body INSERTDISC_DrawInsertDiscPrompt
-//  inlines, without the ping, the sound pump and the button test. It answers what the last call it made answered: D2GFX_WINDOW_GetState()'s
-//  non-zero on the first exit, D2GFX_StartDraw()'s zero on the second, and D2GFX_EndScene()'s from the tail jump. No stack argument.
+//  inlines, without the ping, the sound pump and the button test. No stack argument.
 //  BUG: this function is never called. Its one reference is slot 1 of gafnMessageCallbacks, which GAME_SetActiveMessageCallback(1) installs as
 //  gpfnActiveMessageCallback and which only GAME_UpdateFrame calls -- the outer pump's idle function, which does not run while a prompt pumps
 //  its own messages; the Show functions install slot 1 just before their nested pump and slot 0 just after it, and the nested pump calls only
 //  its own idle function. UNREACHABLE: gpfnActiveMessageCallback is read only in GAME_UpdateFrame.
-int32_t __cdecl INSERTDISC_DrawInsertDiscPromptScene()
+void __cdecl INSERTDISC_DrawInsertDiscPromptScene()
 {
     int32_t nResult = D2GFX_WINDOW_GetState();
     if (nResult)
-        return nResult;
+        return;
     nResult = D2GFX_StartDraw(1, 0, 0, 0);
     if (!nResult)
-        return nResult;
+        return;
 
     D2GFX_ClearScreen(0);
     D2WIN_10179();
@@ -104,7 +103,7 @@ int32_t __cdecl INSERTDISC_DrawInsertDiscPromptScene()
     CHAR_DrawTextCentered(gnBorderXDifference + 272, 310 - gnBorderYDifference, gnBorderXDifference + 368, D2LANG_GetStringFromTblIndex(STR_IDX_5102_OK), 0);
     D2WIN_10127_SetFont(nPrevFont2);
     CURSOR_DrawCursorDefault();
-    return D2GFX_EndScene();
+    D2GFX_EndScene();
 }
 
 //  Escape is a KEYDOWN record and so is Enter; the two button records are plain messages. The original carries the kinds as the literals 0
@@ -309,20 +308,19 @@ BOOL __stdcall INSERTDISC_DrawInsertCinematicsDiscPrompt(int32_t nUnused)
 }
 
 //1.10f: D2Client.0x6FADC970
-//  The two-button frame, out of line -- INSERTDISC_DrawInsertDiscPromptScene's counterpart, with the same three answers (WINDOW_GetState's
-//  non-zero, StartDraw's zero, EndScene's from the tail jump).
+//  The two-button frame, out of line -- INSERTDISC_DrawInsertDiscPromptScene's counterpart.
 //  BUG: this function is never called. Its one reference is slot 2 of gafnMessageCallbacks, which only GAME_UpdateFrame calls. UNREACHABLE:
 //  slot 2 is installed only around the cinematics prompt's nested pump, when GAME_UpdateFrame does not run.
 //  gnDiscPromptButton2Frame is loaded before the first button is drawn: the compiler cannot carry a global's load across a call into another
 //  module, so the source read it first, and so does this C.
-int32_t __cdecl INSERTDISC_DrawInsertCinematicsDiscPromptScene()
+void __cdecl INSERTDISC_DrawInsertCinematicsDiscPromptScene()
 {
     int32_t nResult = D2GFX_WINDOW_GetState();
     if (nResult)
-        return nResult;
+        return;
     nResult = D2GFX_StartDraw(1, 0, 0, 0);
     if (!nResult)
-        return nResult;
+        return;
 
     D2GFX_ClearScreen(0);
     D2WIN_10179();
@@ -356,7 +354,7 @@ int32_t __cdecl INSERTDISC_DrawInsertCinematicsDiscPromptScene()
     CHAR_DrawTextCentered(gnBorderXDifference + 338, 310 - gnBorderYDifference, gnBorderXDifference + 434, D2LANG_GetStringFromTblIndex(STR_IDX_5103_CANCEL), 0);
     D2WIN_10127_SetFont(nPrevFont2);
     CURSOR_DrawCursorDefault();
-    return D2GFX_EndScene();
+    D2GFX_EndScene();
 }
 
 

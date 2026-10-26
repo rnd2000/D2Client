@@ -104,8 +104,8 @@ static_assert(sizeof(Unicode) == 2, "push 2 / push 400h at 0x6FAEFAE2");
 
 //1.10f: D2Client.0x6FAEFA40
 //  Loads the scroll bar image, DATA\GLOBAL\ui\menu\textslid, into gpImgListBoxScrollBar: the one image every list box scroll bar is drawn from.
-//  Called once, by UI_InitUiSubsystems. The return is ARCHIVE_CellFileLoad's handle left in eax; the caller discards it.
-D2CellFileStrc *__cdecl LISTBOX_LoadScrollBarImage(void)
+//  Called once, by UI_InitUiSubsystems.
+void __cdecl LISTBOX_LoadScrollBarImage(void)
 {
     char szBuffer[260];
     D2CellFileStrc *pImage;
@@ -113,7 +113,6 @@ D2CellFileStrc *__cdecl LISTBOX_LoadScrollBarImage(void)
     sprintf(szBuffer, "%s\\ui\\menu\\textslid", aDataGlobal);
     pImage = ARCHIVE_CellFileLoad(szBuffer, 0);
     gpImgListBoxScrollBar = pImage;
-    return pImage;
 }
 
 
@@ -1129,21 +1128,17 @@ int32_t __fastcall LISTBOX_ImplGetSelection(D2ClientListBoxStrc *pListBox)
 //  Proxy destructor: reinstalls gVtblListBox, destroys the body through its own slot 0 with the delete flag set, then drops to
 //  gVtblUiControlBase. The original inlines LISTBOX_UiCtrlBaseDestruct for that last step. The body is read as a pointer to its vtable, three
 //  levels deep, because (**ppBody)(ppBody, 1) dereferences twice to reach slot 0.
-//  DIFFERENCE: when the body pointer is null the original's int return is whatever eax still holds from the prologue (the previous head of the
-//  exception list, mov eax, large fs:0 at 0x6FAF10B7); ours returns 0. No caller reads the value.
 //  DIFFERENCE: the original's prologue registers an exception-handling frame whose one unwind action runs LISTBOX_UiCtrlBaseDestruct on the proxy
 //  if the body's destructor throws; ours has none.
-int32_t __fastcall LISTBOX_ProxyDestruct(int32_t *pProxy, int32_t nEdxUnused)
+void __fastcall LISTBOX_ProxyDestruct(int32_t *pProxy, int32_t nEdxUnused)
 {
     int32_t(__thiscall ***pBody)(int32_t, int32_t);
-    int32_t nDtorResult = 0;
 
     *pProxy = (int32_t)(INT_PTR)&gVtblListBox;
     pBody = (int32_t(__thiscall ***)(int32_t, int32_t))(INT_PTR)pProxy[2];
     if (pBody)
-        nDtorResult = (**pBody)((int32_t)pBody, 1);
+        (**pBody)((int32_t)pBody, 1);
     *pProxy = (int32_t)(INT_PTR)&gVtblUiControlBase;
-    return nDtorResult;
 }
 
 

@@ -2107,7 +2107,7 @@ static_assert(MISSILE_DIABFIRE == 176, "SKILLS_SpawnMissileRing: `mov ebx, 0B0h`
 //  MONUNIQUE_MonUModRunCltFuncsForUnit, which returns for a NULL unit before its loop (0x6FB461C7); the test at 0x6FB456ED is the inlined mode
 //  accessor's own.
 //  The original inlines UNITS_GetXPosition and UNITS_GetYPosition here.
-D2UnitStrc *__fastcall SKILLS_SpawnMissileRingFromUnit(D2UnitStrc *pOwner, D2UnitStrc *pUnit, D2C_MissilesHcIdx nMissileId, D2C_MissilesHcIdx nAltMissileId, D2C_Skills nSkillId, int32_t nSkillLevel, int32_t nVelocity)
+void __fastcall SKILLS_SpawnMissileRingFromUnit(D2UnitStrc *pOwner, D2UnitStrc *pUnit, D2C_MissilesHcIdx nMissileId, D2C_MissilesHcIdx nAltMissileId, D2C_Skills nSkillId, int32_t nSkillLevel, int32_t nVelocity)
 {
     D2MissileStrc tParams;
     D2MissileStrc tAltParams;
@@ -2142,14 +2142,13 @@ D2UnitStrc *__fastcall SKILLS_SpawnMissileRingFromUnit(D2UnitStrc *pOwner, D2Uni
         pAltParams = &tAltParams;
     }
 
-    return SKILLS_SpawnMissileRing(&tParams, pAltParams);
+    SKILLS_SpawnMissileRing(&tParams, pAltParams);
 }
 
 
 //1.10f: D2Client.0x6FABD5D0
 //  The ring: pParams is in ecx and pAltParams in edx. Sixty-four spawns through MISSILE_ClientSpawn, each with the block's nTargetX and nTargetY
-//  set to the next pair of gnRingOffsetX and gnRingOffsetY (the points of a circle of radius 30, from (30, 0) round), and the answer is the last
-//  spawn's.
+//  set to the next pair of gnRingOffsetX and gnRingOffsetY (the points of a circle of radius 30, from (30, 0) round).
 //  With a second block, each step rolls the owner's seed (pParams->pOwner's pSeed, `add ecx, 20h` at 0x6FABD5E9) and spawns the second block when
 //  the roll's low dword is a multiple of 6 (`xor edx, edx / div ecx`, unsigned, 0x6FABD5FE..0x6FABD605), about one step in six. No stock call
 //  passes one.
@@ -2157,9 +2156,8 @@ D2UnitStrc *__fastcall SKILLS_SpawnMissileRingFromUnit(D2UnitStrc *pOwner, D2Uni
 //  0x6FABD665), so the bit alternates from one missile to the next; the block SKILLS_SpawnMissileRingFromUnit builds starts with it clear, so the
 //  first missile and every other one after it carry it.
 //  The original inlines SEED_RollRandomNumber here.
-D2UnitStrc *__fastcall SKILLS_SpawnMissileRing(D2MissileStrc *pParams, D2MissileStrc *pAltParams)
+void __fastcall SKILLS_SpawnMissileRing(D2MissileStrc *pParams, D2MissileStrc *pAltParams)
 {
-    D2UnitStrc *pMissile;
     D2MissileStrc *pSpawnParams;
     int32_t iRingStep;
 
@@ -2185,7 +2183,7 @@ D2UnitStrc *__fastcall SKILLS_SpawnMissileRing(D2MissileStrc *pParams, D2Missile
             }
 
             //  One call for both arms, the block in ecx (0x6FABD631).
-            pMissile = MISSILE_ClientSpawn(pSpawnParams);
+            MISSILE_ClientSpawn(pSpawnParams);
             ++iRingStep;
         } while (iRingStep < 64);
     }
@@ -2198,12 +2196,11 @@ D2UnitStrc *__fastcall SKILLS_SpawnMissileRing(D2MissileStrc *pParams, D2Missile
             if (pParams->nMissile == (int32_t)MISSILE_DIABFIRE)
                 pParams->dwFlags ^= MISSILESPAWN_NOLIGHT;
 
-            pMissile = MISSILE_ClientSpawn(pParams);
+            MISSILE_ClientSpawn(pParams);
             ++iRingStep;
         } while (iRingStep < 64);
     }
 
-    return pMissile;
 }
 
 
@@ -2211,15 +2208,13 @@ D2UnitStrc *__fastcall SKILLS_SpawnMissileRing(D2MissileStrc *pParams, D2Missile
 //  Up to 64 missiles from one point, all round: nMissiles is in ecx and pParams in edx. The caller's block is spawned again and again with a new
 //  nTargetX and nTargetY: first (14, -14); then, ring by ring, seven rings of four quadrants with two missiles each (the ring's two values,
 //  gnMissileArrayRingA and gnMissileArrayRingB, times the quadrant's signs, gnMissileArrayQuadrantX and gnMissileArrayQuadrantY, once as (A, B) and
-//  once swapped) and one missile on an axis, gnMissileArrayAxisX and gnMissileArrayAxisY. Every offset is between 19.7 and 20.4 long. The answer
-//  is the first spawn's, or the last axis missile's.
+//  once swapped) and one missile on an axis, gnMissileArrayAxisX and gnMissileArrayAxisY. Every offset is between 19.7 and 20.4 long.
 //  The count is asserted first: `(nMissiles - 1) / 5 <= MISSILEARRAY_TABLE_LENGTH`, compiled as `> 7` on a signed division (`imul` by 66666667h,
 //  `sar edx, 1`, the sign bit added; 0x6FABD693..0x6FABD6AC), line 2120 of this file (`push 848h`); 41 or more ends the process. The axis tables
 //  hold eight pairs and the loop reads seven: the eighth, (14, -14), is the first missile's, which the code writes as two immediates (0x6FABD6CE,
 //  0x6FABD6D5).
-D2UnitStrc *__fastcall SKILLS_SpawnMissileArray(int32_t nMissiles, D2MissileStrc *pParams)
+void __fastcall SKILLS_SpawnMissileArray(int32_t nMissiles, D2MissileStrc *pParams)
 {
-    D2UnitStrc *pMissile;
     int32_t nRemaining;
     int32_t nRing;
     int32_t nQuadrant;
@@ -2233,7 +2228,7 @@ D2UnitStrc *__fastcall SKILLS_SpawnMissileArray(int32_t nMissiles, D2MissileStrc
 
     pParams->nTargetX = 14;
     pParams->nTargetY = -14;
-    pMissile = MISSILE_ClientSpawn(pParams);
+    MISSILE_ClientSpawn(pParams);
 
     //  The ring bound is tested after each ring (`cmp ebx, 1Ch / jl`,
     //  0x6FABD767), the quadrant bound after each quadrant (`cmp edi, 10h /
@@ -2267,11 +2262,10 @@ D2UnitStrc *__fastcall SKILLS_SpawnMissileArray(int32_t nMissiles, D2MissileStrc
 
         pParams->nTargetX = gnMissileArrayAxisX[nRing];
         pParams->nTargetY = gnMissileArrayAxisY[nRing];
-        pMissile = MISSILE_ClientSpawn(pParams);
+        MISSILE_ClientSpawn(pParams);
         --nRemaining;
     }
 
-    return pMissile;
 }
 
 

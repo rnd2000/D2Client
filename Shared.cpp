@@ -783,7 +783,7 @@ LPVOID __fastcall CLIENT_VirtualAlloc(SIZE_T dwSize)
 
 //1.10f: D2Client.0x6FB6BDAB
 //  VirtualFree(lpAddress, 0, MEM_RELEASE), the whole function: it frees what CLIENT_VirtualAlloc gave (VIEW_FreeGouraudTables).
-BOOL __fastcall CLIENT_VirtualFree(LPVOID lpAddress)
+void __fastcall CLIENT_VirtualFree(LPVOID lpAddress)
 {
-    return VirtualFree(lpAddress, 0, MEM_RELEASE);
+    VirtualFree(lpAddress, 0, MEM_RELEASE);
 }

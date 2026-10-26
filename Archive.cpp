@@ -43,9 +43,9 @@ int32_t __fastcall ARCHIVE_OpenFileOrTrace(int32_t nUnused, const char *pszFileN
 
 
 //1.10f: D2Client.0x6FB6B958
-//  Closes a file: FOG_FCloseFile behind an hFile assert at Archive.cpp:73, reached by a tail jump, so the import's return value is this
-//  function's. hArchive is not used here or anywhere in this file (the callers pass 0): Fog resolves the archive from the open handle.
-int32_t __fastcall ARCHIVE_CloseFile(void *hArchive, void *hFile)
+//  Closes a file: FOG_FCloseFile behind an hFile assert at Archive.cpp:73. hArchive is not used here or anywhere in this file (the
+//  callers pass 0): Fog resolves the archive from the open handle.
+void __fastcall ARCHIVE_CloseFile(void *hArchive, void *hFile)
 {
     UNREFERENCED_PARAMETER(hArchive);
 
@@ -55,7 +55,7 @@ int32_t __fastcall ARCHIVE_CloseFile(void *hArchive, void *hFile)
         exit(-1);
     }
 
-    return FOG_FCloseFile(hFile);
+    FOG_FCloseFile(hFile);
 }
 
 
@@ -100,7 +100,7 @@ uint32_t __fastcall ARCHIVE_GetFileSize(void *hArchive, void *hFile, uint32_t *p
 //      FOG_FReadFile(hFile, pBuffer, dwBytesToRead, &dwBytesToRead, 0, 0, 0);
 //      if (dwBytesRequested != dwBytesToRead) -> assert
 //  bReadOk asks whether the read happened, the compare asks whether it was complete.
-int32_t __fastcall ARCHIVE_ReadFile(void *hArchive, void *hFile, void *pBuffer, uint32_t dwBytesToRead)
+void __fastcall ARCHIVE_ReadFile(void *hArchive, void *hFile, void *pBuffer, uint32_t dwBytesToRead)
 {
     uint32_t dwBytesRequested;
     int32_t bReadOk;
@@ -129,7 +129,6 @@ int32_t __fastcall ARCHIVE_ReadFile(void *hArchive, void *hFile, void *pBuffer, 
         exit(-1);
     }
 
-    return bReadOk;
 }
 
 

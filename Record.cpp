@@ -306,20 +306,17 @@ int32_t __cdecl RECORD_GetRecordingRequested()
 
 
 //1.10f: D2Client.0x6FAAEAB0
-//  Saves the recording, then chains to the handler that was installed before (gpfnPreviousCleanupHandler); with none, the answer is 0.
+//  Saves the recording, then chains to the handler that was installed before (gpfnPreviousCleanupHandler), if any.
 //  RECORD_InstallSaveOnCleanup puts this in the one slot FAULT_SetAssertHandler keeps, and nothing calls that slot (gpfnFaultAssertHandler is
 //  read and written only by the installer), so this never runs: the recording is saved by GAME_AppModeGame's direct call alone.
-//  The previous handler is entered by `jmp` (0x6FAAEABE) with this call's three arguments still on the stack, so it returns straight to this
-//  handler's caller with its own answer; the C is the call and the return. It is GAME_TeardownGraphics, installed by GAME_InitGame. Both
-//  handlers are `int __stdcall(int, int, int)`; what the three arguments mean is not known, so they are named by position.
-int32_t __stdcall RECORD_CleanupHandler(int32_t nArg1, int32_t nArg2, int32_t nArg3)
+//  The previous handler is entered by `jmp` (0x6FAAEABE) with this call's three arguments still on the stack. It is GAME_TeardownGraphics,
+//  installed by GAME_InitGame. What the three arguments mean is not known, so they are named by position.
+void __stdcall RECORD_CleanupHandler(int32_t nArg1, int32_t nArg2, int32_t nArg3)
 {
     RECORD_SaveToFile();
 
     if (gpfnPreviousCleanupHandler)
-        return gpfnPreviousCleanupHandler(nArg1, nArg2, nArg3);
-
-    return 0;
+        gpfnPreviousCleanupHandler(nArg1, nArg2, nArg3);
 }
 
 

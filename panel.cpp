@@ -215,15 +215,13 @@ void __cdecl PANEL_CacheStaminaColourAmber()
 }
 
 //1.10f: D2Client.0x6FAFE970
-//  gnStaminaBarColours[2] = MixRGB(0, 0, 255); the index is left in al for UI_CachePaletteIndices' tail jump to hand on, so this one keeps its return
-//  type.
-uint8_t __cdecl PANEL_CacheStaminaColourBlue()
+//  gnStaminaBarColours[2] = MixRGB(0, 0, 255).
+void __cdecl PANEL_CacheStaminaColourBlue()
 {
     uint8_t nIndex;
 
     nIndex = D2WIN_10034_MixRGB(0, 0, 0xFF);
     gnStaminaBarColours[2] = nIndex;
-    return nIndex;
 }
 
 //1.10f: D2Client.0x6FAFE990
@@ -258,9 +256,8 @@ BOOL __fastcall PANEL_IsPointOverRunButton(int32_t nXPos, int32_t nYPos)
 
 //1.10f: D2Client.0x6FB00C10
 //  When the player's room is known and its level id differs from gnPanelLastLevelId, the id is remembered and gnPanelLevelChangeTimer is set to 60,
-//  which nothing reads; reproduced whole. The return is eax as the body leaves it: the null room, or the level id. The one call is
-//  PANEL_Draw800BorderFrame's tail.
-int32_t __cdecl PANEL_ArmLevelChangeTimer()
+//  which nothing reads; reproduced whole. The one call is PANEL_Draw800BorderFrame's tail.
+void __cdecl PANEL_ArmLevelChangeTimer()
 {
     D2ActiveRoomStrc *pRoom;
     int32_t nLevelId;
@@ -268,7 +265,7 @@ int32_t __cdecl PANEL_ArmLevelChangeTimer()
     pRoom = CUNIT_GetPlayerRoom();
     if (!pRoom)
     {
-        return 0;
+        return;
     }
 
     nLevelId = D2COMMON_DUNGEON_GetLevelIdFromRoom(pRoom);
@@ -277,7 +274,6 @@ int32_t __cdecl PANEL_ArmLevelChangeTimer()
         gnPanelLastLevelId = nLevelId;
         gnPanelLevelChangeTimer = 60;
     }
-    return nLevelId;
 }
 
 //1.10f: D2Client.0x6FB01C30

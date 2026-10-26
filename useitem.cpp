@@ -416,7 +416,7 @@ void __stdcall USEITEM_AnvilOnCloseKey(SMSGHANDLER_PARAMS *pMsg)
 //  On success the click region is fixed to the panel's own rectangle, (107, 91) - (222, 278), so clicks outside it do not reach the world.
 //  On refusal it backs out by the short path: notify, reset, tear down, with no returning of the item to the cursor and no sound 1 (the
 //  original uses only the two lower helpers here), so a panel that cannot open does not leave the client thinking it did.
-int32_t __cdecl USEITEM_AnvilOpenPanel()
+void __cdecl USEITEM_AnvilOpenPanel()
 {
     int32_t pRect[4];
 
@@ -433,13 +433,14 @@ int32_t __cdecl USEITEM_AnvilOpenPanel()
         pRect[0] = 107;
         pRect[3] = 278;
         pRect[2] = 222;
-        return SELECT_SetClickRegion(pRect);
+        SELECT_SetClickRegion(pRect);
+        return;
     }
 
     ANVIL_NotifyInteractionEnd();
     ANVIL_ResetAndTeardown();
     //  The last call of ANVIL_ResetAndTeardown is this one; the original returns its answer from here, so this is not simply `return 0`.
-    return SELECT_SetClickRegion(NULL);
+    SELECT_SetClickRegion(NULL);
 }
 
 
@@ -448,11 +449,11 @@ int32_t __cdecl USEITEM_AnvilOpenPanel()
 //  through NPCMENU_NpcCloseInteraction rather than by telling the server.
 //  The argument is the NPC's GUID (the caller, NPCMENU_OnItemServiceClicked, loads it from sgUIState.NpcUnitGUID); it goes into
 //  gnAnvilNpcGUID, which nothing reads.
-int32_t __fastcall USEITEM_AnvilOpenPanelLocal(D2UnitGUID nNpcGUID)
+void __fastcall USEITEM_AnvilOpenPanelLocal(D2UnitGUID nNpcGUID)
 {
     gnAnvilPanelMode = 1;
     gnAnvilNpcGUID = nNpcGUID;
-    return USEITEM_AnvilOpenPanel();
+    USEITEM_AnvilOpenPanel();
 }
 
 
@@ -694,7 +695,7 @@ void __stdcall USEITEM_AnvilOnButtonDown(SMSGHANDLER_PARAMS *pMsg)
 //  The label the hover box shows is the record's own, except that Upgrade is rewritten three ways: to `ok` in mode 0, to Addsockets for larzuk
 //  and to Personalize for drehya. So one record serves four transactions.
 //  The hover test is skipped entirely when the cursor is past x 320 or in the bottom 48 pixels, which is the control panel's band.
-int32_t __cdecl USEITEM_AnvilDrawPanel()
+void __cdecl USEITEM_AnvilDrawPanel()
 {
     D2GfxDataStrc pData;
     int32_t nPrevFont;
@@ -800,5 +801,5 @@ int32_t __cdecl USEITEM_AnvilDrawPanel()
     if (gpAnvilDialog)
         DIALOG_Draw(gpAnvilDialog);
 
-    return D2WIN_10127_SetFont((Font)nPrevFont);
+    D2WIN_10127_SetFont((Font)nPrevFont);
 }

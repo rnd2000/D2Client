@@ -834,9 +834,9 @@ int32_t __cdecl TEXT_OnPopupDismissed()
 
 //1.10f: D2Client.0x6FB1F310
 //  Five bytes: `jmp TEXT_OnPopupDismissed`. Written as a forwarding call; C++ has no way to spell a bare tail jump.
-int32_t __cdecl j_text_1AE00()
+void __cdecl j_text_1AE00()
 {
-    return TEXT_OnPopupDismissed();
+    TEXT_OnPopupDismissed();
 }
 
 
@@ -2477,7 +2477,7 @@ void __cdecl TEXT_DrawQuickMessages()
 //  rest, append at the tail, mirror into the scrollback, and drop the oldest node once the list holds more than 18 lines (not 18 nodes: the
 //  loop sums wLineCount). The tail walk asserts its own count against the list's.
 //  The original inlines TEXT_FreeMessageList's node free and the message-log listbox refresh here.
-int32_t __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
+void __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
 {
     D2ClientTextNodeStrc *pMessage = (D2ClientTextNodeStrc *)(UINT_PTR)FOG_Alloc(38, szTextCpp, 3394, 0);
 
@@ -2575,7 +2575,7 @@ int32_t __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
         }
     }
 
-    return (int32_t)D2WIN_10127_SetFont(ePrevFont);
+    D2WIN_10127_SetFont(ePrevFont);
 }
 
 
@@ -2651,7 +2651,7 @@ void __fastcall TEXT_PushMessageLogEntry(D2ClientTextNodeStrc *pSrcMessage)
 //  Word-wraps a string into a node and puts it on both lists that show it. Six lines maximum, ten seconds to live, at most two on screen.
 //  The wrap has a defect (see the BUG note at the end of its loop) and a dead szUtf conversion.
 //  The original inlines TEXT_FreeMessageList's node free and the message-log listbox refresh here.
-int32_t __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
+void __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
 {
     const enum Font ePrevFont = D2WIN_10127_SetFont(D2FONT_FONTINGAMECHAT);
 
@@ -2762,7 +2762,7 @@ int32_t __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
     }
 
     D2WIN_10127_SetFont(ePrevFont);
-    return SOUNDINST_PlaySound(SOUND_CURSOR_SWITCH, nullptr, 0, 0, 0);
+    SOUNDINST_PlaySound(SOUND_CURSOR_SWITCH, nullptr, 0, 0, 0);
 }
 
 
@@ -3224,14 +3224,13 @@ static_assert(sizeof(D2C_Sounds) == 4 && SOUND_NONE == 0 && SOUND_CURSOR_PASS ==
 //1.10f: D2Client.0x6FB1F320
 //  An OFF then an ON, not a toggle: the message log is rebuilt from its list rather than merely hidden. Guarded on the dialog existing; on
 //  the refusal path the dialog pointer is what comes back in eax.
-int32_t __cdecl TEXT_MsgLogReopen()
+void __cdecl TEXT_MsgLogReopen()
 {
-    const int32_t nResult = (int32_t)sgTextState.pMessageLogDialog;
     if (!sgTextState.pMessageLogDialog)
-        return nResult;
+        return;
 
     UI_SetUIToggle(UI_MSGLOG, UI_TURNOFF, 0);
-    return UI_SetUIToggle(UI_MSGLOG, UI_TURNON, 0);
+    UI_SetUIToggle(UI_MSGLOG, UI_TURNON, 0);
 }
 
 

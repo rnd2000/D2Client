@@ -333,10 +333,10 @@ int32_t __fastcall OBJECT_ApplyDayNightMode(D2UnitStrc *pObject, int32_t bSkipAn
 //  take its unsigned low word shifted logically by one. The colour arguments arrive on the stack (retn 0Ch) and the constant intensity is 255.
 //  Ids 37 and 29 are DUMMY_TORCH1_TIKI and DUMMY_BRAZIER (the trace strings call them Torch1 Tiki and Brazier). +0x64 of the client unit is its
 //  pLight union arm.
-void __fastcall OBJECT_SetLight(D2UnitStrc *pObject, int32_t nRadius, int32_t nRed, int32_t nGreen, int32_t nBlue)
+void __fastcall OBJECT_SetLight(D2UnitStrc *pObject, uint16_t nRadius, uint8_t nRed, uint8_t nGreen, uint8_t nBlue)
 {
     D2ClientLightStrc *pLight = pObject->pLight;
-    uint32_t nRadiusWord = (uint16_t)nRadius;
+    uint32_t nRadiusWord = nRadius;
 
     if (!nRadiusWord)
     {
@@ -1607,10 +1607,9 @@ char *__fastcall OBJECT_GetPortalOwnerName(D2UnitStrc *pObject)
 }
 
 //1.10f: D2Client.0x6FB48560
-//  Sets it: STORM_SStrCopy into szOwner, bounded by 10h, the field's 16 bytes, and the copy's answer returned (call then retn, eax left as Storm's).
-//  Two call sites, both in SCMD_HandleSrv82_PortalOwner, one for each portal GUID, and neither reads the answer, so the bytes cannot tell int from
-//  void and the int stays.
-int32_t __fastcall OBJECT_SetPortalOwnerName(D2UnitStrc *pObject, const char *pszName)
+//  Sets it: STORM_SStrCopy into szOwner, bounded by 10h, the field's 16 bytes. Two call sites, both in SCMD_HandleSrv82_PortalOwner, one for
+//  each portal GUID.
+void __fastcall OBJECT_SetPortalOwnerName(D2UnitStrc *pObject, const char *pszName)
 {
-    return (int32_t)STORM_SStrCopy(pObject->pObjectData->szOwner, pszName, sizeof(pObject->pObjectData->szOwner));
+    STORM_SStrCopy(pObject->pObjectData->szOwner, pszName, sizeof(pObject->pObjectData->szOwner));
 }

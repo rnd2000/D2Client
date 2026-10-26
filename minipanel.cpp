@@ -61,14 +61,13 @@ void __cdecl MINIPANEL_LoadAlwaysRunFromRegistry()
 
 //1.10f: D2Client.0x6FB08DC0
 //  Saves the run toggle as "Always Run"; one caller, UI_ResetUiSubsystems. The value is saved as it is -- not inverted, as
-//  MINIPANEL_SaveAndUnload inverts "Mini Panel" -- and MINIPANEL_LoadAlwaysRunFromRegistry hands the same value back. int because the
-//  function ends in the SRegSaveValue call and leaves Storm's answer in eax; its one caller reads none of it.
-int32_t __cdecl MINIPANEL_SaveAlwaysRunToRegistry()
+//  MINIPANEL_SaveAndUnload inverts "Mini Panel" -- and MINIPANEL_LoadAlwaysRunFromRegistry hands the same value back.
+void __cdecl MINIPANEL_SaveAlwaysRunToRegistry()
 {
     uint32_t nRunToggled;
 
     nRunToggled = GAME_GetRunToggled();
-    return STORM_SRegSaveValue(szKeyName, szAlwaysRun, 0, nRunToggled);
+    STORM_SRegSaveValue(szKeyName, szAlwaysRun, 0, nRunToggled);
 }
 
 

@@ -267,9 +267,7 @@ void __cdecl UI_EnablePanelToggleDelay()
 //1.10f: D2Client.0x6FB238B0
 //  Sets the deadline gnPanelToggleDelayUntil at now + 100 ms, if the mechanism is enabled. UI_SetUIToggle refuses a chatbox or escape-menu
 //  toggle while it is still in the future, so this is a 100 ms debounce on the click that closed a panel.
-//  The return is read (once, in MINIPANEL_RunButtonAction), which is why it is not void: it is the flag on the disabled path and the
-//  deadline on the enabled one, whatever eax happens to hold.
-uint32_t __cdecl UI_ArmPanelToggleDelay()
+void __cdecl UI_ArmPanelToggleDelay()
 {
     uint32_t nResult;
 
@@ -279,7 +277,6 @@ uint32_t __cdecl UI_ArmPanelToggleDelay()
         nResult = GetTickCount() + 100;
         gnPanelToggleDelayUntil = nResult;
     }
-    return nResult;
 }
 
 
@@ -1500,7 +1497,7 @@ D2CellFileStrc *__fastcall UI_LoadImageFromUiDir(const char *szName)
 //1.10f: D2Client.0x6FB203C0
 //  Recomputes every cached palette index the UI holds: eight calls and nothing else. Sole caller GAME_PreloadActData. Every one of the eight
 //  is a nearest-match against the active palette, so an act change invalidates all of them at once.
-uint8_t __cdecl UI_CachePaletteIndices()
+void __cdecl UI_CachePaletteIndices()
 {
     INV_InitHighlightColors();
     PANEL_SetBoxFillColorRed();
@@ -1509,7 +1506,7 @@ uint8_t __cdecl UI_CachePaletteIndices()
     PANEL_CacheStaminaColourRed();
     PANEL_CacheStaminaColourAmber();
     PANEL_CacheHighlightColours();
-    return (uint8_t)PANEL_CacheStaminaColourBlue();
+    PANEL_CacheStaminaColourBlue();
 }
 
 
@@ -1581,12 +1578,12 @@ D2CellFileStrc *__cdecl UI_GetFocusImage()
 //1.10f: D2Client.0x6FB238D0
 //  Posts a synthetic WM_MOUSEMOVE, the cursor packed into lParam as `(y << 16) | x`. This is how the client makes the UI re-evaluate hover
 //  state without the mouse having moved, after a panel opens or closes for instance.
-LRESULT __cdecl UI_PostSyntheticMouseMove()
+void __cdecl UI_PostSyntheticMouseMove()
 {
     LPARAM lParam;
 
     lParam = (LPARAM)(((uint16_t)CURSOR_GetMouseY() << 16) | (uint16_t)CURSOR_GetMouseX());
-    return SendMessageA(D2GFX_WINDOW_GetWindow(), 0x200u, 0, lParam);
+    SendMessageA(D2GFX_WINDOW_GetWindow(), 0x200u, 0, lParam);
 }
 
 
@@ -1615,7 +1612,7 @@ void __cdecl UI_InitUiForPlayerUnit()
 //  Takes the per-player UI away: the middle member of the lifecycle trio, called when the local player unit is destroyed. It finishes by
 //  dropping whatever is on the cursor: a held item must not outlive the unit that was holding it. MEMPART_Nullsub1 is one byte, `retn`; it
 //  pops nothing, which `void __cdecl()` says.
-int32_t __cdecl UI_ResetUiSubsystems()
+void __cdecl UI_ResetUiSubsystems()
 {
     PARTY_UnloadImages();
     MEMPART_Nullsub1();
@@ -1644,7 +1641,7 @@ int32_t __cdecl UI_ResetUiSubsystems()
     }
 
     MINIPANEL_SaveAlwaysRunToRegistry();
-    return CURSOR_SetHeldUnit(NULL);
+    CURSOR_SetHeldUnit(NULL);
 }
 
 
@@ -1719,14 +1716,14 @@ D2CellFileStrc *__cdecl UI_GetBuySellButtonImage()
 //1.10f: D2Client.0x6FB24150
 //  The loading screen's own palette: two paths under DATA\GLOBAL, both handed to D2Win ordinal 10028. Its three callers are the disc-prompt
 //  screens, which run before the normal UI palette exists, which is why they load their own.
-int32_t __cdecl UI_LoadScreenLoadPalette()
+void __cdecl UI_LoadScreenLoadPalette()
 {
     char szPalDat[260];
     char szPalPl2[260];
 
     sprintf(szPalDat, "%s\\Palette\\Loading\\pal.dat", szDataGlobal);
     sprintf(szPalPl2, "%s\\Palette\\Loading\\pal.pl2", szDataGlobal);
-    return D2WIN_10028(szPalDat, szPalPl2);
+    D2WIN_10028(szPalDat, szPalPl2);
 }
 
 

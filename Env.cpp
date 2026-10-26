@@ -751,19 +751,15 @@ void __cdecl ENV_UnloadImages()
 //1.10f: D2Client.0x6FAA7490
 //  Drops the weather in flight when the player moves: empties the splash and bubble pools, not the particle pool (ENV_ResetWeather does that
 //  one, and only outside act 5). The parameter feeds ENV_ResetWeather's bForce; it stays a pointer with a cast because the single caller loads
-//  ecx from a stack slot, so the bytes cannot say pointer or int. The return is ENV_ResetWeather's own zero on the argument path, otherwise the
-//  result of DATAARRAYS_Reset(ghEnvBubbles): a leftover rather than an answer.
-int32_t __fastcall ENV_OnLevelChange(void *pParam)
+//  ecx from a stack slot, so the bytes cannot say pointer or int.
+void __fastcall ENV_OnLevelChange(void *pParam)
 {
-    int32_t nResult;
 
     FOG_DATAARRAYS_Reset(ghEnvSplashes);
-    nResult = FOG_DATAARRAYS_Reset(ghEnvBubbles);
+    FOG_DATAARRAYS_Reset(ghEnvBubbles);
 
     if (pParam)
-        return ENV_ResetWeather((int32_t)(UINT_PTR)pParam);
-
-    return nResult;
+        ENV_ResetWeather((int32_t)(UINT_PTR)pParam);
 }
 
 
@@ -772,21 +768,16 @@ int32_t __fastcall ENV_OnLevelChange(void *pParam)
 //  cltprgfunc1 of Thunder Storm), passes 0: it is the sorceress's Thunder Storm making the sky flash, and the thunderclap behind it is sound 202,
 //  event_thunder_1. bPlayThunder is stored into gbEnvPlayThunder, the flag deciding whether the next flash gets a thunderclap, so the first flash
 //  of every Thunder Storm is silent and the ones after it thunder (ENV_UpdateLightningAndThunder sets the flag to 1).
-int32_t __fastcall ENV_TriggerLightningFlash(int32_t bPlayThunder)
+void __fastcall ENV_TriggerLightningFlash(int32_t bPlayThunder)
 {
-    int32_t nResult;
-
-    nResult = gbEnvLightningActive;
     if (!gbEnvLightningActive)
     {
         gbEnvThunderScheduled = 0;
         gbEnvLightningActive = 1;
         gnEnvLightningDelay = 1;
         gbEnvPlayThunder = bPlayThunder;
-        return 1;
     }
 
-    return nResult;
 }
 
 //1.10f: D2Client.0x6FAA74F0

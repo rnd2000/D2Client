@@ -188,12 +188,9 @@ void __fastcall CURSOR_SetCursorBuySell(int32_t nFrame, int32_t bAltFrame)
 
 //1.10f: D2Client.0x6FB575B0
 //  Puts an item on the cursor, or takes it off with NULL. Both go through CURSOR_PRotate with frame 0; the state is HandOpened when something
-//  is held and Default when nothing is. The return value is a leftover (eax is zeroed first and nothing assigns it).
-int32_t __fastcall CURSOR_SetHeldUnit(D2UnitStrc *pUnit)
+//  is held and Default when nothing is.
+void __fastcall CURSOR_SetHeldUnit(D2UnitStrc *pUnit)
 {
-    int32_t nLeftInEax;
-
-    nLeftInEax = 0;
 
     gpCursorHeldUnit = pUnit;
     gnCursorFrame = 0;
@@ -203,7 +200,6 @@ int32_t __fastcall CURSOR_SetHeldUnit(D2UnitStrc *pUnit)
     if (pUnit)
         gnCursorState = CURSORSTATE_HandOpened;
 
-    return nLeftInEax;
 }
 
 

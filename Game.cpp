@@ -578,9 +578,8 @@ void __stdcall GAME_WindowOnActivateApp(SMSGHANDLER_PARAMS *pMsg)
 
 //1.10f: D2Client.0x6FAA9230
 //  The Clear Screen key, reached through its five-byte thunk j_GAME_CmdTblActionClearScreen (0x6FAD3E50) in the key table. In a game the panels
-//  are closed without the automap; if none was open, the automap's centre offsets are recomputed and the panels closed again with the automap, by
-//  a tail jmp (0x6FAA9257) whose answer is this one's. Outside a game the answer is gbInGame's 0.
-int32_t __stdcall GAME_CmdTblActionClearScreen()
+//  are closed without the automap; if none was open, the automap's centre offsets are recomputed and the panels closed again with the automap.
+void __stdcall GAME_CmdTblActionClearScreen()
 {
     int32_t nResult = gbInGame;
 
@@ -590,10 +589,9 @@ int32_t __stdcall GAME_CmdTblActionClearScreen()
         if (!nResult)
         {
             AUTOMAP_RecomputeCenterOffsets(0);
-            return UI_CloseAllPanels(1, 0);
+            UI_CloseAllPanels(1, 0);
         }
     }
-    return nResult;
 }
 
 //1.10f: D2Client.0x6FAA9260
@@ -686,12 +684,12 @@ void __fastcall GAME_PreloadActData(uint8_t nAct, uint32_t dwGameSeed, int32_t n
 }
 
 //1.10f: D2Client.0x6FAA9420
-//  D2Gfx's WINDOW_Destroy, then its Release, whose answer is this one's. `retn 0Ch`: three stack arguments, none read (the handler slot's
+//  D2Gfx's WINDOW_Destroy, then its Release. `retn 0Ch`: three stack arguments, none read (the handler slot's
 //  signature), named by position. GAME_InitGame installs it with FAULT_SetAssertHandler, whose slot nothing calls, so it never runs.
-int32_t __stdcall GAME_TeardownGraphics(int32_t nArg1, int32_t nArg2, int32_t nArg3)
+void __stdcall GAME_TeardownGraphics(int32_t nArg1, int32_t nArg2, int32_t nArg3)
 {
     D2GFX_WINDOW_Destroy();
-    return D2GFX_Release();
+    D2GFX_Release();
 }
 
 //1.10f: D2Client.0x6FAA9430

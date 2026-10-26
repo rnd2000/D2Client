@@ -77,7 +77,7 @@ static_assert((COLLIDE_VISIBLE | COLLIDE_BLANK) == 0x22,
 //  A static light (nType 2) also allocates pnStaticMap, 4 * (2r + 1) * (2r + 1) bytes with r the radius in subtiles, one dword per cell of the
 //  square it covers; every other kind carries NULL there. A light with no owner unit stores dwUnitType 6 (UNIT_TYPES_COUNT) and dwUnitId -1.
 //  The return value is used: it is the light pointer the owner keeps at +0x64.
-D2ClientLightStrc *__fastcall DLIGHTMAP_AddLight(D2UnitStrc *pUnit, int32_t nType, int32_t nRadiusSubtiles, int32_t nIntensity, int32_t nRed, int32_t nGreen, int32_t nBlue)
+D2ClientLightStrc *__fastcall DLIGHTMAP_AddLight(D2UnitStrc *pUnit, int32_t nType, int32_t nRadiusSubtiles, uint8_t nIntensity, uint8_t nRed, uint8_t nGreen, uint8_t nBlue)
 {
     D2ClientLightStrc *pLight;
     D2C_UnitTypes dwUnitType;
@@ -283,9 +283,8 @@ void __fastcall DLIGHTMAP_ReleaseLight(D2ClientLightStrc *ptLight)
 //      2. DUNGEON_GetRGB_IntensityFromRoom(pRoom, ...);
 //      3. ENVIRONMENT_GetLightColorFromAct(gpAct, ...) plus ENVIRONMENT_GetIntensityFromAct(gpAct), the act's time-of-day light.
 //  So an unlit room inherits the act's environment colour rather than going dark. The intensity local stands for the argument slot of
-//  bUseRoomOverride: the flag is dead by the time DUNGEON_GetRGB_IntensityFromRoom runs and the compiler reuses its home. The return is pnBlue; the
-//  one caller does not read it.
-uint8_t *__fastcall DLIGHTMAP_GetRoomLightColor(D2ActiveRoomStrc *pRoom, int32_t *pnIntensity, uint8_t *pnRed, uint8_t *pnGreen, uint8_t *pnBlue, int32_t bUseRoomOverride)
+//  bUseRoomOverride: the flag is dead by the time DUNGEON_GetRGB_IntensityFromRoom runs and the compiler reuses its home.
+void __fastcall DLIGHTMAP_GetRoomLightColor(D2ActiveRoomStrc *pRoom, int32_t *pnIntensity, uint8_t *pnRed, uint8_t *pnGreen, uint8_t *pnBlue, int32_t bUseRoomOverride)
 {
     uint8_t nRed = 0;
     uint8_t nGreen = 0;
@@ -307,7 +306,6 @@ uint8_t *__fastcall DLIGHTMAP_GetRoomLightColor(D2ActiveRoomStrc *pRoom, int32_t
     *pnRed = nRed;
     *pnGreen = nGreen;
     *pnBlue = nBlue;
-    return pnBlue;
 }
 
 //1.10f: D2Client.0x6FAA46A0
@@ -482,8 +480,7 @@ void __fastcall DLIGHTMAP_RebuildAmbientLight(int32_t bClear)
 //  light falloff divides with a multiply and a >> 16.
 //  In the bytes the loop does inc ecx before the store and indexes with the already incremented value, so the element for i lands at
 //  0x6FBA29F4 + 4 * (i + 1); the array base is 0x6FBA29F8 and 0x6FBA29F4 is only the displacement.
-//  The int return is the last quotient eax happens to hold; the one caller discards it.
-int32_t __cdecl DLIGHTMAP_Init()
+void __cdecl DLIGHTMAP_Init()
 {
     int32_t i;
     int32_t nResult;
@@ -498,7 +495,6 @@ int32_t __cdecl DLIGHTMAP_Init()
         gnReciprocal16[i] = nResult;
     }
 
-    return nResult;
 }
 
 //1.10f: D2Client.0x6FAA4A70
@@ -1157,10 +1153,9 @@ void __fastcall DLIGHTMAP_SeedStaticGridFromAmbient(D2ClientLightStrc *pLight)
 //      gnPropagateStepY  +1 or -1, the sign of dy
 //
 //  Modes 2 and 3 carry the 8.8 interpolation weight; 1 and 4 do not, so a diagonal ray blends two neighbours while an axial one copies one.
-//  The return is that fraction, or the -1 sentinel for 0/1/4; every caller discards it.
 //  One harmless oddity, reproduced below: a pure-vertical ray still takes the arm that stores gnPropagateStepX = 1, because the dx == 0 case jumps
 //  into it; mode 4 never reads that global.
-int32_t __fastcall DLIGHTMAP_SetupPropagation(int32_t nX, int32_t nY, D2ClientLightStrc *pLight)
+void __fastcall DLIGHTMAP_SetupPropagation(int32_t nX, int32_t nY, D2ClientLightStrc *pLight)
 {
     int32_t nAbsDeltaX;
     int32_t nAbsDeltaY;
@@ -1173,7 +1168,7 @@ int32_t __fastcall DLIGHTMAP_SetupPropagation(int32_t nX, int32_t nY, D2ClientLi
     if (nAbsDeltaX == 0 && nAbsDeltaY == 0)
     {
         gnPropagateMode = 0;
-        return nStepFrac;
+        return;
     }
 
     if (nAbsDeltaX >= 0)
@@ -1222,7 +1217,6 @@ int32_t __fastcall DLIGHTMAP_SetupPropagation(int32_t nX, int32_t nY, D2ClientLi
         gnPropagateMode = 4;
     }
 
-    return nStepFrac;
 }
 
 //1.10f: D2Client.0x6FAA5680

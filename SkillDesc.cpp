@@ -423,9 +423,9 @@ void __fastcall SKILLDESC_AttFunc2(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Ski
 //1.10f: D2Client.0x6FB0A7B0
 //  The nine-argument adapter: five slots dropped, the rest forwarded to SKILLDESC_ComputeAttackRating. It is only ever a callback (handed to the
 //  walker by SKILLDESC_AttFunc2 and SKILLDESC_AttFunc4); SKILLDESC_AddTotalDamageCallback is the other implementation of the same signature.
-int32_t __fastcall SKILLDESC_AttackRatingCallback(D2UnitStrc *pUnit, int32_t *pnValue, int32_t *pnColor, int32_t nUnusedA, int32_t nUnusedB, int32_t nSkillLevel, D2SkillStrc *pSkill, int32_t nUnusedC, D2UnitStrc *pWeapon)
+void __fastcall SKILLDESC_AttackRatingCallback(D2UnitStrc *pUnit, int32_t *pnValue, int32_t *pnColor, int32_t nUnusedA, int32_t nUnusedB, int32_t nSkillLevel, D2SkillStrc *pSkill, int32_t nUnusedC, D2UnitStrc *pWeapon)
 {
-    return SKILLDESC_ComputeAttackRating(pUnit, pnValue, pnColor, nSkillLevel, pSkill, pWeapon);
+    SKILLDESC_ComputeAttackRating(pUnit, pnValue, pnColor, nSkillLevel, pSkill, pWeapon);
 }
 
 
@@ -867,15 +867,14 @@ int32_t __fastcall SKILLDESC_FormatInt(struct Unicode *pwszOut, int32_t nValue, 
 
 
 //1.10f: D2Client.0x6FB0B140
-//  A damage range as text, "min-max", for the description lines. Returns what Unicode::toUnicode returns, wszOut; six callers leave it in eax
-//  as their own answer.
+//  A damage range as text, "min-max", for the description lines.
 //      bAllowK, nMin >= 10000   "%s%dK-%dK", both bounds (x + 500) / 1000   (0x6FB0B1B1..0x6FB0B202)
 //      bAllowK, nMax >= 10000   "%s%d-%dK", nMin as it is, nMax divided     (0x6FB0B16D..0x6FB0B1A3)
 //      otherwise                "+%d-%d" when bSigned, else "%d-%d"
 //  %s is gszPlus ("+") when bSigned and gszEmptyString otherwise, chosen in each K arm on its own. The tests are signed (jge / jl against 2710h,
 //  0x6FB0B160, 0x6FB0B167), and so is the division (imul by 10624DD3h, sar edx, 6, the sign bit added: truncation towards zero). The text is
 //  built by wsprintfA into 32 bytes and widened by Unicode::toUnicode with a count of 32; the longest the formats can make is 26.
-struct Unicode *__fastcall SKILLDESC_FormatDamageRange(struct Unicode *wszOut, int32_t nMin, int32_t nMax, int32_t bSigned, int32_t bAllowK)
+void __fastcall SKILLDESC_FormatDamageRange(struct Unicode *wszOut, int32_t nMin, int32_t nMax, int32_t bSigned, int32_t bAllowK)
 {
     const char *pszSignPrefix;
     char szText[32];
@@ -898,7 +897,7 @@ struct Unicode *__fastcall SKILLDESC_FormatDamageRange(struct Unicode *wszOut, i
     {
         wsprintfA(szText, "%d-%d", nMin, nMax);
     }
-    return Unicode::toUnicode(wszOut, szText, 32);
+    Unicode::toUnicode(wszOut, szText, 32);
 }
 
 
@@ -1179,7 +1178,7 @@ int32_t __cdecl SKILLDESC_GetChargeUpDamagePercent(void)
 //  state checks override the colour last, DamBlue 3 then DamRed 1. The last block is a display guard, not arithmetic: when the max came out
 //  above zero, `if (*pnMin < 1) *pnMin = 1; if (*pnMax <= *pnMin) *pnMax = *pnMin + 1;`, so a panel line never reads 0-0 and never shows a max
 //  below its min; the damage the game deals is untouched. nUnused is accepted and never read.
-int32_t __fastcall SKILLDESC_AddItemElemDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nUnused, D2SkillStrc *pSkill)
+void __fastcall SKILLDESC_AddItemElemDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nUnused, D2SkillStrc *pSkill)
 {
     D2SkillsTxt *pSkillsTxtRec;
     UINT_PTR nStatRow;   // integer cursor; see the DIFFERENCE note below
@@ -1290,7 +1289,6 @@ int32_t __fastcall SKILLDESC_AddItemElemDamage(D2UnitStrc *pUnit, int32_t *pnMin
     {
         *pnColor = 1;
     }
-    return 1;
 }
 
 
@@ -1433,10 +1431,8 @@ int32_t __fastcall SKILLDESC_AddChargeUpElemDamage(D2UnitStrc *pUnit, int32_t *p
 //      if that is <= 0:  nPoisonLength = STAT_POISONLENGTH / max(STAT_POISON_COUNT, 1)
 //      *pnMin += (nPoisonLength * STAT_POISONMINDAM) >> 8
 //      *pnMax += (nPoisonLength * STAT_POISONMAXDAM) >> 8
-//  The poison stats are damage per frame in 8.8 fixed point, so what is added is the total over the duration. The return value is the last
-//  maximum read, and the default arm returns nEType - 1 (one register holds the selector on the way in and the max damage on the way out), so
-//  the C returns whatever each arm would.
-int32_t __fastcall SKILLDESC_AddElemDamageByType(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, uint8_t nEType)
+//  The poison stats are damage per frame in 8.8 fixed point, so what is added is the total over the duration.
+void __fastcall SKILLDESC_AddElemDamageByType(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, uint8_t nEType)
 {
     int32_t nPoisonLength;
     int32_t nPoisonCount;
@@ -1449,23 +1445,23 @@ int32_t __fastcall SKILLDESC_AddElemDamageByType(D2UnitStrc *pUnit, int32_t *pnM
         *pnMin += D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_FIREMINDAM, 0);
         nMaxDam = D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_FIREMAXDAM, 0);
         *pnMax += nMaxDam;
-        return nMaxDam;
+        return;
     case 2:
         *pnMin += D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_LIGHTMINDAM, 0);
         nMaxDam = D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_LIGHTMAXDAM, 0);
         *pnMax += nMaxDam;
-        return nMaxDam;
+        return;
     case 3:
         *pnMin += D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_MAGICMINDAM, 0);
         nMaxDam = D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_MAGICMAXDAM, 0);
         *pnMax += nMaxDam;
-        return nMaxDam;
+        return;
     case 4:
     case 0xC:
         *pnMin += D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_COLDMINDAM, 0);
         nMaxDam = D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_COLDMAXDAM, 0);
         *pnMax += nMaxDam;
-        return nMaxDam;
+        return;
     case 5:
         nPoisonLength = D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_SKILL_POISON_OVERRIDE_LENGTH, 0);
         if (nPoisonLength <= 0)
@@ -1482,9 +1478,9 @@ int32_t __fastcall SKILLDESC_AddElemDamageByType(D2UnitStrc *pUnit, int32_t *pnM
         *pnMin += (nPoisonLength * nPoisonMinDam) >> 8;
         nMaxDam >>= 8;
         *pnMax += nMaxDam;
-        return nMaxDam;
+        return;
     default:
-        return nEType - 1;
+        return;
     }
 }
 
@@ -1639,13 +1635,13 @@ void __fastcall SKILLDESC_DamFunc1(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Ski
 
 //1.10f: D2Client.0x6FB0C3A0
 //  Physical plus elemental in one call: SKILLDESC_AddWeaponPhysDamage followed by SKILLDESC_AddItemElemDamage, accumulating into the same
-//  min/max pair and colour, and returning what the second returns (1 on every path, mov eax, 1 at 0x6FB0BAF3). One of the three implementations
+//  min/max pair and colour. One of the three implementations
 //  of the shared nine-argument callback (see SKILLDESC_ForEachWieldedWeapon), only ever taken as a function pointer. bUseItemOwnStats is 0, so
 //  the physical half reads the unit's damage stats rather than the item's, and pWeapon is handed on to the elemental half's unused fifth parameter.
-int32_t __fastcall SKILLDESC_AddTotalDamageCallback(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nExtraDamagePercent, int32_t nFlatBonus, D2SkillStrc *pSkill, int32_t nSrcDamOverride, D2UnitStrc *pWeapon)
+void __fastcall SKILLDESC_AddTotalDamageCallback(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nExtraDamagePercent, int32_t nFlatBonus, D2SkillStrc *pSkill, int32_t nSrcDamOverride, D2UnitStrc *pWeapon)
 {
     SKILLDESC_AddWeaponPhysDamage(pUnit, pnMin, pnMax, pnColor, nExtraDamagePercent, nFlatBonus, pSkill, nSrcDamOverride, pWeapon, 0);
-    return SKILLDESC_AddItemElemDamage(pUnit, pnMin, pnMax, pnColor, (int32_t)pWeapon, pSkill);
+    SKILLDESC_AddItemElemDamage(pUnit, pnMin, pnMax, pnColor, (int32_t)pWeapon, pSkill);
 }
 
 
@@ -1817,9 +1813,8 @@ void __fastcall SKILLDESC_DrawDualWieldDamage(D2UnitStrc *pUnit, int32_t nShared
 //  and anything else leaves *pnColor untouched. Poison is scaled by its duration: both halves are multiplied by SKILLS_GetElementalLength
 //  before the >> 8, because poison damage in the txt is per frame and the panel shows the total. The poison branch also writes *pnColor = 2
 //  before the switch reaches the same answer (redundant, as found). Both getters take the last argument 1, so Fire, Lightning, Cold and Poison
-//  mastery are already in the numbers when they are added. The return is not a status: it is the maximum elemental damage this skill
-//  contributes, which is also what goes into *pnMaxTotal.
-int32_t __fastcall SKILLDESC_AddElemDamageAndColor(D2UnitStrc *pUnit, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnMinTotal, int32_t *pnMaxTotal, int32_t *pnColor)
+//  mastery are already in the numbers when they are added.
+void __fastcall SKILLDESC_AddElemDamageAndColor(D2UnitStrc *pUnit, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t *pnMinTotal, int32_t *pnMaxTotal, int32_t *pnColor)
 {
     int32_t nMinElem;
     int32_t nMaxElem;
@@ -1861,7 +1856,6 @@ int32_t __fastcall SKILLDESC_AddElemDamageAndColor(D2UnitStrc *pUnit, D2SkillsTx
     }
     *pnMinTotal += nMinElem;
     *pnMaxTotal += nMaxElem;
-    return nMaxElem;
 }
 
 
@@ -2252,9 +2246,8 @@ void __fastcall SKILLDESC_DamFunc3(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Ski
 //  only while the unit has STATE_THROWINGMASTERY, and nExtraDamagePercent plus SKILLS_GetWeaponMasteryBonus together are what the percentage
 //  multiply below applies. The max half clamps the maximum up to the minimum (`if (nMaxAfterBonus < *pnMin) *pnMax = *pnMin;`).
 //  Both out-parameters are zeroed on entry. result is a multi-role slot (pSkill, the inventory pointer, the left-hand weapon through the guard
-//  chain, the throwable test, and in the potion arm the switch selector itself), so the return of a potion call is the selector rather than a
-//  damage; the `result = (int)pnColor` in case 1 is a register reuse. No caller reads the return.
-int32_t __fastcall SKILLDESC_ComputeThrowDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nExtraDamagePercent, int32_t nUnusedA, D2SkillStrc *pSkill, int32_t nUnusedB, D2UnitStrc *pWeapon)
+//  chain, the throwable test, and in the potion arm the switch selector itself); the `result = (int)pnColor` in case 1 is a register reuse.
+void __fastcall SKILLDESC_ComputeThrowDamage(D2UnitStrc *pUnit, int32_t *pnMin, int32_t *pnMax, int32_t *pnColor, int32_t nExtraDamagePercent, int32_t nUnusedA, D2SkillStrc *pSkill, int32_t nUnusedB, D2UnitStrc *pWeapon)
 {
     int32_t result;
     D2UnitStrc *pWeaponUsed;
@@ -2287,7 +2280,7 @@ int32_t __fastcall SKILLDESC_ComputeThrowDamage(D2UnitStrc *pUnit, int32_t *pnMi
     result = (int32_t)pSkill;
     if (!pSkill)
     {
-        return result;
+        return;
     }
 
     //  the guard chain: skill, inventory, left hand -- each fetched, tested, and returned as the failure value
@@ -2297,13 +2290,13 @@ int32_t __fastcall SKILLDESC_ComputeThrowDamage(D2UnitStrc *pUnit, int32_t *pnMi
         result = (int32_t)pUnit->pInventory;
         if (!result)
         {
-            return result;
+            return;
         }
         result = (int32_t)D2COMMON_INVENTORY_GetLeftHandWeapon(pUnit->pInventory);
         pWeapon = (D2UnitStrc *)result;
         if (!result)
         {
-            return result;
+            return;
         }
         pWeaponUsed = (D2UnitStrc *)result;
     }
@@ -2311,7 +2304,7 @@ int32_t __fastcall SKILLDESC_ComputeThrowDamage(D2UnitStrc *pUnit, int32_t *pnMi
     result = D2COMMON_ITEMS_CheckIfThrowable(pWeaponUsed);
     if (!result)
     {
-        return result;
+        return;
     }
 
     if (D2COMMON_ITEMS_CheckItemTypeId(pWeaponUsed, ITEMTYPE_MISSILE_POTION))
@@ -2358,7 +2351,7 @@ int32_t __fastcall SKILLDESC_ComputeThrowDamage(D2UnitStrc *pUnit, int32_t *pnMi
         }
         *pnMin = nMinOut;
         *pnMax = nMaxOut;
-        return result;
+        return;
     }
 
     nStatBonus = 0;
@@ -2409,7 +2402,6 @@ int32_t __fastcall SKILLDESC_ComputeThrowDamage(D2UnitStrc *pUnit, int32_t *pnMi
     }
     *pnMin += nElemMin;
     *pnMax += result;
-    return result;
 }
 
 
@@ -5074,9 +5066,8 @@ APPEND_COLOR_AND_BUILD:
 //  skill's element while descline 0x16 labels the line from MISSILE_GetElemTypeFromMissileId. The number can therefore disagree with the damage
 //  actually dealt. It does not generalise: every line that goes through SKILLS_GetMin/MaxElemDamage with the last argument 1 gets all four
 //  masteries from D2Common. Each half is DATATBLS_ApplyRatio(value, pct, 100), which the original inlines here.
-//  The return is the register's content, as found: the player pointer when the element does not match, zero when the mastery stat is (its own
-//  value, left in eax by the jump at 0x6FB12FB1), and the max's scaled product otherwise. Callers ignore it.
-int32_t __fastcall SKILLDESC_ApplyFireMasteryToRange(D2SkillsTxt *pSkillsTxt, int32_t *pnMin, int32_t *pnMax)
+//  nScaled first holds what the original's eax holds at that point; nothing reads it.
+void __fastcall SKILLDESC_ApplyFireMasteryToRange(D2SkillsTxt *pSkillsTxt, int32_t *pnMin, int32_t *pnMax)
 {
     D2UnitStrc *pPlayer;
     int32_t nScaled;
@@ -5100,14 +5091,13 @@ int32_t __fastcall SKILLDESC_ApplyFireMasteryToRange(D2SkillsTxt *pSkillsTxt, in
             *pnMax = nScaled + nMax;
         }
     }
-    return nScaled;
 }
 
 
 //1.10f: D2Client.0x6FB13120
 //  The Lightning arm: identical in shape to SKILLDESC_ApplyFireMasteryToRange, differing only in the element tested and the stat read. The two
 //  are the whole of this pair; there is no cold or poison arm. The original inlines DATATBLS_ApplyRatio here.
-int32_t __fastcall SKILLDESC_ApplyLightningMasteryToRange(D2SkillsTxt *pSkillsTxt, int32_t *pnMin, int32_t *pnMax)
+void __fastcall SKILLDESC_ApplyLightningMasteryToRange(D2SkillsTxt *pSkillsTxt, int32_t *pnMin, int32_t *pnMax)
 {
     D2UnitStrc *pPlayer;
     int32_t nScaled;
@@ -5131,7 +5121,6 @@ int32_t __fastcall SKILLDESC_ApplyLightningMasteryToRange(D2SkillsTxt *pSkillsTx
             *pnMax = nScaled + nMax;
         }
     }
-    return nScaled;
 }
 
 
@@ -5196,9 +5185,8 @@ int32_t __fastcall SKILLDESC_FormatFixedPointOrInt(struct Unicode *pwszOut, int3
 
 //1.10f: D2Client.0x6FB133C0
 //  "<min int>.<min frac>-<max int>.<max frac>", or the same with a leading '+'. The halves arrive already split; the caller does the /25 or the
-//  /256 itself. The sign test is bSigned alone: unlike the rest of the family there is no nMinInt >= 0 beside it. The return is Unicode::toUnicode's
-//  own, which is why it is the only formatter here that is not int; its one caller, descline 0x10's seconds range, ignores the result.
-struct Unicode *__fastcall SKILLDESC_FormatFracRange(struct Unicode *pwszOut, int32_t nMinInt, int32_t nMinFrac, int32_t nMaxInt, int32_t nMaxFrac, int32_t bSigned)
+//  /256 itself. The sign test is bSigned alone: unlike the rest of the family there is no nMinInt >= 0 beside it.
+void __fastcall SKILLDESC_FormatFracRange(struct Unicode *pwszOut, int32_t nMinInt, int32_t nMinFrac, int32_t nMaxInt, int32_t nMaxFrac, int32_t bSigned)
 {
     char src[32];
 
@@ -5210,7 +5198,7 @@ struct Unicode *__fastcall SKILLDESC_FormatFracRange(struct Unicode *pwszOut, in
     {
         wsprintfA(src, "%d.%d-%d.%d", nMinInt, nMinFrac, nMaxInt, nMaxFrac);
     }
-    return Unicode::toUnicode(pwszOut, src, 32);
+    Unicode::toUnicode(pwszOut, src, 32);
 }
 
 

@@ -179,19 +179,19 @@ void __fastcall MISSILE_CltDoFunc2(D2UnitStrc *pMissile)
 
 
 //1.10f: D2Client.0x6FB302E0
-//  Spawns one sub-missile where the parent stands, in a frame it moved; the whole body is behind PATH_HasMovedThisFrame, and its zero is the return
-//  then. The spawn is flags 5, owner, origin the parent, at the parent's position, with the parent's skill and level; nRange > 0 adds the range and
-//  0x8000, nLoops > 0 the loop count and 8 (`or al, 8` on the whole word). Returns the spawned missile.
+//  Spawns one sub-missile where the parent stands, in a frame it moved; the whole body is behind PATH_HasMovedThisFrame. The spawn is flags 5,
+//  owner, origin the parent, at the parent's position, with the parent's skill and level; nRange > 0 adds the range and 0x8000, nLoops > 0 the
+//  loop count and 8 (`or al, 8` on the whole word).
 //  BUG: nLoops is overwritten: the last store before the spawn is `2 * nLevel - 2` into the same field (0x6FB303C2, 0x6FB303C6), whatever the
 //  argument was; only the 8 it set in the flags survives. REACHABLE: its one caller, pCltDoFunc 3, passes its evaluated dwCltCalc there.
 //  The original inlines UNITS_GetXPosition and UNITS_GetYPosition here.
-D2UnitStrc *__fastcall MISSILE_CltSpawnTrailSubMissile(D2UnitStrc *pMissile, int32_t nSubMissileId, int32_t nRange, int32_t nLoops)
+void __fastcall MISSILE_CltSpawnTrailSubMissile(D2UnitStrc *pMissile, int32_t nSubMissileId, int32_t nRange, int32_t nLoops)
 {
     D2MissileStrc tParams;
     int32_t nLevel;
 
     if (!D2COMMON_PATH_HasMovedThisFrame(pMissile->pDynamicPath))
-        return NULL;
+        return;
 
     memset(&tParams, 0, sizeof(tParams));
     tParams.dwFlags = MISSILESPAWN_STARTPOS | MISSILESPAWN_VELOCITY;
@@ -218,7 +218,7 @@ D2UnitStrc *__fastcall MISSILE_CltSpawnTrailSubMissile(D2UnitStrc *pMissile, int
     nLevel = (int32_t)D2COMMON_MISSILE_GetLevel(pMissile);
     tParams.nSkillLevel = nLevel;
     tParams.nLoops = 2 * nLevel - 2;
-    return MISSILE_ClientSpawn(&tParams);
+    MISSILE_ClientSpawn(&tParams);
 }
 
 

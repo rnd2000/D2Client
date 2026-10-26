@@ -1001,7 +1001,7 @@ void __cdecl DIALOG_Shutdown(void)
 //  BUG: FOG_Alloc is unchecked: a failed allocation stores null as the list head and dereferences it on the next line.
 //  Four parameters over a retn 8; nUnused1 and nUnused2 are read by nothing in the body (the call sites pass values that read like
 //  coordinates, and they are ignored).
-uint32_t *__fastcall DIALOG_AddControl(D2ClientDialogStrc *pDialog, void *pControl, int32_t nUnused1, int32_t nUnused2)
+void __fastcall DIALOG_AddControl(D2ClientDialogStrc *pDialog, void *pControl, int32_t nUnused1, int32_t nUnused2)
 {
     void *pOldHead;
     uint32_t *pNode;
@@ -1019,7 +1019,6 @@ uint32_t *__fastcall DIALOG_AddControl(D2ClientDialogStrc *pDialog, void *pContr
     pNode[1] = (uint32_t)pOldHead;
     pStored = (uint32_t *)pDialog->pControlList;
     *pStored = (uint32_t)pControl;
-    return pStored;
 }
 
 //1.10f: D2Client.0x6FAD6950
@@ -1300,9 +1299,8 @@ void __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog)
 //  per selected line per frame, which in practice is once per frame since a dialog cannot have two selected lines.
 //  eHighlight == 1 instead recolours the line to 3 and draws no cel. The two are exclusive in effect but tested independently, so a third
 //  value gives neither.
-//  The font is saved once around the whole pass and restored by the return expression, `return D2WIN_10127_SetFont(nPrevFont)`, which is why
-//  this function has an int return that nothing reads.
-int32_t __fastcall DIALOG_Draw(D2ClientDialogStrc *pDialog)
+//  The font is saved once around the whole pass and restored at the end.
+void __fastcall DIALOG_Draw(D2ClientDialogStrc *pDialog)
 {
     D2GfxDataStrc pData;
     RECT pRect;
@@ -1400,7 +1398,7 @@ int32_t __fastcall DIALOG_Draw(D2ClientDialogStrc *pDialog)
         while (iLine < pDialog->NumLines);
     }
 
-    return D2WIN_10127_SetFont((enum Font)nPrevFont);
+    D2WIN_10127_SetFont((enum Font)nPrevFont);
 }
 
 //1.10f: D2Client.0x6FAD7090

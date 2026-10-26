@@ -643,9 +643,8 @@ void __fastcall MONSTER_CritterStandStill(D2UnitStrc *pUnit)
 
 //1.10f: D2Client.0x6FB3FC10
 //  Sets a critter's idle ticks: min(nTicks, 200) (signed compare) into the client timer MONSTER_CritterTickAmbient counts down, when the
-//  monster has one. The answer is the timer pointer, left in eax by MONSTER_GetClientTimerPtr; no call site reads it, but the `int *` is
-//  kept: the bytes cannot tell a pointer returned from one the last call left in eax.
-int32_t *__fastcall MONSTER_CritterSetCooldown(D2UnitStrc *pUnit, int32_t nTicks)
+//  monster has one.
+void __fastcall MONSTER_CritterSetCooldown(D2UnitStrc *pUnit, int32_t nTicks)
 {
     int32_t *pClientTimer;
 
@@ -656,7 +655,6 @@ int32_t *__fastcall MONSTER_CritterSetCooldown(D2UnitStrc *pUnit, int32_t nTicks
     if (pClientTimer)
         *pClientTimer = nTicks;
 
-    return pClientTimer;
 }
 
 //1.10f: D2Client.0x6FB3FC30

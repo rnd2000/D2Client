@@ -337,9 +337,9 @@ void __fastcall ITEM_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pItem
 
 //1.10f: D2Client.0x6FB2D040
 //  Stashes ITEMS_GetWeaponClassId(pItem) into one of the two hand slots: BODYLOC_RARM (4) into gnWeaponClassRArm, BODYLOC_LARM (5) into
-//  gnWeaponClassLArm, and nowhere for any other body location. The weapon class is returned either way. ITEM_ItemMsg09_EquipOnPlayer passes the
+//  gnWeaponClassLArm, and nowhere for any other body location. ITEM_ItemMsg09_EquipOnPlayer passes the
 //  equip message's own nBodyLoc. Nothing in D2Client reads either slot.
-uint16_t __fastcall ITEM_CacheWeaponClassForBodyLoc(D2UnitStrc *pItem, uint8_t nBodyLoc)
+void __fastcall ITEM_CacheWeaponClassForBodyLoc(D2UnitStrc *pItem, uint8_t nBodyLoc)
 {
     uint16_t nWeaponClassId = D2COMMON_ITEMS_GetWeaponClassId(pItem);
 
@@ -348,7 +348,6 @@ uint16_t __fastcall ITEM_CacheWeaponClassForBodyLoc(D2UnitStrc *pItem, uint8_t n
     else if (nBodyLoc == 5)
         gnWeaponClassLArm = nWeaponClassId;
 
-    return nWeaponClassId;
 }
 
 
@@ -1939,10 +1938,9 @@ void __fastcall ITEM_ItemMsg0A_UpdateItem(D2GSPacketSrv9C *pPacket)
 
 //1.10f: D2Client.0x6FB2EE00
 //  Item message 0x12 of packet 0x9C: the forced-recreate counterpart of message 0x01. Where 0x01 asserts that the client does not already know
-//  the item, this one destroys whatever it finds and rebuilds. Its int return is real: the body ends `return CURSOR_SetHeldUnit(...)`, a tail
-//  return of the callee's result; the caller ignores it. The creation's result is not checked, unlike every other message of the family: it goes
-//  straight into INVENTORY_SetCursorItem.
-int32_t __fastcall ITEM_ItemMsg12_RecreateToCursor(D2GSPacketSrv9C *pPacket)
+//  the item, this one destroys whatever it finds and rebuilds. The creation's result is not checked, unlike every other message of the
+//  family: it goes straight into INVENTORY_SetCursorItem.
+void __fastcall ITEM_ItemMsg12_RecreateToCursor(D2GSPacketSrv9C *pPacket)
 {
     D2ItemSaveStrc tItemSave;
     D2COMMON_ITEMS_GetCompactItemDataFromBitstream(pPacket->pBitstream, pPacket->nPacketSize - 8, 0, &tItemSave);
@@ -1967,7 +1965,7 @@ int32_t __fastcall ITEM_ItemMsg12_RecreateToCursor(D2GSPacketSrv9C *pPacket)
     }
 
     D2COMMON_INVENTORY_SetCursorItem(pInventory, pItem);
-    return CURSOR_SetHeldUnit(D2COMMON_INVENTORY_GetCursorItem(pInventory));
+    CURSOR_SetHeldUnit(D2COMMON_INVENTORY_GetCursorItem(pInventory));
 }
 
 
@@ -3862,16 +3860,15 @@ D2UnitStrc *__fastcall ITEM_ItemMsg15_UpdateStats(D2GSPacketSrv9D *pPacket)
 //1.10f: D2Client.0x6FB2FD00
 //  Item message 0x16 of packet 0x9D: the item is destroyed and rebuilt from the packet ("hNewItem"), its STAT_QUANTITY set to 1 on layer 0, and
 //  put on the cursor of the unit the packet names -- whatever that unit is: neither its type nor its inventory is tested, where 0x15 requires a
-//  player with one. The int return is the tail `CURSOR_SetHeldUnit(...)` call, as in ITEM_ItemMsg12_RecreateToCursor; the bytes cannot tell a
-//  returned result from the call in a void function, and the caller discards it.
-int32_t __fastcall ITEM_ItemMsg16_Unknown(D2GSPacketSrv9D *pPacket)
+//  player with one.
+void __fastcall ITEM_ItemMsg16_Unknown(D2GSPacketSrv9D *pPacket)
 {
     D2ItemSaveStrc tItemSave;
     D2COMMON_ITEMS_GetCompactItemDataFromBitstream(pPacket->pBitstream, pPacket->nPacketSize - 13, 0, &tItemSave);
 
     D2UnitStrc *pOwner = CUNIT_FindUnitByGuidAndType(pPacket->nUnitId, (D2C_UnitTypes)pPacket->nUnitType);
     if (!pOwner)
-        return 0;
+        return;
 
     CUNIT_RemoveUnitById(pPacket->nItemId, UNIT_ITEM);
     D2UnitStrc *pNewItem = ITEM_CreateItemFromItemUnitExMsg(pPacket, &tItemSave, 0, 0, 0);
@@ -3885,5 +3882,5 @@ int32_t __fastcall ITEM_ItemMsg16_Unknown(D2GSPacketSrv9D *pPacket)
 
     D2InventoryStrc *pInventory = pOwner->pInventory;
     D2COMMON_INVENTORY_SetCursorItem(pInventory, pNewItem);
-    return CURSOR_SetHeldUnit(D2COMMON_INVENTORY_GetCursorItem(pInventory));
+    CURSOR_SetHeldUnit(D2COMMON_INVENTORY_GetCursorItem(pInventory));
 }
