@@ -733,7 +733,7 @@ void __cdecl HELP_DrawHelpHint()
     Unicode wszKeySuffix[30];
 
     Unicode::strcpy(wszText, D2LANG_GetStringFromTblIndex(STR_IDX_4177_minipanelHelp));
-    if ((uint16_t)CMDTBL_ControlsFindBoundKey(HOTKEY_HELP, TRUE) != 0xFFFF)
+    if (CMDTBL_ControlsFindBoundKey(HOTKEY_HELP, TRUE) != D2VK_INVALID)
     {
         memset(wszKeySuffix, 0, sizeof(wszKeySuffix));
         pwszKeyName = CMDTBL_ControlsGetBoundKeyName(HOTKEY_HELP, TRUE);
@@ -741,7 +741,7 @@ void __cdecl HELP_DrawHelpHint()
         Unicode::sprintf(30, wszKeySuffix, pwszFormat, pwszKeyName);
         Unicode::strcat(wszText, wszKeySuffix);
     }
-    if ((uint16_t)CMDTBL_ControlsFindBoundKey(HOTKEY_HELP, FALSE) != 0xFFFF)
+    if (CMDTBL_ControlsFindBoundKey(HOTKEY_HELP, FALSE) != D2VK_INVALID)
     {
         memset(wszKeySuffix, 0, sizeof(wszKeySuffix));
         pwszKeyName = CMDTBL_ControlsGetBoundKeyName(HOTKEY_HELP, FALSE);

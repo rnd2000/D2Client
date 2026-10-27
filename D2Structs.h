@@ -143,6 +143,7 @@ struct D2AreaEntryQuestLineStrc;
 struct D2ArenaUnitStrc;
 struct D2ArmTypeTxt;
 // struct D2AuraCallbackStrc;
+struct D2AutomapCellBlockStrc;
 struct D2AutomapCellStrc;
 struct D2AutomapDataStrc;
 struct D2AutomapLayerStrc;
@@ -183,6 +184,7 @@ struct D2ClientCofCacheNodeStrc;
 struct D2ClientCofCacheStrc;
 struct D2ClientCofNodeStrc;
 struct D2ClientDamageGroupStrc;
+struct D2ClientDialogControlNodeStrc;
 struct D2ClientDialogLineStrc;
 struct D2ClientDialogStrc;
 struct D2ClientDrawNodeStrc;
@@ -931,6 +933,7 @@ struct D2UiButtonImplVtbl;
 struct D2UiButtonProxyVtbl;
 struct D2UiControlBaseVtbl;
 struct D2UiControlProxyVtbl;
+struct D2UiCtrlProxyStrc;
 struct D2UiEditBoxImplVtbl;
 struct D2UiSpinnerImplVtbl;
 struct D2UiSpinnerProxyVtbl;
@@ -1055,10 +1058,12 @@ struct Unicode;
 // struct anon_A0B592BF32EB0681EBBB5D252D2EFAF3;
 // struct anon_A3719FF1A699486E8629E16291555876;
 // struct anon_A85CD68F813312C5E6BB1494B5EEB9CC;
+// union anon_AB19E8A5033E5909EFA8FCA6D6F5DF76;
 // struct anon_ABAA6F78D0909A5EC38B8DAC19886F2D;
 // struct anon_B40DC28E98FE5F06F50437E23D68FF31;
 // union anon_BBC6B91D16152AC7247EC2523B3ED144;
 // struct anon_CAAEA91160A63143F2AE058B4EF58ACE;
+// union anon_EFA6E06670436623E611E46BDB7EB3A5;
 // union anon_FB734C8D8ED8BB4F2FAE5CDADDE28D6C;
 struct ptMsgStruct;
 
@@ -1255,6 +1260,12 @@ uint16_t yPixel;
 uint16_t wWeight;
 struct D2AutomapCellStrc *pPrev;
 struct D2AutomapCellStrc *pNext;
+};
+
+struct D2AutomapCellBlockStrc
+{
+D2AutomapCellStrc pCells[512];
+struct D2AutomapCellBlockStrc *pNext;
 };
 
 struct D2AutomapDataStrc
@@ -1629,6 +1640,12 @@ int32_t bPresent;
 int32_t bIsRange;
 };
 
+struct D2ClientDialogControlNodeStrc
+{
+D2UiCtrlProxyStrc *pControl;
+struct D2ClientDialogControlNodeStrc *pNext;
+};
+
 struct D2ClientDialogLineStrc
 {
 Unicode wszText[120];
@@ -1673,7 +1690,7 @@ int32_t eHighlight;
 DIALOGCALLBACK pfnCallback;
 DIALOGCALLBACK pfnCallback2;
 struct D2ClientDialogLineStrc Lines[10];
-void *pControlList;
+D2ClientDialogControlNodeStrc *pControlList;
 struct D2ClientDialogStrc *pNext;
 };
 
@@ -5432,22 +5449,22 @@ void (__fastcall *pfnAddEntry)(D2ClientListBoxStrc *pListBox, int32_t nEdxUnused
 
 struct D2ListBoxProxyVtbl
 {
-uint32_t **(__fastcall *pfnDeletingDtor)(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
-int32_t (__fastcall *pfnDraw)(uint32_t **pProxy);
-int32_t (__fastcall *pfnOnMouseWheel)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnMouseDown)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnMouseUp)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnMouseMove)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnChar)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowUp)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowDown)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowRight)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowLeft)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnGetValue)(uint32_t **pProxy);
-int32_t (__fastcall *pfnAddEntry)(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg);
-int32_t (__fastcall *pfnGetEntryUserData)(uint32_t **pProxy, int32_t nEdxUnused, int32_t nEntryIndex);
-int32_t (__fastcall *pfnGetNumEntries)(uint32_t **pProxy);
-int32_t (__fastcall *pfnRemoveAll)(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg);
+D2UiCtrlProxyStrc *(__fastcall *pfnDeletingDtor)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
+int32_t (__fastcall *pfnDraw)(D2UiCtrlProxyStrc *pProxy);
+int32_t (__fastcall *pfnOnMouseWheel)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnMouseDown)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnMouseUp)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnMouseMove)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnChar)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowUp)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowDown)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowRight)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowLeft)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnGetValue)(D2UiCtrlProxyStrc *pProxy);
+void (__fastcall *pfnAddEntry)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, const Unicode *pwsCol0, const Unicode *pwsCol1, const Unicode *pwsCol2, const Unicode *pwsCol3, const Unicode *pwsCol4, const Unicode *pwsCol5, int32_t nUserData, int32_t nColor, int32_t bUseDefaultColor, int32_t nFont);
+int32_t (__fastcall *pfnGetEntryUserData)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nEntryIndex);
+int32_t (__fastcall *pfnGetNumEntries)(D2UiCtrlProxyStrc *pProxy);
+void (__fastcall *pfnRemoveAll)(D2UiCtrlProxyStrc *pProxy);
 };
 
 struct D2LowQualityItemsTxt
@@ -6294,7 +6311,7 @@ struct D2NpcMenuDescStrc
 int32_t nMonsterId;
 int32_t nRows;
 uint16_t wTblIdx[5];
-void *pfnHandler[5];
+int32_t (__cdecl *pfnHandler[5])();
 uint8_t bEnabled;
 };
 
@@ -6360,7 +6377,7 @@ D2ClientDialogStrc *hDialogTalkMenu;
 D2ClientDialogStrc *hDialogHireList;
 D2ClientDialogStrc *hDialogInterrupt;
 int32_t TransactionCost;
-void *pHireListControl;
+D2UiCtrlProxyStrc *pHireListControl;
 D2GSPacketSrv2A LastTransactionResult;
 BOOL bWaitingForItemMsg;
 int16_t wNpcSpeechesPlayed[10];
@@ -7598,8 +7615,8 @@ D2TextNodeStrc *pNext;
 
 struct D2TextStateStrc
 {
-void *pMessageLogDialog;
-void *pMessageLogListBox;
+D2ClientDialogStrc *pMessageLogDialog;
+D2UiCtrlProxyStrc *pMessageLogListBox;
 int32_t field_08;
 int32_t bPopupDismissed;
 int32_t bPopupActive;
@@ -7745,19 +7762,19 @@ int32_t (__fastcall *pfnSetFlag24)(void *pControl, int32_t nEdxUnused, int32_t b
 
 struct D2UiButtonProxyVtbl
 {
-uint32_t **(__fastcall *pfnDeletingDtor)(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
-int32_t (__fastcall *pfnDraw)(uint32_t **pProxy);
-int32_t (__fastcall *pfnOnMouseWheel)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnMouseDown)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnMouseUp)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnMouseMove)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnChar)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowUp)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowDown)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowRight)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowLeft)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnGetValue)(uint32_t **pProxy);
-int32_t (__fastcall *pfnSetFlag24)(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg);
+D2UiCtrlProxyStrc *(__fastcall *pfnDeletingDtor)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
+int32_t (__fastcall *pfnDraw)(D2UiCtrlProxyStrc *pProxy);
+int32_t (__fastcall *pfnOnMouseWheel)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnMouseDown)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnMouseUp)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnMouseMove)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnChar)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowUp)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowDown)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowRight)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowLeft)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnGetValue)(D2UiCtrlProxyStrc *pProxy);
+int32_t (__fastcall *pfnSetFlag24)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg);
 };
 
 struct D2UiControlBaseVtbl
@@ -7778,25 +7795,46 @@ int32_t (__cdecl *pfnGetValue)();
 
 struct D2UiControlProxyVtbl
 {
-uint32_t **(__fastcall *pfnDeletingDtor)(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
-int32_t (__fastcall *pfnDraw)(uint32_t **pProxy);
-int32_t (__fastcall *pfnOnMouseWheel)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnMouseDown)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnMouseUp)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnMouseMove)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnChar)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowUp)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowDown)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowRight)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowLeft)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnGetValue)(uint32_t **pProxy);
-int32_t (__fastcall *pfnSlot13)(uint32_t **pProxy, int32_t nEdxUnused, int32_t);
-int32_t (__fastcall *pfnSetTextFromAscii)(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg);
-int32_t (__fastcall *pfnSetTextFromInt)(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg);
-int32_t (__fastcall *pfnGetTextUtf8)(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg);
-int32_t (__fastcall *pfnSetWidth)(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg);
-int32_t (__fastcall *pfnSetFlag24)(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg);
-int32_t (__fastcall *pfnSetNumericOnly)(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg);
+D2UiCtrlProxyStrc *(__fastcall *pfnDeletingDtor)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
+int32_t (__fastcall *pfnDraw)(D2UiCtrlProxyStrc *pProxy);
+int32_t (__fastcall *pfnOnMouseWheel)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnMouseDown)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnMouseUp)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnMouseMove)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnChar)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowUp)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowDown)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowRight)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowLeft)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnGetValue)(D2UiCtrlProxyStrc *pProxy);
+int32_t (__fastcall *pfnSlot13)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t);
+int32_t (__fastcall *pfnSetTextFromAscii)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg);
+int32_t (__fastcall *pfnSetTextFromInt)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg);
+int32_t (__fastcall *pfnGetTextUtf8)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg);
+int32_t (__fastcall *pfnSetWidth)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg);
+int32_t (__fastcall *pfnSetFlag24)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg);
+int32_t (__fastcall *pfnSetNumericOnly)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg);
+};
+
+struct D2UiCtrlProxyStrc
+{
+union
+{
+const D2UiButtonProxyVtbl *pButtonVtbl;
+const D2UiControlProxyVtbl *pEditBoxVtbl;
+const D2ListBoxProxyVtbl *pListBoxVtbl;
+const D2UiSpinnerProxyVtbl *pSpinnerVtbl;
+const D2UiControlBaseVtbl *pBaseVtbl;
+};
+uint32_t dwUnused04;
+union
+{
+D2ClientButtonStrc *pButton;
+D2ClientEditBoxStrc *pEditBox;
+D2ClientListBoxStrc *pListBox;
+D2ClientSpinnerStrc *pSpinner;
+void *pImpl;
+};
 };
 
 struct D2UiEditBoxImplVtbl
@@ -7841,19 +7879,19 @@ int32_t (__fastcall *pfnTickAutoRepeat)(D2ClientSpinnerStrc *pSpinner);
 
 struct D2UiSpinnerProxyVtbl
 {
-uint32_t **(__fastcall *pfnDeletingDtor)(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
-int32_t (__fastcall *pfnDraw)(uint32_t **pProxy);
-int32_t (__fastcall *pfnOnMouseWheel)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnMouseDown)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnMouseUp)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnMouseMove)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnChar)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowUp)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowDown)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowRight)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnOnArrowLeft)(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t (__fastcall *pfnGetValue)(uint32_t **pProxy);
-int32_t (__fastcall *pfnTickAutoRepeat)(uint32_t **pProxy, int32_t nEdxUnused, int32_t);
+D2UiCtrlProxyStrc *(__fastcall *pfnDeletingDtor)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
+int32_t (__fastcall *pfnDraw)(D2UiCtrlProxyStrc *pProxy);
+int32_t (__fastcall *pfnOnMouseWheel)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnMouseDown)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnMouseUp)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnMouseMove)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnChar)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowUp)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowDown)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowRight)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnOnArrowLeft)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t (__fastcall *pfnGetValue)(D2UiCtrlProxyStrc *pProxy);
+int32_t (__fastcall *pfnTickAutoRepeat)(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t);
 };
 
 struct D2UniqueAppellationTxt
@@ -10532,6 +10570,16 @@ int32_t bCopyToUnitBuffer;
 // };
 // static_assert(sizeof(anon_A85CD68F813312C5E6BB1494B5EEB9CC) == 20, "anon_A85CD68F813312C5E6BB1494B5EEB9CC: layout differs from the database");
 
+// union anon_AB19E8A5033E5909EFA8FCA6D6F5DF76
+// {
+// D2ClientButtonStrc *pButton;
+// D2ClientEditBoxStrc *pEditBox;
+// D2ClientListBoxStrc *pListBox;
+// D2ClientSpinnerStrc *pSpinner;
+// void *pImpl;
+// };
+// static_assert(sizeof(anon_AB19E8A5033E5909EFA8FCA6D6F5DF76) == 4, "anon_AB19E8A5033E5909EFA8FCA6D6F5DF76: layout differs from the database");
+
 // struct anon_ABAA6F78D0909A5EC38B8DAC19886F2D
 // {
 // int32_t nItemId;
@@ -10562,6 +10610,16 @@ int32_t bCopyToUnitBuffer;
 // uint8_t nExtraData3[33];
 // };
 // static_assert(sizeof(anon_CAAEA91160A63143F2AE058B4EF58ACE) == 38, "anon_CAAEA91160A63143F2AE058B4EF58ACE: layout differs from the database");
+
+// union anon_EFA6E06670436623E611E46BDB7EB3A5
+// {
+// const D2UiButtonProxyVtbl *pButtonVtbl;
+// const D2UiControlProxyVtbl *pEditBoxVtbl;
+// const D2ListBoxProxyVtbl *pListBoxVtbl;
+// const D2UiSpinnerProxyVtbl *pSpinnerVtbl;
+// const D2UiControlBaseVtbl *pBaseVtbl;
+// };
+// static_assert(sizeof(anon_EFA6E06670436623E611E46BDB7EB3A5) == 4, "anon_EFA6E06670436623E611E46BDB7EB3A5: layout differs from the database");
 
 // union anon_FB734C8D8ED8BB4F2FAE5CDADDE28D6C
 // {
@@ -10607,6 +10665,7 @@ static_assert(sizeof(D2AnvilPanelButtonStrc) == 40, "D2AnvilPanelButtonStrc: lay
 static_assert(sizeof(D2AreaEntryQuestLineStrc) == 48, "D2AreaEntryQuestLineStrc: layout differs from the database");
 static_assert(sizeof(D2ArmTypeTxt) == 52, "D2ArmTypeTxt: layout differs from the database");
 static_assert(sizeof(D2AutomapCellStrc) == 20, "D2AutomapCellStrc: layout differs from the database");
+static_assert(sizeof(D2AutomapCellBlockStrc) == 10244, "D2AutomapCellBlockStrc: layout differs from the database");
 static_assert(sizeof(D2AutomapDataStrc) == 44, "D2AutomapDataStrc: layout differs from the database");
 static_assert(sizeof(D2AutomapLayerStrc) == 28, "D2AutomapLayerStrc: layout differs from the database");
 static_assert(sizeof(D2AutomapRandStrc) == 8, "D2AutomapRandStrc: layout differs from the database");
@@ -10640,6 +10699,7 @@ static_assert(sizeof(D2ClientCofCacheNodeStrc) == 28, "D2ClientCofCacheNodeStrc:
 static_assert(sizeof(D2ClientCofCacheStrc) == 2060, "D2ClientCofCacheStrc: layout differs from the database");
 static_assert(sizeof(D2ClientCofNodeStrc) == 20, "D2ClientCofNodeStrc: layout differs from the database");
 static_assert(sizeof(D2ClientDamageGroupStrc) == 24, "D2ClientDamageGroupStrc: layout differs from the database");
+static_assert(sizeof(D2ClientDialogControlNodeStrc) == 8, "D2ClientDialogControlNodeStrc: layout differs from the database");
 static_assert(sizeof(D2ClientDialogLineStrc) == 272, "D2ClientDialogLineStrc: layout differs from the database");
 static_assert(sizeof(D2ClientDialogStrc) == 2832, "D2ClientDialogStrc: layout differs from the database");
 static_assert(sizeof(D2ClientDrawNodeStrc) == 20, "D2ClientDrawNodeStrc: layout differs from the database");
@@ -11101,6 +11161,7 @@ static_assert(sizeof(D2UiButtonImplVtbl) == 52, "D2UiButtonImplVtbl: layout diff
 static_assert(sizeof(D2UiButtonProxyVtbl) == 52, "D2UiButtonProxyVtbl: layout differs from the database");
 static_assert(sizeof(D2UiControlBaseVtbl) == 48, "D2UiControlBaseVtbl: layout differs from the database");
 static_assert(sizeof(D2UiControlProxyVtbl) == 76, "D2UiControlProxyVtbl: layout differs from the database");
+static_assert(sizeof(D2UiCtrlProxyStrc) == 12, "D2UiCtrlProxyStrc: layout differs from the database");
 static_assert(sizeof(D2UiEditBoxImplVtbl) == 76, "D2UiEditBoxImplVtbl: layout differs from the database");
 static_assert(sizeof(D2UiSpinnerImplVtbl) == 52, "D2UiSpinnerImplVtbl: layout differs from the database");
 static_assert(sizeof(D2UiSpinnerProxyVtbl) == 52, "D2UiSpinnerProxyVtbl: layout differs from the database");

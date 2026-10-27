@@ -908,7 +908,7 @@ HANDLE __fastcall CMDTBL_OpenPlayerKeyFile(DWORD dwDesiredAccess, DWORD dwCreati
 //  Returns the key bound to a command, or -1. The walk steps the 10-byte records comparing eCmd and bPrimaryHotkey; a command with no record
 //  answers -1, and so does one whose record holds -1. CMDTBL_ControlsIsActionBound, CMDTBL_UnbindCommand, CMDTBL_ControlsGetBoundKeyName and its
 //  fallback make the same walk and differ only in what they do when they find the record.
-int16_t __fastcall CMDTBL_ControlsFindBoundKey(D2HotkeyIndices eCmd, BOOL bPrimary)
+D2VirtualKeys __fastcall CMDTBL_ControlsFindBoundKey(D2HotkeyIndices eCmd, BOOL bPrimary)
 {
     int32_t nSlot;
 
@@ -916,14 +916,14 @@ int16_t __fastcall CMDTBL_ControlsFindBoundKey(D2HotkeyIndices eCmd, BOOL bPrima
     {
         if (nSlot >= 114)
         {
-            return -1;
+            return D2VK_INVALID;
         }
         if (gKeyBindings[nSlot].eCmd == eCmd && gKeyBindings[nSlot].bPrimaryHotkey == bPrimary)
         {
             break;
         }
     }
-    return (int16_t)gKeyBindings[nSlot].VKCode;
+    return gKeyBindings[nSlot].VKCode;
 }
 
 //1.10f: D2Client.0x6FAD4F00

@@ -938,7 +938,7 @@
 // OURS, automap.h: D2VAR(D2CLIENT, gaAutomapCellGroup, int32_t, 0x10F990)   // [2048]
 // OURS, automap.h: D2VAR(D2CLIENT, gnAutomapMode, int32_t, 0x111990)
 // OURS, automap.h: D2VAR(D2CLIENT, gpAutomapDrawWriteCursor, uint8_t *, 0x111994)
-// OURS, automap.h: D2VAR(D2CLIENT, gpAutomapCellBlocks, void *, 0x111998)
+// OURS, automap.h: D2VAR(D2CLIENT, gpAutomapCellBlocks, D2AutomapCellBlockStrc *, 0x111998)
 // OURS, automap.h: D2VAR(D2CLIENT, gnAutomapCellsUsed, int32_t, 0x11199C)
 // OURS, automap.h: D2VAR(D2CLIENT, gpAutomapLayers, D2AutomapLayerStrc *, 0x1119A0)
 // OURS, automap.h: D2VAR(D2CLIENT, gpAutomapCurrentLayer, D2AutomapLayerStrc *, 0x1119A4)
@@ -1337,10 +1337,10 @@
 // OURS, trade.h: D2VAR(D2CLIENT, gbTradeWindowOpen, uint8_t, 0x119FBC)
 // OURS, ui.h: D2VAR(D2CLIENT, gbLoadScreenExitPending, int32_t, 0x119FC0)
 // OURS, ui.h: D2VAR(D2CLIENT, gpGoldDialog, D2ClientDialogStrc *, 0x119FC4)
-// OURS, ui.h: D2VAR(D2CLIENT, gpGoldDialogStepButton, int32_t, 0x119FC8)
-// OURS, ui.h: D2VAR(D2CLIENT, gpGoldDialogSpinner, int32_t, 0x119FCC)
-// OURS, ui.h: D2VAR(D2CLIENT, gpGoldDialogOkButton, int32_t, 0x119FD0)
-// OURS, ui.h: D2VAR(D2CLIENT, gpGoldDialogCancelButton, int32_t, 0x119FD4)
+// OURS, ui.h: D2VAR(D2CLIENT, gpGoldDialogStepButton, D2UiCtrlProxyStrc *, 0x119FC8)
+// OURS, ui.h: D2VAR(D2CLIENT, gpGoldDialogSpinner, D2UiCtrlProxyStrc *, 0x119FCC)
+// OURS, ui.h: D2VAR(D2CLIENT, gpGoldDialogOkButton, D2UiCtrlProxyStrc *, 0x119FD0)
+// OURS, ui.h: D2VAR(D2CLIENT, gpGoldDialogCancelButton, D2UiCtrlProxyStrc *, 0x119FD4)
 // OURS, ui.h: D2VAR(D2CLIENT, gbGoldDialogKeyHookSuspended, BOOL, 0x119FD8)
 // OURS, ui.h: D2VAR(D2CLIENT, gwszDrawTextScratch, Unicode, 0x119FE0)   // [256]
 // OURS, ui.h: D2VAR(D2CLIENT, gnUnitLabelColor, int32_t, 0x11A1E0)

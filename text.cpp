@@ -532,13 +532,13 @@ void __cdecl TEXT_Shutdown()
 
     if (sgTextState.pMessageLogDialog)
     {
-        DIALOG_Close((D2ClientDialogStrc *)sgTextState.pMessageLogDialog);
+        DIALOG_Close(sgTextState.pMessageLogDialog);
         sgTextState.pMessageLogDialog = nullptr;
     }
     if (sgTextState.pMessageLogListBox)
     {
         //  The list box's own vector deleting destructor, through its vtable.
-        (**(void(__thiscall ***)(void *, int32_t))sgTextState.pMessageLogListBox)(sgTextState.pMessageLogListBox, 1);
+        ((UICTRLPROXYDTORFN)sgTextState.pMessageLogListBox->pListBoxVtbl->pfnDeletingDtor)(sgTextState.pMessageLogListBox, 1);
         sgTextState.pMessageLogListBox = nullptr;
     }
 
@@ -1641,7 +1641,7 @@ void __fastcall TEXT_TickStaticInfoPanel(D2ClientViewStrc *pView)
         TEXT_DrawQuickMessages();
     }
     if (sgTextState.pMessageLogDialog)
-        DIALOG_Draw((D2ClientDialogStrc *)sgTextState.pMessageLogDialog);
+        DIALOG_Draw(sgTextState.pMessageLogDialog);
 }
 
 
@@ -2568,12 +2568,11 @@ void __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
 
     if (UI_GetUiWindowState(UI_MSGLOG) && sgTextState.pMessageLogListBox)
     {
-        void *pListBox = sgTextState.pMessageLogListBox;
-        (*(void(__thiscall **)(void *))(*(uint32_t *)pListBox + 60))(pListBox);
+        D2UiCtrlProxyStrc *pListBox = sgTextState.pMessageLogListBox;
+        ((UICTRLPROXYVOIDFN)pListBox->pListBoxVtbl->pfnRemoveAll)(pListBox);
         for (D2ClientTextNodeStrc *pEntry = sgTextState.MessageLogDisplayList.pHead; pEntry; pEntry = pEntry->pNext)
         {
-            (*(void(__thiscall **)(void *, Unicode *, Unicode *, Unicode *, Unicode *, Unicode *, Unicode *, uint32_t, int32_t, uint32_t, int32_t)) (*(uint32_t *)pListBox + 48))(pListBox, pEntry->pLines[0], pEntry->pLines[1], pEntry->pLines[2],
-                pEntry->pLines[3], pEntry->pLines[4], pEntry->pLines[5], 0, pEntry->nColor, 0, 13);
+            ((UICTRLPROXYADDENTRYFN)pListBox->pListBoxVtbl->pfnAddEntry)(pListBox, pEntry->pLines[0], pEntry->pLines[1], pEntry->pLines[2], pEntry->pLines[3], pEntry->pLines[4], pEntry->pLines[5], 0, pEntry->nColor, 0, 13);
         }
     }
 
@@ -2755,12 +2754,11 @@ void __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
 
     if (UI_GetUiWindowState(UI_MSGLOG) && sgTextState.pMessageLogListBox)
     {
-        void *pListBox = sgTextState.pMessageLogListBox;
-        (*(void(__thiscall **)(void *))(*(uint32_t *)pListBox + 60))(pListBox);
+        D2UiCtrlProxyStrc *pListBox = sgTextState.pMessageLogListBox;
+        ((UICTRLPROXYVOIDFN)pListBox->pListBoxVtbl->pfnRemoveAll)(pListBox);
         for (D2ClientTextNodeStrc *pEntry = sgTextState.MessageLogDisplayList.pHead; pEntry; pEntry = pEntry->pNext)
         {
-            (*(void(__thiscall **)(void *, Unicode *, Unicode *, Unicode *, Unicode *, Unicode *, Unicode *, uint32_t, int32_t, uint32_t, int32_t)) (*(uint32_t *)pListBox + 48))(pListBox, pEntry->pLines[0], pEntry->pLines[1], pEntry->pLines[2],
-                pEntry->pLines[3], pEntry->pLines[4], pEntry->pLines[5], 0, pEntry->nColor, 0, 13);
+            ((UICTRLPROXYADDENTRYFN)pListBox->pListBoxVtbl->pfnAddEntry)(pListBox, pEntry->pLines[0], pEntry->pLines[1], pEntry->pLines[2], pEntry->pLines[3], pEntry->pLines[4], pEntry->pLines[5], 0, pEntry->nColor, 0, 13);
         }
     }
 
@@ -3069,29 +3067,29 @@ void __cdecl TEXT_OpenMessageLog()
         return;
 
     sgTextState.pMessageLogDialog = DIALOG_Create(5, 30, (DIALOGCALLBACK)TEXT_OnMessageLogClose, nullptr, 0, 0, 0, gnScreenWidth - 20, gnScreenHeight - 130, 0, 0);
-    DIALOG_SetHighlight((D2ClientDialogStrc *)sgTextState.pMessageLogDialog, 1);
-    DIALOG_AddLine((D2ClientDialogStrc *)sgTextState.pMessageLogDialog, D2LANG_GetStringFromTblIndex(STR_IDX_4035_strMsgLog), 21, 0, 4, 1, nullptr, 0);
+    DIALOG_SetHighlight(sgTextState.pMessageLogDialog, 1);
+    DIALOG_AddLine(sgTextState.pMessageLogDialog, D2LANG_GetStringFromTblIndex(STR_IDX_4035_strMsgLog), 21, 0, 4, 1, nullptr, 0);
 
     //  computed before the string lookup, as the bytes have it
     const int32_t nCloseLineY = gnScreenHeight - 165;
-    DIALOG_AddLine((D2ClientDialogStrc *)sgTextState.pMessageLogDialog, D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose), nCloseLineY, 0, 0, 1, TEXT_OnMessageLogClose, 1);
+    DIALOG_AddLine(sgTextState.pMessageLogDialog, D2LANG_GetStringFromTblIndex(STR_IDX_4144_strClose), nCloseLineY, 0, 0, 1, TEXT_OnMessageLogClose, 1);
 
-    void *pBlock = STORM_SMemAlloc(12, szNew, -1, 0);
-    void *pListBox = pBlock ? LISTBOX_Construct(pBlock, 0, 5, 65, gnScreenWidth - 20, gnScreenHeight - 200, 2, 0, 13, nullptr, 1)
-                         : nullptr;
+    D2UiCtrlProxyStrc *pBlock = (D2UiCtrlProxyStrc *)STORM_SMemAlloc(12, szNew, -1, 0);
+    D2UiCtrlProxyStrc *pListBox = pBlock ? LISTBOX_Construct(pBlock, 0, 5, 65, gnScreenWidth - 20, gnScreenHeight - 200, 2, 0, 13, nullptr, 1)
+                                      : nullptr;
     sgTextState.pMessageLogListBox = pListBox;
     if (!pListBox)
         return;
 
-    DIALOG_AddControl((D2ClientDialogStrc *)sgTextState.pMessageLogDialog, pListBox, 25, 30);
+    DIALOG_AddControl(sgTextState.pMessageLogDialog, pListBox, 25, 30);
 
     for (D2ClientTextNodeStrc *pEntry = sgTextState.MessageLogDisplayList.pHead; pEntry; pEntry = pEntry->pNext)
     {
-        (*(void(__thiscall **)(void *, Unicode *, Unicode *, Unicode *, Unicode *, Unicode *, Unicode *, uint32_t, int32_t, uint32_t, int32_t)) (*(uint32_t *)sgTextState.pMessageLogListBox + 48))(sgTextState.pMessageLogListBox,
+        ((UICTRLPROXYADDENTRYFN)sgTextState.pMessageLogListBox->pListBoxVtbl->pfnAddEntry)(sgTextState.pMessageLogListBox,
             pEntry->pLines[0], pEntry->pLines[1], pEntry->pLines[2], pEntry->pLines[3], pEntry->pLines[4], pEntry->pLines[5], 0, pEntry->nColor, 0, 13);
     }
 
-    DIALOG_SetSelectedLine((D2ClientDialogStrc *)sgTextState.pMessageLogDialog, -1);
+    DIALOG_SetSelectedLine(sgTextState.pMessageLogDialog, -1);
 }
 
 
@@ -3113,13 +3111,13 @@ void __cdecl TEXT_CloseMessageLog()
 {
     if (sgTextState.pMessageLogDialog)
     {
-        DIALOG_Close((D2ClientDialogStrc *)sgTextState.pMessageLogDialog);
+        DIALOG_Close(sgTextState.pMessageLogDialog);
         sgTextState.pMessageLogDialog = nullptr;
     }
     if (sgTextState.pMessageLogListBox)
     {
-        void *pListBox = sgTextState.pMessageLogListBox;
-        (**(void(__thiscall ***)(void *, int32_t))pListBox)(pListBox, 1);
+        D2UiCtrlProxyStrc *pListBox = sgTextState.pMessageLogListBox;
+        ((UICTRLPROXYDTORFN)pListBox->pListBoxVtbl->pfnDeletingDtor)(pListBox, 1);
         sgTextState.pMessageLogListBox = nullptr;
     }
 }

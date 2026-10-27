@@ -100,7 +100,7 @@ static_assert(offsetof(SMSGHANDLER_PARAMS, wParam) == 0x08
 //1.10f: D2Client.0x6FACF8D0
 //  The button's constructor: installs the vtable, takes its frame from gUiButtonImages, clears the three state fields and measures its own cel
 //  once, so that the hit tests have a width and a height. The stores follow the original's order: x and y land after the cel handle is taken.
-int32_t *__fastcall CHAR_UiButtonConstruct(D2ClientButtonStrc *pButton, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nImageIndex, void *pfnOnClick)
+D2ClientButtonStrc *__fastcall CHAR_UiButtonConstruct(D2ClientButtonStrc *pButton, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nImageIndex, void *pfnOnClick)
 {
     D2GfxDataStrc tCelContext;
     D2GfxCellStrc *pCel;
@@ -121,7 +121,7 @@ int32_t *__fastcall CHAR_UiButtonConstruct(D2ClientButtonStrc *pButton, int32_t 
     pButton->bFireOnEnter = 0;
     pButton->nHeight = D2CMP_CelGetHeight(pCel);
     pButton->nWidth = D2CMP_CelGetWidth(pCel);
-    return (int32_t *)pButton;
+    return pButton;
 }
 
 
@@ -143,7 +143,7 @@ D2ClientButtonStrc *__fastcall CHAR_UiButtonVecDelDtor(D2ClientButtonStrc *pButt
 void __fastcall CHAR_UiButtonDestruct(D2ClientButtonStrc *pButton)
 {
     pButton->pVtbl = &gVtblUiButtonImpl;
-    LISTBOX_UiCtrlBaseDestruct((int32_t *)pButton);
+    LISTBOX_UiCtrlBaseDestruct(pButton);
 }
 
 
@@ -243,15 +243,15 @@ int32_t __fastcall CHAR_UiButtonOnChar(D2ClientButtonStrc *pButton, int32_t nEdx
 
 //1.10f: D2Client.0x6FACFBC0
 //  The proxy's destructor: the wrapped button is sent its own slot 0 with the free flag, then the base destructor runs.
-void __fastcall CHAR_UiButtonProxyDestruct(int32_t *pProxy)
+void __fastcall CHAR_UiButtonProxyDestruct(D2UiCtrlProxyStrc *pProxy)
 {
-    void (__thiscall ***pControl)(uint32_t, int32_t);
+    D2ClientButtonStrc *pButton;
 
-    *pProxy = (int32_t)(UINT_PTR)&gVtblUiButtonProxy;
-    pControl = (void (__thiscall ***)(uint32_t, int32_t))(UINT_PTR)pProxy[2];
-    if (pControl)
+    pProxy->pButtonVtbl = &gVtblUiButtonProxy;
+    pButton = pProxy->pButton;
+    if (pButton)
     {
-        (**pControl)((uint32_t)(UINT_PTR)pControl, 1);
+        ((D2ClientButtonStrc *(__thiscall *)(D2ClientButtonStrc *, uint8_t))pButton->pVtbl->pfnDeletingDtor)(pButton, 1);
     }
     LISTBOX_UiCtrlBaseDestruct(pProxy);
 }
@@ -259,9 +259,9 @@ void __fastcall CHAR_UiButtonProxyDestruct(int32_t *pProxy)
 
 //1.10f: D2Client.0x6FACFC20
 //  Slot 0 of gVtblUiButtonProxy, the proxy's scalar-deleting destructor.
-uint32_t **__fastcall CHAR_UiButtonProxyVecDelDtor(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject)
+D2UiCtrlProxyStrc *__fastcall CHAR_UiButtonProxyVecDelDtor(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, uint8_t bFreeObject)
 {
-    CHAR_UiButtonProxyDestruct((int32_t *)pProxy);
+    CHAR_UiButtonProxyDestruct(pProxy);
     if ((bFreeObject & 1) != 0 && pProxy)
     {
         STORM_SMemFree(pProxy, szDelete, -1, 0);
@@ -273,12 +273,12 @@ uint32_t **__fastcall CHAR_UiButtonProxyVecDelDtor(uint32_t **pProxy, int32_t nE
 //1.10f: D2Client.0x6FACFC50
 //  Builds a proxy around a new button (the gold dialog makes its OK and Cancel this way). The vtable is stored before the allocation returns; a
 //  failed allocation stores a null control.
-int32_t *__fastcall CHAR_UiButtonProxyConstruct(int32_t *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nImageIndex, void *pfnOnClick)
+D2UiCtrlProxyStrc *__fastcall CHAR_UiButtonProxyConstruct(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nImageIndex, void *pfnOnClick)
 {
     D2ClientButtonStrc *pButton;
-    int32_t *pConstructed;
+    D2ClientButtonStrc *pConstructed;
 
-    *pProxy = (int32_t)(UINT_PTR)&gVtblUiButtonProxy;
+    pProxy->pButtonVtbl = &gVtblUiButtonProxy;
     pButton = (D2ClientButtonStrc *)STORM_SMemAlloc(0x36, szNew, -1, 0);
     if (pButton)
     {
@@ -288,7 +288,7 @@ int32_t *__fastcall CHAR_UiButtonProxyConstruct(int32_t *pProxy, int32_t nEdxUnu
     {
         pConstructed = NULL;
     }
-    pProxy[2] = (int32_t)(UINT_PTR)pConstructed;
+    pProxy->pButton = pConstructed;
     return pProxy;
 }
 

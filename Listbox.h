@@ -70,10 +70,10 @@ inline const D2ListBoxProxyVtbl gVtblListBox =
     .pfnOnArrowRight = &EDITBOX_UiCtrlProxyFwdSlot9,
     .pfnOnArrowLeft = &EDITBOX_UiCtrlProxyFwdSlot10,
     .pfnGetValue = &EDITBOX_UiCtrlProxyFwdSlot11,
-    .pfnAddEntry = &EDITBOX_UiCtrlProxyFwdSlot15,
+    .pfnAddEntry = (decltype(D2ListBoxProxyVtbl::pfnAddEntry))&EDITBOX_UiCtrlProxyFwdSlot15,
     .pfnGetEntryUserData = &LISTBOX_GetEntryUserData,
     .pfnGetNumEntries = &LISTBOX_UiCtrlProxyFwdSlot13,
-    .pfnRemoveAll = &EDITBOX_UiCtrlProxyFwdSlot14,
+    .pfnRemoveAll = (decltype(D2ListBoxProxyVtbl::pfnRemoveAll))&EDITBOX_UiCtrlProxyFwdSlot14,
 };
 static_assert(sizeof(gVtblListBox) == 64, "gVtblListBox: the item's 64 bytes in the .i64");
 

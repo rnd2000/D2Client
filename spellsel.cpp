@@ -1235,7 +1235,7 @@ void __fastcall SPELLSEL_SetHotkeySlot(int32_t nSlot, int32_t nSkillId, int32_t 
 //  apart. Both arrows start at nX + 1 in the stacked layout; horizontally the down arrow is at nX + nCelWidth, without the one. The up arrow's y is
 //  nY either way. The stores follow the source shape, not the bytes' schedule: distinct members, no reader between them. bHorizontal is read back
 //  from the object for the branch, and so here.
-int32_t *__fastcall SPELLSEL_UiSpinnerConstruct(D2ClientSpinnerStrc *pSpinner, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t bHorizontal, void *pfnOnChange)
+D2ClientSpinnerStrc *__fastcall SPELLSEL_UiSpinnerConstruct(D2ClientSpinnerStrc *pSpinner, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t bHorizontal, void *pfnOnChange)
 {
     char szPath[260];
     D2CellFileStrc *hImage;
@@ -1275,7 +1275,7 @@ int32_t *__fastcall SPELLSEL_UiSpinnerConstruct(D2ClientSpinnerStrc *pSpinner, i
         pSpinner->nDownY = pSpinner->nCelHeight + nY + 1;
         pSpinner->nDownX = nX + 1;
     }
-    return (int32_t *)pSpinner;
+    return pSpinner;
 }
 
 //1.10f: D2Client.0x6FB1A340
@@ -1297,7 +1297,7 @@ void __fastcall SPELLSEL_UiSpinnerDestruct(D2ClientSpinnerStrc *pSpinner)
 {
     pSpinner->pVtbl = &gVtblUiSpinnerImpl;
     ARCHIVE_CellFileFree(pSpinner->hCelFile);
-    LISTBOX_UiCtrlBaseDestruct((int32_t *)pSpinner);
+    LISTBOX_UiCtrlBaseDestruct(pSpinner);
 }
 
 //1.10f: D2Client.0x6FB1A3D0
@@ -1468,24 +1468,24 @@ int32_t __fastcall SPELLSEL_UiSpinnerOnMouseUp(D2ClientSpinnerStrc *pSpinner, in
 //1.10f: D2Client.0x6FB1A670
 //  The proxy's destructor, as CHAR_UiButtonProxyDestruct with this class's vtable: the wrapped spinner is sent its own slot 0 with the free flag,
 //  then the base destructor runs.
-void __fastcall SPELLSEL_UiSpinnerProxyDestruct(int32_t *pProxy)
+void __fastcall SPELLSEL_UiSpinnerProxyDestruct(D2UiCtrlProxyStrc *pProxy)
 {
-    void (__thiscall ***pControl)(uint32_t, int32_t);
+    D2ClientSpinnerStrc *pSpinner;
 
-    *pProxy = (int32_t)(UINT_PTR)&gVtblUiSpinnerProxy;
-    pControl = (void (__thiscall ***)(uint32_t, int32_t))(UINT_PTR)pProxy[2];
-    if (pControl)
+    pProxy->pSpinnerVtbl = &gVtblUiSpinnerProxy;
+    pSpinner = pProxy->pSpinner;
+    if (pSpinner)
     {
-        (**pControl)((uint32_t)(UINT_PTR)pControl, 1);
+        ((D2ClientSpinnerStrc *(__thiscall *)(D2ClientSpinnerStrc *, uint8_t))pSpinner->pVtbl->pfnDeletingDtor)(pSpinner, 1);
     }
     LISTBOX_UiCtrlBaseDestruct(pProxy);
 }
 
 //1.10f: D2Client.0x6FB1A6D0
 //  Slot 0 of gVtblUiSpinnerProxy, the proxy's scalar-deleting destructor.
-uint32_t **__fastcall SPELLSEL_UiSpinnerProxyVecDelDtor(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject)
+D2UiCtrlProxyStrc *__fastcall SPELLSEL_UiSpinnerProxyVecDelDtor(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, uint8_t bFreeObject)
 {
-    SPELLSEL_UiSpinnerProxyDestruct((int32_t *)pProxy);
+    SPELLSEL_UiSpinnerProxyDestruct(pProxy);
     if ((bFreeObject & 1) != 0 && pProxy)
     {
         STORM_SMemFree(pProxy, szDelete, -1, 0);
@@ -1496,12 +1496,12 @@ uint32_t **__fastcall SPELLSEL_UiSpinnerProxyVecDelDtor(uint32_t **pProxy, int32
 //1.10f: D2Client.0x6FB1A700
 //  Builds a proxy around a new spinner: 0x54 bytes from Storm, the proxy's vtable stored before the allocation returns, a null control stored when
 //  it fails. UI_OpenGoldEntryDialog (ui.cpp) is the one caller.
-int32_t *__fastcall SPELLSEL_UiSpinnerProxyConstruct(int32_t *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t bHorizontal, void *pfnOnChange)
+D2UiCtrlProxyStrc *__fastcall SPELLSEL_UiSpinnerProxyConstruct(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t bHorizontal, void *pfnOnChange)
 {
     D2ClientSpinnerStrc *pSpinner;
-    int32_t *pConstructed;
+    D2ClientSpinnerStrc *pConstructed;
 
-    *pProxy = (int32_t)(UINT_PTR)&gVtblUiSpinnerProxy;
+    pProxy->pSpinnerVtbl = &gVtblUiSpinnerProxy;
     pSpinner = (D2ClientSpinnerStrc *)STORM_SMemAlloc(0x54, szNew, -1, 0);
     if (pSpinner)
     {
@@ -1511,7 +1511,7 @@ int32_t *__fastcall SPELLSEL_UiSpinnerProxyConstruct(int32_t *pProxy, int32_t nE
     {
         pConstructed = NULL;
     }
-    pProxy[2] = (int32_t)(UINT_PTR)pConstructed;
+    pProxy->pSpinner = pConstructed;
     return pProxy;
 }
 
@@ -1520,16 +1520,16 @@ int32_t *__fastcall SPELLSEL_UiSpinnerProxyConstruct(int32_t *pProxy, int32_t nE
 //  untouched and the target's `retn 4` pops it. It sits at +0x0C of four proxy vtables (0x6FB6EECC the button's, 0x6FB6EF80, 0x6FB6F9F0 and
 //  0x6FB6FBE0 the spinner's) and every one of their slot-3 targets is an OnMouseDown taking the message, so pMsg is passed on: a call that did not
 //  would leave four bytes on the stack for the target to pop.
-int32_t __fastcall SPELLSEL_UiCtrlProxyFwdSlot3(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
+int32_t __fastcall SPELLSEL_UiCtrlProxyFwdSlot3(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *))(**(pProxy + 2) + 12))((uint32_t)*(pProxy + 2), pMsg);
+    return (*(int32_t (__thiscall *const *const *)(void *, SMSGHANDLER_PARAMS *))pProxy->pImpl)[3](pProxy->pImpl, pMsg);
 }
 
 //1.10f: D2Client.0x6FB1A790
 //  Forwards to the wrapped control's slot 12, the spinner's TickAutoRepeat, and is the one forwarder here that is not a tail jump: `call dword ptr
 //  [eax+30h]`, `retn 4`. It takes one stack argument, does not pass it, and pops it itself, because the target takes nothing (editbox.cpp's
 //  FwdSlot13Arg is the same shape). The answer is the step, returned. The gold dialog calls it with 0.
-int32_t __fastcall SPELLSEL_UiCtrlProxyFwdSlot12Arg(uint32_t **pProxy, int32_t nEdxUnused, int32_t nUnused)
+int32_t __fastcall SPELLSEL_UiCtrlProxyFwdSlot12Arg(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nUnused)
 {
-    return (*(int32_t(__thiscall **)(uint32_t))(**(pProxy + 2) + 48))((uint32_t)*(pProxy + 2));
+    return (*(int32_t (__thiscall *const *const *)(void *))pProxy->pImpl)[12](pProxy->pImpl);
 }

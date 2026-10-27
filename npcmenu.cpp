@@ -326,7 +326,7 @@ void __fastcall NPCMENU_SetRowCount4(int32_t nRecord)
 void __fastcall NPCMENU_EnableIdentifyRow(int32_t nRecord)
 {
     gNpcMenuDescriptors[nRecord].wTblIdx[1] = STR_IDX_4020_NPCIdentify1;
-    gNpcMenuDescriptors[nRecord].pfnHandler[1] = (void *)NPCMENU_OnIdentifyClicked;
+    gNpcMenuDescriptors[nRecord].pfnHandler[1] = NPCMENU_OnIdentifyClicked;
     gNpcMenuDescriptors[nRecord].nRows = 3;
 }
 
@@ -366,7 +366,7 @@ void __fastcall NPCMENU_EnableIdentifyRow(int32_t nRecord)
 int32_t __cdecl NPCMENU_QuestUnlock_KashyaHire(void)
 {
     gNpcMenuDescriptors[11].nRows = 3;
-    gNpcMenuDescriptors[11].pfnHandler[1] = (void *)NPCMENU_DrawHireMercenaryList;
+    gNpcMenuDescriptors[11].pfnHandler[1] = NPCMENU_DrawHireMercenaryList;
     gNpcMenuDescriptors[11].wTblIdx[1] = STR_IDX_3397_NPCMenuHire;
     return 1;
 }
@@ -375,7 +375,7 @@ int32_t __cdecl NPCMENU_QuestUnlock_KashyaHire(void)
 int32_t __cdecl NPCMENU_QuestUnlock_WarrivGoEast(void)
 {
     gNpcMenuDescriptors[13].nRows = 3;
-    gNpcMenuDescriptors[13].pfnHandler[1] = (void *)NPCMENU_OnGoEastClicked;
+    gNpcMenuDescriptors[13].pfnHandler[1] = NPCMENU_OnGoEastClicked;
     gNpcMenuDescriptors[13].wTblIdx[1] = STR_IDX_3382_WarrivMenu1b;
     return 1;
 }
@@ -384,7 +384,7 @@ int32_t __cdecl NPCMENU_QuestUnlock_WarrivGoEast(void)
 int32_t __cdecl NPCMENU_QuestUnlock_MeshifSailEast(void)
 {
     gNpcMenuDescriptors[15].nRows = 3;
-    gNpcMenuDescriptors[15].pfnHandler[1] = (void *)NPCMENU_OnSailEastClicked;
+    gNpcMenuDescriptors[15].pfnHandler[1] = NPCMENU_OnSailEastClicked;
     gNpcMenuDescriptors[15].wTblIdx[1] = STR_IDX_3384_MeshifMenuEast;
     return 1;
 }
@@ -393,7 +393,7 @@ int32_t __cdecl NPCMENU_QuestUnlock_MeshifSailEast(void)
 int32_t __cdecl NPCMENU_QuestUnlock_CharsiImbue(void)
 {
     gNpcMenuDescriptors[3].nRows = 4;
-    gNpcMenuDescriptors[3].pfnHandler[2] = (void *)NPCMENU_OnItemServiceClicked;
+    gNpcMenuDescriptors[3].pfnHandler[2] = NPCMENU_OnItemServiceClicked;
     gNpcMenuDescriptors[3].wTblIdx[2] = STR_IDX_4017_Upgrade;
     return 1;
 }
@@ -427,7 +427,7 @@ int32_t __cdecl NPCMENU_OnItemServiceClicked(void)
 int32_t __cdecl NPCMENU_QuestUnlock_LarzukSockets(void)
 {
     gNpcMenuDescriptors[39].nRows = 4;
-    gNpcMenuDescriptors[39].pfnHandler[2] = (void *)NPCMENU_OnItemServiceClicked;
+    gNpcMenuDescriptors[39].pfnHandler[2] = NPCMENU_OnItemServiceClicked;
     gNpcMenuDescriptors[39].wTblIdx[2] = STR_IDX_22748_Addsocketsui;
     return 1;
 }
@@ -436,7 +436,7 @@ int32_t __cdecl NPCMENU_QuestUnlock_LarzukSockets(void)
 int32_t __cdecl NPCMENU_QuestUnlock_AnyaPersonalize(void)
 {
     gNpcMenuDescriptors[41].nRows = 5;
-    gNpcMenuDescriptors[41].pfnHandler[3] = (void *)NPCMENU_OnItemServiceClicked;
+    gNpcMenuDescriptors[41].pfnHandler[3] = NPCMENU_OnItemServiceClicked;
     gNpcMenuDescriptors[41].wTblIdx[3] = STR_IDX_22749_Personalizeui;
     return 1;
 }
@@ -445,7 +445,7 @@ int32_t __cdecl NPCMENU_QuestUnlock_AnyaPersonalize(void)
 int32_t __cdecl NPCMENU_QuestUnlock_QualKehkHire(void)
 {
     gNpcMenuDescriptors[43].nRows = 3;
-    gNpcMenuDescriptors[43].pfnHandler[1] = (void *)NPCMENU_DrawHireMercenaryList;
+    gNpcMenuDescriptors[43].pfnHandler[1] = NPCMENU_DrawHireMercenaryList;
     gNpcMenuDescriptors[43].wTblIdx[1] = STR_IDX_3397_NPCMenuHire;
     return 1;
 }
@@ -458,7 +458,7 @@ int32_t __cdecl NPCMENU_QuestUnlock_TyraelTravel(void)
     if (GAME_IsExpansionGame())
     {
         gNpcMenuDescriptors[21].nRows = 3;
-        gNpcMenuDescriptors[21].pfnHandler[1] = (void *)NPCMENU_OnTravelToHarrogathClicked;
+        gNpcMenuDescriptors[21].pfnHandler[1] = NPCMENU_OnTravelToHarrogathClicked;
         gNpcMenuDescriptors[21].wTblIdx[1] = STR_IDX_22738_Travel_To_Harrogath;
     }
     return 1;
@@ -618,7 +618,7 @@ void __cdecl NPCMENU_TeardownHireList(void)
             DIALOG_Close(sgUIState.hDialogHireList);
             if (sgUIState.pHireListControl)
             {
-                (*(void(__thiscall **)(void *, int32_t)) *(uint32_t *)sgUIState.pHireListControl)(sgUIState.pHireListControl, 1);
+                ((UICTRLPROXYDTORFN)sgUIState.pHireListControl->pListBoxVtbl->pfnDeletingDtor)(sgUIState.pHireListControl, 1);
             }
             sgUIState.pHireListControl = 0;
             sgUIState.hDialogHireList = NULL;
@@ -1262,7 +1262,7 @@ void __cdecl NPCMENU_Shutdown(void)
     }
     if (sgUIState.pHireListControl)
     {
-        (*(void(__thiscall **)(void *, int32_t)) *(uint32_t *)sgUIState.pHireListControl)(sgUIState.pHireListControl, 1);
+        ((UICTRLPROXYDTORFN)sgUIState.pHireListControl->pListBoxVtbl->pfnDeletingDtor)(sgUIState.pHireListControl, 1);
         sgUIState.pHireListControl = 0;
     }
     if (sgUIState.hDialogConfirm)
@@ -1855,7 +1855,6 @@ void __fastcall NPCMENU_PickRandomSpeechLine(D2NpcMenuEntryStrc *pSpeechState)
     int32_t nPlayerClassId;
     int32_t nLineCount;
     int32_t nLine;
-    uint32_t nRoll;
     D2NpcSpeechLineStrc *pLine;
 
     nPlayerClassId = pPlayer ? pPlayer->dwClassId : -1;
@@ -1863,19 +1862,7 @@ void __fastcall NPCMENU_PickRandomSpeechLine(D2NpcMenuEntryStrc *pSpeechState)
     {
         nLineCount = (int32_t)pSpeechState->nSpeechLineCount;
         --nTriesLeft;
-        if (nLineCount > 0)
-        {
-            //  the original reads the seed without testing pPlayer
-            nRoll = (uint32_t)SEED_RollRandomNumber(&pPlayer->pSeed);
-            if ((nLineCount - 1) & nLineCount)
-                nLine = (int32_t)(nRoll % (uint32_t)nLineCount);
-            else
-                nLine = (int32_t)(nRoll & (uint32_t)(nLineCount - 1));
-        }
-        else
-        {
-            nLine = 0;
-        }
+        nLine = SEED_RollLimitedRandomNumber(&pPlayer->pSeed, nLineCount);
         pSpeechState->nSelectedLine = nLine;
         if (nLine >= 2)
         {
@@ -2449,23 +2436,14 @@ static_assert(STR_IDX_11021_merca239 == 0x2B0D, "DrawHireMercenaryList: mov ecx,
 static_assert(STR_IDX_3353_TransactionResults1 == 0xD19, "ConfirmHireMercenary: mov ecx, 0D19h at 0x6FAF5855");
 static_assert(offsetof(D2NpcHirelingOfferStrc, nSeed) == 4, "DrawHireMercenaryList: mov ecx, [eax+4] at 0x6FAF5093");
 
-//  The list box's slots, as byte offsets from the vtable pointer.
-typedef void (__thiscall *HireListReleaseFn)(void *pThis, int32_t bFree);
-typedef int32_t  (__thiscall *HireListGetSelectionFn)(void *pThis);
-typedef void (__thiscall *HireListAddEntryFn)(void *pThis, const Unicode *pwsCol0, const Unicode *pwsCol1, const Unicode *pwsCol2, const Unicode *pwsCol3, const Unicode *pwsCol4, const Unicode *pwsCol5, int32_t nUserData,
-                                              int32_t nColor, int32_t bUseDefaultColor, int32_t nFont);
-typedef int32_t  (__thiscall *HireListGetUserDataFn)(void *pThis, int32_t nEntryIndex);
-
-#define HIRELIST_VSLOT(fn, nByteOff) (*(fn *)((*(uint32_t *)(UINT_PTR)sgUIState.pHireListControl) + (nByteOff)))
-
 //  Allocation tag for the list box: the original's own aNew.
 static const char szNew[] = "new";
 
 //1.10f: D2Client.0x6FAF4E30
 int32_t __cdecl NPCMENU_DrawHireMercenaryList(void)
 {
-    void *pMemory;
-    void *pControl;
+    D2UiCtrlProxyStrc *pMemory;
+    D2UiCtrlProxyStrc *pControl;
     int32_t nGold;
     int32_t nRow;
     int32_t nAdded;
@@ -2484,7 +2462,7 @@ int32_t __cdecl NPCMENU_DrawHireMercenaryList(void)
     {
         DIALOG_Close(sgUIState.hDialogHireList);
         if (sgUIState.pHireListControl)
-            HIRELIST_VSLOT(HireListReleaseFn, 0x00)(sgUIState.pHireListControl, 1);
+            ((UICTRLPROXYDTORFN)sgUIState.pHireListControl->pListBoxVtbl->pfnDeletingDtor)(sgUIState.pHireListControl, 1);
         sgUIState.pHireListControl = 0;
         sgUIState.hDialogHireList = NULL;
         NPCMENU_BuildMainMenu();
@@ -2501,7 +2479,7 @@ int32_t __cdecl NPCMENU_DrawHireMercenaryList(void)
     DIALOG_AddLine(sgUIState.hDialogHireList, wszText, 21, 0, 4, 1, NULL, 0);
     DIALOG_AddLine(sgUIState.hDialogHireList, D2LANG_GetStringFromTblIndex(STR_IDX_3400_Back), 315, 0, 0, 1, (int32_t (__cdecl *)())NPCMENU_OnHireListBack, 1);
 
-    pMemory = STORM_SMemAlloc(12, szNew, -1, 0);
+    pMemory = (D2UiCtrlProxyStrc *)STORM_SMemAlloc(12, szNew, -1, 0);
     pControl = pMemory ? LISTBOX_Construct(pMemory, 0, (gnScreenWidth - 490) / 2, gnViewportBottom / 2 - 160, 490, 280, 6, 0, 1, NPCMENU_OnHireListConfirmClicked, 0)
         : NULL;
     sgUIState.pHireListControl = pControl;
@@ -2511,7 +2489,7 @@ int32_t __cdecl NPCMENU_DrawHireMercenaryList(void)
         {
             DIALOG_Close(sgUIState.hDialogHireList);
             if (sgUIState.pHireListControl)
-                HIRELIST_VSLOT(HireListReleaseFn, 0x00)(sgUIState.pHireListControl, 1);
+                ((UICTRLPROXYDTORFN)sgUIState.pHireListControl->pListBoxVtbl->pfnDeletingDtor)(sgUIState.pHireListControl, 1);
             sgUIState.pHireListControl = 0;
             sgUIState.hDialogHireList = NULL;
         }
@@ -2601,13 +2579,13 @@ int32_t __cdecl NPCMENU_DrawHireMercenaryList(void)
             Unicode::strcat(wszDetail, wszDesc);
         }
 
-        HIRELIST_VSLOT(HireListAddEntryFn, 0x30)(sgUIState.pHireListControl, wszName, wszDetail, NULL, NULL, NULL, NULL, nRow, 0, 1, 14);
+        ((UICTRLPROXYADDENTRYFN)sgUIState.pHireListControl->pListBoxVtbl->pfnAddEntry)(sgUIState.pHireListControl, wszName, wszDetail, NULL, NULL, NULL, NULL, nRow, 0, 1, 14);
         ++nAdded;
     }
 
     if (!nAdded)
     {
-        HIRELIST_VSLOT(HireListAddEntryFn, 0x30)(sgUIState.pHireListControl, D2LANG_GetStringFromTblIndex(STR_IDX_3365_ItemDesc1t), NULL, NULL, NULL, NULL, NULL, 10, 0, 1, 14);
+        ((UICTRLPROXYADDENTRYFN)sgUIState.pHireListControl->pListBoxVtbl->pfnAddEntry)(sgUIState.pHireListControl, D2LANG_GetStringFromTblIndex(STR_IDX_3365_ItemDesc1t), NULL, NULL, NULL, NULL, NULL, 10, 0, 1, 14);
     }
     DIALOG_SetSelectedLine(sgUIState.hDialogHireList, -1);
     return 1;
@@ -2621,7 +2599,7 @@ int32_t __stdcall NPCMENU_OnHireListBack(void)
     {
         DIALOG_Close(sgUIState.hDialogHireList);
         if (sgUIState.pHireListControl)
-            HIRELIST_VSLOT(HireListReleaseFn, 0x00)(sgUIState.pHireListControl, 1);
+            ((UICTRLPROXYDTORFN)sgUIState.pHireListControl->pListBoxVtbl->pfnDeletingDtor)(sgUIState.pHireListControl, 1);
         sgUIState.pHireListControl = 0;
         sgUIState.hDialogHireList = NULL;
     }
@@ -2636,10 +2614,10 @@ int32_t __cdecl NPCMENU_OnHireListConfirmClicked(void)
     int32_t nSelection;
 
     SOUNDINST_PlaySound(SOUND_CURSOR_SELECT, NULL, 0, 0, 0);
-    nSelection = HIRELIST_VSLOT(HireListGetSelectionFn, 0x2C)(sgUIState.pHireListControl);
+    nSelection = ((UICTRLPROXYFN)sgUIState.pHireListControl->pListBoxVtbl->pfnGetValue)(sgUIState.pHireListControl);
     gnSelectedHirelingRow = nSelection;
     gnHireNpcUnitGUID = (int32_t)sgUIState.NpcUnitGUID;
-    if (nSelection < 10 && (uint32_t)HIRELIST_VSLOT(HireListGetUserDataFn, 0x34)(sgUIState.pHireListControl, nSelection) < 10)
+    if (nSelection < 10 && (uint32_t)((UICTRLPROXYARGFN)sgUIState.pHireListControl->pListBoxVtbl->pfnGetEntryUserData)(sgUIState.pHireListControl, nSelection) < 10)
     {
         if (ROSTERPETS_GetAssociatedUnitGUID(CUNIT_GetPlayer(), 7, 0) == -1 && (!GAME_IsExpansionGame() || (!ROSTERPETS_CountByType(CUNIT_GetPlayer(), 7) && (uint16_t)gwMercResurrectNameTblId == 0xFFFF)))
         {
@@ -2650,7 +2628,7 @@ int32_t __cdecl NPCMENU_OnHireListConfirmClicked(void)
         {
             DIALOG_Close(sgUIState.hDialogHireList);
             if (sgUIState.pHireListControl)
-                HIRELIST_VSLOT(HireListReleaseFn, 0x00)(sgUIState.pHireListControl, 1);
+                ((UICTRLPROXYDTORFN)sgUIState.pHireListControl->pListBoxVtbl->pfnDeletingDtor)(sgUIState.pHireListControl, 1);
             sgUIState.pHireListControl = 0;
             sgUIState.hDialogHireList = NULL;
         }
@@ -2680,7 +2658,7 @@ void __cdecl NPCMENU_ConfirmHireMercenary(void)
     {
         DIALOG_Close(sgUIState.hDialogHireList);
         if (sgUIState.pHireListControl)
-            HIRELIST_VSLOT(HireListReleaseFn, 0x00)(sgUIState.pHireListControl, 1);
+            ((UICTRLPROXYDTORFN)sgUIState.pHireListControl->pListBoxVtbl->pfnDeletingDtor)(sgUIState.pHireListControl, 1);
         sgUIState.pHireListControl = 0;
         sgUIState.hDialogHireList = NULL;
     }
@@ -3977,7 +3955,7 @@ void __cdecl NPCMENU_BuildMainMenu(void)
         {
             Unicode::strcpy(wszLine, D2LANG_GetStringFromTblIndex((D2C_StringIndices)pRec->wTblIdx[nRow]));
         }
-        DIALOG_AddLine(sgUIState.hDialogMainMenu, wszLine, 15, 0, 0, 1, (int32_t (__cdecl *)())pRec->pfnHandler[nRow], bSelectable);
+        DIALOG_AddLine(sgUIState.hDialogMainMenu, wszLine, 15, 0, 0, 1, pRec->pfnHandler[nRow], bSelectable);
     }
     DIALOG_AddLine(sgUIState.hDialogMainMenu, D2LANG_GetStringFromTblIndex(STR_IDX_4142_lowercasecancel), 15, 0, 0, 1, NPCMENU_OnMainMenuCancel, 1);
 }
@@ -4421,7 +4399,7 @@ void __fastcall NPCMENU_BeginInteraction(uint8_t nUnitType, int32_t dwNpcGUID, u
     NPCMENU_SetRowCount2(15);
     NPCMENU_SetRowCount3(3);
     NPCMENU_SetRowCount2(43);
-    if (gNpcMenuDescriptors[43].pfnHandler[1] == (void *)NPCMENU_OnResurrectMercClicked)
+    if (gNpcMenuDescriptors[43].pfnHandler[1] == NPCMENU_OnResurrectMercClicked)
         gNpcMenuDescriptors[43].nRows = 3;
     NPCMENU_SetRowCount3(39);
     NPCMENU_SetRowCount4(41);

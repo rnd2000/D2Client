@@ -3028,7 +3028,7 @@ IN_PANEL:
 
     pMsg->bReturn = 1;
     pMsg->lResult = 0;
-    pItem = NULL;
+    nHandled = 0;
 
     if (nXpos >= gInvPanelGrid.nGridLeft && nXpos <= gInvPanelGrid.nGridRight && nYpos >= gInvPanelGrid.nGridTop && nYpos <= gInvPanelGrid.nGridBottom)
     {
@@ -3093,7 +3093,7 @@ SEND_SOCKET_INSERT:
     bInGrid = 1;
 
 AFTER_SOCKET:
-    pItem = NULL;
+    nHandled = 0;
     if (bInGrid)
     {
         goto CONSUME_TAIL;
@@ -3132,17 +3132,16 @@ WEAPON_SWAP_TAB:
         STORM_SMsgBreakHandlerChain(pMsg);
         return;
     }
-    pItem = NULL;
+    nHandled = 0;
     goto CONSUME_TAIL;
 
 GRID_HANDLED:
-    pItem = (D2UnitStrc *)nHandled;
     bInGrid = 1;
 
 CONSUME_TAIL:
     pMsg->lResult = 0;
     pMsg->bReturn = 1;
-    if (!pItem)
+    if (!nHandled)
     {
         if (CURSOR_GetCursorState() == 6)
         {
@@ -9357,12 +9356,12 @@ void __fastcall INV_DrawItemDescription(D2UnitStrc *pUnit, BOOL bVendorUnit)
 
                     Unicode::strcpy(wszSwapHint, D2LANG_GetStringFromTblIndex(STR_IDX_22726_Cfgswapweapons));
                     //  cmp ax, 0FFFFh: the binding is a short
-                    if ((uint16_t)CMDTBL_ControlsFindBoundKey(HOTKEY_SWITCHWEAP, TRUE) != 0xFFFF)
+                    if (CMDTBL_ControlsFindBoundKey(HOTKEY_SWITCHWEAP, TRUE) != D2VK_INVALID)
                     {
                         Unicode::strcat(wszSwapHint, D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon));
                         Unicode::strcat(wszSwapHint, CMDTBL_ControlsGetBoundKeyName(HOTKEY_SWITCHWEAP, TRUE));
                     }
-                    else if ((uint16_t)CMDTBL_ControlsFindBoundKey(HOTKEY_SWITCHWEAP, FALSE) != 0xFFFF)
+                    else if (CMDTBL_ControlsFindBoundKey(HOTKEY_SWITCHWEAP, FALSE) != D2VK_INVALID)
                     {
                         Unicode::strcat(wszSwapHint, D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon));
                         Unicode::strcat(wszSwapHint, CMDTBL_ControlsGetBoundKeyName(HOTKEY_SWITCHWEAP, FALSE));

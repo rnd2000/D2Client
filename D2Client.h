@@ -366,16 +366,16 @@ void __cdecl SHOWITEMS_DrawGroundItemLabels(void);
 //  D2Client.0x6FAD1290 / 0x6FAD1470, UI/char.cpp -- gStatsMessageHandlers. The character screen's button class and text helpers come first,
 //  then the panel's draw and its mouse handlers. The stat buttons are four records of fourteen bytes; shift-click spends every point in chunks
 //  of 32. The six `nEdxUnused` members are `__thiscall` in the original.
-int32_t *__fastcall CHAR_UiButtonConstruct(D2ClientButtonStrc *pButton, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nImageIndex, void *pfnOnClick);  // 0x6FACF8D0
+D2ClientButtonStrc *__fastcall CHAR_UiButtonConstruct(D2ClientButtonStrc *pButton, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nImageIndex, void *pfnOnClick); // 0x6FACF8D0
 D2ClientButtonStrc *__fastcall CHAR_UiButtonVecDelDtor(D2ClientButtonStrc *pButton, int32_t nEdxUnused, uint8_t bFreeObject); // 0x6FACF990
 void __fastcall CHAR_UiButtonDestruct(D2ClientButtonStrc *pButton);                    // 0x6FACF9C0
 void __fastcall CHAR_UiButtonDraw(D2ClientButtonStrc *pButton);                        // 0x6FACF9D0
 int32_t __fastcall CHAR_UiButtonOnMouseDown(D2ClientButtonStrc *pButton, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);  // 0x6FACFAD0
 int32_t __fastcall CHAR_UiButtonOnMouseUp(D2ClientButtonStrc *pButton, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);  // 0x6FACFB30
 int32_t __fastcall CHAR_UiButtonOnChar(D2ClientButtonStrc *pButton, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);  // 0x6FACFB90
-void __fastcall CHAR_UiButtonProxyDestruct(int32_t *pProxy);                               // 0x6FACFBC0
-uint32_t **__fastcall CHAR_UiButtonProxyVecDelDtor(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject); // 0x6FACFC20
-int32_t *__fastcall CHAR_UiButtonProxyConstruct(int32_t *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nImageIndex, void *pfnOnClick);  // 0x6FACFC50
+void __fastcall CHAR_UiButtonProxyDestruct(D2UiCtrlProxyStrc *pProxy);                     // 0x6FACFBC0
+D2UiCtrlProxyStrc *__fastcall CHAR_UiButtonProxyVecDelDtor(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, uint8_t bFreeObject); // 0x6FACFC20
+D2UiCtrlProxyStrc *__fastcall CHAR_UiButtonProxyConstruct(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nImageIndex, void *pfnOnClick); // 0x6FACFC50
 void __fastcall CHAR_DrawTextCentered(int32_t nLeft, int32_t nY, int32_t nRight, const Unicode *wszText, int32_t nColor);  // 0x6FACFCD0
 int32_t __fastcall CHAR_TextCutNextLine(Unicode *pText, Unicode **ppRest);                 // 0x6FACFD10
 void __stdcall CHAR_StatsOnLButtonDown(SMSGHANDLER_PARAMS *pMsg);
@@ -2136,7 +2136,7 @@ void __stdcall DIALOG_OnEnter(SMSGHANDLER_PARAMS *pMsg);                 // dial
 void __stdcall DIALOG_OnChar(SMSGHANDLER_PARAMS *pMsg);                  // dialog.cpp
 void __cdecl DIALOG_Init(void);                                          // dialog.cpp
 void __cdecl DIALOG_Shutdown(void);                                      // dialog.cpp
-void __fastcall DIALOG_AddControl(D2ClientDialogStrc *pDialog, void *pControl, int32_t nUnused1, int32_t nUnused2);  // dialog.cpp
+void __fastcall DIALOG_AddControl(D2ClientDialogStrc *pDialog, D2UiCtrlProxyStrc *pControl, int32_t nUnused1, int32_t nUnused2); // dialog.cpp
 D2ClientDialogStrc *__fastcall DIALOG_CreateFromImage(int32_t nCenterX, int32_t nCenterY, DIALOGCALLBACK pfnCallback, DIALOGCALLBACK pfnCallback2, int32_t nImageIndex, int32_t nInputMode);  // dialog.cpp
 D2ClientDialogStrc *__fastcall DIALOG_Create(int32_t nCenterX, int32_t nCenterY, DIALOGCALLBACK pfnCallback, DIALOGCALLBACK pfnCallback2, int32_t nInputMode, int32_t bVAlignByStaticLines,
     int32_t bAutoSize, int32_t nWidth, int32_t nHeight, int32_t bIgnoreCancelKey, int32_t bGrabsKeyboard);  // dialog.cpp
@@ -2216,7 +2216,7 @@ void __cdecl CMDTBL_CommandHandleMouse5Down(void);                            //
 void __cdecl CMDTBL_CommandHandleMouse5Lift(void);                            // CmdTbl.cpp
 void __fastcall CMDTBL_CommandHandleMouseWheel(int32_t nDelta);                   // CmdTbl.cpp
 HANDLE __fastcall CMDTBL_OpenPlayerKeyFile(DWORD dwDesiredAccess, DWORD dwCreationDisposition); // CmdTbl.cpp
-int16_t __fastcall CMDTBL_ControlsFindBoundKey(D2HotkeyIndices eCmd, BOOL bPrimary); // CmdTbl.cpp
+D2VirtualKeys __fastcall CMDTBL_ControlsFindBoundKey(D2HotkeyIndices eCmd, BOOL bPrimary); // CmdTbl.cpp
 BOOL __fastcall CMDTBL_ControlsIsActionBound(D2HotkeyIndices eCmd, BOOL bPrimary); // CmdTbl.cpp
 void __fastcall CMDTBL_UnbindCommand(int32_t eCmd, int32_t bPrimary);           // CmdTbl.cpp
 void __cdecl CMDTBL_SaveBindingsSnapshot(void);                      // CmdTbl.cpp
@@ -2237,7 +2237,8 @@ void __cdecl CMDTBL_COMMAND_PrepareMouseMappings(void);            // CmdTbl.cpp
 
 
 //  ---- editbox.cpp ----
-char *__fastcall EDITBOX_UiEditBoxConstruct(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont); // editbox.cpp
+D2ClientEditBoxStrc *__fastcall EDITBOX_UiEditBoxConstruct(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue,
+                                                            uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont); // editbox.cpp
 D2ClientEditBoxStrc *__fastcall EDITBOX_UiEditBoxVecDelDtor(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, uint8_t bFreeObject); // editbox.cpp
 void __fastcall EDITBOX_UiEditBoxDestruct(D2ClientEditBoxStrc *pEditBox);      // editbox.cpp
 int32_t __fastcall EDITBOX_UiEditBoxSetNumericOnly(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, int32_t bNumericOnly); // editbox.cpp
@@ -2255,26 +2256,27 @@ int32_t __fastcall EDITBOX_UiEditBoxSetWidth(D2ClientEditBoxStrc *pEditBox, int3
 int32_t __fastcall EDITBOX_UiCtrlSetFlag24(void *pControl, int32_t nEdxUnused, int32_t bFlag); // editbox.cpp
 int32_t __fastcall EDITBOX_UiEditBoxOnArrowRight(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
 int32_t __fastcall EDITBOX_UiEditBoxOnArrowLeft(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
-void __fastcall EDITBOX_UiCtrlProxyDestruct(int32_t *pProxy);                      // editbox.cpp
-uint32_t **__fastcall EDITBOX_UiCtrlProxyVecDelDtor(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject); // editbox.cpp
-uint32_t *__fastcall EDITBOX_UiCtrlProxyConstructEditbox(uint32_t *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont); // editbox.cpp
+void __fastcall EDITBOX_UiCtrlProxyDestruct(D2UiCtrlProxyStrc *pProxy);            // editbox.cpp
+D2UiCtrlProxyStrc *__fastcall EDITBOX_UiCtrlProxyVecDelDtor(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, uint8_t bFreeObject); // editbox.cpp
+D2UiCtrlProxyStrc *__fastcall EDITBOX_UiCtrlProxyConstructEditbox(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue,
+                                                                   uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont); // editbox.cpp
 //  A jump forwarder passes whatever the caller pushed and the target's `retn` pops it, so each one's argument list is the purge of the
 //  implementation slot it jumps to. Slots 1, 11 and 13 purge 0; the rest purge 4.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot4(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot5(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot6(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot8(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot7(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot9(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot10(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot11(uint32_t **pProxy);                  // editbox.cpp -- slot 11 purges 0
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot13Arg(uint32_t **pProxy, int32_t nEdxUnused, int32_t nUnused); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot15(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot14(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot12(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot16(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot17(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg); // editbox.cpp
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot18(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot4(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot5(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot6(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot8(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot7(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot9(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot10(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot11(D2UiCtrlProxyStrc *pProxy);                  // editbox.cpp -- slot 11 purges 0
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot13Arg(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nUnused); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot15(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot14(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot12(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot16(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot17(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg); // editbox.cpp
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot18(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg); // editbox.cpp
 
 //  ---- npcmenu.cpp: the state core and its accessors ----
 BOOL __fastcall NPCMENU_IsVendorGamble(void);                           // npcmenu.cpp
@@ -2547,7 +2549,7 @@ void __cdecl ITEM_ClearWeaponClassCache();                                      
 void __fastcall ITEM_RefreshUnitFromMsg(const void *pMsg);                          // Item.cpp
 void __fastcall ITEM_RefreshUnitFromPacket(const void *pPacket);                    // Item.cpp
 void __fastcall j_ITEM_RefreshActiveItems(D2UnitStrc *pUnit);                       // Item.cpp
-void __fastcall ITEM_SetItemDisplayState(D2UnitStrc *pItem, uint16_t nX, int32_t nY, int32_t nAnimMode, int32_t bResolveRoom, int32_t nStorePage);  // Item.cpp
+void __fastcall ITEM_SetItemDisplayState(D2UnitStrc *pItem, uint16_t nX, uint16_t nY, int32_t nAnimMode, int32_t bResolveRoom, int32_t nStorePage);  // Item.cpp
 int32_t __fastcall ITEM_SetChargedSkillCharges(D2UnitStrc *pUnit, int32_t nSkillId, int32_t nSkillLevel, int32_t nCharges);  // Item.cpp
 void __fastcall ITEM_OnItemStatUpdate(uint32_t dwItemGUID, uint8_t bSetStat, int32_t nStatId, int32_t nValue, int32_t nStatParam);  // Item.cpp
 void __fastcall ITEM_OnCursorItemSkill(D2GSPacketSrv3F *pPacket);                   // Item.cpp
@@ -2610,7 +2612,7 @@ void __cdecl LISTBOX_UnloadScrollBarImage(void);
 D2ClientListBoxStrc *__fastcall LISTBOX_ImplConstruct(D2ClientListBoxStrc *pListBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, int32_t (__cdecl *pfnOnSelect)(),
                                                       uint8_t bWideLayout);
 D2ClientListBoxStrc *__fastcall LISTBOX_ImplVecDelDtor(D2ClientListBoxStrc *pListBox, int32_t nEdxUnused, uint8_t bDelete);
-void __fastcall LISTBOX_UiCtrlBaseDestruct(int32_t *pControl);
+void __fastcall LISTBOX_UiCtrlBaseDestruct(void *pControl);
 int32_t __fastcall LISTBOX_ImplGetNumEntries(D2ClientListBoxStrc *pListBox);
 void __fastcall LISTBOX_ImplRemoveAll(D2ClientListBoxStrc *pListBox);
 void __fastcall LISTBOX_ImplUpdateScrollThumb(D2ClientListBoxStrc *pListBox);
@@ -2629,13 +2631,22 @@ int32_t __fastcall LISTBOX_HitTestEntry(D2ClientListBoxStrc *pListBox, int32_t n
 int32_t __fastcall LISTBOX_ImplOnMouseMove(D2ClientListBoxStrc *pListBox, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
 int32_t __fastcall LISTBOX_ImplOnChar(D2ClientListBoxStrc *pListBox, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
 int32_t __fastcall LISTBOX_ImplGetSelection(D2ClientListBoxStrc *pListBox);
-void __fastcall LISTBOX_ProxyDestruct(int32_t *pProxy, int32_t nEdxUnused);
-uint32_t **__fastcall LISTBOX_ProxyVecDelDtor(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
-void *__fastcall LISTBOX_Construct(void *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, int32_t (__cdecl *pfnOnSelect)(), uint8_t bWideLayout);
-int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot1(uint32_t **pProxy);
-int32_t __fastcall LISTBOX_GetEntryUserData(uint32_t **pProxy, int32_t nEdxUnused, int32_t nEntryIndex);
-int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot13(uint32_t **pProxy);
-int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot2(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+void __fastcall LISTBOX_ProxyDestruct(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused);
+D2UiCtrlProxyStrc *__fastcall LISTBOX_ProxyVecDelDtor(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
+D2UiCtrlProxyStrc *__fastcall LISTBOX_Construct(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor,
+                                                 int32_t nFont, int32_t (__cdecl *pfnOnSelect)(), uint8_t bWideLayout);
+int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot1(D2UiCtrlProxyStrc *pProxy);
+int32_t __fastcall LISTBOX_GetEntryUserData(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nEntryIndex);
+int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot13(D2UiCtrlProxyStrc *pProxy);
+int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot2(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+typedef D2UiCtrlProxyStrc *(__thiscall *UICTRLPROXYDTORFN)(D2UiCtrlProxyStrc *pProxy, uint8_t bFreeObject);
+typedef int32_t (__thiscall *UICTRLPROXYFN)(D2UiCtrlProxyStrc *pProxy);
+typedef int32_t (__thiscall *UICTRLPROXYARGFN)(D2UiCtrlProxyStrc *pProxy, int32_t nArg);
+typedef int32_t (__thiscall *UICTRLPROXYMSGFN)(D2UiCtrlProxyStrc *pProxy, SMSGHANDLER_PARAMS *pMsg);
+typedef void (__thiscall *UICTRLPROXYVOIDFN)(D2UiCtrlProxyStrc *pProxy);
+typedef void (__thiscall *UICTRLPROXYADDENTRYFN)(D2UiCtrlProxyStrc *pProxy, const Unicode *pwsCol0, const Unicode *pwsCol1, const Unicode *pwsCol2,
+                                               const Unicode *pwsCol3, const Unicode *pwsCol4, const Unicode *pwsCol5, int32_t nUserData,
+                                               int32_t nColor, int32_t bUseDefaultColor, int32_t nFont);
 
 //  ---- Gfx.cpp (ENGINE\Gfx.cpp) ----
 
@@ -2865,7 +2876,7 @@ void __cdecl SPELLSEL_UnbindEmptyScrollHotkeys();
 void __fastcall SPELLSEL_BindHoveredSkillToSlot(int32_t nSlot);
 void __fastcall SPELLSEL_SkillsSelectHotkeySlot(int32_t nSlot);
 //  The spinner; `__thiscall` as `__fastcall` with nEdxUnused.
-int32_t *__fastcall SPELLSEL_UiSpinnerConstruct(D2ClientSpinnerStrc *pSpinner, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t bHorizontal, void *pfnOnChange);
+D2ClientSpinnerStrc *__fastcall SPELLSEL_UiSpinnerConstruct(D2ClientSpinnerStrc *pSpinner, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t bHorizontal, void *pfnOnChange);
 D2ClientSpinnerStrc *__fastcall SPELLSEL_UiSpinnerVecDelDtor(D2ClientSpinnerStrc *pSpinner, int32_t nEdxUnused, uint8_t bFreeObject);
 void __fastcall SPELLSEL_UiSpinnerDestruct(D2ClientSpinnerStrc *pSpinner);
 void __fastcall SPELLSEL_UiSpinnerDraw(D2ClientSpinnerStrc *pSpinner);
@@ -2874,11 +2885,11 @@ int32_t __fastcall SPELLSEL_UiSpinnerTickAutoRepeat(D2ClientSpinnerStrc *pSpinne
 int32_t __fastcall SPELLSEL_UiSpinnerOnMouseWheel(D2ClientSpinnerStrc *pSpinner, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
 int32_t __fastcall SPELLSEL_UiSpinnerOnMouseDown(D2ClientSpinnerStrc *pSpinner, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
 int32_t __fastcall SPELLSEL_UiSpinnerOnMouseUp(D2ClientSpinnerStrc *pSpinner, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-void __fastcall SPELLSEL_UiSpinnerProxyDestruct(int32_t *pProxy);
-uint32_t **__fastcall SPELLSEL_UiSpinnerProxyVecDelDtor(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
-int32_t *__fastcall SPELLSEL_UiSpinnerProxyConstruct(int32_t *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t bHorizontal, void *pfnOnChange);
-int32_t __fastcall SPELLSEL_UiCtrlProxyFwdSlot3(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
-int32_t __fastcall SPELLSEL_UiCtrlProxyFwdSlot12Arg(uint32_t **pProxy, int32_t nEdxUnused, int32_t nUnused);
+void __fastcall SPELLSEL_UiSpinnerProxyDestruct(D2UiCtrlProxyStrc *pProxy);
+D2UiCtrlProxyStrc *__fastcall SPELLSEL_UiSpinnerProxyVecDelDtor(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, uint8_t bFreeObject);
+D2UiCtrlProxyStrc *__fastcall SPELLSEL_UiSpinnerProxyConstruct(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t bHorizontal, void *pfnOnChange);
+int32_t __fastcall SPELLSEL_UiCtrlProxyFwdSlot3(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg);
+int32_t __fastcall SPELLSEL_UiCtrlProxyFwdSlot12Arg(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nUnused);
 
 
 //  ---- Quest.cpp: the QUEST_ functions of the module ----

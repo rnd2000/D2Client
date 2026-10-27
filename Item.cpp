@@ -471,10 +471,10 @@ void __fastcall j_ITEM_RefreshActiveItems(D2UnitStrc *pUnit)
 
 //1.10f: D2Client.0x6FB2DE80
 //  Sets an item's client-side display state -- its room, its position and its animation mode -- and then its inventory page.
-//  The room lookup is guarded twice: if (bResolveRoom && (nX || (uint16_t)nY)) pRoom = CUNIT_FindRoomForCoords(nX, (uint16_t)nY). None of the
+//  The room lookup is guarded twice: if (bResolveRoom && (nX || nY)) pRoom = CUNIT_FindRoomForCoords(nX, nY). None of the
 //  out-of-line calls sets bResolveRoom (they pass 0 for the flag, for nY and for nX); the copy inlined in ITEM_ItemMsg02_DropToGround passes 1.
-//  The coordinates are masked to sixteen bits at every use (nY twice, nX once): nX is already declared uint16_t, nY is an int the code narrows.
-void __fastcall ITEM_SetItemDisplayState(D2UnitStrc *pItem, uint16_t nX, int32_t nY, int32_t nAnimMode, int32_t bResolveRoom, int32_t nStorePage)
+//  Both coordinates are tested as words and masked to sixteen bits at every use, so both are uint16_t.
+void __fastcall ITEM_SetItemDisplayState(D2UnitStrc *pItem, uint16_t nX, uint16_t nY, int32_t nAnimMode, int32_t bResolveRoom, int32_t nStorePage)
 {
     if (!pItem)
     {
@@ -483,10 +483,10 @@ void __fastcall ITEM_SetItemDisplayState(D2UnitStrc *pItem, uint16_t nX, int32_t
     }
 
     D2ActiveRoomStrc *pRoom = NULL;
-    if (bResolveRoom && (nX || (uint16_t)nY))
-        pRoom = CUNIT_FindRoomForCoords(nX, (uint16_t)nY);
+    if (bResolveRoom && (nX || nY))
+        pRoom = CUNIT_FindRoomForCoords(nX, nY);
 
-    ITEM_SetClientItemMode(pItem, pRoom, nX, (uint16_t)nY, nAnimMode, 0);
+    ITEM_SetClientItemMode(pItem, pRoom, nX, nY, nAnimMode, 0);
     D2COMMON_ITEMS_SetInvPage(pItem, (uint8_t)nStorePage);
 }
 

@@ -1059,14 +1059,7 @@ void __fastcall UI_UnregisterPanelHandlers(D2C_UIvars nUiId)
 
 
 //  Gold-entry dialog: "How much Gold would you like to drop / offer / deposit / withdraw?", the number box under it, and the callbacks the
-//  dialog framework drives. The dialog's controls are C++ objects reached through their vtables, and the original addresses a slot as a byte
-//  offset from the vtable pointer. `__thiscall` is legal on a function pointer where it is not on a free function, so the shapes are spelled
-//  out and the offsets stay visible.
-typedef int32_t  (__thiscall *GoldCtrlGetFn)(uint32_t pThis);
-typedef int32_t  (__thiscall *GoldCtrlGetArgFn)(uint32_t pThis, int32_t nArg);
-typedef void (__thiscall *GoldCtrlSetFn)(uint32_t pThis, int32_t nArg);
-
-#define GOLD_VSLOT(fn, obj, nByteOff) (*(fn *)((*(uint32_t *)(UINT_PTR)(obj)) + (nByteOff)))
+//  dialog framework drives. The dialog's controls are C++ objects reached through their vtables.
 
 static_assert(sizeof(D2SplittedTextStrc) == 8,
               "D2Win_10199 returns a list of { Unicode *wszLine; next; } and "
@@ -1096,7 +1089,7 @@ BOOL __cdecl UI_IsGoldDialogOpen()
 //  the end are tail jumps to functions in other files. The mode > 4 arm below them is unreachable: gnGoldDialogMode's only writer caps at 4.
 void __cdecl UI_CloseGoldEntryDialog()
 {
-    uint32_t nSpinner;
+    D2UiCtrlProxyStrc *pSpinner;
 
     if (gbGoldDialogKeyHookSuspended)
     {
@@ -1105,37 +1098,37 @@ void __cdecl UI_CloseGoldEntryDialog()
     }
 
     //  The original re-loads gpGoldDialogSpinner into this slot once per branch rather than keeping it live, so the reads are written out.
-    nSpinner = (uint32_t)gpGoldDialogSpinner;
+    pSpinner = gpGoldDialogSpinner;
     if (gpGoldDialogSpinner)
     {
-        gnGoldDialogAmount = GOLD_VSLOT(GoldCtrlGetFn, gpGoldDialogSpinner, 44)((uint32_t)gpGoldDialogSpinner);
-        nSpinner = (uint32_t)gpGoldDialogSpinner;
+        gnGoldDialogAmount = ((UICTRLPROXYFN)gpGoldDialogSpinner->pEditBoxVtbl->pfnGetValue)(gpGoldDialogSpinner);
+        pSpinner = gpGoldDialogSpinner;
     }
     if (gpGoldDialog)
     {
         DIALOG_Close(gpGoldDialog);
-        nSpinner = (uint32_t)gpGoldDialogSpinner;
+        pSpinner = gpGoldDialogSpinner;
         gpGoldDialog = 0;
     }
     if (gpGoldDialogStepButton)
     {
-        GOLD_VSLOT(GoldCtrlSetFn, gpGoldDialogStepButton, 0)((uint32_t)gpGoldDialogStepButton, 1);
-        nSpinner = (uint32_t)gpGoldDialogSpinner;
+        ((UICTRLPROXYDTORFN)gpGoldDialogStepButton->pSpinnerVtbl->pfnDeletingDtor)(gpGoldDialogStepButton, 1);
+        pSpinner = gpGoldDialogSpinner;
         gpGoldDialogStepButton = 0;
     }
-    if (nSpinner)
+    if (pSpinner)
     {
-        GOLD_VSLOT(GoldCtrlSetFn, nSpinner, 0)(nSpinner, 1);
+        ((UICTRLPROXYDTORFN)pSpinner->pEditBoxVtbl->pfnDeletingDtor)(pSpinner, 1);
         gpGoldDialogSpinner = 0;
     }
     if (gpGoldDialogOkButton)
     {
-        GOLD_VSLOT(GoldCtrlSetFn, gpGoldDialogOkButton, 0)((uint32_t)gpGoldDialogOkButton, 1);
+        ((UICTRLPROXYDTORFN)gpGoldDialogOkButton->pButtonVtbl->pfnDeletingDtor)(gpGoldDialogOkButton, 1);
         gpGoldDialogOkButton = 0;
     }
     if (gpGoldDialogCancelButton)
     {
-        GOLD_VSLOT(GoldCtrlSetFn, gpGoldDialogCancelButton, 0)((uint32_t)gpGoldDialogCancelButton, 1);
+        ((UICTRLPROXYDTORFN)gpGoldDialogCancelButton->pButtonVtbl->pfnDeletingDtor)(gpGoldDialogCancelButton, 1);
         gpGoldDialogCancelButton = 0;
     }
 
@@ -1184,9 +1177,9 @@ void __fastcall UI_OpenGoldEntryDialog(int32_t nGoldDialogMode)
     int32_t pLines;
     D2SplittedTextStrc *pSplitText;
     D2SplittedTextStrc *pSplitNext;
-    void *pThis;
-    int32_t *pControl;
-    uint32_t *pSpinner;
+    D2UiCtrlProxyStrc *pThis;
+    D2UiCtrlProxyStrc *pControl;
+    D2UiCtrlProxyStrc *pSpinner;
 
     if (!CUNIT_GetPlayer() || D2COMMON_INVENTORY_GetCursorItem(CUNIT_GetPlayer()->pInventory))
     {
@@ -1271,36 +1264,36 @@ void __fastcall UI_OpenGoldEntryDialog(int32_t nGoldDialogMode)
         while (pSplitNext);
     }
 
-    pThis = STORM_SMemAlloc(0xC, szNew, -1, 0);
-    pControl = pThis ? SPELLSEL_UiSpinnerProxyConstruct((int32_t *)pThis, 0, 223, 219, 0, (void *)UI_GoldDialogStepAmount)
+    pThis = (D2UiCtrlProxyStrc *)STORM_SMemAlloc(0xC, szNew, -1, 0);
+    pControl = pThis ? SPELLSEL_UiSpinnerProxyConstruct(pThis, 0, 223, 219, 0, (void *)UI_GoldDialogStepAmount)
                      : NULL;
-    gpGoldDialogStepButton = (int32_t)pControl;
+    gpGoldDialogStepButton = pControl;
     DIALOG_AddControl(gpGoldDialog, pControl, 0, 0);
 
-    pThis = STORM_SMemAlloc(0xC, szNew, -1, 0);
-    pSpinner = pThis ? EDITBOX_UiCtrlProxyConstructEditbox((uint32_t *)pThis, 0, 258, 228, 100, 1, nStatValue, 0xA, USEITEM_NullCallback, 1)
+    pThis = (D2UiCtrlProxyStrc *)STORM_SMemAlloc(0xC, szNew, -1, 0);
+    pSpinner = pThis ? EDITBOX_UiCtrlProxyConstructEditbox(pThis, 0, 258, 228, 100, 1, nStatValue, 0xA, USEITEM_NullCallback, 1)
                      : NULL;
-    gpGoldDialogSpinner = (int32_t)pSpinner;
+    gpGoldDialogSpinner = pSpinner;
     DIALOG_AddControl(gpGoldDialog, pSpinner, 0, 0);
     if (gpGoldDialogSpinner)
     {
-        GOLD_VSLOT(GoldCtrlSetFn, gpGoldDialogSpinner, 68)((uint32_t)gpGoldDialogSpinner, 1);
+        ((UICTRLPROXYARGFN)gpGoldDialogSpinner->pEditBoxVtbl->pfnSetFlag24)(gpGoldDialogSpinner, 1);
     }
 
-    pThis = STORM_SMemAlloc(0xC, szNew, -1, 0);
-    pControl = pThis ? CHAR_UiButtonProxyConstruct((int32_t *)pThis, 0, 250, 287, 0, (void *)UI_GoldDialogOnOk)
+    pThis = (D2UiCtrlProxyStrc *)STORM_SMemAlloc(0xC, szNew, -1, 0);
+    pControl = pThis ? CHAR_UiButtonProxyConstruct(pThis, 0, 250, 287, 0, (void *)UI_GoldDialogOnOk)
                      : NULL;
-    gpGoldDialogOkButton = (uint32_t)pControl;
+    gpGoldDialogOkButton = pControl;
     DIALOG_AddControl(gpGoldDialog, pControl, 0, 0);
     //  BUG: the OK button is called through without a NULL test (`mov ecx, gpGoldDialogOkButton / mov edx,[ecx]` at 0x6FB23E88), though the
     //  branch two lines up, which has an explicit `else pControl = NULL`, can make it NULL; the spinner's call (0x6FB23E1C) is guarded.
     //  REACHABLE: on allocation failure of the 12-byte control.
-    GOLD_VSLOT(GoldCtrlSetFn, gpGoldDialogOkButton, 48)((uint32_t)gpGoldDialogOkButton, 1);
+    ((UICTRLPROXYARGFN)gpGoldDialogOkButton->pButtonVtbl->pfnSetFlag24)(gpGoldDialogOkButton, 1);
 
-    pThis = STORM_SMemAlloc(0xC, szNew, -1, 0);
-    pControl = pThis ? CHAR_UiButtonProxyConstruct((int32_t *)pThis, 0, 355, 287, 1, (void *)UI_GoldDialogOnCancelButton)
+    pThis = (D2UiCtrlProxyStrc *)STORM_SMemAlloc(0xC, szNew, -1, 0);
+    pControl = pThis ? CHAR_UiButtonProxyConstruct(pThis, 0, 355, 287, 1, (void *)UI_GoldDialogOnCancelButton)
                      : NULL;
-    gpGoldDialogCancelButton = (uint32_t)pControl;
+    gpGoldDialogCancelButton = pControl;
     DIALOG_AddControl(gpGoldDialog, pControl, 0, 0);
 
     if (nGoldDialogMode == 2)
@@ -1312,7 +1305,7 @@ void __fastcall UI_OpenGoldEntryDialog(int32_t nGoldDialogMode)
     {
         if (gpGoldDialogSpinner)
         {
-            GOLD_VSLOT(GoldCtrlSetFn, gpGoldDialogSpinner, 56)((uint32_t)gpGoldDialogSpinner, nStatValue);
+            ((UICTRLPROXYARGFN)gpGoldDialogSpinner->pEditBoxVtbl->pfnSetTextFromInt)(gpGoldDialogSpinner, nStatValue);
         }
     }
 }
@@ -1344,12 +1337,12 @@ int32_t __cdecl UI_GoldDialogStepAmount()
     D2C_ItemStats nStatId;
     uint32_t nBalance;
 
-    nStepDirection = GOLD_VSLOT(GoldCtrlGetFn, gpGoldDialogStepButton, 44)((uint32_t)gpGoldDialogStepButton);
-    nStepSize = (uint32_t)GOLD_VSLOT(GoldCtrlGetArgFn, gpGoldDialogStepButton, 48)((uint32_t)gpGoldDialogStepButton, 0);
+    nStepDirection = ((UICTRLPROXYFN)gpGoldDialogStepButton->pSpinnerVtbl->pfnGetValue)(gpGoldDialogStepButton);
+    nStepSize = (uint32_t)((UICTRLPROXYARGFN)gpGoldDialogStepButton->pSpinnerVtbl->pfnTickAutoRepeat)(gpGoldDialogStepButton, 0);
 
     if (gpGoldDialogSpinner)
     {
-        gnGoldDialogAmount = GOLD_VSLOT(GoldCtrlGetFn, gpGoldDialogSpinner, 44)((uint32_t)gpGoldDialogSpinner);
+        gnGoldDialogAmount = ((UICTRLPROXYFN)gpGoldDialogSpinner->pEditBoxVtbl->pfnGetValue)(gpGoldDialogSpinner);
     }
     nGoldDialogAmount = (uint32_t)gnGoldDialogAmount;
 
@@ -1382,7 +1375,7 @@ int32_t __cdecl UI_GoldDialogStepAmount()
     gnGoldDialogAmount = (int32_t)nGoldDialogAmount;
     if (gpGoldDialogSpinner)
     {
-        GOLD_VSLOT(GoldCtrlSetFn, gpGoldDialogSpinner, 56)((uint32_t)gpGoldDialogSpinner, (int32_t)nGoldDialogAmount);
+        ((UICTRLPROXYARGFN)gpGoldDialogSpinner->pEditBoxVtbl->pfnSetTextFromInt)(gpGoldDialogSpinner, (int32_t)nGoldDialogAmount);
     }
     return 0;
 }

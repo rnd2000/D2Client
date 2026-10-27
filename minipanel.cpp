@@ -527,7 +527,7 @@ void __fastcall MINIPANEL_DrawButtonHint(int32_t nLayout)
             {
                 Unicode wszKeySuffix[30];
 
-                if ((uint16_t)CMDTBL_ControlsFindBoundKey(eCmd, TRUE) != 0xFFFF)
+                if (CMDTBL_ControlsFindBoundKey(eCmd, TRUE) != D2VK_INVALID)
                 {
                     memset(wszKeySuffix, 0, sizeof(wszKeySuffix));
                     pwszKeyName = CMDTBL_ControlsGetBoundKeyNameFallback(eCmd, TRUE);
@@ -535,7 +535,7 @@ void __fastcall MINIPANEL_DrawButtonHint(int32_t nLayout)
                     Unicode::sprintf(30, wszKeySuffix, pwszFormat, pwszKeyName);
                     Unicode::strcat(wszText, wszKeySuffix);
                 }
-                if ((uint16_t)CMDTBL_ControlsFindBoundKey(eCmd, FALSE) != 0xFFFF)
+                if (CMDTBL_ControlsFindBoundKey(eCmd, FALSE) != D2VK_INVALID)
                 {
                     memset(wszKeySuffix, 0, sizeof(wszKeySuffix));
                     pwszKeyName = CMDTBL_ControlsGetBoundKeyNameFallback(eCmd, FALSE);

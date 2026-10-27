@@ -72,7 +72,7 @@ static_assert(sizeof(D2ClientDialogLineStrc) == 272,
 void __stdcall DIALOG_OnMouseMove(SMSGHANDLER_PARAMS *pMsg)
 {
     D2ClientDialogStrc *pDialog;
-    uint32_t *pControl;
+    D2ClientDialogControlNodeStrc *pNode;
     int32_t nWasSelected;
     int32_t nHitLine;
 
@@ -82,13 +82,13 @@ void __stdcall DIALOG_OnMouseMove(SMSGHANDLER_PARAMS *pMsg)
         return;
     }
 
-    pControl = (uint32_t *)pDialog->pControlList;
-    if (pControl)
+    pNode = pDialog->pControlList;
+    if (pNode)
     {
-        while (!*pControl || (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *)) (*(uint32_t *)*pControl + 20))(*pControl, pMsg) != 1)
+        while (!pNode->pControl || ((UICTRLPROXYMSGFN)pNode->pControl->pBaseVtbl->pfnOnMouseMove)(pNode->pControl, pMsg) != 1)
         {
-            pControl = (uint32_t *)pControl[1];
-            if (!pControl)
+            pNode = pNode->pNext;
+            if (!pNode)
             {
                 goto HIT_TEST_LINES;
             }
@@ -171,7 +171,7 @@ int32_t __fastcall DIALOG_HitTestLine(D2ClientDialogStrc *pDialog, SMSGHANDLER_P
 void __stdcall DIALOG_OnMouseUp(SMSGHANDLER_PARAMS *pMsg)
 {
     D2ClientDialogStrc *pDialog;
-    uint32_t *pControl;
+    D2ClientDialogControlNodeStrc *pNode;
     int32_t bPressWasOnLines;
     int32_t nHitLine;
     int32_t (*pfnOnSelect)(void);
@@ -222,9 +222,9 @@ FINISH_PRESS:
     }
 
     //  the press did not go to the lines, so the controls get the release
-    for (pControl = (uint32_t *)pDialog->pControlList; pControl; pControl = (uint32_t *)pControl[1])
+    for (pNode = pDialog->pControlList; pNode; pNode = pNode->pNext)
     {
-        if (*pControl && (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *)) (*(uint32_t *)*pControl + 16))(*pControl, pMsg) == 1)
+        if (pNode->pControl && ((UICTRLPROXYMSGFN)pNode->pControl->pBaseVtbl->pfnOnMouseUp)(pNode->pControl, pMsg) == 1)
         {
             break;
         }
@@ -247,7 +247,7 @@ FINISH_PRESS:
 void __stdcall DIALOG_OnMouseDown(SMSGHANDLER_PARAMS *pMsg)
 {
     D2ClientDialogStrc *pDialog;
-    uint32_t *pControl;
+    D2ClientDialogControlNodeStrc *pNode;
     int32_t nWasSelected;
     int32_t nHitLine;
     int32_t nLeft;
@@ -269,13 +269,13 @@ void __stdcall DIALOG_OnMouseDown(SMSGHANDLER_PARAMS *pMsg)
         goto CONSUME;
     }
 
-    pControl = (uint32_t *)pDialog->pControlList;
-    if (pControl)
+    pNode = pDialog->pControlList;
+    if (pNode)
     {
-        while (!*pControl || (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *)) (*(uint32_t *)*pControl + 12))(*pControl, pMsg) != 1)
+        while (!pNode->pControl || ((UICTRLPROXYMSGFN)pNode->pControl->pBaseVtbl->pfnOnMouseDown)(pNode->pControl, pMsg) != 1)
         {
-            pControl = (uint32_t *)pControl[1];
-            if (!pControl)
+            pNode = pNode->pNext;
+            if (!pNode)
             {
                 goto HIT_TEST_LINES;
             }
@@ -403,7 +403,7 @@ void __stdcall DIALOG_OnMouseWheel(SMSGHANDLER_PARAMS *pMsg)
 {
     int32_t nWheelNotches;
     D2ClientDialogStrc *pDialog;
-    uint32_t *pControl;
+    D2ClientDialogControlNodeStrc *pNode;
     int32_t nSelected;
     int32_t nNumLines;
 
@@ -424,13 +424,13 @@ void __stdcall DIALOG_OnMouseWheel(SMSGHANDLER_PARAMS *pMsg)
         exit(-1);
     }
 
-    pControl = (uint32_t *)pDialog->pControlList;
-    if (pControl)
+    pNode = pDialog->pControlList;
+    if (pNode)
     {
-        while (!*pControl || (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *)) (*(uint32_t *)*pControl + 8))(*pControl, pMsg) != 1)
+        while (!pNode->pControl || ((UICTRLPROXYMSGFN)pNode->pControl->pBaseVtbl->pfnOnMouseWheel)(pNode->pControl, pMsg) != 1)
         {
-            pControl = (uint32_t *)pControl[1];
-            if (!pControl)
+            pNode = pNode->pNext;
+            if (!pNode)
             {
                 goto STEP_SELECTION;
             }
@@ -555,7 +555,7 @@ void __stdcall DIALOG_OnEscape(SMSGHANDLER_PARAMS *pMsg)
 void __stdcall DIALOG_OnArrowRight(SMSGHANDLER_PARAMS *pMsg)
 {
     D2ClientDialogStrc *pDialog;
-    uint32_t *pControl;
+    D2ClientDialogControlNodeStrc *pNode;
     int32_t nSelected;
     int32_t nNumLines;
 
@@ -570,13 +570,13 @@ void __stdcall DIALOG_OnArrowRight(SMSGHANDLER_PARAMS *pMsg)
         exit(-1);
     }
 
-    pControl = (uint32_t *)pDialog->pControlList;
-    if (pControl)
+    pNode = pDialog->pControlList;
+    if (pNode)
     {
-        while (!*pControl || (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *)) (*(uint32_t *)*pControl + 36))(*pControl, pMsg) != 1)
+        while (!pNode->pControl || ((UICTRLPROXYMSGFN)pNode->pControl->pBaseVtbl->pfnOnArrowRight)(pNode->pControl, pMsg) != 1)
         {
-            pControl = (uint32_t *)pControl[1];
-            if (!pControl)
+            pNode = pNode->pNext;
+            if (!pNode)
             {
                 goto STEP_SELECTION;
             }
@@ -613,7 +613,7 @@ STEP_SELECTION:
 void __stdcall DIALOG_OnArrowLeft(SMSGHANDLER_PARAMS *pMsg)
 {
     D2ClientDialogStrc *pDialog;
-    uint32_t *pControl;
+    D2ClientDialogControlNodeStrc *pNode;
     int32_t nSelected;
     int32_t nNumLines;
 
@@ -628,13 +628,13 @@ void __stdcall DIALOG_OnArrowLeft(SMSGHANDLER_PARAMS *pMsg)
         exit(-1);
     }
 
-    pControl = (uint32_t *)pDialog->pControlList;
-    if (pControl)
+    pNode = pDialog->pControlList;
+    if (pNode)
     {
-        while (!*pControl || (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *)) (*(uint32_t *)*pControl + 40))(*pControl, pMsg) != 1)
+        while (!pNode->pControl || ((UICTRLPROXYMSGFN)pNode->pControl->pBaseVtbl->pfnOnArrowLeft)(pNode->pControl, pMsg) != 1)
         {
-            pControl = (uint32_t *)pControl[1];
-            if (!pControl)
+            pNode = pNode->pNext;
+            if (!pNode)
             {
                 goto STEP_SELECTION;
             }
@@ -671,7 +671,7 @@ STEP_SELECTION:
 void __stdcall DIALOG_OnArrowUp(SMSGHANDLER_PARAMS *pMsg)
 {
     D2ClientDialogStrc *pDialog;
-    uint32_t *pControl;
+    D2ClientDialogControlNodeStrc *pNode;
     int32_t nSelected;
     int32_t nNumLines;
 
@@ -686,13 +686,13 @@ void __stdcall DIALOG_OnArrowUp(SMSGHANDLER_PARAMS *pMsg)
         exit(-1);
     }
 
-    pControl = (uint32_t *)pDialog->pControlList;
-    if (pControl)
+    pNode = pDialog->pControlList;
+    if (pNode)
     {
-        while (!*pControl || (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *)) (*(uint32_t *)*pControl + 28))(*pControl, pMsg) != 1)
+        while (!pNode->pControl || ((UICTRLPROXYMSGFN)pNode->pControl->pBaseVtbl->pfnOnArrowUp)(pNode->pControl, pMsg) != 1)
         {
-            pControl = (uint32_t *)pControl[1];
-            if (!pControl)
+            pNode = pNode->pNext;
+            if (!pNode)
             {
                 goto STEP_SELECTION;
             }
@@ -729,7 +729,7 @@ STEP_SELECTION:
 void __stdcall DIALOG_OnArrowDown(SMSGHANDLER_PARAMS *pMsg)
 {
     D2ClientDialogStrc *pDialog;
-    uint32_t *pControl;
+    D2ClientDialogControlNodeStrc *pNode;
     int32_t nSelected;
     int32_t nNumLines;
 
@@ -744,13 +744,13 @@ void __stdcall DIALOG_OnArrowDown(SMSGHANDLER_PARAMS *pMsg)
         exit(-1);
     }
 
-    pControl = (uint32_t *)pDialog->pControlList;
-    if (pControl)
+    pNode = pDialog->pControlList;
+    if (pNode)
     {
-        while (!*pControl || (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *)) (*(uint32_t *)*pControl + 32))(*pControl, pMsg) != 1)
+        while (!pNode->pControl || ((UICTRLPROXYMSGFN)pNode->pControl->pBaseVtbl->pfnOnArrowDown)(pNode->pControl, pMsg) != 1)
         {
-            pControl = (uint32_t *)pControl[1];
-            if (!pControl)
+            pNode = pNode->pNext;
+            if (!pNode)
             {
                 goto STEP_SELECTION;
             }
@@ -863,7 +863,7 @@ void __stdcall DIALOG_OnChar(SMSGHANDLER_PARAMS *pMsg)
 {
     D2ClientDialogStrc *pDialogAtEntry;
     D2ClientDialogStrc *pDialogFresh;
-    uint32_t *pControl;
+    D2ClientDialogControlNodeStrc *pNode;
     WPARAM wParam;
     void (*pfnCallback)(void);
 
@@ -875,11 +875,11 @@ void __stdcall DIALOG_OnChar(SMSGHANDLER_PARAMS *pMsg)
         exit(-1);
     }
 
-    for (pControl = (uint32_t *)pDialogAtEntry->pControlList; pControl; pControl = (uint32_t *)pControl[1])
+    for (pNode = pDialogAtEntry->pControlList; pNode; pNode = pNode->pNext)
     {
-        if (*pControl)
+        if (pNode->pControl)
         {
-            if ((*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *)) (*(uint32_t *)*pControl + 24))(*pControl, pMsg))
+            if (((UICTRLPROXYMSGFN)pNode->pControl->pBaseVtbl->pfnOnChar)(pNode->pControl, pMsg))
             {
                 return;
             }
@@ -987,7 +987,7 @@ void __cdecl DIALOG_Shutdown(void)
 }
 
 //1.10f: D2Client.0x6FAD68F0
-//  Pushes a control onto the dialog: an 8-byte { pObject, pNext } node from FOG_Alloc, inserted at the head of pControlList.
+//  Pushes a control onto the dialog: an 8-byte { pControl, pNext } node from FOG_Alloc, inserted at the head of pControlList.
 //  The control objects have vtables and every input handler above dispatches to them before falling back to the dialog's own lines:
 //  +8 wheel, +12 mouse down, +16 mouse up, +20 mouse move, +24 char, +28/+32/+36/+40 the four arrows. A control answering 1 consumes the event.
 //  The compiler re-reads pDialog->pControlList right after writing it, so a head insertion uses two slots for one pointer:
@@ -1002,11 +1002,11 @@ void __cdecl DIALOG_Shutdown(void)
 //  Four parameters over a retn 8; nUnused1 and nUnused2 are read by nothing in the body (the call sites pass values that read like
 //  coordinates, and they are ignored).
 //  void: no caller reads what the original leaves in eax.
-void __fastcall DIALOG_AddControl(D2ClientDialogStrc *pDialog, void *pControl, int32_t nUnused1, int32_t nUnused2)
+void __fastcall DIALOG_AddControl(D2ClientDialogStrc *pDialog, D2UiCtrlProxyStrc *pControl, int32_t nUnused1, int32_t nUnused2)
 {
-    void *pOldHead;
-    uint32_t *pNode;
-    uint32_t *pStored;
+    D2ClientDialogControlNodeStrc *pOldHead;
+    D2ClientDialogControlNodeStrc *pNode;
+    D2ClientDialogControlNodeStrc *pStored;
 
     if (!pDialog)
     {
@@ -1015,11 +1015,11 @@ void __fastcall DIALOG_AddControl(D2ClientDialogStrc *pDialog, void *pControl, i
     }
 
     pOldHead = pDialog->pControlList;
-    pNode = (uint32_t *)FOG_Alloc(8, szDialogCpp, 860, 0);
+    pNode = (D2ClientDialogControlNodeStrc *)FOG_Alloc(8, szDialogCpp, 860, 0);
     pDialog->pControlList = pNode;
-    pNode[1] = (uint32_t)pOldHead;
-    pStored = (uint32_t *)pDialog->pControlList;
-    *pStored = (uint32_t)pControl;
+    pNode->pNext = pOldHead;
+    pStored = pDialog->pControlList;
+    pStored->pControl = pControl;
 }
 
 //1.10f: D2Client.0x6FAD6950
@@ -1240,8 +1240,8 @@ D2ClientDialogStrc *__fastcall DIALOG_Create(int32_t nCenterX, int32_t nCenterY,
 void __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog)
 {
     D2ClientDialogStrc *pDialog;
-    uint32_t *pControl;
-    uint32_t *pNextControl;
+    D2ClientDialogControlNodeStrc *pNode;
+    D2ClientDialogControlNodeStrc *pNextNode;
     D2ClientDialogStrc *pNext;
 
     if (--gnDialogNestDepth)
@@ -1262,16 +1262,16 @@ void __fastcall DIALOG_Close(D2ClientDialogStrc *hDialog)
     pDialog = gpDialogList;
     gbDialogHandlersRegistered = 0;
 
-    pControl = (uint32_t *)pDialog->pControlList;
-    if (pControl)
+    pNode = pDialog->pControlList;
+    if (pNode)
     {
         do
         {
-            pNextControl = (uint32_t *)pControl[1];
-            FOG_Free(pControl, szDialogCpp, 1072, 0);
-            pControl = pNextControl;
+            pNextNode = pNode->pNext;
+            FOG_Free(pNode, szDialogCpp, 1072, 0);
+            pNode = pNextNode;
         }
-        while (pNextControl);
+        while (pNextNode);
     }
 
     if (pDialog->bOwnsImage)
@@ -1312,7 +1312,7 @@ void __fastcall DIALOG_Draw(D2ClientDialogStrc *pDialog)
     int32_t nRight;
     int32_t nBottomEdge;
     int32_t bOwnsImage;
-    uint32_t *pControl;
+    D2ClientDialogControlNodeStrc *pNode;
     int32_t nPrevFont;
     int32_t nYOffset;
     int32_t iLine;
@@ -1356,11 +1356,11 @@ void __fastcall DIALOG_Draw(D2ClientDialogStrc *pDialog)
         UIPANELS_DrawTiledFrame(&pRect);
     }
 
-    for (pControl = (uint32_t *)pDialog->pControlList; pControl; pControl = (uint32_t *)pControl[1])
+    for (pNode = pDialog->pControlList; pNode; pNode = pNode->pNext)
     {
-        if (*pControl)
+        if (pNode->pControl)
         {
-            (*(void(__thiscall **)(uint32_t))(*(uint32_t *)*pControl + 4))(*pControl);
+            ((UICTRLPROXYFN)pNode->pControl->pBaseVtbl->pfnDraw)(pNode->pControl);
         }
     }
 

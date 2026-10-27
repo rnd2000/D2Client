@@ -47,7 +47,8 @@ static_assert(sizeof(D2ClientEditBoxStrc) == 90,
 //  nLineCount <= 0 is forced to 1 and raises bDrawBackground, which is what turns on the filled rectangle in Draw.
 //  bNumericOnly starts at 1, so an edit box is numeric until something says otherwise; the only thing that could is vtable slot 18, which
 //  no code in the module indexes.
-char *__fastcall EDITBOX_UiEditBoxConstruct(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont)
+D2ClientEditBoxStrc *__fastcall EDITBOX_UiEditBoxConstruct(D2ClientEditBoxStrc *pEditBox, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue,
+                                                            uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont)
 {
     uint32_t nBufferBytes;
     Unicode *pwszAltBuffer;
@@ -108,7 +109,7 @@ char *__fastcall EDITBOX_UiEditBoxConstruct(D2ClientEditBoxStrc *pEditBox, int32
     pEditBox->nLineCount = nLines;
     pEditBox->bAllowKeyRepeat = 0;
     pEditBox->pfnCharFilter = 0;
-    return (char *)pEditBox;
+    return pEditBox;
 }
 
 //1.10f: D2Client.0x6FAD7730
@@ -142,7 +143,7 @@ void __fastcall EDITBOX_UiEditBoxDestruct(D2ClientEditBoxStrc *pEditBox)
     }
     //  no null check here, unlike the two above
     ARCHIVE_CellFileFree(pEditBox->hCelFile);
-    LISTBOX_UiCtrlBaseDestruct((int32_t *)pEditBox);
+    LISTBOX_UiCtrlBaseDestruct(pEditBox);
 }
 
 //1.10f: D2Client.0x6FAD77F0
@@ -689,24 +690,24 @@ int32_t __fastcall EDITBOX_UiEditBoxOnArrowLeft(D2ClientEditBoxStrc *pEditBox, i
 //1.10f: D2Client.0x6FAD7FD0
 //  Destroys the proxy and the control it holds: the wrapped control is sent its own slot 0, the scalar-deleting destructor, with the flag set,
 //  so the proxy frees what it wraps. Then the shared base destructor runs.
-void __fastcall EDITBOX_UiCtrlProxyDestruct(int32_t *pProxy)
+void __fastcall EDITBOX_UiCtrlProxyDestruct(D2UiCtrlProxyStrc *pProxy)
 {
-    void (__thiscall ***pControl)(uint32_t, int32_t);
+    D2ClientEditBoxStrc *pEditBox;
 
-    *pProxy = (int32_t)&gVtblUiControlProxy;
-    pControl = (void (__thiscall ***)(uint32_t, int32_t))pProxy[2];
-    if (pControl)
+    pProxy->pEditBoxVtbl = &gVtblUiControlProxy;
+    pEditBox = pProxy->pEditBox;
+    if (pEditBox)
     {
-        (**pControl)((uint32_t)pControl, 1);
+        ((D2ClientEditBoxStrc *(__thiscall *)(D2ClientEditBoxStrc *, uint8_t))pEditBox->pVtbl->pfnDeletingDtor)(pEditBox, 1);
     }
     LISTBOX_UiCtrlBaseDestruct(pProxy);
 }
 
 //1.10f: D2Client.0x6FAD8030
 //  The proxy's scalar-deleting destructor, slot 0, shaped like the edit box's.
-uint32_t **__fastcall EDITBOX_UiCtrlProxyVecDelDtor(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject)
+D2UiCtrlProxyStrc *__fastcall EDITBOX_UiCtrlProxyVecDelDtor(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, uint8_t bFreeObject)
 {
-    EDITBOX_UiCtrlProxyDestruct((int32_t *)pProxy);
+    EDITBOX_UiCtrlProxyDestruct(pProxy);
     if ((bFreeObject & 1) != 0 && pProxy)
     {
         STORM_SMemFree(pProxy, szDelete, -1, 0);
@@ -719,12 +720,13 @@ uint32_t **__fastcall EDITBOX_UiCtrlProxyVecDelDtor(uint32_t **pProxy, int32_t n
 //  SMemAlloc(0x5A, "new", -1, 0) is the edit box, 0x5A being sizeof(D2ClientEditBoxStrc) (the static_assert at the head of this file ties the
 //  two together). The allocation is checked, and a failure stores a null control rather than halting, which every forwarder would then
 //  dereference. Its nine parameters are the edit box's own, passed through untouched.
-uint32_t *__fastcall EDITBOX_UiCtrlProxyConstructEditbox(uint32_t *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue, uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont)
+D2UiCtrlProxyStrc *__fastcall EDITBOX_UiCtrlProxyConstructEditbox(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nLineCount, int32_t nMaxValue,
+                                                                   uint16_t nMaxChars, int32_t (__cdecl *pfnCallback)(), int32_t nFont)
 {
     D2ClientEditBoxStrc *pEditBox;
-    char *pConstructed;
+    D2ClientEditBoxStrc *pConstructed;
 
-    *pProxy = (uint32_t)&gVtblUiControlProxy;
+    pProxy->pEditBoxVtbl = &gVtblUiControlProxy;
     pEditBox = (D2ClientEditBoxStrc *)STORM_SMemAlloc(0x5A, szNew, -1, 0);
     if (pEditBox)
     {
@@ -734,114 +736,114 @@ uint32_t *__fastcall EDITBOX_UiCtrlProxyConstructEditbox(uint32_t *pProxy, int32
     {
         pConstructed = NULL;
     }
-    pProxy[2] = (uint32_t)pConstructed;
+    pProxy->pEditBox = pConstructed;
     return pProxy;
 }
 
 //1.10f: D2Client.0x6FAD8100
 //  Forwards to the wrapped control's slot 4, the edit box's OnMouseUp.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot4(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot4(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *))(**(pProxy + 2) + 16))((uint32_t)*(pProxy + 2), pMsg);
+    return (*(int32_t (__thiscall *const *const *)(void *, SMSGHANDLER_PARAMS *))pProxy->pImpl)[4](pProxy->pImpl, pMsg);
 }
 
 //1.10f: D2Client.0x6FAD8110
 //  Forwards to the wrapped control's slot 5, the edit box's (mouse move) null.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot5(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot5(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *))(**(pProxy + 2) + 20))((uint32_t)*(pProxy + 2), pMsg);
+    return (*(int32_t (__thiscall *const *const *)(void *, SMSGHANDLER_PARAMS *))pProxy->pImpl)[5](pProxy->pImpl, pMsg);
 }
 
 //1.10f: D2Client.0x6FAD8120
 //  Forwards to the wrapped control's slot 6, the edit box's OnChar.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot6(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot6(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *))(**(pProxy + 2) + 24))((uint32_t)*(pProxy + 2), pMsg);
+    return (*(int32_t (__thiscall *const *const *)(void *, SMSGHANDLER_PARAMS *))pProxy->pImpl)[6](pProxy->pImpl, pMsg);
 }
 
 //1.10f: D2Client.0x6FAD8130
 //  Forwards to the wrapped control's slot 8, the edit box's (arrow down) null.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot8(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot8(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *))(**(pProxy + 2) + 32))((uint32_t)*(pProxy + 2), pMsg);
+    return (*(int32_t (__thiscall *const *const *)(void *, SMSGHANDLER_PARAMS *))pProxy->pImpl)[8](pProxy->pImpl, pMsg);
 }
 
 //1.10f: D2Client.0x6FAD8140
 //  Forwards to the wrapped control's slot 7, the edit box's (arrow up) null.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot7(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot7(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *))(**(pProxy + 2) + 28))((uint32_t)*(pProxy + 2), pMsg);
+    return (*(int32_t (__thiscall *const *const *)(void *, SMSGHANDLER_PARAMS *))pProxy->pImpl)[7](pProxy->pImpl, pMsg);
 }
 
 //1.10f: D2Client.0x6FAD8150
 //  Forwards to the wrapped control's slot 9, the edit box's OnArrowRight.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot9(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot9(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *))(**(pProxy + 2) + 36))((uint32_t)*(pProxy + 2), pMsg);
+    return (*(int32_t (__thiscall *const *const *)(void *, SMSGHANDLER_PARAMS *))pProxy->pImpl)[9](pProxy->pImpl, pMsg);
 }
 
 //1.10f: D2Client.0x6FAD8160
 //  Forwards to the wrapped control's slot 10, the edit box's OnArrowLeft.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot10(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot10(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *))(**(pProxy + 2) + 40))((uint32_t)*(pProxy + 2), pMsg);
+    return (*(int32_t (__thiscall *const *const *)(void *, SMSGHANDLER_PARAMS *))pProxy->pImpl)[10](pProxy->pImpl, pMsg);
 }
 
 //1.10f: D2Client.0x6FAD8170
 //  Forwards to the wrapped control's slot 11, the edit box's GetIntValue.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot11(uint32_t **pProxy)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot11(D2UiCtrlProxyStrc *pProxy)
 {
-    return (*(int32_t(__thiscall **)(uint32_t))(**(pProxy + 2) + 44))((uint32_t)*(pProxy + 2));
+    return (*(int32_t (__thiscall *const *const *)(void *))pProxy->pImpl)[11](pProxy->pImpl);
 }
 
 //1.10f: D2Client.0x6FAD8180
 //  Forwards to the wrapped control's slot 13, the edit box's EDITBOX_ReturnZeroCallback. It sits in proxy slot 12 and reaches impl slot 13.
 //  It is not a tail jump: it calls, then `retn 4`, so it takes one stack argument, does not pass it on, and pops it itself, because impl slot 13
 //  takes nothing and purges nothing.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot13Arg(uint32_t **pProxy, int32_t nEdxUnused, int32_t nUnused)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot13Arg(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nUnused)
 {
-    (*(int32_t(__thiscall **)(uint32_t))(**(pProxy + 2) + 52))((uint32_t)*(pProxy + 2));
+    (*(int32_t (__thiscall *const *const *)(void *))pProxy->pImpl)[13](pProxy->pImpl);
     return 0;
 }
 
 //1.10f: D2Client.0x6FAD8190
 //  Forwards to the wrapped control's slot 15, the edit box's SetTextFromInt. It sits in proxy slot 14 and reaches impl slot 15.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot15(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot15(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, int32_t))(**(pProxy + 2) + 60))((uint32_t)*(pProxy + 2), nArg);
+    return (*(int32_t (__thiscall *const *const *)(void *, int32_t))pProxy->pImpl)[15](pProxy->pImpl, nArg);
 }
 
 //1.10f: D2Client.0x6FAD81A0
 //  Forwards to the wrapped control's slot 14, the edit box's SetTextFromAscii. It sits in proxy slot 13 and reaches impl slot 14.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot14(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot14(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, int32_t))(**(pProxy + 2) + 56))((uint32_t)*(pProxy + 2), nArg);
+    return (*(int32_t (__thiscall *const *const *)(void *, int32_t))pProxy->pImpl)[14](pProxy->pImpl, nArg);
 }
 
 //1.10f: D2Client.0x6FAD81B0
 //  Forwards to the wrapped control's slot 12, the edit box's GetTextUtf8. It sits in proxy slot 15 and reaches impl slot 12.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot12(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot12(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, int32_t))(**(pProxy + 2) + 48))((uint32_t)*(pProxy + 2), nArg);
+    return (*(int32_t (__thiscall *const *const *)(void *, int32_t))pProxy->pImpl)[12](pProxy->pImpl, nArg);
 }
 
 //1.10f: D2Client.0x6FAD81C0
 //  Forwards to the wrapped control's slot 16, the edit box's SetWidth.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot16(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot16(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, int32_t))(**(pProxy + 2) + 64))((uint32_t)*(pProxy + 2), nArg);
+    return (*(int32_t (__thiscall *const *const *)(void *, int32_t))pProxy->pImpl)[16](pProxy->pImpl, nArg);
 }
 
 //1.10f: D2Client.0x6FAD81D0
 //  Forwards to the wrapped control's slot 17, the edit box's EDITBOX_UiCtrlSetFlag24.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot17(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot17(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, int32_t))(**(pProxy + 2) + 68))((uint32_t)*(pProxy + 2), nArg);
+    return (*(int32_t (__thiscall *const *const *)(void *, int32_t))pProxy->pImpl)[17](pProxy->pImpl, nArg);
 }
 
 //1.10f: D2Client.0x6FAD81E0
 //  Forwards to the wrapped control's slot 18, the edit box's SetNumericOnly.
-int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot18(uint32_t **pProxy, int32_t nEdxUnused, int32_t nArg)
+int32_t __fastcall EDITBOX_UiCtrlProxyFwdSlot18(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nArg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, int32_t))(**(pProxy + 2) + 72))((uint32_t)*(pProxy + 2), nArg);
+    return (*(int32_t (__thiscall *const *const *)(void *, int32_t))pProxy->pImpl)[18](pProxy->pImpl, nArg);
 }

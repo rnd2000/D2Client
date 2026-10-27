@@ -224,7 +224,7 @@ D2ClientListBoxStrc *__fastcall LISTBOX_ImplConstruct(D2ClientListBoxStrc *pList
 //  object in eax (the D2UnitStrc * return type stands for that).
 D2ClientListBoxStrc *__fastcall LISTBOX_ImplVecDelDtor(D2ClientListBoxStrc *pListBox, int32_t nEdxUnused, uint8_t bDelete)
 {
-    LISTBOX_UiCtrlBaseDestruct((int32_t *)pListBox);
+    LISTBOX_UiCtrlBaseDestruct(pListBox);
     if ((bDelete & 1) != 0 && pListBox)
         STORM_SMemFree(pListBox, szDelete, -1, 0);
     return pListBox;
@@ -234,9 +234,9 @@ D2ClientListBoxStrc *__fastcall LISTBOX_ImplVecDelDtor(D2ClientListBoxStrc *pLis
 //1.10f: D2Client.0x6FAEFD30
 //  The base destructor every UI control chains into: it puts gVtblUiControlBase back and does nothing else. The destructors of the button, the
 //  edit box, the spinner and the list box (and their proxies) use it.
-void __fastcall LISTBOX_UiCtrlBaseDestruct(int32_t *pControl)
+void __fastcall LISTBOX_UiCtrlBaseDestruct(void *pControl)
 {
-    *pControl = (int32_t)(INT_PTR)&gVtblUiControlBase;
+    *(const D2UiControlBaseVtbl **)pControl = &gVtblUiControlBase;
 }
 
 
@@ -478,6 +478,7 @@ void __fastcall LISTBOX_DrawColumnText(D2ClientListBoxStrc *pListBox, int32_t nE
         D2WIN_10117_DrawText(wszText, nX, nY, nColor, 0);
     }
 }
+typedef int32_t (__thiscall *LISTBOXIMPLMSGFN)(D2ClientListBoxStrc *pListBox, SMSGHANDLER_PARAMS *pMsg);
 
 
 //1.10f: D2Client.0x6FAF0190
@@ -621,7 +622,7 @@ int32_t __fastcall LISTBOX_ImplDraw(D2ClientListBoxStrc *pListBox)
             pListBox->nHoldTicks = nHoldTicks;
             if (nHoldTicks && nHoldTicks % 10)      //  unsigned remainder (div)
             {
-                pListBox->pVtbl->pfnOnArrowUp(pListBox, 0, (SMSGHANDLER_PARAMS *)&nDummyMsg);
+                ((LISTBOXIMPLMSGFN)pListBox->pVtbl->pfnOnArrowUp)(pListBox, (SMSGHANDLER_PARAMS *)&nDummyMsg);
                 return (int32_t)D2WIN_10127_SetFont((enum Font)nPrevFont);
             }
         }
@@ -636,7 +637,7 @@ int32_t __fastcall LISTBOX_ImplDraw(D2ClientListBoxStrc *pListBox)
                 {
                     if (nHoldTicks % 10)
                     {
-                        pListBox->pVtbl->pfnOnArrowDown(pListBox, 0, (SMSGHANDLER_PARAMS *)&nDummyMsg);
+                        ((LISTBOXIMPLMSGFN)pListBox->pVtbl->pfnOnArrowDown)(pListBox, (SMSGHANDLER_PARAMS *)&nDummyMsg);
                     }
                 }
             }
@@ -794,12 +795,12 @@ int32_t __fastcall LISTBOX_ImplOnMouseWheel(D2ClientListBoxStrc *pListBox, int32
     if (nDelta > 0)
     {
         pListBox->nSelection = pListBox->nTopEntry;
-        pListBox->pVtbl->pfnOnArrowUp(pListBox, 0, pMsg);
+        ((LISTBOXIMPLMSGFN)pListBox->pVtbl->pfnOnArrowUp)(pListBox, pMsg);
     }
     else if (nDelta < 0)
     {
         pListBox->nSelection = pListBox->nVisibleRows + pListBox->nTopEntry - 1;
-        pListBox->pVtbl->pfnOnArrowDown(pListBox, 0, pMsg);
+        ((LISTBOXIMPLMSGFN)pListBox->pVtbl->pfnOnArrowDown)(pListBox, pMsg);
     }
 
     pMsg->bReturn = 1;
@@ -901,7 +902,7 @@ int32_t __fastcall LISTBOX_ImplOnMouseUp(D2ClientListBoxStrc *pListBox, int32_t 
         {
             if (pMsg->nYpos > pListBox->nScrollBarY - 12 && pMsg->nYpos < pListBox->nScrollBarY)
             {
-                pListBox->pVtbl->pfnOnArrowUp(pListBox, 0, pMsg);
+                ((LISTBOXIMPLMSGFN)pListBox->pVtbl->pfnOnArrowUp)(pListBox, pMsg);
             }
         }
         pListBox->nHoveredEntry = -1;
@@ -916,7 +917,7 @@ int32_t __fastcall LISTBOX_ImplOnMouseUp(D2ClientListBoxStrc *pListBox, int32_t 
         nDownArrowY = pListBox->nScrollBarY + 12 * pListBox->nTrackRows;
         if (pMsg->nXpos > pListBox->nScrollBarX && pMsg->nXpos < pListBox->nScrollBarX + 16 && pMsg->nYpos > nDownArrowY - 12 && pMsg->nYpos < nDownArrowY)
         {
-            pListBox->pVtbl->pfnOnArrowDown(pListBox, 0, pMsg);
+            ((LISTBOXIMPLMSGFN)pListBox->pVtbl->pfnOnArrowDown)(pListBox, pMsg);
             pListBox->nHoveredEntry = -1;
             return 0;
         }
@@ -1132,24 +1133,24 @@ int32_t __fastcall LISTBOX_ImplGetSelection(D2ClientListBoxStrc *pListBox)
 //  DIFFERENCE: the original's prologue registers an exception-handling frame whose one unwind action runs LISTBOX_UiCtrlBaseDestruct on the proxy
 //  if the body's destructor throws; ours has none.
 //  void: eax is the body destructor's answer, or on a null body the old exception-list head (fs:0, 0x6FAF10B7); no caller reads it.
-void __fastcall LISTBOX_ProxyDestruct(int32_t *pProxy, int32_t nEdxUnused)
+void __fastcall LISTBOX_ProxyDestruct(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused)
 {
-    int32_t(__thiscall ***pBody)(int32_t, int32_t);
+    D2ClientListBoxStrc *pBody;
 
-    *pProxy = (int32_t)(INT_PTR)&gVtblListBox;
-    pBody = (int32_t(__thiscall ***)(int32_t, int32_t))pProxy[2];
+    pProxy->pListBoxVtbl = &gVtblListBox;
+    pBody = pProxy->pListBox;
     if (pBody)
-        (**pBody)((int32_t)pBody, 1);
-    *pProxy = (int32_t)(INT_PTR)&gVtblUiControlBase;
+        ((D2ClientListBoxStrc *(__thiscall *)(D2ClientListBoxStrc *, uint8_t))pBody->pVtbl->pfnDeletingDtor)(pBody, 1);
+    pProxy->pBaseVtbl = &gVtblUiControlBase;
 }
 
 
 //1.10f: D2Client.0x6FAF1100
 //  Proxy vtable slot 0: LISTBOX_ProxyDestruct plus a STORM_SMemFree when bit 0 of the flag is set (the compiler's delete convention: the object
 //  was heap-allocated, free it).
-uint32_t **__fastcall LISTBOX_ProxyVecDelDtor(uint32_t **pProxy, int32_t nEdxUnused, uint8_t bFreeObject)
+D2UiCtrlProxyStrc *__fastcall LISTBOX_ProxyVecDelDtor(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, uint8_t bFreeObject)
 {
-    LISTBOX_ProxyDestruct((int32_t *)pProxy, 0);
+    LISTBOX_ProxyDestruct(pProxy, 0);
     if ((bFreeObject & 1) != 0 && pProxy)
         STORM_SMemFree(pProxy, szDelete, -1, 0);
     return pProxy;
@@ -1163,12 +1164,13 @@ uint32_t **__fastcall LISTBOX_ProxyVecDelDtor(uint32_t **pProxy, int32_t nEdxUnu
 //  DIFFERENCE: the original's prologue registers an exception-handling frame with two unwind actions: state 1, around ImplConstruct, frees the
 //  block with the CRT's operator delete (not with Storm's SMemFree, which matches the SMemAlloc), and state 0 runs LISTBOX_UiCtrlBaseDestruct on
 //  the proxy. Neither runs unless ImplConstruct throws; ours has no frame.
-void *__fastcall LISTBOX_Construct(void *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor, int32_t nFont, int32_t (__cdecl *pfnOnSelect)(), uint8_t bWideLayout)
+D2UiCtrlProxyStrc *__fastcall LISTBOX_Construct(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nX, int32_t nY, int32_t nWidth, int32_t nHeight, int32_t nEntryGap, int32_t nDefaultColor,
+                                                 int32_t nFont, int32_t (__cdecl *pfnOnSelect)(), uint8_t bWideLayout)
 {
     D2ClientListBoxStrc *pBody;
     D2ClientListBoxStrc *pConstructed;
 
-    *(int32_t *)pProxy = (int32_t)(INT_PTR)&gVtblListBox;
+    pProxy->pListBoxVtbl = &gVtblListBox;
     pBody = (D2ClientListBoxStrc *)STORM_SMemAlloc(0x180776, szNew, -1, 0);
     if (pBody)
     {
@@ -1178,7 +1180,7 @@ void *__fastcall LISTBOX_Construct(void *pProxy, int32_t nEdxUnused, int32_t nX,
     {
         pConstructed = nullptr;
     }
-    *((int32_t *)pProxy + 2) = (int32_t)(INT_PTR)pConstructed;
+    pProxy->pListBox = pConstructed;
     return pProxy;
 }
 
@@ -1187,9 +1189,9 @@ void *__fastcall LISTBOX_Construct(void *pProxy, int32_t nEdxUnused, int32_t nX,
 //  Forwards to the wrapped control's slot 1, Draw. A tail jump (mov ecx, [ecx+8] / mov eax, [ecx] / jmp dword ptr [eax+4]) with the body as
 //  this and no stack argument. The body pointer is not tested, here or in the other two forwarders below: the failure arm of LISTBOX_Construct
 //  cannot run, because Storm's SMemAlloc never returns NULL (it reports and exits), so the untested dereference cannot fault through it.
-int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot1(uint32_t **pProxy)
+int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot1(D2UiCtrlProxyStrc *pProxy)
 {
-    return (*(int32_t(__thiscall **)(uint32_t))(**(pProxy + 2) + 4))((uint32_t)*(pProxy + 2));
+    return (*(int32_t (__thiscall *const *const *)(void *))pProxy->pImpl)[1](pProxy->pImpl);
 }
 
 
@@ -1204,9 +1206,9 @@ int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot1(uint32_t **pProxy)
 //  nEntryIndex == wNumEntries and for every negative index, and lets an index past wNumEntries through to return 0. So the third,
 //  Selection >= 0, can never fire. LATENT: the one caller passes the list's own selection, which is a real row whenever the callback runs. They
 //  are reproduced as found.
-int32_t __fastcall LISTBOX_GetEntryUserData(uint32_t **pProxy, int32_t nEdxUnused, int32_t nEntryIndex)
+int32_t __fastcall LISTBOX_GetEntryUserData(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, int32_t nEntryIndex)
 {
-    D2ClientListBoxStrc *pBody = (D2ClientListBoxStrc *)pProxy[2];
+    D2ClientListBoxStrc *pBody = pProxy->pListBox;
 
     if (nEntryIndex >= 0 && nEntryIndex < (int32_t)pBody->wNumEntries && nEntryIndex < LISTBOX_MAX_ENTRIES)
     {
@@ -1233,16 +1235,16 @@ int32_t __fastcall LISTBOX_GetEntryUserData(uint32_t **pProxy, int32_t nEdxUnuse
 
 //1.10f: D2Client.0x6FAF12A0
 //  Forwards to the wrapped control's slot 13, the list box's GetNumEntries. A tail jump (jmp dword ptr [eax+34h]) with no stack argument.
-int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot13(uint32_t **pProxy)
+int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot13(D2UiCtrlProxyStrc *pProxy)
 {
-    return (*(int32_t(__thiscall **)(uint32_t))(**(pProxy + 2) + 52))((uint32_t)*(pProxy + 2));
+    return (*(int32_t (__thiscall *const *const *)(void *))pProxy->pImpl)[13](pProxy->pImpl);
 }
 
 
 //1.10f: D2Client.0x6FAF12B0
 //  Forwards to the wrapped control's slot 2, the mouse wheel. A tail jump (jmp dword ptr [eax+8]), so the message the caller pushed stays on the
 //  stack and the target's retn 4 pops it; the C passes pMsg on for that reason.
-int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot2(uint32_t **pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
+int32_t __fastcall LISTBOX_UiCtrlProxyFwdSlot2(D2UiCtrlProxyStrc *pProxy, int32_t nEdxUnused, SMSGHANDLER_PARAMS *pMsg)
 {
-    return (*(int32_t(__thiscall **)(uint32_t, SMSGHANDLER_PARAMS *))(**(pProxy + 2) + 8))((uint32_t)*(pProxy + 2), pMsg);
+    return (*(int32_t (__thiscall *const *const *)(void *, SMSGHANDLER_PARAMS *))pProxy->pImpl)[2](pProxy->pImpl, pMsg);
 }

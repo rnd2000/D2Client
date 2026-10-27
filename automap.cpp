@@ -526,8 +526,8 @@ void __cdecl AUTOMAP_Tick()
     D2AutomapLayerStrc *pLayer;
     D2AutomapLayerStrc *pNewLayer;
     uint32_t dwLayer;
-    int32_t nBlock;
-    int32_t nBlockToFree;
+    D2AutomapCellBlockStrc *pBlock;
+    D2AutomapCellBlockStrc *pBlockToFree;
     uint32_t i;
     D2ActiveRoomStrc **ppRoomList;
     int32_t nNumRooms;
@@ -606,14 +606,14 @@ void __cdecl AUTOMAP_Tick()
 
         if (gpAutomapCurrentLayer)
         {
-            nBlock = (int32_t)(UINT_PTR)gpAutomapCellBlocks;
-            while (nBlock)
+            pBlock = gpAutomapCellBlocks;
+            while (pBlock)
             {
-                nBlockToFree = nBlock;
-                nBlock = *(uint32_t *)(nBlock + 10240);
-                FOG_Free((void *)(UINT_PTR)nBlockToFree, szAutomapCpp, 1310, 0);
+                pBlockToFree = pBlock;
+                pBlock = pBlock->pNext;
+                FOG_Free(pBlockToFree, szAutomapCpp, 1310, 0);
             }
-            gpAutomapCellBlocks = 0;
+            gpAutomapCellBlocks = NULL;
             gnAutomapCellsUsed = 0;
             gpAutomapCurrentLayer->pFloors = NULL;
             gpAutomapCurrentLayer->pWalls = NULL;
@@ -641,8 +641,8 @@ void __cdecl AUTOMAP_Tick()
 //  void: eax at its exit is whichever walk ran last, and the one caller discards it.
 void __cdecl AUTOMAP_Shutdown()
 {
-    int32_t nBlock;
-    int32_t nBlockToFree;
+    D2AutomapCellBlockStrc *pBlock;
+    D2AutomapCellBlockStrc *pBlockToFree;
     D2CellFileStrc **pIconCels;
     D2AutomapLayerStrc *pNext;
     D2AutomapLayerStrc *pLayer;
@@ -651,14 +651,14 @@ void __cdecl AUTOMAP_Shutdown()
 
     if (gpAutomapCurrentLayer)
     {
-        nBlock = (int32_t)(UINT_PTR)gpAutomapCellBlocks;
-        while (nBlock)
+        pBlock = gpAutomapCellBlocks;
+        while (pBlock)
         {
-            nBlockToFree = nBlock;
-            nBlock = *(uint32_t *)(nBlock + 10240);
-            FOG_Free((void *)(UINT_PTR)nBlockToFree, szAutomapCpp, 1310, 0);
+            pBlockToFree = pBlock;
+            pBlock = pBlock->pNext;
+            FOG_Free(pBlockToFree, szAutomapCpp, 1310, 0);
         }
-        gpAutomapCellBlocks = 0;
+        gpAutomapCellBlocks = NULL;
         gnAutomapCellsUsed = 0;
         gpAutomapCurrentLayer->pFloors = NULL;
         gpAutomapCurrentLayer->pWalls = NULL;
@@ -720,8 +720,9 @@ void __cdecl AUTOMAP_InitSymbolColors()
 //  block; the three places that walk the list (here, the tick's layer switch and AUTOMAP_Shutdown) all do the same raw arithmetic.
 
 static_assert(sizeof(D2AutomapCellStrc) == 20,
-              "AUTOMAP_AllocCell hands out &pBlock[5 * i] out of a 10244-byte "
+              "AUTOMAP_AllocCell hands out &pBlock->pCells[i] out of a 10244-byte "
               "block whose link sits at +10240: 512 * 20 + 4 = 10244");
+static_assert(offsetof(D2AutomapCellBlockStrc, pNext) == 10240, "every walk of the chain reads the link at +2800h");
 
 
 //1.10f: D2Client.0x6FACBA40
@@ -731,8 +732,8 @@ static_assert(sizeof(D2AutomapCellStrc) == 20,
 //  return.
 D2AutomapCellStrc *__cdecl AUTOMAP_AllocCell()
 {
-    uint32_t *pBlock;
-    uint32_t *pPrevBlock;
+    D2AutomapCellBlockStrc *pBlock;
+    D2AutomapCellBlockStrc *pPrevBlock;
     int32_t iBlock;
     int32_t iCellInBlock;
     int32_t iScan;
@@ -740,29 +741,29 @@ D2AutomapCellStrc *__cdecl AUTOMAP_AllocCell()
 
     iBlock = gnAutomapCellsUsed / 512;
     iCellInBlock = gnAutomapCellsUsed % 512;
-    pBlock = (uint32_t *)gpAutomapCellBlocks;
+    pBlock = gpAutomapCellBlocks;
     pPrevBlock = NULL;
     ++gnAutomapCellsUsed;
 
     for (iScan = 0; pBlock && iScan < iBlock; ++iScan)
     {
         pPrevBlock = pBlock;
-        pBlock = (uint32_t *)pBlock[2560];
+        pBlock = pBlock->pNext;
     }
 
     if (!pBlock)
     {
-        pBlock = (uint32_t *)FOG_Alloc(10244, szAutomapCpp, 861, 0);
+        pBlock = (D2AutomapCellBlockStrc *)FOG_Alloc(10244, szAutomapCpp, 861, 0);
         memset(pBlock, 0, 10244);
 
         if (pPrevBlock)
-            pPrevBlock[2560] = (uint32_t)pBlock;
+            pPrevBlock->pNext = pBlock;
         else
             gpAutomapCellBlocks = pBlock;
     }
 
     //  clears the 20-byte cell as five dword stores, the original's expansion of a constant-size memset
-    pCell = (D2AutomapCellStrc *)&pBlock[5 * iCellInBlock];
+    pCell = &pBlock->pCells[iCellInBlock];
     memset(pCell, 0, sizeof(D2AutomapCellStrc));
     return pCell;
 }
@@ -1315,8 +1316,8 @@ void __stdcall AUTOMAP_RebuildAutomapLayer(D2ActiveRoomStrc *pRoom)
     uint32_t dwLayer;
     D2AutomapLayerStrc *pLayer;
     D2AutomapLayerStrc *pNewLayer;
-    int32_t nBlock;
-    int32_t nBlockToFree;
+    D2AutomapCellBlockStrc *pBlock;
+    D2AutomapCellBlockStrc *pBlockToFree;
 
     if (gpAutomapCurrentLayer)
         nPreviousLayerNo = gpAutomapCurrentLayer->nLayerNo;
@@ -1347,14 +1348,14 @@ void __stdcall AUTOMAP_RebuildAutomapLayer(D2ActiveRoomStrc *pRoom)
 
         if (gpAutomapCurrentLayer)
         {
-            nBlock = (int32_t)(UINT_PTR)gpAutomapCellBlocks;
-            while (nBlock)
+            pBlock = gpAutomapCellBlocks;
+            while (pBlock)
             {
-                nBlockToFree = nBlock;
-                nBlock = *(uint32_t *)(nBlock + 10240);
-                FOG_Free((void *)(UINT_PTR)nBlockToFree, szAutomapCpp, 1310, 0);
+                pBlockToFree = pBlock;
+                pBlock = pBlock->pNext;
+                FOG_Free(pBlockToFree, szAutomapCpp, 1310, 0);
             }
-            gpAutomapCellBlocks = 0;
+            gpAutomapCellBlocks = NULL;
             gnAutomapCellsUsed = 0;
             gpAutomapCurrentLayer->pFloors = NULL;
             gpAutomapCurrentLayer->pWalls = NULL;
@@ -1394,14 +1395,14 @@ void __stdcall AUTOMAP_RebuildAutomapLayer(D2ActiveRoomStrc *pRoom)
 
         if (gpAutomapCurrentLayer)
         {
-            nBlock = (int32_t)(UINT_PTR)gpAutomapCellBlocks;
-            while (nBlock)
+            pBlock = gpAutomapCellBlocks;
+            while (pBlock)
             {
-                nBlockToFree = nBlock;
-                nBlock = *(uint32_t *)(nBlock + 10240);
-                FOG_Free((void *)(UINT_PTR)nBlockToFree, szAutomapCpp, 1310, 0);
+                pBlockToFree = pBlock;
+                pBlock = pBlock->pNext;
+                FOG_Free(pBlockToFree, szAutomapCpp, 1310, 0);
             }
-            gpAutomapCellBlocks = 0;
+            gpAutomapCellBlocks = NULL;
             gnAutomapCellsUsed = 0;
             gpAutomapCurrentLayer->pFloors = NULL;
             gpAutomapCurrentLayer->pWalls = NULL;
@@ -1439,8 +1440,8 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
     uint32_t dwLayer;
     D2AutomapLayerStrc *pLayer;
     D2AutomapLayerStrc *pNewLayer;
-    int32_t nBlock;
-    int32_t nBlockToFree;
+    D2AutomapCellBlockStrc *pBlock;
+    D2AutomapCellBlockStrc *pBlockToFree;
     const int32_t *pSkipCels;
     const int32_t *pSkipCel;
     int32_t nCelNum;
@@ -1488,14 +1489,14 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
 
         if (gpAutomapCurrentLayer)
         {
-            nBlock = (int32_t)(UINT_PTR)gpAutomapCellBlocks;
-            while (nBlock)
+            pBlock = gpAutomapCellBlocks;
+            while (pBlock)
             {
-                nBlockToFree = nBlock;
-                nBlock = *(uint32_t *)(nBlock + 10240);
-                FOG_Free((void *)(UINT_PTR)nBlockToFree, szAutomapCpp, 1310, 0);
+                pBlockToFree = pBlock;
+                pBlock = pBlock->pNext;
+                FOG_Free(pBlockToFree, szAutomapCpp, 1310, 0);
             }
-            gpAutomapCellBlocks = 0;
+            gpAutomapCellBlocks = NULL;
             gnAutomapCellsUsed = 0;
             gpAutomapCurrentLayer->pFloors = NULL;
             gpAutomapCurrentLayer->pWalls = NULL;
@@ -1629,14 +1630,14 @@ void __stdcall AUTOMAP_AddTown(int32_t nLevelId, int32_t nPickedFile, int32_t nC
 
         if (gpAutomapCurrentLayer)
         {
-            nBlock = (int32_t)(UINT_PTR)gpAutomapCellBlocks;
-            while (nBlock)
+            pBlock = gpAutomapCellBlocks;
+            while (pBlock)
             {
-                nBlockToFree = nBlock;
-                nBlock = *(uint32_t *)(nBlock + 10240);
-                FOG_Free((void *)(UINT_PTR)nBlockToFree, szAutomapCpp, 1310, 0);
+                pBlockToFree = pBlock;
+                pBlock = pBlock->pNext;
+                FOG_Free(pBlockToFree, szAutomapCpp, 1310, 0);
             }
-            gpAutomapCellBlocks = 0;
+            gpAutomapCellBlocks = NULL;
             gnAutomapCellsUsed = 0;
             gpAutomapCurrentLayer->pFloors = NULL;
             gpAutomapCurrentLayer->pWalls = NULL;

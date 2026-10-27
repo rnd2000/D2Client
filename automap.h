@@ -184,7 +184,7 @@ static_assert(sizeof(gpAutomapDrawWriteCursor) == 4, "gpAutomapDrawWriteCursor: 
 //  D2Client 0x6FBB1998
 //  Head of the cell block pool, a singly linked list of 10244-byte blocks (512 cells of 20 bytes, then a next pointer at +10240) allocated by
 //  AUTOMAP_AllocCell. AUTOMAP_Shutdown, AUTOMAP_Tick, AUTOMAP_RebuildAutomapLayer and AUTOMAP_AddTown free the chain and zero this.
-inline void *gpAutomapCellBlocks;
+inline D2AutomapCellBlockStrc *gpAutomapCellBlocks;
 static_assert(sizeof(gpAutomapCellBlocks) == 4, "gpAutomapCellBlocks: the item's 4 bytes in the .i64");
 
 //  D2Client 0x6FBB199C

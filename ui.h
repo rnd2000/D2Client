@@ -659,14 +659,14 @@ static_assert(sizeof(gpGoldDialog) == 4, "gpGoldDialog: the item's 4 bytes in th
 //  The gold dialog's step button, built by SPELLSEL_UiSpinnerProxyConstruct (0x6FB23D90) with UI_GoldDialogStepAmount as its callback
 //  (`push 6FB23F70h`, 0x6FB23D7D). UI_GoldDialogStepAmount reads the pressed direction from vtable slot +44 and the step size from +48; not
 //  null-checked there, unlike the spinner beside it.
-inline int32_t gpGoldDialogStepButton;
+inline D2UiCtrlProxyStrc *gpGoldDialogStepButton;
 static_assert(sizeof(gpGoldDialogStepButton) == 4, "gpGoldDialogStepButton: the item's 4 bytes in the .i64");
 
 //  D2Client 0x6FBB9FCC
 //  The spinner proxy holding the amount, built by EDITBOX_UiCtrlProxyConstructEditbox (0x6FB23DF6). UI_GoldDialogStepAmount reads its value
 //  through vtable +44 and writes the new one back through +56, both behind a null check, so the dialog still works after a failed control
 //  allocation, it just stops tracking the value.
-inline int32_t gpGoldDialogSpinner;
+inline D2UiCtrlProxyStrc *gpGoldDialogSpinner;
 static_assert(sizeof(gpGoldDialogSpinner) == 4, "gpGoldDialogSpinner: the item's 4 bytes in the .i64");
 
 //  D2Client 0x6FBB9FD0
@@ -675,14 +675,14 @@ static_assert(sizeof(gpGoldDialogSpinner) == 4, "gpGoldDialogSpinner: the item's
 //  latter two. Destroyed by UI_CloseGoldEntryDialog through vtable slot 0 with argument 1 (a vector deleting destructor) and nulled, which is
 //  what makes closing twice harmless. The dialog builds four controls: the step button (0x6FB23D90), the spinner (0x6FB23DF6), OK (0x6FB23E62)
 //  and Cancel (0x6FB23ECA); DIALOG_AddLine (0x6FB23D24) adds a line.
-inline int32_t gpGoldDialogOkButton;
+inline D2UiCtrlProxyStrc *gpGoldDialogOkButton;
 static_assert(sizeof(gpGoldDialogOkButton) == 4, "gpGoldDialogOkButton: the item's 4 bytes in the .i64");
 
 //  D2Client 0x6FBB9FD4
 //  The gold dialog's Cancel button proxy: `CHAR_UiButtonProxyConstruct(this, 355, 287, 1, UI_GoldDialogOnCancelButton)`, the same Y as OK and
 //  105 pixels to its right. Written by UI_InitUiSubsystems, UI_CloseGoldEntryDialog and UI_OpenGoldEntryDialog, read by
 //  UI_CloseGoldEntryDialog, which destroys and nulls it like the rest.
-inline int32_t gpGoldDialogCancelButton;
+inline D2UiCtrlProxyStrc *gpGoldDialogCancelButton;
 static_assert(sizeof(gpGoldDialogCancelButton) == 4, "gpGoldDialogCancelButton: the item's 4 bytes in the .i64");
 
 //  D2Client 0x6FBB9FD8
