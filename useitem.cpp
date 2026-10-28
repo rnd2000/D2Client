@@ -129,7 +129,7 @@ static void ANVIL_ResetAndTeardown()
 
 //1.10f: Inlined in D2Client.0x6FB249D0 USEITEM_AnvilCloseOnInteractionStop,
 //       0x6FB24B20 USEITEM_AnvilOnButtonUp, 0x6FB24CD0 USEITEM_AnvilOnPanelClick -- and
-//       USEITEM_AnvilOnCloseKey.
+//       USEITEM_AnvilOnCloseKey without the sound, so written out there.
 //  Closes the panel and tells the other side. The item comes back to the cursor first if it was in the slot, then sound 1, then the
 //  notification: NPCMENU_NpcCloseInteraction() when gnAnvilPanelMode is set, otherwise MSG_SendCmd4Dwords(68, myUnitId, gnAnvilInteractGUID,
 //  0, 2). Then the state is zeroed, the swap helper is called (and does nothing because of it), and the panel comes down.
@@ -395,10 +395,12 @@ static_assert(UNIT_ITEM == 4,
 //  Esc or Space closes the panel: entries 5 and 6 of gAnvilMsgHandlers with flag 3, so it is bound to two key messages rather than mouse ones.
 //  It acts only in states 1 and 2: with the panel closed or the transaction finished it claims the key and does nothing else. That is a
 //  different guard from USEITEM_AnvilCloseOnInteractionStop's, which refuses state 3 alone and so still closes from state 0.
-//  The rest is ANVIL_CloseAndNotify whole; its leading `if (state == 2)` is where the item comes back to the cursor, which is why the guard
-//  admits both states rather than just 2.
+//  The rest is ANVIL_CloseAndNotify less its sound: the original plays no SOUND_CURSOR_PASS here, where the other close paths do. Its leading
+//  `if (state == 2)` is where the item comes back to the cursor, which is why the guard admits both states rather than just 2.
 void __stdcall USEITEM_AnvilOnCloseKey(SMSGHANDLER_PARAMS *pMsg)
 {
+    D2UnitStrc *pPlayer;
+    D2UnitStrc *pCursorItem;
     pMsg->bReturn = 1;
     pMsg->lResult = 0;
     STORM_SMsgBreakHandlerChain(pMsg);
@@ -406,7 +408,17 @@ void __stdcall USEITEM_AnvilOnCloseKey(SMSGHANDLER_PARAMS *pMsg)
     if (gnAnvilState != 1 && gnAnvilState != 2)
         return;
 
-    ANVIL_CloseAndNotify();
+    if (gnAnvilState == 2)
+    {
+        pPlayer = CUNIT_GetPlayer();
+        if (pPlayer)
+            pCursorItem = D2COMMON_INVENTORY_GetCursorItem(pPlayer->pInventory);
+        else
+            pCursorItem = NULL;
+        CURSOR_SetHeldUnit(pCursorItem);
+    }
+    ANVIL_NotifyInteractionEnd();
+    ANVIL_ResetAndTeardown();
 }
 
 

@@ -146,12 +146,13 @@ void __fastcall UIPANELS_DrawInGamePanels(D2ClientViewStrc *pView)
 
                         //  The UI shift moves the label a quarter screen the way the panels moved: 1 pushes left, 2 right, and anything else
                         //  leaves it alone.
-                        if (SCROLL_GetUiShiftScreen() - 1 == 0)
+                        const int32_t nUiShift = SCROLL_GetUiShiftScreen();
+                        if (nUiShift == 1)
                         {
                             nQuarterScreen = gnScreenWidth / -4;
                             pXAdjust += nQuarterScreen;
                         }
-                        else if (SCROLL_GetUiShiftScreen() - 1 == 1)
+                        else if (nUiShift == 2)
                         {
                             nQuarterScreen = gnScreenWidth / 4;
                             pXAdjust += nQuarterScreen;

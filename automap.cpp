@@ -3093,7 +3093,8 @@ void __fastcall AUTOMAP_DrawCellList(D2AutomapCellStrc *pCellList, D2ClientAutom
                 }
                 else if (nAutomapFade == 3)
                 {
-                    if (CUNIT_GetPlayer()->nAct == 0 || CUNIT_GetPlayer()->nAct == 2)
+                    const uint8_t nPlayerAct = CUNIT_GetPlayer()->nAct;
+                    if (nPlayerAct == 0 || nPlayerAct == 2)
                     {
                         eDrawMode = (gnAutomapMode == 1) ? 1 : 2;
                     }

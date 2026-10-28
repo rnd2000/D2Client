@@ -2322,6 +2322,7 @@ void __stdcall INV_NpcShopOnLButtonUp(SMSGHANDLER_PARAMS *pMsg)
     int32_t nTabStripTop;
     int32_t bTabActionTaken;
     int32_t nAction;
+    int32_t nCursorState;
     int16_t wSubAction;
     D2UnitStrc *pPlayer;
     D2InventoryStrc *pInventory;
@@ -2430,7 +2431,8 @@ void __stdcall INV_NpcShopOnLButtonUp(SMSGHANDLER_PARAMS *pMsg)
             pPlayer = CUNIT_GetPlayer();
             if (!D2COMMON_INVENTORY_GetCursorItem(pPlayer->pInventory))
             {
-                if (CURSOR_GetCursorState() == 7 || CURSOR_GetCursorState() == 1 || CURSOR_GetCursorState() == 4)
+                nCursorState = CURSOR_GetCursorState();
+                if (nCursorState == 7 || nCursorState == 1 || nCursorState == 4)
                 {
                     pPlayer = CUNIT_GetPlayer();
                     CURSOR_SetHeldUnit(D2COMMON_INVENTORY_GetCursorItem(pPlayer->pInventory));
