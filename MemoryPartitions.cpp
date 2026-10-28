@@ -23,11 +23,12 @@ static const char szSourceFile[] = "C:\\projects\\D2\\head\\Diablo2\\Source\\D2C
 //  BUG: `FOG_Trace("Tile Cache Size: %dMB", 6)` pushes a literal 6 outside the `if (bInitTileCache)`, so a call that passed 0 would print six
 //  megabytes of tile cache it had not reserved. The only caller passes 1, so it never shows; reproduced.
 
-//  The minimum-memory threshold, 22 MB plus 512000; 512000 is also the third argument this function hands to D2CMP_InitSpriteCache (`push 7D000h`).
+//  The minimum-memory threshold, 22 MB plus 512000; 512000 is also the third argument this function hands to
+//  D2CMP_SPRITECACHE_SpriteCacheInit (`push 7D000h`).
 static_assert(0x167D000 == 22 * 1024 * 1024 + 512000,
               "the RAM floor is 22 MB plus the sprite cache's own 512000");
 static_assert(0x7D000 == 512000,
-              "D2CMP_InitSpriteCache's third argument is that same 512000");
+              "D2CMP_SPRITECACHE_SpriteCacheInit's third argument is that same 512000");
 //  The five budgets, each an exact number of megabytes.
 static_assert(0xB00000 == 11 * 1024 * 1024 && 0x300000 == 3 * 1024 * 1024
               && 0x500000 == 5 * 1024 * 1024 && 0x600000 == 6 * 1024 * 1024
@@ -81,7 +82,7 @@ void __fastcall MEMPART_InitMemoryPartitions(void *pPool, int32_t bInitTileCache
     if (bInitTileCache)
     {
         nRemainingBytes -= 6 * 1024 * 1024;
-        D2CMP_10089(pPool, 6 * 1024 * 1024);
+        D2CMP_TILECACHE_TileCacheInit(pPool, 6 * 1024 * 1024);
     }
 
     nSpriteThird = (nRemainingBytes - 2 * 1024 * 1024) / 3;
@@ -96,7 +97,7 @@ void __fastcall MEMPART_InitMemoryPartitions(void *pPool, int32_t bInitTileCache
     FOG_Trace("Tile Cache Size: %dMB", 6);
     FOG_Trace("Sprite Cache Size: %dMB", nSpriteCacheSize >> 20);
 
-    D2CMP_InitSpriteCache(pPool, nSpriteCacheSize, 512000, nUsableBytes);
+    D2CMP_SPRITECACHE_SpriteCacheInit(pPool, nSpriteCacheSize, 512000, nUsableBytes);
 
     //  A tail call (`jmp GFX_InitCelCache` after `mov ecx, 200000h`) in the original, not the start of a second half of this function.
     GFX_InitCelCache(2 * 1024 * 1024);
@@ -109,8 +110,8 @@ void __fastcall MEMPART_InitMemoryPartitions(void *pPool, int32_t bInitTileCache
 //  (`push esi` twice, 0x6FAA14E3 and 0x6FAA14E9); the cel cache's free is a tail jump (0x6FAA14F0). Its caller, GAME_AppModeGame, discards eax.
 void __fastcall MEMPART_DestroyCaches(BOOL bFreeLRU)
 {
-    D2CMP_10090(bFreeLRU);
-    D2CMP_FlushSpriteCache(bFreeLRU);
+    D2CMP_TILECACHE_TileCacheDestroy(bFreeLRU);
+    D2CMP_SPRITECACHE_SpriteCacheDestroy(bFreeLRU);
     GFX_FreeCelCache();
 }
 

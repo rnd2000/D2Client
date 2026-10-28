@@ -480,7 +480,7 @@ void __fastcall CURSOR_DrawCursorBuySell()
 //  and by gnCursorState <= 5. Both state compares are signed (jge), so the test casts to int32_t.
 //  Without an item, control leaves by a tail jump (jmp dword ptr [ecx*4 + 6FB96B6Ch] at 0x6FB57BAD, after the stack is unwound at 0x6FB57BAA)
 //  to gCursorDescs[gnCursorType].pDrawFunction(). The table has seven rows: rows 0..5 CURSOR_DrawCurrent, row 6 CURSOR_DrawCursorBuySell;
-//  what follows is not a row. The two cel calls are in the binary's order, D2CMP_CelGetHeight first, then D2CMP_CelGetWidth.
+//  what follows is not a row. The two cel calls are in the binary's order, D2CMP_CELCMP_CelGetHeight first, then D2CMP_CELCMP_CelGetWidth.
 //  BUG: gnCursorType is not range-checked here, unlike CURSOR_GetCursorLoops and CURSOR_GetCursorFrameDuration: a value of 7 or more jumps
 //  through whatever follows the table (0xFFFFFFFF in the next row). NOT ESTABLISHED: this runs every frame and the game does not fall over,
 //  so no writer is seen to reach 7, but that is an observation and not a proof. The writers are CURSOR_Init, CURSOR_SetCursorBuySell,
@@ -502,7 +502,7 @@ void __cdecl CURSOR_DrawCursorDefault()
     {
         memset(&tCelContext, 0, sizeof(tCelContext));
 
-        if (GFXUTIL_FillGfxData(&tCelContext, gpCursorHeldUnit, 0, 0, 0, &nClass, 1, -1) && D2CMP_SpriteValidate(&tCelContext, 0, 1))
+        if (GFXUTIL_FillGfxData(&tCelContext, gpCursorHeldUnit, 0, 0, 0, &nClass, 1, -1) && D2CMP_SPRITECACHE_SpriteValidate(&tCelContext, 0, 1))
         {
             if (!tCelContext.pCurrentCell)
             {
@@ -510,10 +510,10 @@ void __cdecl CURSOR_DrawCursorDefault()
                 exit(-1);
             }
 
-            nCellHeight = (uint32_t)D2CMP_CelGetHeight(tCelContext.pCurrentCell);
+            nCellHeight = (uint32_t)D2CMP_CELCMP_CelGetHeight(tCelContext.pCurrentCell);
             nDrawY = gnMouseY - (int32_t)(nCellHeight >> 1);
 
-            nCellWidth = (uint32_t)D2CMP_CelGetWidth(tCelContext.pCurrentCell);
+            nCellWidth = (uint32_t)D2CMP_CELCMP_CelGetWidth(tCelContext.pCurrentCell);
 
             GFX_DrawInventoryItem(gpCursorHeldUnit, gnMouseX + gnCursorClickOffsetX - (int32_t)(nCellWidth >> 1), nDrawY);
         }

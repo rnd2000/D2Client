@@ -1561,12 +1561,12 @@ void __cdecl ESCMENU_LoadImages(void)
 
     memset(&tCelContext, 0, sizeof(tCelContext));
     tCelContext.pCellFile = UI_GetPentSpinImage();
-    nCelCount = D2CMP_CelFileGetCelsPerDirection(tCelContext.pCellFile);
+    nCelCount = D2CMP_CELCMP_CelFileGetCelsPerDirection(tCelContext.pCellFile);
 
     nWidestCel = 0;
     for (tCelContext.nFrame = 0; tCelContext.nFrame < nCelCount; ++tCelContext.nFrame)
     {
-        nCelWidth = D2CMP_CelGetWidth(D2CMP_CelGetHandle(&tCelContext));
+        nCelWidth = D2CMP_CELCMP_CelGetWidth(D2CMP_CELCMP_CelGetHandle(&tCelContext));
         if (nWidestCel <= nCelWidth)
             nWidestCel = nCelWidth;
     }

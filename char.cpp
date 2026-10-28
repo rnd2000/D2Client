@@ -115,12 +115,12 @@ D2ClientButtonStrc *__fastcall CHAR_UiButtonConstruct(D2ClientButtonStrc *pButto
     tCelContext.pCellFile = UI_GetBuySellButtonImage();
     tCelContext.nDirection = 0;
     tCelContext.nFrame = pButton->wFrame;
-    pCel = D2CMP_CelGetHandle(&tCelContext);
+    pCel = D2CMP_CELCMP_CelGetHandle(&tCelContext);
     pButton->nX = nX;
     pButton->nY = nY;
     pButton->bFireOnEnter = 0;
-    pButton->nHeight = D2CMP_CelGetHeight(pCel);
-    pButton->nWidth = D2CMP_CelGetWidth(pCel);
+    pButton->nHeight = D2CMP_CELCMP_CelGetHeight(pCel);
+    pButton->nWidth = D2CMP_CELCMP_CelGetWidth(pCel);
     return pButton;
 }
 

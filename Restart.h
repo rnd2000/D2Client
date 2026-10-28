@@ -1023,7 +1023,7 @@ static_assert(sizeof(ghEscMenuOptSkull) == 4, "ghEscMenuOptSkull: the item's 4 b
 
 //  D2Client 0x6FBB6FFC
 //  The widest cel in the selection-pentagram cel file, measured once by ESCMENU_LoadImages by walking every cel of
-//  D2CMP_CelFileGetCelsPerDirection. ESCMENU_Draw subtracts it when placing the LEFT pentagram (`gnScreenWidth / 2 - width - 249`) so the pair
+//  D2CMP_CELCMP_CelFileGetCelsPerDirection. ESCMENU_Draw subtracts it when placing the LEFT pentagram (`gnScreenWidth / 2 - width - 249`) so the pair
 //  stays symmetric about the centre whatever the animation frame is.
 inline int32_t gnEscMenuPentagramWidth;
 static_assert(sizeof(gnEscMenuPentagramWidth) == 4, "gnEscMenuPentagramWidth: the item's 4 bytes in the .i64");

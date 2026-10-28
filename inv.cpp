@@ -2072,14 +2072,12 @@ void __stdcall INV_NpcShopOnLButtonDown(SMSGHANDLER_PARAMS *pMsg)
     int32_t bHadSelection;
     int32_t nCloseX;
     int32_t nTabStripTop;
-    int32_t i;
     D2UnitGUID nNpcGUID;
     int32_t nCost;
     D2UnitStrc *pNpc;
     D2UnitStrc *pPlayer;
     D2UnitStrc *pHeldItem;
     D2InventoryStrc *pInventory;
-    Unicode wszOut[64];
 
     nXpos = pMsg->nXpos;
     nYpos = pMsg->nYpos;
@@ -2125,10 +2123,7 @@ void __stdcall INV_NpcShopOnLButtonDown(SMSGHANDLER_PARAMS *pMsg)
             if (pNpc)
             {
                 //  the original calls Unicode's default constructor sixty-four times, once per element (an inlined `Unicode wszOut[64];`)
-                for (i = 0; i < 64; ++i)
-                {
-                    wszOut[i].ch = 0;
-                }
+                Unicode wszOut[64];
                 if (NPCMENU_TransactionCost(CURSOR_GetHeldUnit(), 1, &nCost, wszOut, 64))
                 {
                     pHeldItem = CURSOR_GetHeldUnit();

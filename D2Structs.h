@@ -243,6 +243,9 @@ struct D2ClientViewStrc;
 struct D2ClientWallRoomArgsStrc;
 struct D2ClientWallSquareStrc;
 struct D2ClientWaypointActStrc;
+struct D2CmpLruEntry;
+struct D2CmpNormalizedTileProject;
+struct D2CmpTileRuntimeComponent;
 // struct D2CofDataStrc;
 struct D2CofHeaderStrc;
 // struct D2CofInfoStrc;
@@ -919,7 +922,7 @@ struct D2TileLibraryHashNodeStrc;
 struct D2TileLibraryHashRefStrc;
 struct D2TileLibraryHashStrc;
 // struct D2TileLibraryHeaderStrc;
-struct D2TileRecordStrc;
+// struct D2TileRecordStrc;
 // struct D2TileStrc;
 // struct D2TimerArg2Strc;
 // struct D2TimerArgStrc;
@@ -1403,6 +1406,17 @@ int32_t nY;
 D2C_StringIndices nStringIndex;
 BOOL bSelected;
 BOOL bActive;
+};
+
+struct D2CellFileStrc
+{
+uint32_t dwVersion;
+uint32_t dwFlags;
+int32_t nFormat;
+uint32_t dwTerminationOrTransparentColor;
+uint32_t nDirections;
+uint32_t nFramesPerDirection;
+D2GfxCellStrc *pFrames[];
 };
 
 struct D2CfgControlsRowStrc
@@ -2267,6 +2281,37 @@ int32_t nFirstLevelId;
 int32_t nLastLevelId;
 uint8_t nFirstWaypointNo;
 uint8_t nLastWaypointNo;
+};
+
+struct D2CmpLruEntry
+{
+void *pData;
+uint32_t dwSize;
+void *pUserData;
+D2CmpLruEntry *pNext;
+D2CmpLruEntry *pPrev;
+};
+
+struct D2CmpNormalizedTileProject
+{
+uint32_t dwVersion;
+uint32_t dwFlags;
+char szLibraryName[260];
+int32_t nNumTiles;
+D2TileLibraryEntryStrc *ptTileArray;
+};
+
+struct D2CmpTileRuntimeComponent
+{
+int16_t nOffsetX;
+int16_t nOffsetY;
+int16_t sCacheIndex;
+uint8_t nGridX;
+uint8_t nGridY;
+uint16_t wFlags;
+uint16_t wDataBytesLow;
+uint8_t unknown0C[4];
+uint8_t *pData;
 };
 
 struct D2CofHeaderStrc
@@ -4810,6 +4855,18 @@ union D2GemsTxtCodeUnion
 {
 uint32_t dwItemCode;
 char szItemCode[4];
+};
+
+struct D2GfxCellStrc
+{
+uint32_t dwOrientationFlags;
+uint32_t dwWidth;
+uint32_t dwHeight;
+int32_t nXOffset;
+int32_t nYOffset;
+uint32_t unknown14;
+uint32_t dwNextBlockOrCellNode;
+uint32_t dwLength;
 };
 
 struct D2GfxDataStrc
@@ -7667,14 +7724,16 @@ int32_t nStyle;
 int32_t nSequence;
 int32_t nRarity_Frame;
 int32_t transparentColorRGB24;
-uint8_t dwTileFlags[4];
-int32_t dwBlockOffset_pBlock;
-int32_t nBlockSize;
-int32_t nBlocks;
-D2TileRecordStrc *pParent;
-uint16_t unk0x3C;
-uint16_t nCacheIndex;
-uint32_t unk0x40[4];
+uint8_t nSubtileFlags[25];
+uint8_t unknown41;
+int16_t sCacheIndex;
+uint8_t unknown44[4];
+uint32_t dwComponentFileOffset;
+uint32_t dwComponentDataBytes;
+int32_t nCompCount;
+D2CmpTileRuntimeComponent *ptCompArray;
+char *szFileName;
+D2CmpLruEntry *ptLRUCache;
 };
 
 struct D2TileLibraryHashNodeStrc
@@ -7695,14 +7754,6 @@ D2TileLibraryHashRefStrc *pPrev;
 struct D2TileLibraryHashStrc
 {
 D2TileLibraryHashNodeStrc *pNodes[128];
-};
-
-struct D2TileRecordStrc
-{
-char szLibraryName[260];
-void *pLibrary;
-D2TileLibraryHashStrc *pHashBlock;
-D2TileRecordStrc *pPrev;
 };
 
 union D2TxtLinkCodeUnion
@@ -10063,6 +10114,15 @@ int32_t bCopyToUnitBuffer;
 // };
 // static_assert(sizeof(D2SkillCalcStrc) == 12, "D2SkillCalcStrc: layout differs from the database");
 
+// struct D2TileRecordStrc
+// {
+// char szLibraryName[260];
+// D2CmpNormalizedTileProject *pLibrary;
+// D2TileLibraryHashStrc *pHashBlock;
+// D2TileRecordStrc *pPrev;
+// };
+// static_assert(sizeof(D2TileRecordStrc) == 272, "D2TileRecordStrc: layout differs from the database");
+
 // struct D2TreasureClassExTxt
 // {
 // char szTreasureClass[32];
@@ -10681,6 +10741,7 @@ static_assert(sizeof(D2BookDataTbl) == 8, "D2BookDataTbl: layout differs from th
 static_assert(sizeof(D2BooksTxt) == 32, "D2BooksTxt: layout differs from the database");
 static_assert(sizeof(D2BoundingBoxStrc) == 16, "D2BoundingBoxStrc: layout differs from the database");
 static_assert(sizeof(D2BuySellTabStrc) == 18, "D2BuySellTabStrc: layout differs from the database");
+static_assert(sizeof(D2CellFileStrc) == 24, "D2CellFileStrc: layout differs from the database");
 static_assert(sizeof(D2CfgControlsRowStrc) == 10, "D2CfgControlsRowStrc: layout differs from the database");
 static_assert(sizeof(D2ChampionUModNameStrc) == 8, "D2ChampionUModNameStrc: layout differs from the database");
 static_assert(sizeof(D2CharItemStrc) == 8, "D2CharItemStrc: layout differs from the database");
@@ -10753,6 +10814,9 @@ static_assert(sizeof(D2ClientViewStrc) == 60092, "D2ClientViewStrc: layout diffe
 static_assert(sizeof(D2ClientWallRoomArgsStrc) == 28, "D2ClientWallRoomArgsStrc: layout differs from the database");
 static_assert(sizeof(D2ClientWallSquareStrc) == 36, "D2ClientWallSquareStrc: layout differs from the database");
 static_assert(sizeof(D2ClientWaypointActStrc) == 11, "D2ClientWaypointActStrc: layout differs from the database");
+static_assert(sizeof(D2CmpLruEntry) == 20, "D2CmpLruEntry: layout differs from the database");
+static_assert(sizeof(D2CmpNormalizedTileProject) == 276, "D2CmpNormalizedTileProject: layout differs from the database");
+static_assert(sizeof(D2CmpTileRuntimeComponent) == 20, "D2CmpTileRuntimeComponent: layout differs from the database");
 static_assert(sizeof(D2CofHeaderStrc) == 24, "D2CofHeaderStrc: layout differs from the database");
 static_assert(sizeof(D2CollisionFieldStrc) == 20, "D2CollisionFieldStrc: layout differs from the database");
 static_assert(sizeof(D2ColorsTxt) == 4, "D2ColorsTxt: layout differs from the database");
@@ -10977,6 +11041,7 @@ static_assert(sizeof(D2GSPacketSrvAC) == 257, "D2GSPacketSrvAC: layout differs f
 static_assert(sizeof(D2GSPacketSrvAD) == 9, "D2GSPacketSrvAD: layout differs from the database");
 static_assert(sizeof(D2GemsTxt) == 192, "D2GemsTxt: layout differs from the database");
 static_assert(sizeof(D2GemsTxtCodeUnion) == 4, "D2GemsTxtCodeUnion: layout differs from the database");
+static_assert(sizeof(D2GfxCellStrc) == 32, "D2GfxCellStrc: layout differs from the database");
 static_assert(sizeof(D2GfxDataStrc) == 72, "D2GfxDataStrc: layout differs from the database");
 static_assert(sizeof(D2HireDescTxt) == 4, "D2HireDescTxt: layout differs from the database");
 static_assert(sizeof(D2HirelingInitStrc) == 58, "D2HirelingInitStrc: layout differs from the database");
@@ -11147,11 +11212,10 @@ static_assert(sizeof(D2TextDisplayListStrc) == 6, "D2TextDisplayListStrc: layout
 static_assert(sizeof(D2TextHeaderStrc) == 12, "D2TextHeaderStrc: layout differs from the database");
 static_assert(sizeof(D2TextNodeStrc) == 12, "D2TextNodeStrc: layout differs from the database");
 static_assert(sizeof(D2TextStateStrc) == 159, "D2TextStateStrc: layout differs from the database");
-static_assert(sizeof(D2TileLibraryEntryStrc) == 80, "D2TileLibraryEntryStrc: layout differs from the database");
+static_assert(sizeof(D2TileLibraryEntryStrc) == 96, "D2TileLibraryEntryStrc: layout differs from the database");
 static_assert(sizeof(D2TileLibraryHashNodeStrc) == 20, "D2TileLibraryHashNodeStrc: layout differs from the database");
 static_assert(sizeof(D2TileLibraryHashRefStrc) == 8, "D2TileLibraryHashRefStrc: layout differs from the database");
 static_assert(sizeof(D2TileLibraryHashStrc) == 512, "D2TileLibraryHashStrc: layout differs from the database");
-static_assert(sizeof(D2TileRecordStrc) == 272, "D2TileRecordStrc: layout differs from the database");
 static_assert(sizeof(D2TxtLinkCodeUnion) == 4, "D2TxtLinkCodeUnion: layout differs from the database");
 static_assert(sizeof(D2TxtLinkNodeStrc) == 44, "D2TxtLinkNodeStrc: layout differs from the database");
 static_assert(sizeof(D2TxtLinkStrc) == 16, "D2TxtLinkStrc: layout differs from the database");

@@ -643,12 +643,12 @@ void __fastcall GAME_PreloadActData(uint8_t nAct, uint32_t dwGameSeed, int32_t n
         {
             D2COMMON_DATATBLS_GetFileNameFromLevelTypeAndFileId(nLevelType, nFile, szFile);
             if (szFile[0] != '0' && szFile[0])
-                D2CMP_10095(&pTileHash, szFile);
+                D2CMP_TILEPROJECTS_LoadProjectRecord(&pTileHash, szFile);
         }
     }
 
-    D2CMP_10095(&pTileHash, szWarpTile);
-    D2CMP_10095(&pTileHash, szBlankTile);
+    D2CMP_TILEPROJECTS_LoadProjectRecord(&pTileHash, szWarpTile);
+    D2CMP_TILEPROJECTS_LoadProjectRecord(&pTileHash, szBlankTile);
 
     if (gpAct)
         D2COMMON_DUNGEON_FreeAct(gpAct);
@@ -796,7 +796,7 @@ void __cdecl GAME_InitGame()
     //  Nothing calls the slot it fills.
     FAULT_SetAssertHandler((void *)GAME_TeardownGraphics);
     PALSHIFT_Init();
-    D2CMP_10096();
+    D2CMP_PALSHIFT_PalShiftInit();
     MEMPART_InitMemoryPartitions(ghClientPoolSystem, 1);
 
     //  A 0-or-1 store (neg / sbb / neg), not the raw return value.
@@ -2315,8 +2315,8 @@ D2C_AppMode __fastcall GAME_AppModeGame()
         D2COMMON_DUNGEON_FreeAct(gpAct);
     gpAct = 0;
 
-    D2CMP_SpriteFreeAsyncLoads();
-    D2CMP_TileFreeAsyncLoads();
+    D2CMP_SPRITECACHE_SpriteFreeAsyncLoads();
+    D2CMP_TILECACHE_TileFreeAsyncLoads();
     MEMPART_DestroyCaches(FALSE);
     VIEW_Free(gpView);
     gpView = NULL;
@@ -2664,7 +2664,7 @@ void __cdecl GAME_NullFunc()
 void __fastcall GAME_ApplyParamCompressedData(D2ConfigStrc *pConfig)
 {
     if (pConfig->bNoCompress)
-        D2CMP_SetCompressedDataMode(pConfig->bNoCompress);
+        D2CMP_SPRITECACHE_SetNoCompress(pConfig->bNoCompress);
 }
 
 //1.10f: D2Client.0x6FAABEC0

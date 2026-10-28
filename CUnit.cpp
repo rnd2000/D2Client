@@ -390,7 +390,7 @@ void __fastcall CUNIT_WarpUnit(D2UnitStrc *pUnit, int32_t nX, int32_t nY, int32_
                 if (pOldLevel->nPal != pNewLevel->nPal)
                 {
                     D2WIN_10177(pNewLevel->nPal);
-                    D2CMP_10097(pNewLevel->nPal);
+                    D2CMP_PALSHIFT_PalShiftSetAct(pNewLevel->nPal);
                 }
             }
 
@@ -2440,7 +2440,7 @@ BOOL __fastcall CUNIT_GetComponentScreenBox(D2UnitStrc *pUnit, int32_t nUnused1,
         return FALSE;
     }
 
-    if (!D2CMP_SpriteValidate(&tParams, FALSE, TRUE))
+    if (!D2CMP_SPRITECACHE_SpriteValidate(&tParams, FALSE, TRUE))
         return FALSE;
 
     pCel = tParams.pCurrentCell;
@@ -2453,14 +2453,14 @@ BOOL __fastcall CUNIT_GetComponentScreenBox(D2UnitStrc *pUnit, int32_t nUnused1,
         exit(-1);
     }
 
-    nOffset = D2CMP_CelGetOffsetX(pCel);
+    nOffset = D2CMP_CELCMP_CelGetOffsetX(pCel);
     pBox->nLeft = nOffset + D2COMMON_UNITS_GetClientCoordX(pUnit) - 12;
-    pBox->nRight = D2CMP_CelGetWidth(pCel) + pBox->nLeft + 24;
+    pBox->nRight = D2CMP_CELCMP_CelGetWidth(pCel) + pBox->nLeft + 24;
 
-    nOffset = D2CMP_CelGetOffsetY(pCel);
+    nOffset = D2CMP_CELCMP_CelGetOffsetY(pCel);
     nBottom = D2COMMON_UNITS_GetClientCoordY(pUnit) + nOffset + 12;
     pBox->nBottom = nBottom;
-    nTop = nBottom - D2CMP_CelGetHeight(pCel) - 24;
+    nTop = nBottom - D2CMP_CELCMP_CelGetHeight(pCel) - 24;
     pBox->nTop = nTop;
 
     nWidth = pBox->nRight - pBox->nLeft;

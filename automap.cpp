@@ -368,8 +368,8 @@ void __cdecl AUTOMAP_UpdateClipRect()
 //  Loads the four icon cel files: MaxiMapS, Act2MapS, Act4MapS and ExTnMapS in mini-map mode, MaxiMap, Act2Map, Act4Map and ExTnMap otherwise.
 //  Called from AUTOMAP_LoadSettings at startup and from AUTOMAP_SetMode on every mode change, so it unloads first.
 //  BUG: in mini-map mode ExTnMapS is loaded with no FOG_IsExpansion test, while the other arm loads ExTnMap only on an expansion install and
-//  otherwise sets slot 3 to 0. ARCHIVE_CellFileLoad returns 0 for a file it cannot find, and that null reaches D2CMP_CelFileGetCelsPerDirection.
-//  NOT ESTABLISHED: it turns on whether ExTnMapS.dc6 ships in the classic archive.
+//  otherwise sets slot 3 to 0. ARCHIVE_CellFileLoad returns 0 for a file it cannot find, and that null reaches
+//  D2CMP_CELCMP_CelFileGetCelsPerDirection. NOT ESTABLISHED: it turns on whether ExTnMapS.dc6 ships in the classic archive.
 //  The path buffer is one MAX_PATH array, cleared in the three steps the bytes have.
 void __cdecl AUTOMAP_LoadIconCels()
 {
@@ -395,15 +395,15 @@ void __cdecl AUTOMAP_LoadIconCels()
     {
         sprintf(szPath, "%s\\UI\\AutoMap\\MaxiMapS", aDataGlobal);
         gpAutomapIconCels[0] = ARCHIVE_CellFileLoad(szPath, 0);
-        gnAutomapIconCelCounts[0] = D2CMP_CelFileGetCelsPerDirection(gpAutomapIconCels[0]);
+        gnAutomapIconCelCounts[0] = D2CMP_CELCMP_CelFileGetCelsPerDirection(gpAutomapIconCels[0]);
 
         sprintf(szPath, "%s\\UI\\AutoMap\\Act2MapS", aDataGlobal);
         gpAutomapIconCels[1] = ARCHIVE_CellFileLoad(szPath, 0);
-        gnAutomapIconCelCounts[1] = D2CMP_CelFileGetCelsPerDirection(gpAutomapIconCels[1]);
+        gnAutomapIconCelCounts[1] = D2CMP_CELCMP_CelFileGetCelsPerDirection(gpAutomapIconCels[1]);
 
         sprintf(szPath, "%s\\UI\\AutoMap\\Act4MapS", aDataGlobal);
         gpAutomapIconCels[2] = ARCHIVE_CellFileLoad(szPath, 0);
-        gnAutomapIconCelCounts[2] = D2CMP_CelFileGetCelsPerDirection(gpAutomapIconCels[2]);
+        gnAutomapIconCelCounts[2] = D2CMP_CELCMP_CelFileGetCelsPerDirection(gpAutomapIconCels[2]);
 
         //  no FOG_IsExpansion() test here, unlike the arm below
         sprintf(szPath, "%s\\UI\\AutoMap\\ExTnMapS", aDataGlobal);
@@ -412,15 +412,15 @@ void __cdecl AUTOMAP_LoadIconCels()
     {
         sprintf(szPath, "%s\\UI\\AutoMap\\MaxiMap", aDataGlobal);
         gpAutomapIconCels[0] = ARCHIVE_CellFileLoad(szPath, 0);
-        gnAutomapIconCelCounts[0] = D2CMP_CelFileGetCelsPerDirection(gpAutomapIconCels[0]);
+        gnAutomapIconCelCounts[0] = D2CMP_CELCMP_CelFileGetCelsPerDirection(gpAutomapIconCels[0]);
 
         sprintf(szPath, "%s\\UI\\AutoMap\\Act2Map", aDataGlobal);
         gpAutomapIconCels[1] = ARCHIVE_CellFileLoad(szPath, 0);
-        gnAutomapIconCelCounts[1] = D2CMP_CelFileGetCelsPerDirection(gpAutomapIconCels[1]);
+        gnAutomapIconCelCounts[1] = D2CMP_CELCMP_CelFileGetCelsPerDirection(gpAutomapIconCels[1]);
 
         sprintf(szPath, "%s\\UI\\AutoMap\\Act4Map", aDataGlobal);
         gpAutomapIconCels[2] = ARCHIVE_CellFileLoad(szPath, 0);
-        gnAutomapIconCelCounts[2] = D2CMP_CelFileGetCelsPerDirection(gpAutomapIconCels[2]);
+        gnAutomapIconCelCounts[2] = D2CMP_CELCMP_CelFileGetCelsPerDirection(gpAutomapIconCels[2]);
 
         if (!FOG_IsExpansion())
         {
@@ -433,7 +433,7 @@ void __cdecl AUTOMAP_LoadIconCels()
     }
 
     gpAutomapIconCels[3] = ARCHIVE_CellFileLoad(szPath, 0);
-    gnAutomapIconCelCounts[3] = D2CMP_CelFileGetCelsPerDirection(gpAutomapIconCels[3]);
+    gnAutomapIconCelCounts[3] = D2CMP_CELCMP_CelFileGetCelsPerDirection(gpAutomapIconCels[3]);
 }
 
 
@@ -1094,9 +1094,9 @@ void __fastcall AUTOMAP_AddTile(D2DrlgTileDataStrc *pTile, D2DrlgRoomStrc *pRoom
     pTile->dwFlags |= 0x40000;
 
     dwAutomapType = D2COMMON_DRLG_GetLevelTypeFromLevelId((D2C_Levels)pRoom->pLevel->nLevelId);
-    dwTileType = D2CMP_10077_GetTileType(pTile->pTile);
-    nStyle = D2CMP_10078_GetTileStyle(pTile->pTile);
-    nSequence = D2CMP_10082_GetTileSequence(pTile->pTile);
+    dwTileType = D2CMP_TILELIB_TileGetType(pTile->pTile);
+    nStyle = D2CMP_TILELIB_TileGetStyle(pTile->pTile);
+    nSequence = D2CMP_TILELIB_TileGetSequence(pTile->pTile);
 
     nCelNum = D2COMMON_DATATBLS_GetAutomapCellId(dwAutomapType, dwTileType, nStyle, nSequence);
     if (nCelNum == -1)

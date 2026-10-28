@@ -386,7 +386,7 @@ int32_t __stdcall WALL2_WallAddRoomToSquareGrid(D2ActiveRoomStrc *pRoom, D2Clien
         pTile = pTiles;
         do
         {
-            nTileRadius = D2CMP_10084(pTile->pTile);
+            nTileRadius = D2CMP_TILELIB_TileGetTotalHeight(pTile->pTile);
             D2COMMON_DUNGEON_ClientTileDrawPositionToGameCoords(pTile->nDrawX, pTile->nDrawY, &nGameX, &nGameY);
             --nGameY;
 
@@ -524,7 +524,7 @@ int32_t __stdcall WALL2_WallAddRoomToSquareGrid(D2ActiveRoomStrc *pRoom, D2Clien
         pTile = pTiles;
         do
         {
-            nTileRadius = D2CMP_10084(pTile->pTile);
+            nTileRadius = D2CMP_TILELIB_TileGetTotalHeight(pTile->pTile);
             D2COMMON_DUNGEON_ClientTileDrawPositionToGameCoords(pTile->nDrawX, pTile->nDrawY, &nGameX, &nGameY);
             --nGameY;
 

@@ -219,8 +219,8 @@ inline D2CellFileStrc *gpAutomapIconCels[4];
 static_assert(sizeof(gpAutomapIconCels) == 16, "gpAutomapIconCels: the item's 16 bytes in the .i64");
 
 //  D2Client 0x6FBB19B8
-//  Cels per direction of each gpAutomapIconCels entry, filled by AUTOMAP_LoadIconCels with D2CMP_CelFileGetCelsPerDirection right after each load
-//  and read by AUTOMAP_LoadCelData. Entry [3] is 0 in a classic game outside mode 1, where ExTnMap is never loaded.
+//  Cels per direction of each gpAutomapIconCels entry, filled by AUTOMAP_LoadIconCels with D2CMP_CELCMP_CelFileGetCelsPerDirection right
+//  after each load and read by AUTOMAP_LoadCelData. Entry [3] is 0 in a classic game outside mode 1, where ExTnMap is never loaded.
 inline int32_t gnAutomapIconCelCounts[4];
 static_assert(sizeof(gnAutomapIconCelCounts) == 16, "gnAutomapIconCelCounts: the item's 16 bytes in the .i64");
 

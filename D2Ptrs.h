@@ -100,8 +100,8 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-//D2FUNC(D2CLIENT, ARCHIVE_CellFileLoad, D2CellFileStrc *, __fastcall, (char *pszName, int32_t nGfxType), 0x1000)
-//D2FUNC(D2CLIENT, ARCHIVE_CellFileLoadWithSize, D2CellFileStrc *, __fastcall, (char *pszName, uint32_t *pdwFileSize, int32_t nGfxType), 0x10A0)
+//D2FUNC(D2CLIENT, ARCHIVE_CellFileLoad, D2CellFileStrc *, __fastcall, (char *pszName, int32_t bAllowCompressed), 0x1000)
+//D2FUNC(D2CLIENT, ARCHIVE_CellFileLoadWithSize, D2CellFileStrc *, __fastcall, (char *pszName, uint32_t *pdwFileSize, int32_t bAllowCompressed), 0x10A0)
 //D2FUNC(D2CLIENT, ARCHIVE_CellFileFree, void, __fastcall, (D2CellFileStrc *pCellFile), 0x1140)
 //D2FUNC(D2CLIENT, QueryInterface, D2ClientInterface *, __cdecl, (), -10004)
 //D2FUNC(D2CLIENT, DLLMAIN_Entrypoint, int32_t, __fastcall, (D2ConfigStrc *pConfig), 0x11D0)
@@ -2885,41 +2885,41 @@ extern DWORD GetDllOffset(const char* ModuleName, DWORD BaseAddress, int Offset)
 //  D2FUNC(D2CLIENT, ImmSimulateHotKey, BOOL, __stdcall, (HWND, DWORD), 0xCA81E)   -- IMM32, called directly
 //  D2FUNC(D2CLIENT, ImmSetConversionStatus, BOOL, __stdcall, (HIMC, DWORD, DWORD), 0xCA824)   -- IMM32, called directly
 //  D2FUNC(D2CLIENT, ImmSetOpenStatus, BOOL, __stdcall, (HIMC, BOOL), 0xCA82A)   -- IMM32, called directly
-//  D2FUNC(D2CLIENT, D2CMP_CelFileNormalize, void, __stdcall, (D2CellFileStrc *pFile, D2CellFileStrc **ppOutFile, const char *szFile, int nLine, int nSpecVersion, int nUnused), 0xCA830)   -- now D2CMP_CelFileNormalize
-//  D2FUNC(D2CLIENT, D2CMP_GetGfxFileExtension, char *, __stdcall, (int nGfxType), 0xCA836)   -- now D2CMP_GetGfxFileExtension
-//  D2FUNC(D2CLIENT, D2CMP_CelFileFreeHardware, BOOL, __stdcall, (D2CellFileStrc *pFile), 0xCA83C)   -- now D2CMP_CelFileFreeHardware
-//  D2FUNC(D2CLIENT, D2CMP_InitSpriteCache, void, __stdcall, (void *pPool, int32_t nSpriteCacheBytes, int32_t nCelHeaderCacheBytes, uint32_t dwMemoryOverride), 0xCA842)   -- now D2CMP_InitSpriteCache
-//  D2FUNC(D2CLIENT, D2CMP_10089, void, __stdcall, (void *pPool, uint32_t dwCacheBytes), 0xCA848)   -- now D2CMP_10089
-//  D2FUNC(D2CLIENT, D2CMP_FlushSpriteCache, int, __stdcall, (int a1), 0xCA84E)   -- now D2CMP_FlushSpriteCache
-//  D2FUNC(D2CLIENT, D2CMP_10090, int, __stdcall, (_DWORD), 0xCA854)   -- now D2CMP_10090
-//  D2FUNC(D2CLIENT, D2CMP_10092, void, __stdcall, (uint32_t *pConfiguredBytes, uint32_t *pAllocRequests, uint32_t *pAccessRequests, uint32_t *pPercentAllocated), 0xCA85A)   -- now D2CMP_10092
-//  D2FUNC(D2CLIENT, D2CMP_10063, int, __cdecl, (), 0xCA860)   -- now D2CMP_10063
-//  D2FUNC(D2CLIENT, D2CMP_10064, int, __cdecl, (), 0xCA866)   -- now D2CMP_10064
-//  D2FUNC(D2CLIENT, D2CMP_10060, int, __cdecl, (), 0xCA86C)   -- now D2CMP_10060
-//  D2FUNC(D2CLIENT, D2CMP_10061, int, __cdecl, (), 0xCA872)   -- now D2CMP_10061
-//  D2FUNC(D2CLIENT, D2CMP_10093, int, __cdecl, (), 0xCA878)   -- now D2CMP_10093
-//  D2FUNC(D2CLIENT, D2CMP_CelFileGetCelsPerDirection, int, __stdcall, (D2CellFileStrc *pCelFile), 0xCA87E)   -- now D2CMP_CelFileGetCelsPerDirection
-//  D2FUNC(D2CLIENT, D2CMP_10095, void *, __stdcall, (D2TileLibraryHashStrc **ppHash, const char *szFileName), 0xCA884)   -- now D2CMP_10095
-//  D2FUNC(D2CLIENT, D2CMP_10096, int, __stdcall, (), 0xCA88A)   -- now D2CMP_10096
-//  D2FUNC(D2CLIENT, D2CMP_TileFreeAsyncLoads, int, __cdecl, (), 0xCA890)   -- now D2CMP_TileFreeAsyncLoads
-//  D2FUNC(D2CLIENT, D2CMP_SpriteFreeAsyncLoads, int, __cdecl, (), 0xCA896)   -- now D2CMP_SpriteFreeAsyncLoads
-//  D2FUNC(D2CLIENT, D2CMP_SetCompressedDataMode, int, __stdcall, (_DWORD), 0xCA89C)   -- now D2CMP_SetCompressedDataMode
-//  D2FUNC(D2CLIENT, D2CMP_10084, int32_t, __stdcall, (D2TileLibraryEntryStrc *hTile), 0xCA8A2)   -- now D2CMP_10084
-//  D2FUNC(D2CLIENT, D2CMP_10082_GetTileSequence, int32_t, __stdcall, (D2TileLibraryEntryStrc *hTile), 0xCA8A8)   -- now D2CMP_10082_GetTileSequence
-//  D2FUNC(D2CLIENT, D2CMP_10078_GetTileStyle, int32_t, __stdcall, (D2TileLibraryEntryStrc *hTile), 0xCA8AE)   -- now D2CMP_10078_GetTileStyle
-//  D2FUNC(D2CLIENT, D2CMP_10077_GetTileType, int32_t, __stdcall, (D2TileLibraryEntryStrc *hTile), 0xCA8B4)   -- now D2CMP_10077_GetTileType
-//  D2FUNC(D2CLIENT, D2CMP_CelGetWidth, int, __stdcall, (D2GfxCellStrc *pCel), 0xCA8BA)   -- now D2CMP_CelGetWidth
-//  D2FUNC(D2CLIENT, D2CMP_CelGetHeight, int, __stdcall, (D2GfxCellStrc *pCel), 0xCA8C0)   -- now D2CMP_CelGetHeight
-//  D2FUNC(D2CLIENT, D2CMP_CelGetHandle, D2GfxCellStrc *, __stdcall, (D2GfxDataStrc *pGfxData), 0xCA8C6)   -- now D2CMP_CelGetHandle
-//  D2FUNC(D2CLIENT, D2CMP_10097, int, __stdcall, (_DWORD), 0xCA8CC)   -- now D2CMP_10097
-//  D2FUNC(D2CLIENT, D2CMP_SpriteValidate, BOOL, __stdcall, (D2GfxDataStrc *pGfxData, BOOL bAsyncWait, BOOL bAsyncLoad), 0xCA8D2)   -- now D2CMP_SpriteValidate
-//  D2FUNC(D2CLIENT, D2CMP_CelGetOffsetY, int, __stdcall, (D2GfxCellStrc *pCel), 0xCA8D8)   -- now D2CMP_CelGetOffsetY
-//  D2FUNC(D2CLIENT, D2CMP_CelGetOffsetX, int, __stdcall, (D2GfxCellStrc *pCel), 0xCA8DE)   -- now D2CMP_CelGetOffsetX
-//  D2FUNC(D2CLIENT, D2CMP_10058, int, __stdcall, (_DWORD, _DWORD, _DWORD), 0xCA8E4)   -- now D2CMP_10058
-//  D2FUNC(D2CLIENT, D2CMP_10057, int, __cdecl, (), 0xCA8EA)   -- now D2CMP_10057
-//  D2FUNC(D2CLIENT, D2CMP_10056, int32_t, __stdcall, (D2GfxDataStrc *ptCelContext), 0xCA8F0)   -- now D2CMP_10056
-//  D2FUNC(D2CLIENT, D2CMP_10022, int, __stdcall, (_DWORD, _DWORD), 0xCA8F6)   -- now D2CMP_10022
-//  D2FUNC(D2CLIENT, D2CMP_10019, int, __stdcall, (_DWORD, _DWORD, _DWORD, _DWORD), 0xCA8FC)   -- now D2CMP_10019
+//  D2FUNC(D2CLIENT, D2CMP_CELCMP_CelFileNormalize, void, __stdcall, (D2CellFileStrc *pFile, D2CellFileStrc **ppOutFile, const char *szFile, int32_t nLine, int32_t nSpecVersion, int32_t nUnused), 0xCA830)   -- now D2CMP_CELCMP_CelFileNormalize
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_GetGfxFileExtension, const char *, __stdcall, (int32_t bAllowCompressed), 0xCA836)   -- now D2CMP_SPRITECACHE_GetGfxFileExtension
+//  D2FUNC(D2CLIENT, D2CMP_CELCMP_CelFileFreeHardware, BOOL, __stdcall, (D2CellFileStrc *pFile), 0xCA83C)   -- now D2CMP_CELCMP_CelFileFreeHardware
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_SpriteCacheInit, void, __stdcall, (void *pPool, int32_t nSpriteCacheBytes, int32_t nCelHeaderCacheBytes, uint32_t dwMemoryOverride), 0xCA842)   -- now D2CMP_SPRITECACHE_SpriteCacheInit
+//  D2FUNC(D2CLIENT, D2CMP_TILECACHE_TileCacheInit, void, __stdcall, (void *pPool, uint32_t dwCacheBytes), 0xCA848)   -- now D2CMP_TILECACHE_TileCacheInit
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_SpriteCacheDestroy, void, __stdcall, (int32_t bFreeCaches), 0xCA84E)   -- now D2CMP_SPRITECACHE_SpriteCacheDestroy
+//  D2FUNC(D2CLIENT, D2CMP_TILECACHE_TileCacheDestroy, void, __stdcall, (int32_t bFreeCache), 0xCA854)   -- now D2CMP_TILECACHE_TileCacheDestroy
+//  D2FUNC(D2CLIENT, D2CMP_TILECACHE_GetTileCacheHits, void, __stdcall, (uint32_t *pConfiguredBytes, uint32_t *pAllocRequests, uint32_t *pAccessRequests, uint32_t *pPercentAllocated), 0xCA85A)   -- now D2CMP_TILECACHE_GetTileCacheHits
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_CelDataCacheGetUsedMemory, uint32_t, __cdecl, (), 0xCA860)   -- now D2CMP_SPRITECACHE_CelDataCacheGetUsedMemory
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_CelDataCacheGetMaxMemory, uint32_t, __cdecl, (), 0xCA866)   -- now D2CMP_SPRITECACHE_CelDataCacheGetMaxMemory
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_SpriteCacheGetUsedMemory, uint32_t, __cdecl, (), 0xCA86C)   -- now D2CMP_SPRITECACHE_SpriteCacheGetUsedMemory
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_SpriteCacheGetMaxMemory, uint32_t, __cdecl, (), 0xCA872)   -- now D2CMP_SPRITECACHE_SpriteCacheGetMaxMemory
+//  D2FUNC(D2CLIENT, D2CMP_TILECACHE_ResetTileCacheHits, void, __cdecl, (), 0xCA878)   -- now D2CMP_TILECACHE_ResetTileCacheHits
+//  D2FUNC(D2CLIENT, D2CMP_CELCMP_CelFileGetCelsPerDirection, int32_t, __stdcall, (D2CellFileStrc *pCelFile), 0xCA87E)   -- now D2CMP_CELCMP_CelFileGetCelsPerDirection
+//  D2FUNC(D2CLIENT, D2CMP_TILEPROJECTS_LoadProjectRecord, D2CmpNormalizedTileProject *, __stdcall, (D2TileLibraryHashStrc **ppHash, const char *szFileName), 0xCA884)   -- now D2CMP_TILEPROJECTS_LoadProjectRecord
+//  D2FUNC(D2CLIENT, D2CMP_PALSHIFT_PalShiftInit, void, __stdcall, (), 0xCA88A)   -- now D2CMP_PALSHIFT_PalShiftInit
+//  D2FUNC(D2CLIENT, D2CMP_TILECACHE_TileFreeAsyncLoads, void, __stdcall, (), 0xCA890)   -- now D2CMP_TILECACHE_TileFreeAsyncLoads
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_SpriteFreeAsyncLoads, void, __stdcall, (), 0xCA896)   -- now D2CMP_SPRITECACHE_SpriteFreeAsyncLoads
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_SetNoCompress, void, __stdcall, (int32_t bAllowCompressedMode), 0xCA89C)   -- now D2CMP_SPRITECACHE_SetNoCompress
+//  D2FUNC(D2CLIENT, D2CMP_TILELIB_TileGetTotalHeight, int32_t, __stdcall, (D2TileLibraryEntryStrc *hTile), 0xCA8A2)   -- now D2CMP_TILELIB_TileGetTotalHeight
+//  D2FUNC(D2CLIENT, D2CMP_TILELIB_TileGetSequence, int32_t, __stdcall, (D2TileLibraryEntryStrc *hTile), 0xCA8A8)   -- now D2CMP_TILELIB_TileGetSequence
+//  D2FUNC(D2CLIENT, D2CMP_TILELIB_TileGetStyle, int32_t, __stdcall, (D2TileLibraryEntryStrc *hTile), 0xCA8AE)   -- now D2CMP_TILELIB_TileGetStyle
+//  D2FUNC(D2CLIENT, D2CMP_TILELIB_TileGetType, int32_t, __stdcall, (D2TileLibraryEntryStrc *hTile), 0xCA8B4)   -- now D2CMP_TILELIB_TileGetType
+//  D2FUNC(D2CLIENT, D2CMP_CELCMP_CelGetWidth, int32_t, __stdcall, (const D2GfxCellStrc *pCel), 0xCA8BA)   -- now D2CMP_CELCMP_CelGetWidth
+//  D2FUNC(D2CLIENT, D2CMP_CELCMP_CelGetHeight, int32_t, __stdcall, (const D2GfxCellStrc *pCel), 0xCA8C0)   -- now D2CMP_CELCMP_CelGetHeight
+//  D2FUNC(D2CLIENT, D2CMP_CELCMP_CelGetHandle, D2GfxCellStrc *, __stdcall, (D2GfxDataStrc *pContext), 0xCA8C6)   -- now D2CMP_CELCMP_CelGetHandle
+//  D2FUNC(D2CLIENT, D2CMP_PALSHIFT_PalShiftSetAct, void, __stdcall, (int32_t nAct), 0xCA8CC)   -- now D2CMP_PALSHIFT_PalShiftSetAct
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_SpriteValidate, int32_t, __stdcall, (D2GfxDataStrc *pContext, int32_t bAsyncWait, int32_t bAsyncLoad), 0xCA8D2)   -- now D2CMP_SPRITECACHE_SpriteValidate
+//  D2FUNC(D2CLIENT, D2CMP_CELCMP_CelGetOffsetY, int32_t, __stdcall, (const D2GfxCellStrc *pCel), 0xCA8D8)   -- now D2CMP_CELCMP_CelGetOffsetY
+//  D2FUNC(D2CLIENT, D2CMP_CELCMP_CelGetOffsetX, int32_t, __stdcall, (const D2GfxCellStrc *pCel), 0xCA8DE)   -- now D2CMP_CELCMP_CelGetOffsetX
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_SpriteFindAsynchSiblings, int32_t, __stdcall, (int32_t nUnitType, int32_t nMode, int32_t nUnitIndex), 0xCA8E4)   -- now D2CMP_SPRITECACHE_SpriteFindAsynchSiblings
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_SpriteNumAsyncLoads, int32_t, __cdecl, (), 0xCA8EA)   -- now D2CMP_SPRITECACHE_SpriteNumAsyncLoads
+//  D2FUNC(D2CLIENT, D2CMP_SPRITECACHE_SpriteRequest, int32_t, __stdcall, (D2GfxDataStrc *ptCelContext), 0xCA8F0)   -- now D2CMP_SPRITECACHE_SpriteRequest
+//  D2FUNC(D2CLIENT, D2CMP_CELCMP_CelGameDirToNormalDir, int32_t, __stdcall, (uint32_t nGameDirection, uint32_t nLevelOfRotation), 0xCA8F6)   -- now D2CMP_CELCMP_CelGameDirToNormalDir
+//  D2FUNC(D2CLIENT, D2CMP_CELCMP_CelConvertDir, uint32_t, __stdcall, (uint32_t nDirection, uint32_t nStartDirections, uint32_t nRepresentativeDirections, int32_t bAlternate), 0xCA8FC)   -- now D2CMP_CELCMP_CelConvertDir
 //  D2FUNC(D2CLIENT, D2COMMON_LOG_11105, void, __cdecl, (), 0xCA902)   -- now D2COMMON_LOG_11105
 //  D2FUNC(D2CLIENT, D2COMMON_DATATBLS_UnloadAllBins, void, __stdcall, (), 0xCA908)   -- now D2COMMON_DATATBLS_UnloadAllBins
 //  D2FUNC(D2CLIENT, D2COMMON_DATATBLS_LoadAllTxts, void, __stdcall, (HD2ARCHIVE hArchive, int a2, int a3), 0xCA90E)   -- now D2COMMON_DATATBLS_LoadAllTxts

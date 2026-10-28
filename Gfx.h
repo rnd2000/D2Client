@@ -57,8 +57,9 @@ static_assert(sizeof(gCofCachePlayer) == 2060, "gCofCachePlayer: the item's 2060
 
 //  D2Client 0x6FBC2318
 //  Per (component, class) marker set when a cel could not be produced, indexed `4 * (nComponent + 40 * nClass)`. GFX_PreloadPlayerMode checks it
-//  first and skips all further work when it is up; it writes 1 here after `D2CMP_10058(nType, nComponent, nClass)` returns 0, and clears it
-//  together with gaComponentCelQueued when neither path succeeds.
+//  first and skips all further work when it is up; it writes 1 here after
+//  `D2CMP_SPRITECACHE_SpriteFindAsynchSiblings(nType, nComponent, nClass)` returns 0, and clears it together with gaComponentCelQueued when
+//  neither path succeeds.
 //  The size is NOT ESTABLISHED: this table and gaComponentCelQueued sit 80 bytes apart while sharing an index that reaches 255, so they cannot both
 //  be [7][40]. MEMPART_InitMemoryPartitions zeroes 0x460 bytes (280 ints) from here in one memset, which covers both and ends where
 //  gCofCacheOther begins.
@@ -131,8 +132,8 @@ static_assert(sizeof(gnCofMemoryBudget) == 4, "gnCofMemoryBudget: the item's 4 b
 
 //  D2Client 0x6FBC2F9C
 //  Set to 1 while GFX_PreloadOnLoadComplete is running its full pass and cleared at the end; nothing else writes it. It is read as a licence to
-//  ignore the time budget: inside the pass, `if (!gbPreloadPassActive && D2CMP_10057() >= 0x1E) break` stops after 30 ms once the flag is down,
-//  and GFX_PreloadVisibleUnits checks it to keep out of the way while the bulk load is in progress.
+//  ignore the time budget: inside the pass, `if (!gbPreloadPassActive && D2CMP_SPRITECACHE_SpriteNumAsyncLoads() >= 0x1E) break` stops after
+//  30 ms once the flag is down, and GFX_PreloadVisibleUnits checks it to keep out of the way while the bulk load is in progress.
 inline int32_t gbPreloadPassActive;
 static_assert(sizeof(gbPreloadPassActive) == 4, "gbPreloadPassActive: the item's 4 bytes in the .i64");
 

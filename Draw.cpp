@@ -176,17 +176,17 @@ void __cdecl DRAW_GameDrawDebugOverlay()
     nCofBudget = GFX_GetCofMemoryBudget();
     D2GFX_OutputString(10, 132, "COF Memory->%i of %i", GFX_GetCofMemoryUsed(), nCofBudget);
 
-    nSpriteBudget = D2CMP_10061();
-    D2GFX_OutputString(10, 144, "Sprite Cache Memory->%i of %i", D2CMP_10060(), nSpriteBudget);
+    nSpriteBudget = D2CMP_SPRITECACHE_SpriteCacheGetMaxMemory();
+    D2GFX_OutputString(10, 144, "Sprite Cache Memory->%i of %i", D2CMP_SPRITECACHE_SpriteCacheGetUsedMemory(), nSpriteBudget);
 
     D2GFX_OutputString(10, 156, "Async Files->%i", FOG_10098());
 
-    nCelBudget = D2CMP_10064();
-    D2GFX_OutputString(10, 168, "CelData Cache Memory->%i of %i", D2CMP_10063(), nCelBudget);
+    nCelBudget = D2CMP_SPRITECACHE_CelDataCacheGetMaxMemory();
+    D2GFX_OutputString(10, 168, "CelData Cache Memory->%i of %i", D2CMP_SPRITECACHE_CelDataCacheGetUsedMemory(), nCelBudget);
 
     MEMPART_Nullsub1();
 
-    D2CMP_10092(&nTileBytes, (uint32_t *)&nTileMisses, (uint32_t *)&nTileAccesses, (uint32_t *)&nTilePercent);
+    D2CMP_TILECACHE_GetTileCacheHits(&nTileBytes, (uint32_t *)&nTileMisses, (uint32_t *)&nTileAccesses, (uint32_t *)&nTilePercent);
     if (nTileAccesses > 0)
     {
         sprintf(szLine, gszTileCacheDebugFmt, (double)nTileBytes * gfOneOver1024, (double)nTileMisses * gfPercentDivisor / nTileAccesses, nTileMisses, nTilePercent);
@@ -259,7 +259,7 @@ void __cdecl DRAW_GameToggleDebugOverlay()
         pCache[25] = 0;
         pCache[26] = 0;
     }
-    D2CMP_10093();
+    D2CMP_TILECACHE_ResetTileCacheHits();
 }
 
 //1.10f: D2Client.0x6FAA2DA0
@@ -297,7 +297,7 @@ void __cdecl DRAW_ToggleDebugOverlay()
                 pCache[25] = 0;
                 pCache[26] = 0;
             }
-            D2CMP_10093();
+            D2CMP_TILECACHE_ResetTileCacheHits();
         }
     }
     gnDebugOverlayPage = 1;

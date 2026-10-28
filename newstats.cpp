@@ -723,7 +723,7 @@ void __cdecl NEWSTATS_PanelDrawNewStatsButton()
     tCelContext.nDirection = 0;
     tCelContext.pCellFile = gpImgLevelUpSocket;
     tCelContext.nFrame = 0;
-    nSocketWidth = D2CMP_CelGetWidth(D2CMP_CelGetHandle(&tCelContext));
+    nSocketWidth = D2CMP_CELCMP_CelGetWidth(D2CMP_CELCMP_CelGetHandle(&tCelContext));
     nTextWidth = D2WIN_10121_GetTextWidth(D2LANG_GetStringFromTblIndex(STR_IDX_3986_strlvlup));
     if (D2GFX_GetResolutionMode() != D2GAMERES_800x600)
     {
@@ -764,7 +764,7 @@ void __cdecl NEWSTATS_PanelDrawNewStatsButton()
     tCelContext.nFrame = bPressed ? 1 : 0;
 
     //  measured again, and neither answer is read
-    D2CMP_CelGetWidth(D2CMP_CelGetHandle(&tCelContext));
+    D2CMP_CELCMP_CelGetWidth(D2CMP_CELCMP_CelGetHandle(&tCelContext));
     D2WIN_10121_GetTextWidth(D2LANG_GetStringFromTblIndex(STR_IDX_3986_strlvlup));
 
     if (D2GFX_GetResolutionMode() == D2GAMERES_800x600)
@@ -878,7 +878,7 @@ void __cdecl NEWSTATS_PanelDrawNewSkillButton()
     tCelContext.nDirection = 0;
     tCelContext.pCellFile = gpImgLevelUpSocket;
     tCelContext.nFrame = 0;
-    nSocketWidth = D2CMP_CelGetWidth(D2CMP_CelGetHandle(&tCelContext));
+    nSocketWidth = D2CMP_CELCMP_CelGetWidth(D2CMP_CELCMP_CelGetHandle(&tCelContext));
     nTextWidth = D2WIN_10121_GetTextWidth(D2LANG_GetStringFromTblIndex(STR_IDX_3987_strnewskl));
     if (D2GFX_GetResolutionMode() != D2GAMERES_800x600)
     {
@@ -920,7 +920,7 @@ void __cdecl NEWSTATS_PanelDrawNewSkillButton()
     tCelContext.nFrame = bPressed ? 1 : 0;
 
     //  measured again, and neither answer is read
-    D2CMP_CelGetWidth(D2CMP_CelGetHandle(&tCelContext));
+    D2CMP_CELCMP_CelGetWidth(D2CMP_CELCMP_CelGetHandle(&tCelContext));
     D2WIN_10121_GetTextWidth(D2LANG_GetStringFromTblIndex(STR_IDX_3987_strnewskl));
 
     if (D2GFX_GetResolutionMode() == D2GAMERES_800x600)

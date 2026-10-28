@@ -1248,7 +1248,7 @@ void __cdecl QUESTLOG_DrawFrameAndTitle(void)
         }
     }
 
-    nCelWidth = D2CMP_CelGetWidth(D2CMP_CelGetHandle(&tCelContext));
+    nCelWidth = D2CMP_CELCMP_CelGetWidth(D2CMP_CELCMP_CelGetHandle(&tCelContext));
     wszTitle = D2LANG_GetStringFromTblIndex(STR_IDX_3928_CfgQuestLog);
     nTitleX = nCelWidth / 2 - D2WIN_10121_GetTextWidth(wszTitle) / 2 + gQuestLogCloseRects[iRect].nLeft + 1;
     nTitleY = gQuestLogCloseRects[iRect].nTitleY + gnScreenHeight - 480;

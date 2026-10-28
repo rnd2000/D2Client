@@ -1259,9 +1259,9 @@ D2ClientSpinnerStrc *__fastcall SPELLSEL_UiSpinnerConstruct(D2ClientSpinnerStrc 
     pSpinner->nRepeatTicks = 0;
     tCelData.nDirection = 0;
     tCelData.nFrame = 0;
-    pCel = D2CMP_CelGetHandle(&tCelData);
-    pSpinner->nCelHeight = D2CMP_CelGetHeight(pCel);
-    pSpinner->nCelWidth = D2CMP_CelGetWidth(pCel);
+    pCel = D2CMP_CELCMP_CelGetHandle(&tCelData);
+    pSpinner->nCelHeight = D2CMP_CELCMP_CelGetHeight(pCel);
+    pSpinner->nCelWidth = D2CMP_CELCMP_CelGetWidth(pCel);
     pSpinner->nUpY = nY;
     if (pSpinner->bHorizontal)
     {

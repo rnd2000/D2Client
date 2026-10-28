@@ -46,41 +46,41 @@
 extern "C" {
 
 /*  ---- D2CMP ---- */
-int __stdcall D2CMP_10019(_DWORD, _DWORD, _DWORD, _DWORD);   /* #10019 */
-int __stdcall D2CMP_10022(_DWORD, _DWORD);   /* #10022 */
-void __stdcall D2CMP_CelFileNormalize(D2CellFileStrc *pFile, D2CellFileStrc **ppOutFile, const char *szFile, int nLine, int nSpecVersion, int nUnused);   /* #10024 */
-BOOL __stdcall D2CMP_CelFileFreeHardware(D2CellFileStrc *pFile);   /* #10032 */
-D2GfxCellStrc * __stdcall D2CMP_CelGetHandle(D2GfxDataStrc *pGfxData);   /* #10036 */
-int __stdcall D2CMP_CelGetWidth(D2GfxCellStrc *pCel);   /* #10037 */
-int __stdcall D2CMP_CelGetHeight(D2GfxCellStrc *pCel);   /* #10038 */
-int __stdcall D2CMP_CelGetOffsetX(D2GfxCellStrc *pCel);   /* #10039 */
-int __stdcall D2CMP_CelGetOffsetY(D2GfxCellStrc *pCel);   /* #10040 */
-int __stdcall D2CMP_CelFileGetCelsPerDirection(D2CellFileStrc *pCelFile);   /* #10046 */
-char * __stdcall D2CMP_GetGfxFileExtension(int nGfxType);   /* #10051 */
-void __stdcall D2CMP_InitSpriteCache(void *pPool, int32_t nSpriteCacheBytes, int32_t nCelHeaderCacheBytes, uint32_t dwMemoryOverride);   /* #10052 */
-int __stdcall D2CMP_FlushSpriteCache(int a1);   /* #10053 */
-int __stdcall D2CMP_SetCompressedDataMode(_DWORD);   /* #10054 */
-BOOL __stdcall D2CMP_SpriteValidate(D2GfxDataStrc *pGfxData, BOOL bAsyncWait, BOOL bAsyncLoad);   /* #10055 */
-int32_t __stdcall D2CMP_10056(D2GfxDataStrc *ptCelContext);   /* #10056 */
-int __stdcall D2CMP_10057(void);   /* #10057 */
-int __stdcall D2CMP_10058(_DWORD, _DWORD, _DWORD);   /* #10058 */
-int __cdecl D2CMP_10060(void);   /* #10060 */
-int __stdcall D2CMP_10061(void);   /* #10061 */
-int __cdecl D2CMP_10063(void);   /* #10063 */
-int __stdcall D2CMP_10064(void);   /* #10064 */
-int32_t __stdcall D2CMP_10077_GetTileType(D2TileLibraryEntryStrc *hTile);   /* #10077 */
-int32_t __stdcall D2CMP_10078_GetTileStyle(D2TileLibraryEntryStrc *hTile);   /* #10078 */
-int32_t __stdcall D2CMP_10082_GetTileSequence(D2TileLibraryEntryStrc *hTile);   /* #10082 */
-int32_t __stdcall D2CMP_10084(D2TileLibraryEntryStrc *hTile);   /* #10084 */
-void __stdcall D2CMP_10089(void *pPool, uint32_t dwCacheBytes);   /* #10089 */
-int __stdcall D2CMP_10090(_DWORD);   /* #10090 */
-void __stdcall D2CMP_10092(uint32_t *pConfiguredBytes, uint32_t *pAllocRequests, uint32_t *pAccessRequests, uint32_t *pPercentAllocated);   /* #10092 */
-int __stdcall D2CMP_10093(void);   /* #10093 */
-void * __stdcall D2CMP_10095(D2TileLibraryHashStrc **ppHash, const char *szFileName);   /* #10095 */
-int __stdcall D2CMP_10096(void);   /* #10096 */
-int __stdcall D2CMP_10097(_DWORD);   /* #10097 */
-int __stdcall D2CMP_SpriteFreeAsyncLoads(void);   /* #10099 */
-int __stdcall D2CMP_TileFreeAsyncLoads(void);   /* #10102 */
+uint32_t __stdcall D2CMP_CELCMP_CelConvertDir(uint32_t nDirection, uint32_t nStartDirections, uint32_t nRepresentativeDirections, int32_t bAlternate);   /* #10019 */
+int32_t __stdcall D2CMP_CELCMP_CelGameDirToNormalDir(uint32_t nGameDirection, uint32_t nLevelOfRotation);   /* #10022 */
+void __stdcall D2CMP_CELCMP_CelFileNormalize(D2CellFileStrc *pFile, D2CellFileStrc **ppOutFile, const char *szFile, int32_t nLine, int32_t nSpecVersion, int32_t nUnused);   /* #10024 */
+BOOL __stdcall D2CMP_CELCMP_CelFileFreeHardware(D2CellFileStrc *pFile);   /* #10032 */
+D2GfxCellStrc * __stdcall D2CMP_CELCMP_CelGetHandle(D2GfxDataStrc *pContext);   /* #10036 */
+int32_t __stdcall D2CMP_CELCMP_CelGetWidth(const D2GfxCellStrc *pCel);   /* #10037 */
+int32_t __stdcall D2CMP_CELCMP_CelGetHeight(const D2GfxCellStrc *pCel);   /* #10038 */
+int32_t __stdcall D2CMP_CELCMP_CelGetOffsetX(const D2GfxCellStrc *pCel);   /* #10039 */
+int32_t __stdcall D2CMP_CELCMP_CelGetOffsetY(const D2GfxCellStrc *pCel);   /* #10040 */
+int32_t __stdcall D2CMP_CELCMP_CelFileGetCelsPerDirection(D2CellFileStrc *pCelFile);   /* #10046 */
+const char * __stdcall D2CMP_SPRITECACHE_GetGfxFileExtension(int32_t bAllowCompressed);   /* #10051 */
+void __stdcall D2CMP_SPRITECACHE_SpriteCacheInit(void *pPool, int32_t nSpriteCacheBytes, int32_t nCelHeaderCacheBytes, uint32_t dwMemoryOverride);   /* #10052 */
+void __stdcall D2CMP_SPRITECACHE_SpriteCacheDestroy(int32_t bFreeCaches);   /* #10053 */
+void __stdcall D2CMP_SPRITECACHE_SetNoCompress(int32_t bAllowCompressedMode);   /* #10054 */
+int32_t __stdcall D2CMP_SPRITECACHE_SpriteValidate(D2GfxDataStrc *pContext, int32_t bAsyncWait, int32_t bAsyncLoad);   /* #10055 */
+int32_t __stdcall D2CMP_SPRITECACHE_SpriteRequest(D2GfxDataStrc *ptCelContext);   /* #10056 */
+int32_t __cdecl D2CMP_SPRITECACHE_SpriteNumAsyncLoads(void);   /* #10057 */
+int32_t __stdcall D2CMP_SPRITECACHE_SpriteFindAsynchSiblings(int32_t nUnitType, int32_t nMode, int32_t nUnitIndex);   /* #10058 */
+uint32_t __cdecl D2CMP_SPRITECACHE_SpriteCacheGetUsedMemory(void);   /* #10060 */
+uint32_t __cdecl D2CMP_SPRITECACHE_SpriteCacheGetMaxMemory(void);   /* #10061 */
+uint32_t __cdecl D2CMP_SPRITECACHE_CelDataCacheGetUsedMemory(void);   /* #10063 */
+uint32_t __cdecl D2CMP_SPRITECACHE_CelDataCacheGetMaxMemory(void);   /* #10064 */
+int32_t __stdcall D2CMP_TILELIB_TileGetType(D2TileLibraryEntryStrc *hTile);   /* #10077 */
+int32_t __stdcall D2CMP_TILELIB_TileGetStyle(D2TileLibraryEntryStrc *hTile);   /* #10078 */
+int32_t __stdcall D2CMP_TILELIB_TileGetSequence(D2TileLibraryEntryStrc *hTile);   /* #10082 */
+int32_t __stdcall D2CMP_TILELIB_TileGetTotalHeight(D2TileLibraryEntryStrc *hTile);   /* #10084 */
+void __stdcall D2CMP_TILECACHE_TileCacheInit(void *pPool, uint32_t dwCacheBytes);   /* #10089 */
+void __stdcall D2CMP_TILECACHE_TileCacheDestroy(int32_t bFreeCache);   /* #10090 */
+void __stdcall D2CMP_TILECACHE_GetTileCacheHits(uint32_t *pConfiguredBytes, uint32_t *pAllocRequests, uint32_t *pAccessRequests, uint32_t *pPercentAllocated);   /* #10092 */
+void __cdecl D2CMP_TILECACHE_ResetTileCacheHits(void);   /* #10093 */
+D2CmpNormalizedTileProject * __stdcall D2CMP_TILEPROJECTS_LoadProjectRecord(D2TileLibraryHashStrc **ppHash, const char *szFileName);   /* #10095 */
+void __stdcall D2CMP_PALSHIFT_PalShiftInit(void);   /* #10096 */
+void __stdcall D2CMP_PALSHIFT_PalShiftSetAct(int32_t nAct);   /* #10097 */
+void __stdcall D2CMP_SPRITECACHE_SpriteFreeAsyncLoads(void);   /* #10099 */
+void __stdcall D2CMP_TILECACHE_TileFreeAsyncLoads(void);   /* #10102 */
 
 /*  ---- D2Common ---- */
 int __stdcall D2COMMON_DRLG_GetLevelTypeFromLevelId(D2C_Levels nLevelId);   /* #10000 */

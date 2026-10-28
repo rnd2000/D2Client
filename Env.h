@@ -137,7 +137,7 @@ inline char gEnvRainColoursNight[12];
 static_assert(sizeof(gEnvRainColoursNight) == 12, "gEnvRainColoursNight: the item's 12 bytes in the .i64");
 
 //  D2Client 0x6FBA7698
-//  Frames per direction of each gpEnvRainImages entry: ENV_LoadImages fills it with D2CMP_CelFileGetCelsPerDirection and ENV_UpdateWeather
+//  Frames per direction of each gpEnvRainImages entry: ENV_LoadImages fills it with D2CMP_CELCMP_CelFileGetCelsPerDirection and ENV_UpdateWeather
 //  reads it to know when a raindrop's animation has run out.
 inline int32_t gnEnvRainFrameCounts[4];
 static_assert(sizeof(gnEnvRainFrameCounts) == 16, "gnEnvRainFrameCounts: the item's 16 bytes in the .i64");

@@ -1918,10 +1918,10 @@ void __fastcall GFX_DrawInventoryItem(D2UnitStrc *pItem, int32_t nX, int32_t nY)
     if (!GFXUTIL_FillGfxData(&tGfxData, pItem, NULL, nGoldPile, 0, &nClassOut, 1, -1))
         return;
 
-    if (!D2CMP_SpriteValidate(&tGfxData, FALSE, TRUE))
+    if (!D2CMP_SPRITECACHE_SpriteValidate(&tGfxData, FALSE, TRUE))
         return;
 
-    if (!GFXUTIL_IsCelVisible(tGfxData.pCurrentCell, nX, nY + D2CMP_CelGetHeight(tGfxData.pCurrentCell), 0))
+    if (!GFXUTIL_IsCelVisible(tGfxData.pCurrentCell, nX, nY + D2CMP_CELCMP_CelGetHeight(tGfxData.pCurrentCell), 0))
         return;
 
     pPalette = D2COMMON_ITEMS_GetColor(NULL, pItem, &nColor, 1);
@@ -1929,10 +1929,10 @@ void __fastcall GFX_DrawInventoryItem(D2UnitStrc *pItem, int32_t nX, int32_t nY)
     if (D2COMMON_ITEMS_CheckItemFlag(pItem, IFLAG_ETHEREAL, 2742, szGfxCpp))
         eDrawMode = DRAWMODE_TRANS50;
 
-    nCelHeight = D2CMP_CelGetHeight(tGfxData.pCurrentCell);
+    nCelHeight = D2CMP_CELCMP_CelGetHeight(tGfxData.pCurrentCell);
     D2GFX_TEXTURE_CelDraw(&tGfxData, nX, nY + nCelHeight, 0xFFFFFFFF, eDrawMode, pPalette);
-    nCenterY = nY + ((uint32_t)D2CMP_CelGetHeight(tGfxData.pCurrentCell) >> 1);
-    GFX_DrawUnitOverlays(pItem, 0xFF, 0, nX + ((uint32_t)D2CMP_CelGetWidth(tGfxData.pCurrentCell) >> 1), nCenterY, 0);
+    nCenterY = nY + ((uint32_t)D2CMP_CELCMP_CelGetHeight(tGfxData.pCurrentCell) >> 1);
+    GFX_DrawUnitOverlays(pItem, 0xFF, 0, nX + ((uint32_t)D2CMP_CELCMP_CelGetWidth(tGfxData.pCurrentCell) >> 1), nCenterY, 0);
 }
 
 
@@ -2423,7 +2423,7 @@ int32_t __fastcall GFX_DrawUnitCels(D2UnitStrc *pUnit, int32_t nColor, int32_t n
     if (!GFXUTIL_FillGfxData(&tCelData, pUnit, NULL, nCelDirection, nCelFrame, &nClassOut, 1, -1))
         return 0;
 
-    if (!D2CMP_SpriteValidate(&tCelData, FALSE, TRUE))
+    if (!D2CMP_SPRITECACHE_SpriteValidate(&tCelData, FALSE, TRUE))
         return 0;
 
     nCelX = nOffsetX + nX - SCROLL_GetViewportOriginX();
@@ -2615,7 +2615,7 @@ void __fastcall GFX_PreloadVisibleUnits(int32_t bAsync)
             if (gbPreloadPassActive && (!bAsync || gbPreloadRequired) && (nLoadingCount++ & 0x1F))
                 UI_DrawLoadingScreen(1);
 
-            if (!gbPreloadPassActive && (uint32_t)D2CMP_10057() >= 30)
+            if (!gbPreloadPassActive && (uint32_t)D2CMP_SPRITECACHE_SpriteNumAsyncLoads() >= 30)
                 break;
 
             for (pUnit = ppRoomList[iRoom]->pUnitFirst; pUnit; pUnit = pUnit->pRoomNext)
@@ -2640,7 +2640,7 @@ void __fastcall GFX_PreloadVisibleUnits(int32_t bAsync)
                     GFX_PreloadAllPlayerModes(pUnit, bAsync);
                 }
 
-                if (!gbPreloadPassActive && (uint32_t)D2CMP_10057() >= 30)
+                if (!gbPreloadPassActive && (uint32_t)D2CMP_SPRITECACHE_SpriteNumAsyncLoads() >= 30)
                     goto SWEEP_DONE;
             }
         }
@@ -2742,10 +2742,10 @@ int32_t __fastcall GFX_AsyncLoadBlock(D2UnitStrc *pUnit, int32_t nAnimMode, int3
         }
 
         memset(&tGfxData, 0, sizeof(tGfxData));
-        if (GFXUTIL_FillGfxData(&tGfxData, pUnit, NULL, D2COMMON_UNITS_GetDirection(pUnit), 0, &nClassOut, nComponent, nAnimMode) && !D2CMP_SpriteValidate(&tGfxData, bAsync, bAsync))
+        if (GFXUTIL_FillGfxData(&tGfxData, pUnit, NULL, D2COMMON_UNITS_GetDirection(pUnit), 0, &nClassOut, nComponent, nAnimMode) && !D2CMP_SPRITECACHE_SpriteValidate(&tGfxData, bAsync, bAsync))
         {
             tGfxData.pCellFile = NULL;
-            if (!D2CMP_10056(&tGfxData))
+            if (!D2CMP_SPRITECACHE_SpriteRequest(&tGfxData))
                 return -1;
 
             if (!(tGfxData.fFlags & 4))
@@ -2785,7 +2785,7 @@ void __fastcall GFX_PreloadAnimMode(D2UnitStrc *pUnit, int32_t nAnimMode, int32_
 
     if (gpMonsterPreloadTable[nClass].bQueued[nAnimMode])
     {
-        if (!D2CMP_10058(nType, nAnimMode, nClass))
+        if (!D2CMP_SPRITECACHE_SpriteFindAsynchSiblings(nType, nAnimMode, nClass))
             gpMonsterPreloadTable[nClass].bLoaded[nAnimMode] = 1;
         return;
     }
@@ -3330,7 +3330,7 @@ void __fastcall GFX_GetUnitCel(D2UnitStrc *pUnit, D2Composits nComponent, int32_
     if (!GFXUTIL_FillGfxData(&tCelContext, pUnit, NULL, D2COMMON_PATH_GetDirection(pDynamicPath), nFrame, &nCelClass, nComponent, -1))
         return;
 
-    if (!D2CMP_SpriteValidate(&tCelContext, FALSE, TRUE))
+    if (!D2CMP_SPRITECACHE_SpriteValidate(&tCelContext, FALSE, TRUE))
         return;
 
     if (!tCelContext.pCurrentCell)
@@ -3339,8 +3339,8 @@ void __fastcall GFX_GetUnitCel(D2UnitStrc *pUnit, D2Composits nComponent, int32_
         exit(-1);
     }
 
-    *pnOffsetX = D2CMP_CelGetOffsetX(tCelContext.pCurrentCell);
-    *pnOffsetY = D2CMP_CelGetOffsetY(tCelContext.pCurrentCell);
+    *pnOffsetX = D2CMP_CELCMP_CelGetOffsetX(tCelContext.pCurrentCell);
+    *pnOffsetY = D2CMP_CELCMP_CelGetOffsetY(tCelContext.pCurrentCell);
 }
 
 
@@ -3686,15 +3686,15 @@ void __fastcall GFX_AddMonsterCofFiles(int32_t nMonsterId, BOOL bValidateSprites
 
                     if (bValidateSprites)
                     {
-                        if (!D2CMP_SpriteValidate(&tDirCelContext, TRUE, TRUE))
+                        if (!D2CMP_SPRITECACHE_SpriteValidate(&tDirCelContext, TRUE, TRUE))
                         {
                             tDirCelContext.pCellFile = NULL;
-                            D2CMP_10056(&tDirCelContext);
+                            D2CMP_SPRITECACHE_SpriteRequest(&tDirCelContext);
                         }
                     }
                     else
                     {
-                        D2CMP_SpriteValidate(&tDirCelContext, FALSE, FALSE);
+                        D2CMP_SPRITECACHE_SpriteValidate(&tDirCelContext, FALSE, FALSE);
                     }
                 }
             }
@@ -3706,15 +3706,15 @@ void __fastcall GFX_AddMonsterCofFiles(int32_t nMonsterId, BOOL bValidateSprites
 
                 if (bValidateSprites)
                 {
-                    if (!D2CMP_SpriteValidate(&tCelContext, TRUE, TRUE))
+                    if (!D2CMP_SPRITECACHE_SpriteValidate(&tCelContext, TRUE, TRUE))
                     {
                         tCelContext.pCellFile = NULL;
-                        D2CMP_10056(&tCelContext);
+                        D2CMP_SPRITECACHE_SpriteRequest(&tCelContext);
                     }
                 }
                 else
                 {
-                    D2CMP_SpriteValidate(&tCelContext, FALSE, FALSE);
+                    D2CMP_SPRITECACHE_SpriteValidate(&tCelContext, FALSE, FALSE);
                 }
             }
         }
@@ -3910,7 +3910,7 @@ void __fastcall GFX_PreloadPlayerMode(D2UnitStrc *pUnit, int32_t nAnimMode, int3
 
     if (gaPlayerPreloadTable[nClass].bQueued[nAnimMode])
     {
-        if (!D2CMP_10058(nType, nAnimMode, nClass))
+        if (!D2CMP_SPRITECACHE_SpriteFindAsynchSiblings(nType, nAnimMode, nClass))
             gaPlayerPreloadTable[nClass].bLoaded[nAnimMode] = 1;
         return;
     }

@@ -1025,7 +1025,7 @@ void __fastcall DIALOG_AddControl(D2ClientDialogStrc *pDialog, D2UiCtrlProxyStrc
 //1.10f: D2Client.0x6FAD6950
 //  A dialog whose background is a cel: the image constructor. It refuses two ways before allocating: a null dismiss callback, and an
 //  nImageIndex of 1 or more (see the index test below). gDialogImageNames has one entry, so the bound is the table's real extent.
-//  The size comes from the cel rather than from the caller (D2CMP_CelGetWidth / CelGetHeight of the loaded image), and bOwnsImage is raised so
+//  The size comes from the cel rather than from the caller (D2CMP_CELCMP_CelGetWidth / CelGetHeight of the loaded image), and bOwnsImage is raised so
 //  DIALOG_Close unloads it. There is no autosize and no line measurement: an image dialog is the image.
 //  It shares the pNext defect with DIALOG_Create, at the same three instruction positions.
 //  hCel is asserted at :950, so a missing or broken cel halts the game rather than drawing nothing.
@@ -1090,14 +1090,14 @@ D2ClientDialogStrc *__fastcall DIALOG_CreateFromImage(int32_t nCenterX, int32_t 
     gfxRequest.pCellFile = pDialog->hImage;
     gfxRequest.nDirection = 0;
     gfxRequest.nFrame = 0;
-    pCel = D2CMP_CelGetHandle(&gfxRequest);
+    pCel = D2CMP_CELCMP_CelGetHandle(&gfxRequest);
     if (!pCel)
     {
         FOG_DisplayAssert(szHCel, szDialogCpp, 950);
         exit(-1);
     }
-    pDialog->nWidth = D2CMP_CelGetWidth(pCel);
-    pDialog->nHeight = D2CMP_CelGetHeight(pCel);
+    pDialog->nWidth = D2CMP_CELCMP_CelGetWidth(pCel);
+    pDialog->nHeight = D2CMP_CELCMP_CelGetHeight(pCel);
     pDialog->nCenterY = nCenterY;
     pDialog->nCenterX = nCenterX;
     pDialog->nLeft = nCenterX;

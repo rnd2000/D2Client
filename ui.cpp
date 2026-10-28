@@ -24,12 +24,12 @@ static const char szUiCpp[] = "C:\\projects\\D2\\head\\Diablo2\\Source\\D2Client
 
 //1.10f: D2Client.0x6FB241A0
 //  Tears down the previous loading screen and puts up a new one. One caller, GAME_InitGame, which follows it with UI_DrawLoadingScreen(1).
-//  The teardown branch is where per-act resources are swapped: the act palette through D2Win_10177 and D2CMP_10097, then eleven
+//  The teardown branch is where per-act resources are swapped: the act palette through D2Win_10177 and D2CMP_PALSHIFT_PalShiftSetAct, then eleven
 //  cache-rebuilding calls, then the level's environment images and a 2000 ms extension of the catch-up deadline. All of it is skipped the
 //  first time through, when sghLoadScreenProgress is still null.
 //  The image comes from DATA\LOCAL\UI\LoadingScreen when STRTABLE_GetLanguage says localised, otherwise from DATA\GLOBAL\UI\Loading\Loadingscreen.
-//  gnLoadScreenAct feeds D2Win_10177 as a byte (`mov cl, byte ptr gnLoadScreenAct`, 0x6FB241B8) and D2CMP_10097 as a dword (0x6FB241C9);
-//  the cast below is the byte load.
+//  gnLoadScreenAct feeds D2Win_10177 as a byte (`mov cl, byte ptr gnLoadScreenAct`, 0x6FB241B8) and D2CMP_PALSHIFT_PalShiftSetAct as a
+//  dword (0x6FB241C9); the cast below is the byte load.
 //  UNRESOLVED_dword_6FBBA774 (0x6FBBA774) is written by this function, UI_DrawLoadingScreen and UI_UnloadLoadingScreen and read by nothing;
 //  what it is is unknown. void: the caller reads nothing.
 
@@ -49,7 +49,7 @@ void __cdecl UI_LoadScreenBegin()
         sghLoadScreenProgress = NULL;
 
         D2WIN_10177((uint8_t)gnLoadScreenAct);
-        D2CMP_10097(gnLoadScreenAct);
+        D2CMP_PALSHIFT_PalShiftSetAct(gnLoadScreenAct);
         AUTOMAP_InitSymbolColors();
         INV_InitHighlightColors();
         PANEL_SetBoxFillColorRed();
@@ -184,7 +184,7 @@ void __fastcall UI_DrawLoadingScreen(int32_t nProgress)
                 }
             }
 
-            nCelsPerDirection = D2CMP_CelFileGetCelsPerDirection(sghLoadScreenProgress);
+            nCelsPerDirection = D2CMP_CELCMP_CelFileGetCelsPerDirection(sghLoadScreenProgress);
             nFrame = gnLoadScreenFrame;
             if (nFrame >= nCelsPerDirection)
             {
@@ -1735,7 +1735,7 @@ void __cdecl UI_UnloadLoadingScreen()
         ARCHIVE_CellFileFree(sghLoadScreenProgress);
         sghLoadScreenProgress = NULL;
         D2WIN_10177(gnLoadScreenAct);
-        D2CMP_10097(gnLoadScreenAct);
+        D2CMP_PALSHIFT_PalShiftSetAct(gnLoadScreenAct);
         AUTOMAP_InitSymbolColors();
         INV_InitHighlightColors();
         PANEL_SetBoxFillColorRed();

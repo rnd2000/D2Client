@@ -476,7 +476,7 @@ void __fastcall USEITEM_AnvilOpenPanelLocal(D2UnitGUID nNpcGUID)
 //  when the item is in the slot, the item is drawn on top of it.
 //  The slot's box is 114 pixels tall with its top at 106, and the item is centred on x = 167 within it: (114 - height) >> 1 vertically, and
 //  only when the item is shorter than 0x70. The cel size comes from the item's own graphic, and the draw happens only after both
-//  GFXUTIL_FillGfxData and D2CMP_SpriteValidate have agreed.
+//  GFXUTIL_FillGfxData and D2CMP_SPRITECACHE_SpriteValidate have agreed.
 //  The anim mode is changed to 0 before the draw and back to 4 after, which is the original's way of forcing the item's inventory frame.
 void __cdecl USEITEM_AnvilTickPanel()
 {
@@ -511,7 +511,7 @@ void __cdecl USEITEM_AnvilTickPanel()
     memset(&pParams, 0, sizeof(pParams));
     if (!GFXUTIL_FillGfxData(&pParams, pItem, 0, 0, 0, &pClass, 1, -1))
         return;
-    if (!D2CMP_SpriteValidate(&pParams, 0, 1) || !pParams.pCurrentCell)
+    if (!D2CMP_SPRITECACHE_SpriteValidate(&pParams, 0, 1) || !pParams.pCurrentCell)
         return;
 
     GFXUTIL_GetUnitCelSize(pItem, 0, 0, &pnWidth, &pnHeight);

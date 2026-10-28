@@ -339,7 +339,7 @@ int32_t __fastcall ENV_ResetWeather(int32_t bForce)
 //  divided by 12 before use, and each mixes green 25, 10 or 5 higher than the other two channels, which tints the rain. The two snow ramps are
 //  grey, nSnowStep + 120 and nSnowStep - 86 on all three channels, from the day counter. The second is the fallback ramp and starts negative,
 //  -86 at step 0, which D2WIN_10034_MixRGB takes as a uint8_t, so it wraps to 170; the same expression is passed here.
-//  Eight images: Rain1..4 and bubble1..4 under DATA\GLOBAL\UncompOverlays, each followed by D2CMP_CelFileGetCelsPerDirection to record its
+//  Eight images: Rain1..4 and bubble1..4 under DATA\GLOBAL\UncompOverlays, each followed by D2CMP_CELCMP_CelFileGetCelsPerDirection to record its
 //  frame count.
 void __fastcall ENV_LoadImages(D2C_Levels nLevelId)
 {
@@ -431,7 +431,7 @@ void __fastcall ENV_LoadImages(D2C_Levels nLevelId)
     gpEnvRainImages[3] = ARCHIVE_CellFileLoadWithSize(szPath, (uint32_t *)&pImageSize, 0);
 
     for (i = 0; i < 4; ++i)
-        gnEnvRainFrameCounts[i] = D2CMP_CelFileGetCelsPerDirection(gpEnvRainImages[i]);
+        gnEnvRainFrameCounts[i] = D2CMP_CELCMP_CelFileGetCelsPerDirection(gpEnvRainImages[i]);
 
     wsprintfA(szPath, "%s\\UncompOverlays\\bubble1", aDataGlobal);
     gpEnvBubbleImages[0] = ARCHIVE_CellFileLoadWithSize(szPath, (uint32_t *)&pImageSize, 0);
@@ -443,7 +443,7 @@ void __fastcall ENV_LoadImages(D2C_Levels nLevelId)
     gpEnvBubbleImages[3] = ARCHIVE_CellFileLoadWithSize(szPath, (uint32_t *)&pImageSize, 0);
 
     for (i = 0; i < 4; ++i)
-        gnEnvBubbleFrameCounts[i] = D2CMP_CelFileGetCelsPerDirection(gpEnvBubbleImages[i]);
+        gnEnvBubbleFrameCounts[i] = D2CMP_CELCMP_CelFileGetCelsPerDirection(gpEnvBubbleImages[i]);
 
     gflWeatherParticleIntensity = 0.0f;
 }

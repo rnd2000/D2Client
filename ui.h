@@ -846,7 +846,7 @@ static_assert(sizeof(UNRESOLVED_dword_6FBBA774) == 4, "UNRESOLVED_dword_6FBBA774
 //  Handle of the loading-screen image (loaded by UI_LoadScreenBegin from UI\LoadingScreen / UI\Loading\Loadingscreen), released by
 //  UI_UnloadLoadingScreen. The assert at 0x6FB243FD reloads this address (6FB243F4 mov eax, <here>; cmp eax, ebx; jnz) and pushes the message
 //  "sghLoadScreenProgress", the stringified condition, so that is the author's name for this handle: the loading screen's progress animation,
-//  whose frame count D2CMP_CelFileGetCelsPerDirection reads and whose current frame is gnLoadScreenFrame.
+//  whose frame count D2CMP_CELCMP_CelFileGetCelsPerDirection reads and whose current frame is gnLoadScreenFrame.
 inline D2CellFileStrc *sghLoadScreenProgress;
 static_assert(sizeof(sghLoadScreenProgress) == 4, "sghLoadScreenProgress: the item's 4 bytes in the .i64");
 

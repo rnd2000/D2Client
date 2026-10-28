@@ -213,14 +213,14 @@ void __fastcall GFXUTIL_GetUnitCelSize(D2UnitStrc *pUnit, int32_t nDirection, in
     if (!GFXUTIL_FillGfxData(&tGfxData, pUnit, NULL, nDirection, nFrame, &nClass, 1, -1))
         return;
 
-    if (!D2CMP_SpriteValidate(&tGfxData, FALSE, TRUE))
+    if (!D2CMP_SPRITECACHE_SpriteValidate(&tGfxData, FALSE, TRUE))
         return;
 
     if (!tGfxData.pCurrentCell)
         return;
 
-    *pnWidth = D2CMP_CelGetWidth(tGfxData.pCurrentCell);
-    *pnHeight = D2CMP_CelGetHeight(tGfxData.pCurrentCell);
+    *pnWidth = D2CMP_CELCMP_CelGetWidth(tGfxData.pCurrentCell);
+    *pnHeight = D2CMP_CELCMP_CelGetHeight(tGfxData.pCurrentCell);
 }
 
 
@@ -255,17 +255,17 @@ BOOL __fastcall GFXUTIL_IsUnitCelOnScreen(D2UnitStrc *pUnit, int32_t nX, int32_t
     if (!GFXUTIL_FillGfxData(&tGfxData, pUnit, NULL, D2COMMON_UNITS_GetDirection(pUnit), nFrameNo, &nClass, 1, -1))
         return FALSE;
 
-    if (!D2CMP_SpriteValidate(&tGfxData, FALSE, TRUE))
+    if (!D2CMP_SPRITECACHE_SpriteValidate(&tGfxData, FALSE, TRUE))
         return FALSE;
 
     pCel = tGfxData.pCurrentCell;
     if (!pCel)
         return FALSE;
 
-    nCelHeight = D2CMP_CelGetHeight(pCel);
-    nCelBottom = nViewY + D2CMP_CelGetOffsetY(pCel);
-    nCelLeft = nViewX + D2CMP_CelGetOffsetX(pCel);
-    nWidth = D2CMP_CelGetWidth(pCel);
+    nCelHeight = D2CMP_CELCMP_CelGetHeight(pCel);
+    nCelBottom = nViewY + D2CMP_CELCMP_CelGetOffsetY(pCel);
+    nCelLeft = nViewX + D2CMP_CELCMP_CelGetOffsetX(pCel);
+    nWidth = D2CMP_CELCMP_CelGetWidth(pCel);
     if (nCelLeft > gnScreenWidth)
         return FALSE;
 
@@ -290,10 +290,10 @@ int32_t __fastcall GFXUTIL_IsCelVisible(D2GfxCellStrc *pCel, int32_t nX, int32_t
     int32_t nAnchorX;
     int32_t nWidth;
 
-    nHeight = D2CMP_CelGetHeight(pCel);
-    nAnchorY = nY + D2CMP_CelGetOffsetY(pCel);
-    nAnchorX = nX + D2CMP_CelGetOffsetX(pCel);
-    nWidth = D2CMP_CelGetWidth(pCel);
+    nHeight = D2CMP_CELCMP_CelGetHeight(pCel);
+    nAnchorY = nY + D2CMP_CELCMP_CelGetOffsetY(pCel);
+    nAnchorX = nX + D2CMP_CELCMP_CelGetOffsetX(pCel);
+    nWidth = D2CMP_CELCMP_CelGetWidth(pCel);
     if (bShear)
     {
         nAnchorX -= nHeight;
@@ -1234,11 +1234,11 @@ void __fastcall GFXUTIL_ResolveAnimDirection(D2UnitStrc *pUnit, D2C_UnitTypes nU
         if (nCofDirections == 8)
         {
             if (nNumDirections == 4)
-                *pnUnitDirection = (int32_t)((uint32_t)D2CMP_10019(((uint32_t)*pnUnitDirection << 3) >> 6, nCofDirections, nNumDirections, 0) << 6 >> 3);
+                *pnUnitDirection = (int32_t)(D2CMP_CELCMP_CelConvertDir(((uint32_t)*pnUnitDirection << 3) >> 6, nCofDirections, nNumDirections, 0) << 6 >> 3);
         }
         else if (nCofDirections == 16 && nNumDirections == 8)
         {
-            *pnUnitDirection = (int32_t)((uint32_t)D2CMP_10019(((uint32_t)*pnUnitDirection << 4) >> 6, nCofDirections, nNumDirections, 0) << 6 >> 4);
+            *pnUnitDirection = (int32_t)(D2CMP_CELCMP_CelConvertDir(((uint32_t)*pnUnitDirection << 4) >> 6, nCofDirections, nNumDirections, 0) << 6 >> 4);
         }
 
         nActualDirections = *pnNumDirections;
@@ -1259,7 +1259,7 @@ void __fastcall GFXUTIL_ResolveAnimDirection(D2UnitStrc *pUnit, D2C_UnitTypes nU
         }
     }
 
-    *pnCelDirection = D2CMP_10022(*pnUnitDirection, nCofDirections);
+    *pnCelDirection = D2CMP_CELCMP_CelGameDirToNormalDir(*pnUnitDirection, nCofDirections);
 }
 
 
@@ -1294,9 +1294,9 @@ int32_t __fastcall GFXUTIL_MeasureLayersBottomY(D2UnitStrc *pUnit, uint8_t *pCof
         }
 
         memset(&tGfxData, 0, sizeof(tGfxData));
-        if (GFXUTIL_FillGfxData(&tGfxData, pUnit, NULL, nDirection, nFrame, &nClass, nComponent, -1) && D2CMP_SpriteValidate(&tGfxData, FALSE, TRUE) && tGfxData.pCurrentCell)
+        if (GFXUTIL_FillGfxData(&tGfxData, pUnit, NULL, nDirection, nFrame, &nClass, nComponent, -1) && D2CMP_SPRITECACHE_SpriteValidate(&tGfxData, FALSE, TRUE) && tGfxData.pCurrentCell)
         {
-            nOffsetY = D2CMP_CelGetOffsetY(tGfxData.pCurrentCell);
+            nOffsetY = D2CMP_CELCMP_CelGetOffsetY(tGfxData.pCurrentCell);
             nOffsetY -= SCROLL_GetViewportOriginY();
             nScreenY = nOffsetY + D2COMMON_UNITS_GetClientCoordY(pUnit);
             if (nScreenY > *pnBottomY)
@@ -1619,7 +1619,7 @@ int32_t __fastcall GFXUTIL_GetOverlayFrameCount(D2UnitStrc *pUnit, D2ClientGfxEn
     if (!GFXUTIL_FillGfxData(&tGfxData, NULL, NULL, D2COMMON_UNITS_GetDirection(pUnit), nFrame, &nClass, 1, -1))
         return 1;
 
-    if (!D2CMP_SpriteValidate(&tGfxData, FALSE, TRUE))
+    if (!D2CMP_SPRITECACHE_SpriteValidate(&tGfxData, FALSE, TRUE))
         return 1;
 
     return tGfxData.nMaxFrames << 8;

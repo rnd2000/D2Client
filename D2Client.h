@@ -3963,10 +3963,11 @@ LPVOID __fastcall CLIENT_VirtualAlloc(SIZE_T dwSize);
 void __fastcall CLIENT_VirtualFree(LPVOID lpAddress);
 
 //  ---- CORE\ARCHIVE.CPP -- CoreArchive.cpp ----
-//  A cel file by name -- MAX_PATH copy, the extension for nGfxType, read whole from D2Win's archive, normalised -- or 0; the second also hands
-//  back the file's size; the third frees one. The handle is a D2CellFileStrc *. CELLFILE_, not LoadImage: a Win32 macro.
-D2CellFileStrc *__fastcall ARCHIVE_CellFileLoad(char *pszName, int32_t nGfxType);
-D2CellFileStrc *__fastcall ARCHIVE_CellFileLoadWithSize(char *pszName, uint32_t *pdwFileSize, int32_t nGfxType);
+//  A cel file by name -- MAX_PATH copy, the .dcc or .dc6 extension bAllowCompressed picks, read whole from D2Win's archive, normalised -- or
+//  0; the second also hands back the file's size; the third frees one. The handle is a D2CellFileStrc *. CELLFILE_, not LoadImage: a Win32
+//  macro.
+D2CellFileStrc *__fastcall ARCHIVE_CellFileLoad(char *pszName, int32_t bAllowCompressed);
+D2CellFileStrc *__fastcall ARCHIVE_CellFileLoadWithSize(char *pszName, uint32_t *pdwFileSize, int32_t bAllowCompressed);
 void __fastcall ARCHIVE_CellFileFree(D2CellFileStrc *pCellFile);
 
 //  ---- CORE\Lng.cpp ----
