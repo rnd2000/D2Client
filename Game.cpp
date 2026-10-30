@@ -384,14 +384,10 @@ void __stdcall GAME_WindowOnRButtonDown(SMSGHANDLER_PARAMS *pMsg)
 //  WM_RBUTTONUP in the world. The right-hand globals are released as WM_LBUTTONUP releases the left-hand ones, but this frame's issued right
 //  click is SET, not cleared. In a game, for a player unit, PLAYER_OnMouseClick with click event 5 at the message's position, its answer stored in
 //  gbRightButtonDown; consumed in a game either way.
-//  BUG: the flags passed are not the movement flags the other three clicks pass but whatever eax holds: the player pointer CUNIT_GetPlayer returned
-//  with its low half replaced by LOWORD(wParam), the MK_* keys (0x6FAA8ED9 mov ax, [esi+8]; 0x6FAA8EE3 push eax). INERT: PLAYER_OnMouseClick reads
-//  the passed value once, as a byte tested for 8 and 4, so the pointer's half is never read. Written as the bytes compute it: the pointer's high
-//  half, the word's low half.
+//  The flags passed are LOWORD(wParam), the MK_* keys, not the movement flags the other three clicks pass.
 void __stdcall GAME_WindowOnRButtonUp(SMSGHANDLER_PARAMS *pMsg)
 {
     D2UnitStrc *pPlayer;
-    int32_t nFlags;
 
     gnRightClickModifierFlags = 16;
     gbRightButtonDown = 0;
@@ -405,8 +401,7 @@ void __stdcall GAME_WindowOnRButtonUp(SMSGHANDLER_PARAMS *pMsg)
     pPlayer = CUNIT_GetPlayer();
     if (pPlayer && pPlayer->dwUnitType == UNIT_PLAYER)
     {
-        nFlags = (int32_t)(((UINT_PTR)pPlayer & 0xFFFF0000u) | LOWORD(pMsg->wParam));
-        const int32_t bDown = PLAYER_OnMouseClick(5, pMsg->nXpos, pMsg->nYpos, nFlags);
+        const int32_t bDown = PLAYER_OnMouseClick(5, pMsg->nXpos, pMsg->nYpos, LOWORD(pMsg->wParam));
         gbRightButtonDown = bDown;
     }
 
@@ -2811,9 +2806,9 @@ int32_t __cdecl GAME_IsGreenBloodEnabled()
 
 //1.10f: D2Client.0x6FAAC030
 //  `mov byte ptr gnDifficulty, cl`: one byte, and the three above it are left as they are.
-void __fastcall GAME_SetDifficulty(D2C_Difficulties nDifficulty)
+void __fastcall GAME_SetDifficulty(uint8_t nDifficulty)
 {
-    gnDifficulty = (uint8_t)nDifficulty;
+    gnDifficulty = nDifficulty;
 }
 
 //1.10f: D2Client.0x6FAAC040

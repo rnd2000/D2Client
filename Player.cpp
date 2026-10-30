@@ -1073,7 +1073,7 @@ void __cdecl PLAYER_ResetClickGuard()
 //    5  clears the selection, 12h, and PLAYER_ReleaseClickAndResetHireling's answer.
 //
 //  Every dispatch is PLAYER_DispatchClickAction, and answers 1. Bit 80h is set here and in PLAYER_IssueRightSkillCommand and read nowhere.
-int32_t __fastcall PLAYER_OnMouseClick(int32_t nClickEvent, int32_t nX, int32_t nY, int32_t nMoveFlags)
+int32_t __fastcall PLAYER_OnMouseClick(int32_t nClickEvent, int32_t nX, int32_t nY, uint16_t nMoveFlags)
 {
     D2ClientClickStrc tClick;
     D2UnitStrc *pCursorItem;

@@ -879,9 +879,9 @@ HANDLE __fastcall CMDTBL_OpenPlayerKeyFile(DWORD dwDesiredAccess, DWORD dwCreati
     HANDLE hFile;
 
     szFile[0] = gszEmptyString;
-    memset(&szFile[1], 0, 0x100u);
+    memset(&szFile[1], 0, 259);
     szDir[0] = gszEmptyString;
-    memset(&szDir[1], 0, 0x100u);
+    memset(&szDir[1], 0, 259);
     szSavePath[0] = gszEmptyString;
     memset(&szSavePath[1], 0, 259);
 

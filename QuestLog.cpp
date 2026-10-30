@@ -453,14 +453,7 @@ CONSUME:
 //  gbQuestScreenCloseButtonDown first, then the quest icons if gnQuestScreenPressedQuest is set, then the speech button. The hit tests are the
 //  press handler's, repeated.
 //
-//  BUG: the high half of the string id is never written. The speech arm computes the entry's stride in ecx (309 * iEntry, 618 / 2) and then
-//  `mov cx, gQuestLogEntries.wTailStringId[ecx*2]` (0x6FB05FB7) replaces only the LOW WORD. ecx is the first __fastcall argument of
-//  TEXT_ShowQuestScrollingText and its prototype is `int nTblStringId`, so the string id arrives with `(309 * iEntry) >> 16` in its upper half.
-//  LATENT: `gnQuestLogEntryCount > 6` halts the game earlier in this same function, so iEntry is at most 5, 309 * 5 is 1545 and the upper half is
-//  zero; it would take 213 quest entries. Reproduced through the same partial store.
-//
-//  3724 and 3725 are the two "no speech" ids (`cmp cx, 0E8Ch` and `cmp cx, 0E8Dh`, compared as WORDS, so those two tests are unaffected by
-//  the contamination above).
+//  3724 and 3725 are the two "no speech" ids.
 //
 //  The reset tail runs on every path: nine globals cleared, including the two cinematic-cof flags and the two zoo flags, whichever arm ran and
 //  whether or not anything was hit. The message is then consumed only if the cursor is inside the panel, using the same 47/49 resolution seam
@@ -472,7 +465,7 @@ void __stdcall QUESTLOG_QuestScreenOnMouseUp(SMSGHANDLER_PARAMS *pMsg)
     int32_t iButton;
     int32_t iEntry;
     int32_t nHitX;
-    int32_t nTailStringId;
+    D2C_StringIndices nTailStringId;
     int32_t bInsidePanel;
 
     nPanelX = pMsg->nXpos - gnBorderXDifference;
@@ -506,10 +499,8 @@ void __stdcall QUESTLOG_QuestScreenOnMouseUp(SMSGHANDLER_PARAMS *pMsg)
                 //  iEntry cannot be -1
                 if (iEntry != -1)
                 {
-                //  the partial store the original makes (the low word of ecx only)
-                    nTailStringId = 309 * iEntry;
-                    *(uint16_t *)&nTailStringId = gQuestLogEntries[iEntry].wTailStringId;
-                    if ((uint16_t)nTailStringId != 3724 && (uint16_t)nTailStringId != 3725)
+                    nTailStringId = (D2C_StringIndices)gQuestLogEntries[iEntry].wTailStringId;
+                    if (nTailStringId != 3724 && nTailStringId != 3725)
                     {
                         TEXT_ShowQuestScrollingText(nTailStringId, 1, 0);
                         TEXT_SetCallback((void *)QUESTLOG_OnSpeechFinished, 0);

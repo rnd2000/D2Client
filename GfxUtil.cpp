@@ -852,12 +852,12 @@ int32_t __fastcall GFXUTIL_ResolveUnitAnimIdentity(D2UnitStrc *pUnit, D2GfxDataS
 //1.10f: D2Client.0x6FB5EC80
 //  Fills and resolves a gfx request: four fields (pCellFile, nDirection, nFrame, and nComponent as a byte), then GFXUTIL_ResolveUnitAnimIdentity's
 //  answer, handed on. retn 18h: six arguments on the stack. Not item-specific: CUNIT_GetComponentScreenBox passes any unit's component.
-int32_t __fastcall GFXUTIL_FillGfxData(D2GfxDataStrc *pGfxData, D2UnitStrc *pUnit, D2CellFileStrc *pCellFile, int32_t nDirection, int32_t nFrame, int32_t *pnClass, int32_t nComponent, int32_t nModeOverride)
+int32_t __fastcall GFXUTIL_FillGfxData(D2GfxDataStrc *pGfxData, D2UnitStrc *pUnit, D2CellFileStrc *pCellFile, int32_t nDirection, int32_t nFrame, int32_t *pnClass, uint8_t nComponent, int32_t nModeOverride)
 {
     pGfxData->pCellFile = pCellFile;
     pGfxData->nDirection = (uint32_t)nDirection;
     pGfxData->nFrame = (uint32_t)nFrame;
-    pGfxData->nComponent = (uint8_t)nComponent;
+    pGfxData->nComponent = nComponent;
     return GFXUTIL_ResolveUnitAnimIdentity(pUnit, pGfxData, pnClass, nModeOverride);
 }
 
@@ -875,7 +875,7 @@ int32_t __fastcall GFXUTIL_FillGfxData(D2GfxDataStrc *pGfxData, D2UnitStrc *pUni
 //  pCofNode is a COF cache node (its +14h is pData). pMonTokens is a D2ClientMonCofTokensStrc: its first word is the monster id, and the byte at
 //  +4 + 16 * nCofDirection + the component is the component's variant. The layer walk is unsigned, where the resolver's is signed.
 //  The original inlines DATATBLS_GetMonStats2TxtRecord here.
-int32_t __fastcall GFXUTIL_FillCelContextTokens(D2GfxDataStrc *pGfxData, int32_t nDirection, int32_t nFrame, int32_t nComponent, int32_t nAnimMode, int32_t dwWClass,
+int32_t __fastcall GFXUTIL_FillCelContextTokens(D2GfxDataStrc *pGfxData, int32_t nDirection, int32_t nFrame, uint8_t nComponent, int32_t nAnimMode, int32_t dwWClass,
                                             D2ClientCofCacheNodeStrc *pCofNode, D2ClientMonCofTokensStrc *pMonTokens, D2MonStatsTxt *pMonStatsTxt, int32_t nCofDirection)
 {
     uint8_t *pCofData;
@@ -888,7 +888,7 @@ int32_t __fastcall GFXUTIL_FillCelContextTokens(D2GfxDataStrc *pGfxData, int32_t
 
     pGfxData->nFrame = (uint32_t)nFrame;
     pGfxData->nDirection = (uint32_t)nDirection;
-    pGfxData->nComponent = (uint8_t)nComponent;
+    pGfxData->nComponent = nComponent;
     if (!dwWClass)
     {
         FOG_DisplayAssert("dwWClass", szGfxUtilCpp, 994);

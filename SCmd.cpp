@@ -467,7 +467,7 @@ static_assert(D2JOINERR_Your_connection_has_been_interrupted == 7
 void __fastcall SCMD_HandleSrv01_GameFlags(D2GSPacketSrv01 *pPacket)
 {
     const uint32_t dwArenaFlags = pPacket->dwArenaFlags;
-    GAME_SetDifficulty((D2C_Difficulties)pPacket->nDifficulty);
+    GAME_SetDifficulty(pPacket->nDifficulty);
     GAME_SetExpansionGame(pPacket->nExpansion);
     GAME_SetLadderGame(pPacket->nLadder);
     ARENA_SetArenaFlags(dwArenaFlags);

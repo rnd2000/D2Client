@@ -866,7 +866,7 @@ void __fastcall ROSTER_MoveEntryToFront(D2UnitGUID dwUnitId)
 //  (0x6FAAFB55..0x6FAAFB67). The C writes those operations; the value is (__int16)nKillCount's.
 //  Then the rebuild, ending in a tail jump to PARTY_BuildRowList (0x6FAAFD22). The original inlines ROSTER_FindEntryByUnitOrCorpse,
 //  ROSTER_FindOrAddListNode, ROSTER_ResortAllGroups, ROSTER_MoveListNodeAndEntryToFront and ROSTER_FlattenGroupsIntoEntryList here.
-void __fastcall ROSTER_OnPartyUpdate(uint32_t dwUnitId, int32_t nKillCount)
+void __fastcall ROSTER_OnPartyUpdate(uint32_t dwUnitId, uint16_t nKillCount)
 {
     D2RosterUnitStrc *pEntry;
     D2RosterUnitStrc *pWalk;

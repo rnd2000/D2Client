@@ -1326,10 +1326,8 @@ void __fastcall TEXT_ShowSpeechPopup(D2UnitStrc *pNpc, int16_t nTblStringId, int
 //  parameter.
 //  D2ExpRes patches one site in this function, QuestScrollingText1 (RVA 0x7D14E), redoing the position from D2ExpRes.ini for 1024x768 and
 //  1280x768. The stock numbers are written here and the detour lands on the position block below.
-void __fastcall TEXT_ShowQuestScrollingText(int32_t nTblStringId, int16_t bIsQuestText, int32_t bNeedsAck)
+void __fastcall TEXT_ShowQuestScrollingText(D2C_StringIndices nTblStringId, int16_t bIsQuestText, int32_t bNeedsAck)
 {
-    const D2C_StringIndices wTblStringId = (D2C_StringIndices)(int16_t)nTblStringId;
-    const int16_t nTblStringIdChecked = (int16_t)nTblStringId;
 
     //  D2ExpRes: QuestScrollingText1 detours here to redo the position.
     if (bIsQuestText)
@@ -1366,7 +1364,7 @@ void __fastcall TEXT_ShowQuestScrollingText(int32_t nTblStringId, int16_t bIsQue
     pRect[2] = gnPopupX + 335;
     SELECT_SetClickRegion(pRect);
     SELECT_ClearSelectedUnit();
-    sgTextState.nPopupStringId = (uint16_t)wTblStringId;
+    sgTextState.nPopupStringId = nTblStringId;
 
     if (gPopupTextList)
         return;
@@ -1374,7 +1372,7 @@ void __fastcall TEXT_ShowQuestScrollingText(int32_t nTblStringId, int16_t bIsQue
     sgTextState.bPopupDismissed = 0;
     //  The two font saves are nested the other way round from the speech popup's: inner set first, restored last. Both restore what they saved.
     const enum Font eFontInner = D2WIN_10127_SetFont(D2FONT_FONTFORMAL11);
-    Unicode *pwszText = (Unicode *)D2LANG_GetStringFromTblIndex(wTblStringId);
+    Unicode *pwszText = (Unicode *)D2LANG_GetStringFromTblIndex(nTblStringId);
     D2ClientPopupStrc *pPopup = (D2ClientPopupStrc *)FOG_Alloc(44, szTextCpp, 1625, 0);
     const enum Font eFontOuter = D2WIN_10127_SetFont(D2FONT_FONTFORMAL11);
 
@@ -1421,7 +1419,7 @@ void __fastcall TEXT_ShowQuestScrollingText(int32_t nTblStringId, int16_t bIsQue
         WNDPROC_RegisterMessageHandlers(D2GFX_WINDOW_GetWindow(), gPopupMessageHandlers, 7u);
     }
 
-    const D2C_Sounds nSoundId = OBJECT_FindSpeechSoundByTblIndex(wTblStringId);
+    const D2C_Sounds nSoundId = OBJECT_FindSpeechSoundByTblIndex(nTblStringId);
     if (nSoundId)
     {
         D2UnitStrc *pPlayer = CUNIT_GetPlayer();
@@ -1430,7 +1428,7 @@ void __fastcall TEXT_ShowQuestScrollingText(int32_t nTblStringId, int16_t bIsQue
     }
 
     //  Only these five string ids can owe an acknowledgement.
-    if (nTblStringIdChecked == 127 || nTblStringIdChecked == 20002 || nTblStringIdChecked == 20169 || nTblStringIdChecked == 20131 || nTblStringIdChecked == 396)
+    if (nTblStringId == 127 || nTblStringId == 20002 || nTblStringId == 20169 || nTblStringId == 20131 || nTblStringId == 396)
     {
         if (bNeedsAck)
             sgTextState.bPopupNeedsAck = 1;
@@ -2479,7 +2477,7 @@ void __cdecl TEXT_DrawQuickMessages()
 //  loop sums wLineCount). The tail walk asserts its own count against the list's.
 //  The original inlines TEXT_FreeMessageList's node free and the message-log listbox refresh here.
 //  void: no caller reads what the original leaves in eax.
-void __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
+void __fastcall TEXT_PrintChatMessage(Unicode *wszText, uint8_t nColor)
 {
     D2ClientTextNodeStrc *pMessage = (D2ClientTextNodeStrc *)FOG_Alloc(38, szTextCpp, 3394, 0);
 
@@ -2511,7 +2509,7 @@ void __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor)
             pSplitText = pSplitNext;
         } while (iLine < nLines);
     }
-    pMessage->nColor = (uint8_t)nColor;
+    pMessage->nColor = nColor;
 
     if (sgTextState.GlobalMessageDisplayList.pHead)
     {
@@ -2653,7 +2651,7 @@ void __fastcall TEXT_PushMessageLogEntry(D2ClientTextNodeStrc *pSrcMessage)
 //  The wrap has a defect (see the BUG note at the end of its loop) and a dead szUtf conversion.
 //  The original inlines TEXT_FreeMessageList's node free and the message-log listbox refresh here.
 //  void: no caller reads what the original leaves in eax.
-void __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
+void __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, uint8_t nColor)
 {
     const enum Font ePrevFont = D2WIN_10127_SetFont(D2FONT_FONTINGAMECHAT);
 
@@ -2711,7 +2709,7 @@ void __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor)
         nOffset = nLen;
         nLen = nTotalLen - nLen;
     }
-    pMessage->nColor = (uint8_t)nColor;
+    pMessage->nColor = nColor;
 
     if (sgTextState.QuickMessageDisplayList.pHead)
     {
@@ -3641,7 +3639,7 @@ void __fastcall TEXT_OnMessageListPacket(D2GSPacketSrv27 *pPacket)
         sgTextState.dwPopupObjectGUID = pPacket->dwUnitGUID;
         if (pObject)
             sgTextState.field_84 = (uint16_t)pObject->dwClassId;
-        TEXT_ShowQuestScrollingText(pPacket->pMessageList.pMessages[0].nStringId, 0, 1);
+        TEXT_ShowQuestScrollingText((D2C_StringIndices)pPacket->pMessageList.pMessages[0].nStringId, 0, 1);
         return;
     }
 
@@ -3848,7 +3846,7 @@ void __fastcall TEXT_HandleChatMessage(D2GSPacketSrv26 *pPacket)
             while (pwch->ch)
                 ++pwch;
         }
-        NEWSTATS_RecipeScrollShow(wszRecipe, 0, pPacket->nMessageColor);
+        NEWSTATS_RecipeScrollShow(wszRecipe, pPacket->nLang, pPacket->nMessageColor);
         break;
     }
 

@@ -31,14 +31,14 @@ static const char szPanelLevel[]       = "Panel\\Level";          // 0x6FB79AB0
 //1.10f: D2Client.0x6FAEE990
 //  Puts a text on the recipe scroll and opens it: copies pwszText into gwszRecipeScrollText, stores the colour in gnRecipeScrollColor and calls
 //  UI_SetUIToggle(UI_RECIPESCROLL, UI_TURNON, 0). The panel's only opener is TEXT_HandleChatMessage's message type 7, which reaches this by a tail
-//  jump. The original is a __thiscall whose `this` is the source string (ecx), with the colour on the stack; a free function cannot say that, so it
-//  is spelled __fastcall with an unread edx between the two. The last five instructions are a tail call: the zero stored over this function's own
+//  jump. The text comes in ecx and the colour on the stack; the second argument, the language the caller leaves in edx, is never read. The last
+//  five instructions are a tail call: the zero stored over this function's own
 //  stack argument becomes UI_SetUIToggle's bCheckMousePos, and UI_SetUIToggle's retn 4 returns for both. Written as a call. void: its one caller is a
 //  tail jump from TEXT_HandleChatMessage, a void function, so UI_SetUIToggle's answer reaches nobody. BUG: Unicode::strcpy runs to the source's NUL
 //  with no bound. LATENT: the destination holds 4096 characters and the one caller copies from a terminated 256-character buffer
 //  (SCMD_HandleSrv26_ChatMessage takes the text off the wire with SStrCopy(..., 256), at most 255 characters and a NUL), and no stock server sends
 //  message type 7 at all.
-void __fastcall NEWSTATS_RecipeScrollShow(const Unicode *pwszText, int32_t nEdxUnused, int32_t nColor)
+void __fastcall NEWSTATS_RecipeScrollShow(const Unicode *pwszText, int32_t nLanguage, int32_t nColor)
 {
     Unicode::strcpy(gwszRecipeScrollText, pwszText);
     gnRecipeScrollColor = nColor;

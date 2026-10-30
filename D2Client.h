@@ -189,7 +189,7 @@ int32_t __cdecl UNRESOLVED_sub_6FAABFE0();
 eD2GameTypes __cdecl GAME_GetGameType();
 void __fastcall GAME_ExtendCatchUpDeadline(int32_t nExtraMs);
 int32_t __cdecl GAME_IsGreenBloodEnabled();
-void __fastcall GAME_SetDifficulty(D2C_Difficulties nDifficulty);
+void __fastcall GAME_SetDifficulty(uint8_t nDifficulty);
 void __fastcall GAME_SetExpansionGame(uint8_t bExpansion);
 void __fastcall GAME_SetLadderGame(int32_t bLadder);
 int32_t __cdecl GAME_IsLadderGame();
@@ -1830,7 +1830,7 @@ void __fastcall TEXT_DrawHoverBox(D2ClientPopupStrc *pPopup, int32_t nX, int32_t
 //  ---- text.cpp: the parser, the openers, the tick ----
 struct Unicode **__fastcall TEXT_ParseLinesAndScrollRate(Unicode *pwszText, int32_t *pnLineCount, int16_t *pnScrollRate);  // text.cpp
 void __fastcall TEXT_ShowSpeechPopup(D2UnitStrc *pNpc, int16_t nTblStringId, int32_t nUnused);  // text.cpp
-void __fastcall TEXT_ShowQuestScrollingText(int32_t nTblStringId, int16_t bIsQuestText, int32_t bNeedsAck);  // text.cpp
+void __fastcall TEXT_ShowQuestScrollingText(D2C_StringIndices nTblStringId, int16_t bIsQuestText, int32_t bNeedsAck);  // text.cpp
 void __fastcall TEXT_TickStaticInfoPanel(D2ClientViewStrc *pView);                 // text.cpp
 
 //  ---- text.cpp: what draws ----
@@ -1848,9 +1848,9 @@ void __fastcall TEXT_ChatClearUnitHoverText(D2GSPacketSrv76 *pPacket);       // 
 //  the display list.
 void __cdecl TEXT_DrawChatMessages();                                    // text.cpp
 void __cdecl TEXT_DrawQuickMessages();                                   // text.cpp
-void __fastcall TEXT_PrintChatMessage(Unicode *wszText, int32_t nColor);           // text.cpp
+void __fastcall TEXT_PrintChatMessage(Unicode *wszText, uint8_t nColor);           // text.cpp
 void __fastcall TEXT_PushMessageLogEntry(D2ClientTextNodeStrc *pSrcMessage); // text.cpp
-void __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, int32_t nColor);    // text.cpp
+void __fastcall TEXT_AddQuickMessage(const Unicode *pwszText, uint8_t nColor);    // text.cpp
 
 //  ---- text.cpp: the quest scroll ----
 //  The panel TEXT_IniScrollOnMouseDown dismisses: what opens it, what draws it, what the server tells it, and the quest-menu string lookup
@@ -1890,8 +1890,8 @@ void __stdcall NEWSTATS_NewSkillsOnLButtonDown(SMSGHANDLER_PARAMS *pMsg);       
 void __stdcall NEWSTATS_NewSkillsOnLButtonUp(SMSGHANDLER_PARAMS *pMsg);          // newstats.cpp
 
 //  ---- newstats.cpp: the recipe scroll, the images, the buttons' visibility and the two hit tests ----
-//  NEWSTATS_RecipeScrollShow is a __thiscall in the original, spelled with an unread edx.
-void __fastcall NEWSTATS_RecipeScrollShow(const Unicode *pwszText, int32_t nEdxUnused, int32_t nColor);  // newstats.cpp
+//  NEWSTATS_RecipeScrollShow's second argument, the language its caller leaves in edx, is never read.
+void __fastcall NEWSTATS_RecipeScrollShow(const Unicode *pwszText, int32_t nLanguage, int32_t nColor);  // newstats.cpp
 void __cdecl NEWSTATS_RecipeScrollDraw();                                        // newstats.cpp
 void __cdecl NEWSTATS_LoadImages();                                      // newstats.cpp
 void __cdecl NEWSTATS_UnloadImages();                                    // newstats.cpp
@@ -2014,7 +2014,7 @@ void __cdecl INV_SwapWeaponsAndLockItems(void);                          // inv.
 //  ---- the vendor page block: inv.cpp ----
 void INV_ResetItemDescState(void);                                       // inv.cpp
 void __fastcall INV_ClearHoverForItem(D2UnitStrc *pItem);                // inv.cpp
-void __fastcall INV_GetVendorPageInventory(int32_t nInvPage);                // inv.cpp
+void __fastcall INV_GetVendorPageInventory(uint8_t nInvPage);                // inv.cpp
 void __cdecl INV_ResetPanelState(void);                                  // inv.cpp
 void __cdecl INV_NpcShopBuildTabs(void);                                    // inv.cpp
 
@@ -2819,31 +2819,31 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
 int32_t __fastcall SKILLDESC_FormatFixedPoint(struct Unicode *pwszOut, int32_t nWhole, int32_t nFraction, int32_t bSigned);
 int32_t __fastcall SKILLDESC_FormatFixedPointOrInt(struct Unicode *pwszOut, int32_t nWhole, int32_t nFraction, int32_t bSigned);
 void __fastcall SKILLDESC_FormatFracRange(struct Unicode *pwszOut, int32_t nMinInt, int32_t nMinFrac, int32_t nMaxInt, int32_t nMaxFrac, int32_t bSigned);
-int32_t __fastcall SKILLDESC_AppendFramesAsSeconds(struct Unicode *pwszText, int32_t nStrIdx, int32_t nFrames, int32_t bSigned);
-int32_t __fastcall SKILLDESC_AppendScaledDamageRange(struct Unicode *pwszText, int32_t nStrIdxA, int32_t nStrIdxB, int32_t nMin, int32_t nMax, int32_t nFracScale);
-int32_t __fastcall SKILLDESC_AppendTextLine(struct Unicode *pwszText, int32_t nStrIdx);
-int32_t __fastcall SKILLDESC_AppendTextThenValue(struct Unicode *pwszText, int32_t nStrIdx, int32_t nValue, int32_t bSigned);
-int32_t __fastcall SKILLDESC_AppendFixedPointValue(struct Unicode *pwszText, int32_t nStrIdxA, int32_t nStrIdxB, int32_t nValue, int32_t nFracScale, int32_t bSigned);
-int32_t __fastcall SKILLDESC_AppendIntAndFraction(struct Unicode *pwszText, int32_t nStrIdx, int32_t nInt, int32_t nFrac, int32_t bSigned);
-int32_t __fastcall SKILLDESC_AppendValueThenText(struct Unicode *pwszText, int32_t nStrIdx, int32_t nValue, int32_t bSigned);
-int32_t __fastcall SKILLDESC_AppendValueThenTextPair(struct Unicode *pwszText, int32_t nStrIdxA, int32_t nStrIdxB, int32_t nValue, int32_t bSigned);
-int32_t __fastcall SKILLDESC_AppendValueBetweenTexts(struct Unicode *pwszText, int32_t nStrIdxA, int32_t nStrIdxB, int32_t nValue, int32_t bSigned);
-int32_t __fastcall SKILLDESC_AppendRangeBetweenTexts(struct Unicode *pwszText, int32_t nStrIdxA, int32_t nStrIdxB, int32_t nMin, int32_t nMax, int32_t bSigned);
-int32_t __fastcall SKILLDESC_AppendDamageRangeLine(struct Unicode *pwszText, int32_t nStrIdx, int32_t nMin, int32_t nMax, int32_t bSigned, int32_t bTrailingSpace);
+int32_t __fastcall SKILLDESC_AppendFramesAsSeconds(struct Unicode *pwszText, D2C_StringIndices nStrIdx, int32_t nFrames, int32_t bSigned);
+int32_t __fastcall SKILLDESC_AppendScaledDamageRange(struct Unicode *pwszText, D2C_StringIndices nStrIdxA, D2C_StringIndices nStrIdxB, int32_t nMin, int32_t nMax, int32_t nFracScale);
+int32_t __fastcall SKILLDESC_AppendTextLine(struct Unicode *pwszText, D2C_StringIndices nStrIdx);
+int32_t __fastcall SKILLDESC_AppendTextThenValue(struct Unicode *pwszText, D2C_StringIndices nStrIdx, int32_t nValue, int32_t bSigned);
+int32_t __fastcall SKILLDESC_AppendFixedPointValue(struct Unicode *pwszText, D2C_StringIndices nStrIdxA, D2C_StringIndices nStrIdxB, int32_t nValue, int32_t nFracScale, int32_t bSigned);
+int32_t __fastcall SKILLDESC_AppendIntAndFraction(struct Unicode *pwszText, D2C_StringIndices nStrIdx, int32_t nInt, int32_t nFrac, int32_t bSigned);
+int32_t __fastcall SKILLDESC_AppendValueThenText(struct Unicode *pwszText, D2C_StringIndices nStrIdx, int32_t nValue, int32_t bSigned);
+int32_t __fastcall SKILLDESC_AppendValueThenTextPair(struct Unicode *pwszText, D2C_StringIndices nStrIdxA, D2C_StringIndices nStrIdxB, int32_t nValue, int32_t bSigned);
+int32_t __fastcall SKILLDESC_AppendValueBetweenTexts(struct Unicode *pwszText, D2C_StringIndices nStrIdxA, D2C_StringIndices nStrIdxB, int32_t nValue, int32_t bSigned);
+int32_t __fastcall SKILLDESC_AppendRangeBetweenTexts(struct Unicode *pwszText, D2C_StringIndices nStrIdxA, D2C_StringIndices nStrIdxB, int32_t nMin, int32_t nMax, int32_t bSigned);
+int32_t __fastcall SKILLDESC_AppendDamageRangeLine(struct Unicode *pwszText, D2C_StringIndices nStrIdx, int32_t nMin, int32_t nMax, int32_t bSigned, int32_t bTrailingSpace);
 int32_t __fastcall SKILLDESC_FormatChargesText(struct Unicode *wszOut, int32_t nCharges);
 int32_t __fastcall SKILLDESC_AppendElemLengthLine(D2UnitStrc *pUnit, struct Unicode *pwszText, D2C_Skills nSkillId, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel);
-int32_t __fastcall SKILLDESC_AppendElemDamageLine(struct Unicode *pwszText, int32_t nMin, int32_t nMax, int32_t nEType, int32_t nStrIdxOverride);
-int32_t __fastcall SKILLDESC_AppendSkillElemDamageLine(D2UnitStrc *pUnit, struct Unicode *pwszText, D2C_Skills nSkillId, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nStrIdxOverride);
+int32_t __fastcall SKILLDESC_AppendElemDamageLine(struct Unicode *pwszText, int32_t nMin, int32_t nMax, int32_t nEType, uint16_t nStrIdxOverride);
+int32_t __fastcall SKILLDESC_AppendSkillElemDamageLine(D2UnitStrc *pUnit, struct Unicode *pwszText, D2C_Skills nSkillId, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, uint16_t nStrIdxOverride);
 int32_t __fastcall SKILLDESC_AppendPhysDamageLine(D2UnitStrc *pUnit, struct Unicode *pwszText, D2C_Skills nSkillId, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nPercentBonus, int32_t nFlatBonus);
 int32_t __fastcall SKILLDESC_AppendToHitLine(D2UnitStrc *pUnit, struct Unicode *pwszText, D2C_Skills nSkillId, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel);
-int32_t __fastcall SKILLDESC_AppendAveragePerSecondLine(struct Unicode *pwszText, int32_t nMin, int32_t nMax, int32_t nStrIdx);
-int32_t __fastcall SKILLDESC_AppendValueThenTextLine(struct Unicode *pwszText, int32_t nStrIdxLabel, int32_t nStrIdxSuffix, int32_t nValue, int32_t bSigned, int32_t bPercent);
-int32_t __fastcall SKILLDESC_AppendValueOverValueLine(struct Unicode *pwszText, int16_t nStrIdxLabel, int32_t nStrIdxSuffix, int32_t nValue, int32_t nMax, int32_t bSigned);
-int32_t __fastcall SKILLDESC_AppendTextPairLine(struct Unicode *pwszText, int32_t nStrIdxLabel, int32_t nStrIdxText);
-int32_t __fastcall SKILLDESC_AppendTextThenValueLine(struct Unicode *pwszText, int32_t nStrIdxLabel, int32_t nStrIdxText, int32_t nValue, int32_t bSigned, int32_t bPercent);
-int32_t __fastcall SKILLDESC_AppendSprintfLine(struct Unicode *pwszText, int32_t nStrIdxFormat, int32_t nValue);
+int32_t __fastcall SKILLDESC_AppendAveragePerSecondLine(struct Unicode *pwszText, int32_t nMin, int32_t nMax, D2C_StringIndices nStrIdx);
+int32_t __fastcall SKILLDESC_AppendValueThenTextLine(struct Unicode *pwszText, D2C_StringIndices nStrIdxLabel, D2C_StringIndices nStrIdxSuffix, int32_t nValue, int32_t bSigned, int32_t bPercent);
+int32_t __fastcall SKILLDESC_AppendValueOverValueLine(struct Unicode *pwszText, D2C_StringIndices nStrIdxLabel, D2C_StringIndices nStrIdxSuffix, int32_t nValue, int32_t nMax, int32_t bSigned);
+int32_t __fastcall SKILLDESC_AppendTextPairLine(struct Unicode *pwszText, D2C_StringIndices nStrIdxLabel, D2C_StringIndices nStrIdxText);
+int32_t __fastcall SKILLDESC_AppendTextThenValueLine(struct Unicode *pwszText, D2C_StringIndices nStrIdxLabel, D2C_StringIndices nStrIdxText, int32_t nValue, int32_t bSigned, int32_t bPercent);
+int32_t __fastcall SKILLDESC_AppendSprintfLine(struct Unicode *pwszText, D2C_StringIndices nStrIdxFormat, int32_t nValue);
 int32_t __fastcall SKILLDESC_ValidateMonsterId(D2C_MonsterIds nMonsterId);
-void __fastcall SKILLDESC_DrawQuantityHint(int32_t nQuantity, int32_t nStringId);
+void __fastcall SKILLDESC_DrawQuantityHint(int32_t nQuantity, D2C_StringIndices nStringId);
 int32_t __fastcall SKILLDESC_GetLinearParamByLevel(int32_t nSkillId, int32_t nSkillLevel);
 void __fastcall SKILLDESC_SkillsBuildSkillLevelText(D2UnitStrc *pUnit, D2C_Skills nSkillId, int32_t nSkillLevel, int32_t nCharges, int32_t nIconLeft, int32_t nIconBottom);
 void __fastcall SKILLDESC_SkillsBuildSkillRequirementText(D2UnitStrc *pUnit, D2C_Skills nSkillId, int32_t nSkillLevel, int32_t nCharges, int32_t nIconLeft, int32_t nIconBottom);
@@ -2990,7 +2990,7 @@ void __fastcall ROSTER_MoveListNodeAndEntryToFront(D2UnitGUID dwUnitId, int16_t 
 void __fastcall ROSTER_ResortAllGroups();
 void __cdecl ROSTER_FlattenGroupsIntoEntryList();
 void __fastcall ROSTER_MoveEntryToFront(D2UnitGUID dwUnitId);
-void __fastcall ROSTER_OnPartyUpdate(uint32_t dwUnitId, int32_t nKillCount);
+void __fastcall ROSTER_OnPartyUpdate(uint32_t dwUnitId, uint16_t nKillCount);
 int32_t __fastcall ROSTER_EntryGetKillCount(D2RosterUnitStrc *pEntry);
 int32_t __fastcall ROSTER_EntryGetLevel(D2RosterUnitStrc *pEntry);
 int32_t __fastcall ROSTER_EntryGetClassId(D2RosterUnitStrc *pEntry);
@@ -3419,7 +3419,7 @@ BOOL __fastcall PLAYER_DoClientAction(D2C_ClientActions nAction, D2UnitStrc *pUn
 BOOL __fastcall PLAYER_CanUseSkill(D2UnitStrc *pUnit, D2SkillStrc **ppSkill, int32_t *pnUseState);
 BOOL __fastcall PLAYER_IsUnitInAuraRange(D2SkillStrc *pSkill, D2UnitStrc *pTarget, int32_t *pnRange, int32_t *pnDistance);
 void __cdecl PLAYER_ResetClickGuard();
-int32_t __fastcall PLAYER_OnMouseClick(int32_t nClickEvent, int32_t nX, int32_t nY, int32_t nMoveFlags);
+int32_t __fastcall PLAYER_OnMouseClick(int32_t nClickEvent, int32_t nX, int32_t nY, uint16_t nMoveFlags);
 void __fastcall PLAYER_ResumeQueuedMove(D2ClientClickStrc *pClick);
 void __fastcall PLAYER_DispatchClickAction(D2ClientClickStrc *pClick);
 void __fastcall PLAYER_SendClickCommand(D2ClientClickStrc *pClick, int32_t bOnUnit);
@@ -4022,8 +4022,8 @@ BOOL __fastcall GFXUTIL_IsUnitCelOnScreen(D2UnitStrc *pUnit, int32_t nX, int32_t
 int32_t __fastcall GFXUTIL_IsCelVisible(D2GfxCellStrc *pCel, int32_t nX, int32_t nY, int32_t bShear);
 BOOL __fastcall GFXUTIL_UnitHasComponent(D2UnitStrc *pUnit, int32_t nComponent);
 int32_t __fastcall GFXUTIL_ResolveUnitAnimIdentity(D2UnitStrc *pUnit, D2GfxDataStrc *pGfxData, int32_t *pnClass, int32_t nModeOverride);
-int32_t __fastcall GFXUTIL_FillGfxData(D2GfxDataStrc *pGfxData, D2UnitStrc *pUnit, D2CellFileStrc *pCellFile, int32_t nDirection, int32_t nFrame, int32_t *pnClass, int32_t nComponent, int32_t nModeOverride);
-int32_t __fastcall GFXUTIL_FillCelContextTokens(D2GfxDataStrc *pGfxData, int32_t nDirection, int32_t nFrame, int32_t nComponent, int32_t nAnimMode, int32_t dwWClass,
+int32_t __fastcall GFXUTIL_FillGfxData(D2GfxDataStrc *pGfxData, D2UnitStrc *pUnit, D2CellFileStrc *pCellFile, int32_t nDirection, int32_t nFrame, int32_t *pnClass, uint8_t nComponent, int32_t nModeOverride);
+int32_t __fastcall GFXUTIL_FillCelContextTokens(D2GfxDataStrc *pGfxData, int32_t nDirection, int32_t nFrame, uint8_t nComponent,int32_t nAnimMode, int32_t dwWClass,
                                             D2ClientCofCacheNodeStrc *pCofNode, D2ClientMonCofTokensStrc *pMonTokens, D2MonStatsTxt *pMonStatsTxt, int32_t nCofDirection);
 void __fastcall GFXUTIL_CopyTokenPadded(const char *pszToken, char *pszOut);
 D2UniqueItemsTxt *__fastcall GFXUTIL_GetUniqueItemsTxtRecord(int32_t nUniqueItemId);

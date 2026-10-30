@@ -299,7 +299,7 @@ int32_t __fastcall SKILLDESC_ComputeAttackRating(D2UnitStrc *pUnit, int32_t *pnA
     nWeaponMasteryBonus = D2COMMON_SKILLS_GetWeaponMasteryBonus(pUnit, pWeaponUsed, pSkill, 0);
     nToHitSubtotal = D2COMMON_STATLIST_UnitGetItemStatOrSkillStatValue(pUnit, STAT_ITEM_TOHIT_PERCENT, 0) + nWeaponMasteryBonus;
     nPercent = D2COMMON_SKILLS_GetToHitFactor(pUnit, (D2C_Skills)pSkillsTxt->nSkillId, nSkillLevel) + nToHitSubtotal;
-    if ((pSkillsTxt->dwFlags[0] & gdwBitMasks[SKILLSFLAGINDEX_FINISHING]) != 0)
+    if ((((uint8_t *)pSkillsTxt->dwFlags)[SKILLSFLAGINDEX_FINISHING >> 3] & (uint8_t)gdwBitMasks[SKILLSFLAGINDEX_FINISHING & 7]) != 0)
     {
         nProgressiveToHit = D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_PROGRESSIVE_TOHIT, 0);
         if (nProgressiveToHit)
@@ -373,7 +373,7 @@ void __fastcall SKILLDESC_AttFunc5(D2UnitStrc *pUnit, D2SkillStrc *pSkill, D2Ski
     }
     nToHitSubtotal = D2COMMON_STATLIST_UnitGetItemStatOrSkillStatValue(pUnit, STAT_ITEM_TOHIT_PERCENT, 0);
     nPercent = D2COMMON_SKILLS_GetToHitFactor(pUnit, (D2C_Skills)pSkillsTxt->nSkillId, nSkillLevel) + nToHitSubtotal;
-    if ((pSkillsTxt->dwFlags[0] & gdwBitMasks[SKILLSFLAGINDEX_FINISHING]) != 0)
+    if ((((uint8_t *)pSkillsTxt->dwFlags)[SKILLSFLAGINDEX_FINISHING >> 3] & (uint8_t)gdwBitMasks[SKILLSFLAGINDEX_FINISHING & 7]) != 0)
     {
         nProgressiveToHit = D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_PROGRESSIVE_TOHIT, 0);
         if (nProgressiveToHit)
@@ -1023,7 +1023,7 @@ int32_t __fastcall SKILLDESC_AddWeaponPhysDamage(D2UnitStrc *pUnit, int32_t *pnM
     nItemMinDamagePercent = D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_ITEM_MINDAMAGE_PERCENT, 0);
     nItemMaxDamagePercent = D2COMMON_STATLIST_UnitGetStatValue(pUnit, STAT_ITEM_MAXDAMAGE_PERCENT, 0);
 
-    if ((pSkillsTxt->dwFlags[0] & gdwBitMasks[SKILLSFLAGINDEX_FINISHING]) != 0)
+    if ((((uint8_t *)pSkillsTxt->dwFlags)[SKILLSFLAGINDEX_FINISHING >> 3] & (uint8_t)gdwBitMasks[SKILLSFLAGINDEX_FINISHING & 7]) != 0)
     {
         nChargeUpPercent = SKILLDESC_GetChargeUpDamagePercent();
         if (nChargeUpPercent)
@@ -1276,7 +1276,7 @@ void __fastcall SKILLDESC_AddItemElemDamage(D2UnitStrc *pUnit, int32_t *pnMin, i
         pSkillsTxtRec = D2COMMON_SKILLS_GetSkillsTxtRecordFromSkill(pSkill);
         if (pSkillsTxtRec)
         {
-            if ((pSkillsTxtRec->dwFlags[0] & gdwBitMasks[SKILLSFLAGINDEX_FINISHING]) != 0)
+            if ((((uint8_t *)pSkillsTxtRec->dwFlags)[SKILLSFLAGINDEX_FINISHING >> 3] & (uint8_t)gdwBitMasks[SKILLSFLAGINDEX_FINISHING & 7]) != 0)
             {
                 SKILLDESC_AddChargeUpElemDamage(pUnit, pnMin, pnMax, pnColor);
             }
@@ -3933,10 +3933,10 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     int32_t wSkillDesc;
     int32_t nCalcA;
     int32_t nCalcB;
-    int32_t wDescTextA;
-    int32_t nDescTextB;
+    D2C_StringIndices wDescTextA;
+    D2C_StringIndices nDescTextB;
 
-    int32_t nStrIdx;
+    D2C_StringIndices nStrIdx;
     int32_t nManaShift;
     int32_t wLevelMana;
     int32_t nManaCost;
@@ -4001,11 +4001,8 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
 
     nCalcA = D2COMMON_SKILLS_EvaluateSkillDescFormula(pPlayer, pSkillDescTxt->dwDescCalcA[nLine], nSkillId, nSkillLevel);
     nCalcB = D2COMMON_SKILLS_EvaluateSkillDescFormula(pPlayer, pSkillDescTxt->dwDescCalcB[nLine], nSkillId, nSkillLevel);
-    //  BUG: the A text index is loaded into di over the line index in edi (0x6FB10A4E), so its upper half is nLine's; the B index is stored as a
-    //  word into a dword slot nothing writes whole before it is read (mov [esp+10h], dx at 0x6FB10A5F), so its upper half is stale stack.
-    //  INERT: every consumer uses the low word (each 5382 test is a word compare and D2Lang #10004 masks), so the C zero-extends both.
-    wDescTextA = pSkillDescTxt->wDescTextA[nLine];
-    nDescTextB = pSkillDescTxt->wDescTextB[nLine];
+    wDescTextA = (D2C_StringIndices)pSkillDescTxt->wDescTextA[nLine];
+    nDescTextB = (D2C_StringIndices)pSkillDescTxt->wDescTextB[nLine];
 
     switch (pSkillDescTxt->nDescLine[nLine])
     {
@@ -4039,8 +4036,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             goto RETURN_ONE;
         }
 
-        //  stored as a word into a dword slot (mov [esp+14h], cx at 0x6FB10B39) and handed on whole: the same INERT store as the B index above
-        nStrIdx = pSkillDescByIdx->wStrMana;
+        nStrIdx = (D2C_StringIndices)pSkillDescByIdx->wStrMana;
 
         //  nManaShift is read as a word over the pad byte after it (the threshold test takes the whole word), and the shift takes cl, which the
         //  machine masks to five bits (shl ebp, cl at 0x6FB10B55, shl edi, cl at 0x6FB10B6B).
@@ -4073,9 +4069,9 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             goto RETURN_ONE;
         }
         SKILLDESC_FormatInt(wszScratch, nCalcA, 1);
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         Unicode::strcat(pwszText, wszScratch);
-        pTailText = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB);
+        pTailText = D2LANG_GetStringFromTblIndex(nDescTextB);
         goto APPEND_TAIL_TEXT;
 
     case 3:     //  the same with the value unsigned
@@ -4084,9 +4080,9 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             goto RETURN_ONE;
         }
         SKILLDESC_FormatInt(wszScratch, nCalcA, 0);
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         Unicode::strcat(pwszText, wszScratch);
-        pTailText = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB);
+        pTailText = D2LANG_GetStringFromTblIndex(nDescTextB);
         goto APPEND_TAIL_TEXT;
 
     case 4:
@@ -4124,11 +4120,11 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     case 8:     //  the to-hit factor between two fixed labels
         if (wDescTextA != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         }
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         nToHitFactor = D2COMMON_SKILLS_GetToHitFactor(pPlayer, nSkillId, nSkillLevel);
         if (!nToHitFactor)
@@ -4141,11 +4137,11 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     case 9:     //  the physical damage line
         if (wDescTextA != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         }
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         SKILLDESC_AppendPhysDamageLine(pPlayer, pwszText, nSkillId, pSkillsTxt, nSkillLevel, nCalcA, nCalcB);
         return 1;
@@ -4153,11 +4149,11 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     case 0xA:   //  the elemental damage line, via D2Common's own numbers
         if (wDescTextA != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         }
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         nMinElemDamage = D2COMMON_SKILLS_GetMinElemDamage(pPlayer, nSkillId, nSkillLevel, 1);
         nMaxElemDamage = D2COMMON_SKILLS_GetMaxElemDamage(pPlayer, nSkillId, nSkillLevel, 1);
@@ -4171,11 +4167,11 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     case 0xB:   //  the duration, and only Cold and Poison have one
         if (wDescTextA != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         }
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         nElemLength = D2COMMON_SKILLS_GetElementalLength(pPlayer, nSkillId, nSkillLevel, 0);
         if (!nElemLength)
@@ -4197,7 +4193,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     case 0xC:   //  the A text is the label the helper receives
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         SKILLDESC_AppendFramesAsSeconds(pwszText, wDescTextA, nCalcA, 0);
         return 1;
@@ -4232,11 +4228,11 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     case 0xE:   //  the length line and the per-frame damage it repeats
         if (wDescTextA != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         }
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         nFrames = D2COMMON_SKILLS_GetElementalLength(pPlayer, nSkillId, nSkillLevel, 0);
         nMin = D2COMMON_SKILLS_GetMinElemDamage(pPlayer, nSkillId, nSkillLevel, 1);
@@ -4246,10 +4242,10 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         return 1;
 
     case 0xF:   //  "A: B"
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon));
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
-        pTailText = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB);
+        pTailText = D2LANG_GetStringFromTblIndex(nDescTextB);
         goto APPEND_TAIL_TEXT;
 
     case 0x10:  //  the seconds range: /25 on each end, two formatter arms
@@ -4290,7 +4286,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     case 0x11:  //  the A-B range, or the single value B when equal
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         if (nCalcA == nCalcB)
         {
@@ -4300,14 +4296,14 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         SKILLDESC_FormatDamageRange(wszScratch, nCalcA, nCalcB, 0, 0);
         if (wDescTextA != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         }
         Unicode::strcat(pwszText, wszScratch);
         pTailText = D2LANG_GetStringFromTblIndex(STR_IDX_4286_StrSkill34);
         goto APPEND_TAIL_TEXT;
 
     case 0x12:  //  the coloured A line and a coloured newline
-        Unicode::strcpy(wszBuild, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcpy(wszBuild, D2LANG_GetStringFromTblIndex(wDescTextA));
         if (nCalcA > 0)
         {
             UI_AddColorCodeToWstring((wchar_t *)wszBuild, nCalcA);
@@ -4321,7 +4317,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     case 0x13:  //  20/3 into a one-decimal value, clamped up to 1
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         nFraction = 20 * nCalcA / 3 % 10;
         nWhole = 20 * nCalcA / 3 / 10;
@@ -4330,7 +4326,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             nWhole = 1;
         }
         SKILLDESC_FormatFixedPointOrInt(wszScratch, nWhole, nFraction, 0);
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         Unicode::strcat(pwszText, wszScratch);
         nStrSkill36Idx = (nWhole != 1) ? STR_IDX_4278_StrSkill26 : STR_IDX_4288_StrSkill36;
         pTailText = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrSkill36Idx);
@@ -4342,10 +4338,10 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             goto RETURN_ONE;
         }
         SKILLDESC_FormatInt(wszScratch, nCalcA, 1);
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         Unicode::strcat(pwszText, wszScratch);
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_4275_StrSkill23));
-        pTailText = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB);
+        pTailText = D2LANG_GetStringFromTblIndex(nDescTextB);
         goto APPEND_TAIL_TEXT;
 
     case 0x15:
@@ -4354,10 +4350,10 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             goto RETURN_ONE;
         }
         SKILLDESC_FormatInt(wszScratch, nCalcA, 0);
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         Unicode::strcat(pwszText, wszScratch);
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_4275_StrSkill23));
-        pTailText = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB);
+        pTailText = D2LANG_GetStringFromTblIndex(nDescTextB);
         goto APPEND_TAIL_TEXT;
 
     case 0x16:  //  the skill's missile damage per second, masteries folded in HERE
@@ -4395,7 +4391,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     case 0x18:
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         nMinElemDamage = D2COMMON_SKILLS_GetMinElemDamage(pPlayer, nSkillId, nSkillLevel, 1);
         nMaxElemDamage = D2COMMON_SKILLS_GetMaxElemDamage(pPlayer, nSkillId, nSkillLevel, 1);
@@ -4407,10 +4403,10 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         return 1;
 
     case 0x19:
-        Unicode::strcpy(wszBuild, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcpy(wszBuild, D2LANG_GetStringFromTblIndex(wDescTextA));
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(wszBuild, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(wszBuild, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         if (nCalcA > 0)
         {
@@ -4423,11 +4419,11 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     case 0x1A:  //  25/256 into a per-second pair, labelled by element
         if (wDescTextA != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         }
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         nMin = (25 * D2COMMON_SKILLS_GetMinElemDamage(pPlayer, nSkillId, nSkillLevel, 1)) >> 8;
         nMax = (25 * D2COMMON_SKILLS_GetMaxElemDamage(pPlayer, nSkillId, nSkillLevel, 1)) >> 8;
@@ -4445,11 +4441,11 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     case 0x1B:  //  the skill's own numbers at 75/256, Fire's label
         if (wDescTextA != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         }
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         nMin = (75 * D2COMMON_SKILLS_GetMinElemDamage(pPlayer, nSkillId, nSkillLevel, 1)) >> 8;
         nMax = (75 * D2COMMON_SKILLS_GetMaxElemDamage(pPlayer, nSkillId, nSkillLevel, 1)) >> 8;
@@ -4538,13 +4534,13 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         return 1;
 
     case 0x20:
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         if (!nCalcA)
         {
             goto RETURN_ONE;
         }
         SKILLDESC_FormatInt(wszScratch, nCalcA, 1);
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         Unicode::strcat(pwszText, wszScratch);
         pTailText = D2LANG_GetStringFromTblIndex(STR_IDX_4275_StrSkill23);
         goto APPEND_TAIL_TEXT;
@@ -4554,8 +4550,8 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         {
             goto RETURN_ONE;
         }
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
-        pTailText = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB);
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
+        pTailText = D2LANG_GetStringFromTblIndex(nDescTextB);
         goto APPEND_TAIL_TEXT;
 
     case 0x22:  //  the summon numbers with the aura/passive percent folded in
@@ -4621,7 +4617,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         }
 
     case 0x23:  //  "A: <damage range>"
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon));
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
         SKILLDESC_FormatDamageRange(wszScratch, nCalcA, nCalcB, 0, 0);
@@ -4648,7 +4644,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             nWhole = 1;
         }
         SKILLDESC_FormatFixedPointOrInt(wszScratch, nWhole, nFraction, 0);
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         Unicode::strcat(pwszText, wszScratch);
         nStrSkill36Idx = (nWhole != 1) ? STR_IDX_4278_StrSkill26 : STR_IDX_4288_StrSkill36;
         pTailText = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrSkill36Idx);
@@ -4746,12 +4742,12 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             goto RETURN_ONE;
         }
         SKILLDESC_FormatFixedPoint(wszScratch, nCalcA, nCalcB, 1);
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon));
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
         Unicode::strcat(pwszText, wszScratch);
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
-        pTailText = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB);
+        pTailText = D2LANG_GetStringFromTblIndex(nDescTextB);
         goto APPEND_TAIL_TEXT;
 
     case 0x2B:
@@ -4819,7 +4815,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
             return 1;
         }
         SKILLDESC_FormatDamageRange(wszScratch, nMin, nMax, 1, 0);
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
         pTailText = wszScratch;
         goto APPEND_TAIL_TEXT;
@@ -4843,7 +4839,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         }
         else
         {
-            Unicode::sprintf(256, wszBuild, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA), nCalcA);
+            Unicode::sprintf(256, wszBuild, D2LANG_GetStringFromTblIndex(wDescTextA), nCalcA);
             Unicode::strcat(wszBuild, D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline));
             Unicode::strcat(pwszText, wszBuild);
         }
@@ -4880,7 +4876,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
     case 0x3B:
         if (nDescTextB != STR_IDX_5382_dummy)
         {
-            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+            Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nDescTextB));
         }
         SKILLDESC_AppendElemDamageLine(pwszText, nCalcA, nCalcB, pSkillsTxt->nEType, wDescTextA);
         return 1;
@@ -4910,7 +4906,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         return 1;
 
     case 0x40:
-        SKILLDESC_AppendValueOverValueLine(pwszText, (int16_t)wDescTextA, nDescTextB, nCalcA, nCalcB, 1);
+        SKILLDESC_AppendValueOverValueLine(pwszText, wDescTextA, nDescTextB, nCalcA, nCalcB, 1);
         return 1;
 
     case 0x41:
@@ -4934,7 +4930,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         return 1;
 
     case 0x46:
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         SKILLDESC_AppendTextThenValue(pwszText, nDescTextB, nCalcA, 1);
         return 1;
 
@@ -4943,8 +4939,8 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         {
             return 0;
         }
-        Unicode::sprintf(100, wszTemp, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB), nCalcA);
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::sprintf(100, wszTemp, D2LANG_GetStringFromTblIndex(nDescTextB), nCalcA);
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon));
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
         pTailText = wszTemp;
@@ -4978,7 +4974,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         {
             return 0;
         }
-        Unicode::sprintf(100, wszTemp, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA), nCalcA);
+        Unicode::sprintf(100, wszTemp, D2LANG_GetStringFromTblIndex(wDescTextA), nCalcA);
         goto APPEND_TEMP;
 
     case 0x4B:
@@ -4986,7 +4982,7 @@ int32_t __fastcall SKILLDESC_BuildDescLine(D2UnitStrc *pPlayer, struct Unicode *
         {
             return 0;
         }
-        Unicode::sprintf(100, wszTemp, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA), nCalcA, nCalcB);
+        Unicode::sprintf(100, wszTemp, D2LANG_GetStringFromTblIndex(wDescTextA), nCalcA, nCalcB);
     APPEND_TEMP:
         pTailText = wszTemp;
         goto APPEND_TAIL_TEXT;
@@ -5013,7 +5009,7 @@ APPEND_TAIL_TEXT:
     goto APPEND_NEWLINE_AND_RETURN;
 
 APPEND_A_THEN_SCRATCH:
-    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
     pTailText = wszScratch;
     goto APPEND_TAIL_TEXT;
 
@@ -5029,7 +5025,7 @@ APPEND_RANGE_EQUAL:
 APPEND_RANGE_TAIL:
     if (wDescTextA != STR_IDX_5382_dummy)
     {
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wDescTextA));
     }
     Unicode::strcat(pwszText, wszScratch);
     nSuffixIdx = (int16_t)nDescTextB;
@@ -5048,7 +5044,7 @@ APPEND_MISSILE_RANGE:
     return 1;
 
 SPRINTF_A_AND_B:
-    Unicode::sprintf(256, wszBuild, D2LANG_GetStringFromTblIndex((D2C_StringIndices)wDescTextA), D2LANG_GetStringFromTblIndex((D2C_StringIndices)nDescTextB));
+    Unicode::sprintf(256, wszBuild, D2LANG_GetStringFromTblIndex(wDescTextA), D2LANG_GetStringFromTblIndex(nDescTextB));
     if (nCalcA > 0)
     {
         UI_AddColorCodeToWstring((wchar_t *)wszBuild, nCalcA);
@@ -5220,7 +5216,7 @@ void __fastcall SKILLDESC_FormatFracRange(struct Unicode *pwszOut, int32_t nMinI
 //          nUnitStrIdx = STR_IDX_4268_StrSkill16;
 //  so the singular " second" is taken only for a flat "1"; "1.5" takes the plural. Returns 0 without touching the text when the value rounds to
 //  zero, which is how a line with no duration disappears entirely. The original inlines SKILLDESC_FormatInt here.
-int32_t __fastcall SKILLDESC_AppendFramesAsSeconds(struct Unicode *pwszText, int32_t nStrIdx, int32_t nFrames, int32_t bSigned)
+int32_t __fastcall SKILLDESC_AppendFramesAsSeconds(struct Unicode *pwszText, D2C_StringIndices nStrIdx, int32_t nFrames, int32_t bSigned)
 {
     Unicode dest[32];
     char src[32];
@@ -5233,7 +5229,7 @@ int32_t __fastcall SKILLDESC_AppendFramesAsSeconds(struct Unicode *pwszText, int
     const Unicode *pwszLabel;
     const Unicode *wszUnit;
 
-    wStrIdx = (D2C_StringIndices)(int16_t)nStrIdx;
+    wStrIdx = nStrIdx;
     nWholeSeconds = nFrames / 25;
     nTenthsScaled = 10 * (nFrames % 25);
     nTenths = nTenthsScaled / 25;
@@ -5278,7 +5274,7 @@ int32_t __fastcall SKILLDESC_AppendFramesAsSeconds(struct Unicode *pwszText, int
 //  fractional part is formatted the way every other damage range is. Either tbl index may be 5382 ("dummy"), in which case that side is skipped.
 //  Returns 0, printing nothing, when the whole range is zero. The early return is `return nMaxFraction`, which the branch has proved zero: it is
 //  reached only when both whole parts and both fractions are zero, and the same slot carries the max fraction the rest of the time.
-int32_t __fastcall SKILLDESC_AppendScaledDamageRange(struct Unicode *pwszText, int32_t nStrIdxA, int32_t nStrIdxB, int32_t nMin, int32_t nMax, int32_t nFracScale)
+int32_t __fastcall SKILLDESC_AppendScaledDamageRange(struct Unicode *pwszText, D2C_StringIndices nStrIdxA, D2C_StringIndices nStrIdxB, int32_t nMin, int32_t nMax, int32_t nFracScale)
 {
     Unicode wszOut[32];
     char src[32];
@@ -5287,7 +5283,7 @@ int32_t __fastcall SKILLDESC_AppendScaledDamageRange(struct Unicode *pwszText, i
     int32_t nMinFraction;
     int32_t nMaxFraction;
 
-    wStrIdxA = (D2C_StringIndices)(int16_t)nStrIdxA;
+    wStrIdxA = nStrIdxA;
     nMinFraction = nFracScale * (nMin % 256) / 256;
     nMaxFraction = nFracScale * (nMax % 256) / 256;
     if (!(nMin / 256) && !(nMax / 256) && !nMinFraction && !nMaxFraction)
@@ -5308,9 +5304,9 @@ int32_t __fastcall SKILLDESC_AppendScaledDamageRange(struct Unicode *pwszText, i
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wStrIdxA));
     }
     Unicode::strcat(pwszText, wszOut);
-    if ((uint16_t)nStrIdxB != STR_IDX_5382_dummy)
+    if (nStrIdxB != STR_IDX_5382_dummy)
     {
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdxB));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nStrIdxB));
     }
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline));
     return 1;
@@ -5320,12 +5316,12 @@ int32_t __fastcall SKILLDESC_AppendScaledDamageRange(struct Unicode *pwszText, i
 //1.10f: D2Client.0x6FB136B0
 //  "<tbl nStrIdx>\n". Its one caller, descline 0x33, uses it when the format string is the sentinel 5382 ("dummy") and Unicode::sprintf would
 //  have nothing to substitute into.
-int32_t __fastcall SKILLDESC_AppendTextLine(struct Unicode *pwszText, int32_t nStrIdx)
+int32_t __fastcall SKILLDESC_AppendTextLine(struct Unicode *pwszText, D2C_StringIndices nStrIdx)
 {
     const Unicode *pwszLabel;
     const Unicode *wszNewline;
 
-    pwszLabel = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdx);
+    pwszLabel = D2LANG_GetStringFromTblIndex(nStrIdx);
     Unicode::strcat(pwszText, pwszLabel);
     wszNewline = D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
     Unicode::strcat(pwszText, wszNewline);
@@ -5338,7 +5334,7 @@ int32_t __fastcall SKILLDESC_AppendTextLine(struct Unicode *pwszText, int32_t nS
 //  line rather than printing "Radius: 0". result is nValue on the way in and the constant zero on the way out, and `return result` is reached
 //  only when nValue is zero: the register the branch has just tested, not a variable. AppendValueThenText and AppendIntAndFraction are the same
 //  function with the pieces in a different order. The original inlines SKILLDESC_FormatInt here.
-int32_t __fastcall SKILLDESC_AppendTextThenValue(struct Unicode *pwszText, int32_t nStrIdx, int32_t nValue, int32_t bSigned)
+int32_t __fastcall SKILLDESC_AppendTextThenValue(struct Unicode *pwszText, D2C_StringIndices nStrIdx, int32_t nValue, int32_t bSigned)
 {
     Unicode dest[32];
 
@@ -5347,7 +5343,7 @@ int32_t __fastcall SKILLDESC_AppendTextThenValue(struct Unicode *pwszText, int32
     const Unicode *pwszLabel;
     const Unicode *wszNewline;
 
-    wStrIdx = (D2C_StringIndices)(int16_t)nStrIdx;
+    wStrIdx = nStrIdx;
     result = nValue;
     if (nValue)
     {
@@ -5371,7 +5367,7 @@ int32_t __fastcall SKILLDESC_AppendTextThenValue(struct Unicode *pwszText, int32
 //  the labels only: with nWhole and nFraction both zero both formatting blocks are skipped and the empty dest is concatenated. Returns 0, before
 //  any of that, only when nValue itself is zero. Either index may be 5382 and is then skipped; the first test compares wStrIdxA, the
 //  sign-truncated copy made once at the top, the second tests (_WORD)nStrIdxB inline. The original inlines SKILLDESC_FormatInt here.
-int32_t __fastcall SKILLDESC_AppendFixedPointValue(struct Unicode *pwszText, int32_t nStrIdxA, int32_t nStrIdxB, int32_t nValue, int32_t nFracScale, int32_t bSigned)
+int32_t __fastcall SKILLDESC_AppendFixedPointValue(struct Unicode *pwszText, D2C_StringIndices nStrIdxA, D2C_StringIndices nStrIdxB, int32_t nValue, int32_t nFracScale, int32_t bSigned)
 {
     Unicode dest[32];
     char src[32];
@@ -5381,7 +5377,7 @@ int32_t __fastcall SKILLDESC_AppendFixedPointValue(struct Unicode *pwszText, int
     int32_t nWhole;
     const Unicode *pwszSuffix;
 
-    wStrIdxA = (D2C_StringIndices)(int16_t)nStrIdxA;
+    wStrIdxA = nStrIdxA;
     if (!nValue)
     {
         return 0;
@@ -5412,9 +5408,9 @@ int32_t __fastcall SKILLDESC_AppendFixedPointValue(struct Unicode *pwszText, int
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wStrIdxA));
     }
     Unicode::strcat(pwszText, dest);
-    if ((uint16_t)nStrIdxB != STR_IDX_5382_dummy)
+    if (nStrIdxB != STR_IDX_5382_dummy)
     {
-        pwszSuffix = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdxB);
+        pwszSuffix = D2LANG_GetStringFromTblIndex(nStrIdxB);
         Unicode::strcat(pwszText, pwszSuffix);
     }
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline));
@@ -5427,7 +5423,7 @@ int32_t __fastcall SKILLDESC_AppendFixedPointValue(struct Unicode *pwszText, int
 //  fraction is not positive, so a negative fraction with a zero integer part prints nothing either. Its one caller is descline 1, the mana cost
 //  line, when the cost is small enough to be worth a decimal (mana is 8.8 fixed point there, and the caller does the split). The original
 //  inlines SKILLDESC_FormatInt here.
-int32_t __fastcall SKILLDESC_AppendIntAndFraction(struct Unicode *pwszText, int32_t nStrIdx, int32_t nInt, int32_t nFrac, int32_t bSigned)
+int32_t __fastcall SKILLDESC_AppendIntAndFraction(struct Unicode *pwszText, D2C_StringIndices nStrIdx, int32_t nInt, int32_t nFrac, int32_t bSigned)
 {
     Unicode dest[32];
     char src[32];
@@ -5437,7 +5433,7 @@ int32_t __fastcall SKILLDESC_AppendIntAndFraction(struct Unicode *pwszText, int3
     const Unicode *pwszLabel;
     const Unicode *wszNewline;
 
-    wStrIdx = (D2C_StringIndices)(int16_t)nStrIdx;
+    wStrIdx = nStrIdx;
     result = nInt;
     if (!nInt && !(nFrac > 0))
     {
@@ -5473,7 +5469,7 @@ int32_t __fastcall SKILLDESC_AppendIntAndFraction(struct Unicode *pwszText, int3
 //  "Radius: 25". Returns 0 when nValue is zero. The order of the two strcat calls is the only thing separating it from its mirror: the bare
 //  Unicode::strcat of the formatted number comes before the tbl lookup here and after it there. Its one caller is descline 0x2D, tbl 4309
 //  " percent damage returned". The original inlines SKILLDESC_FormatInt here.
-int32_t __fastcall SKILLDESC_AppendValueThenText(struct Unicode *pwszText, int32_t nStrIdx, int32_t nValue, int32_t bSigned)
+int32_t __fastcall SKILLDESC_AppendValueThenText(struct Unicode *pwszText, D2C_StringIndices nStrIdx, int32_t nValue, int32_t bSigned)
 {
     Unicode dest[32];
 
@@ -5482,7 +5478,7 @@ int32_t __fastcall SKILLDESC_AppendValueThenText(struct Unicode *pwszText, int32
     const Unicode *pwszLabel;
     const Unicode *wszNewline;
 
-    wStrIdx = (D2C_StringIndices)(int16_t)nStrIdx;
+    wStrIdx = nStrIdx;
     result = nValue;
     if (nValue)
     {
@@ -5502,7 +5498,7 @@ int32_t __fastcall SKILLDESC_AppendValueThenText(struct Unicode *pwszText, int32
 //  "<value><tbl A><tbl B>\n". Returns 0 when nValue is zero. Its one caller, descline 0x44, wraps the value in two strings the way a range's two
 //  labels do, but as a plain concatenation, with no tbl index tested against 5382 and no SKILLDESC_FormatDamageRange. wStrIdxA is the first
 //  index narrowed to 16 bits once at the top; the second index is cast at its own call. The original inlines SKILLDESC_FormatInt here.
-int32_t __fastcall SKILLDESC_AppendValueThenTextPair(struct Unicode *pwszText, int32_t nStrIdxA, int32_t nStrIdxB, int32_t nValue, int32_t bSigned)
+int32_t __fastcall SKILLDESC_AppendValueThenTextPair(struct Unicode *pwszText, D2C_StringIndices nStrIdxA, D2C_StringIndices nStrIdxB, int32_t nValue, int32_t bSigned)
 {
     Unicode dest[32];
 
@@ -5512,7 +5508,7 @@ int32_t __fastcall SKILLDESC_AppendValueThenTextPair(struct Unicode *pwszText, i
     const Unicode *pwszTextB;
     const Unicode *pwszNewline;
 
-    wStrIdxA = (D2C_StringIndices)(int16_t)nStrIdxA;
+    wStrIdxA = nStrIdxA;
     result = nValue;
     if (nValue)
     {
@@ -5520,7 +5516,7 @@ int32_t __fastcall SKILLDESC_AppendValueThenTextPair(struct Unicode *pwszText, i
         Unicode::strcat(pwszText, dest);
         pwszTextA = D2LANG_GetStringFromTblIndex(wStrIdxA);
         Unicode::strcat(pwszText, pwszTextA);
-        pwszTextB = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdxB);
+        pwszTextB = D2LANG_GetStringFromTblIndex(nStrIdxB);
         Unicode::strcat(pwszText, pwszTextB);
         pwszNewline = D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
         Unicode::strcat(pwszText, pwszNewline);
@@ -5534,7 +5530,7 @@ int32_t __fastcall SKILLDESC_AppendValueThenTextPair(struct Unicode *pwszText, i
 //  "<tbl A><value><tbl B>\n", the same three pieces as SKILLDESC_AppendValueThenTextPair in a different order. Returns 0 when nValue is zero.
 //  Descline 8 passes 4262 "To Attack Rating: " and 4275 " percent" around the value SKILLS_GetToHitFactor returns. The original inlines
 //  SKILLDESC_FormatInt here.
-int32_t __fastcall SKILLDESC_AppendValueBetweenTexts(struct Unicode *pwszText, int32_t nStrIdxA, int32_t nStrIdxB, int32_t nValue, int32_t bSigned)
+int32_t __fastcall SKILLDESC_AppendValueBetweenTexts(struct Unicode *pwszText, D2C_StringIndices nStrIdxA, D2C_StringIndices nStrIdxB, int32_t nValue, int32_t bSigned)
 {
     Unicode dest[32];
 
@@ -5544,7 +5540,7 @@ int32_t __fastcall SKILLDESC_AppendValueBetweenTexts(struct Unicode *pwszText, i
     const Unicode *pwszTextB;
     const Unicode *pwszNewline;
 
-    wStrIdxA = (D2C_StringIndices)(int16_t)nStrIdxA;
+    wStrIdxA = nStrIdxA;
     result = nValue;
     if (nValue)
     {
@@ -5552,7 +5548,7 @@ int32_t __fastcall SKILLDESC_AppendValueBetweenTexts(struct Unicode *pwszText, i
         pwszTextA = D2LANG_GetStringFromTblIndex(wStrIdxA);
         Unicode::strcat(pwszText, pwszTextA);
         Unicode::strcat(pwszText, dest);
-        pwszTextB = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdxB);
+        pwszTextB = D2LANG_GetStringFromTblIndex(nStrIdxB);
         Unicode::strcat(pwszText, pwszTextB);
         pwszNewline = D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline);
         Unicode::strcat(pwszText, pwszNewline);
@@ -5570,7 +5566,7 @@ int32_t __fastcall SKILLDESC_AppendValueBetweenTexts(struct Unicode *pwszText, i
 //  DIFFERENCE: both buffers are declared here and both are constructed at entry; the original constructs only the one its arm uses, and the
 //  zeros land in the same dead stack.
 //  DIFFERENCE: the original loads the Unicode::strcat address into a register once and calls through it (call edi); ours calls it directly.
-int32_t __fastcall SKILLDESC_AppendRangeBetweenTexts(struct Unicode *pwszText, int32_t nStrIdxA, int32_t nStrIdxB, int32_t nMin, int32_t nMax, int32_t bSigned)
+int32_t __fastcall SKILLDESC_AppendRangeBetweenTexts(struct Unicode *pwszText, D2C_StringIndices nStrIdxA, D2C_StringIndices nStrIdxB, int32_t nMin, int32_t nMax, int32_t bSigned)
 {
     Unicode dest[32];
     Unicode wszOut[32];
@@ -5579,7 +5575,7 @@ int32_t __fastcall SKILLDESC_AppendRangeBetweenTexts(struct Unicode *pwszText, i
     D2C_StringIndices wStrIdxA;
     const Unicode *pwszValue;
 
-    wStrIdxA = (D2C_StringIndices)(int16_t)nStrIdxA;
+    wStrIdxA = nStrIdxA;
     if (nMin == nMax)
     {
         if (!nMin)
@@ -5590,13 +5586,13 @@ int32_t __fastcall SKILLDESC_AppendRangeBetweenTexts(struct Unicode *pwszText, i
         Unicode::toUnicode(dest, src, 32);
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wStrIdxA));
         Unicode::strcat(pwszText, dest);
-        pwszValue = D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdxB);
+        pwszValue = D2LANG_GetStringFromTblIndex(nStrIdxB);
     }
     else
     {
         SKILLDESC_FormatDamageRange(wszOut, nMin, nMax, bSigned, 0);
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wStrIdxA));
-        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdxB));
+        Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nStrIdxB));
         pwszValue = wszOut;
     }
     Unicode::strcat(pwszText, pwszValue);
@@ -5613,7 +5609,7 @@ int32_t __fastcall SKILLDESC_AppendRangeBetweenTexts(struct Unicode *pwszText, i
 //  spilled once at 0x6FB13D4A and read back at 0x6FB13DC0.
 //  DIFFERENCE: the original loads the Unicode::strcat address into a register once and calls through it (call edi); ours calls it directly.
 //  The original inlines SKILLDESC_FormatInt here.
-int32_t __fastcall SKILLDESC_AppendDamageRangeLine(struct Unicode *pwszText, int32_t nStrIdx, int32_t nMin, int32_t nMax, int32_t bSigned, int32_t bTrailingSpace)
+int32_t __fastcall SKILLDESC_AppendDamageRangeLine(struct Unicode *pwszText, D2C_StringIndices nStrIdx, int32_t nMin, int32_t nMax, int32_t bSigned, int32_t bTrailingSpace)
 {
     Unicode dest[32];
     Unicode wszOut[32];
@@ -5622,7 +5618,7 @@ int32_t __fastcall SKILLDESC_AppendDamageRangeLine(struct Unicode *pwszText, int
     const Unicode *pwszValue;
     const Unicode *wszSpace;
 
-    wLabelStrIdx = (D2C_StringIndices)(int16_t)nStrIdx;
+    wLabelStrIdx = nStrIdx;
     if (nMin == nMax)
     {
         if (!nMin)
@@ -5722,7 +5718,7 @@ int32_t __fastcall SKILLDESC_AppendElemLengthLine(D2UnitStrc *pUnit, struct Unic
 //  The collapse test is not nMin == nMax: it is `nMin ? (nMin == nMax) : (nMax == 0)`, so a line with a zero min and a non-zero max prints as a
 //  range, while 0-0 collapses to a single 0. result is the literal zero of the switch's default arm: the return says "was this an element type
 //  I know".
-int32_t __fastcall SKILLDESC_AppendElemDamageLine(struct Unicode *pwszText, int32_t nMin, int32_t nMax, int32_t nEType, int32_t nStrIdxOverride)
+int32_t __fastcall SKILLDESC_AppendElemDamageLine(struct Unicode *pwszText, int32_t nMin, int32_t nMax, int32_t nEType, uint16_t nStrIdxOverride)
 {
     Unicode wszOut[32];
     char src[32];
@@ -5732,8 +5728,8 @@ int32_t __fastcall SKILLDESC_AppendElemDamageLine(struct Unicode *pwszText, int3
     int32_t result;
     const Unicode *pwszLabel;
 
-    nStrIdx = (D2C_StringIndices)(int16_t)nStrIdxOverride;
-    if (!(uint16_t)nStrIdxOverride)
+    nStrIdx = (D2C_StringIndices)nStrIdxOverride;
+    if (!nStrIdxOverride)
     {
         switch (nEType)
         {
@@ -5779,7 +5775,7 @@ int32_t __fastcall SKILLDESC_AppendElemDamageLine(struct Unicode *pwszText, int3
 //  asks D2Common for damage with mastery: both getters take the last argument 1, the flag that makes D2Common add
 //  SKILLS_CalculateMasteryBonus, so this line already covers Fire, Lightning, Cold (and Freeze) and Poison mastery without the client doing
 //  anything, unlike the missile path where the mastery helpers are folded in by hand (descline 0x16, SKILLDESC_ApplyFireMasteryToRange).
-int32_t __fastcall SKILLDESC_AppendSkillElemDamageLine(D2UnitStrc *pUnit, struct Unicode *pwszText, D2C_Skills nSkillId, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, int32_t nStrIdxOverride)
+int32_t __fastcall SKILLDESC_AppendSkillElemDamageLine(D2UnitStrc *pUnit, struct Unicode *pwszText, D2C_Skills nSkillId, D2SkillsTxt *pSkillsTxt, int32_t nSkillLevel, uint16_t nStrIdxOverride)
 {
     Unicode wszOut[32];
     char src[32];
@@ -5799,9 +5795,9 @@ int32_t __fastcall SKILLDESC_AppendSkillElemDamageLine(D2UnitStrc *pUnit, struct
     }
     nMin >>= 8;
     nMax >>= 8;
-    wStrIdx = (D2C_StringIndices)(int16_t)nStrIdxOverride;
+    wStrIdx = (D2C_StringIndices)nStrIdxOverride;
     nEType = pSkillsTxt->nEType;
-    if (!(uint16_t)nStrIdxOverride)
+    if (!nStrIdxOverride)
     {
         switch (nEType)
         {
@@ -5914,7 +5910,7 @@ int32_t __fastcall SKILLDESC_AppendToHitLine(D2UnitStrc *pUnit, struct Unicode *
 //  the pair of mastery helpers feeds. The middle Unicode::strcat with no tbl lookup in front of it is the formatted number, so the sentence is
 //  'Average ', the caller's label, the number, ' per second'. result starts as nMax, which makes `return result` the both-ends-zero exit; every
 //  path that prints returns a literal 1.
-int32_t __fastcall SKILLDESC_AppendAveragePerSecondLine(struct Unicode *pwszText, int32_t nMin, int32_t nMax, int32_t nStrIdx)
+int32_t __fastcall SKILLDESC_AppendAveragePerSecondLine(struct Unicode *pwszText, int32_t nMin, int32_t nMax, D2C_StringIndices nStrIdx)
 {
     Unicode wszOut[32];
     char src[32];
@@ -5943,7 +5939,7 @@ int32_t __fastcall SKILLDESC_AppendAveragePerSecondLine(struct Unicode *pwszText
         SKILLDESC_FormatDamageRange(wszOut, nMin, nMax, 0, 0);
     }
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_4322_StrSkill68));
-    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdx));
+    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nStrIdx));
     Unicode::strcat(pwszText, wszOut);
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_4286_StrSkill34));
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline));
@@ -5959,13 +5955,13 @@ int32_t __fastcall SKILLDESC_AppendAveragePerSecondLine(struct Unicode *pwszText
 //  convention, so a leading '+' is not evidence of a bonus. This and SKILLDESC_AppendTextThenValueLine are mirror images with the same six
 //  arguments: here the number precedes the caller's text, there the text precedes the number. The strcat order is: label, 3997, 3995, the number,
 //  [4001 percent,] 3995, the suffix, 3998. The original inlines SKILLDESC_FormatInt here.
-int32_t __fastcall SKILLDESC_AppendValueThenTextLine(struct Unicode *pwszText, int32_t nStrIdxLabel, int32_t nStrIdxSuffix, int32_t nValue, int32_t bSigned, int32_t bPercent)
+int32_t __fastcall SKILLDESC_AppendValueThenTextLine(struct Unicode *pwszText, D2C_StringIndices nStrIdxLabel, D2C_StringIndices nStrIdxSuffix, int32_t nValue, int32_t bSigned, int32_t bPercent)
 {
     Unicode dest[32];
 
     D2C_StringIndices wLabelStrIdx;
 
-    wLabelStrIdx = (D2C_StringIndices)(int16_t)nStrIdxLabel;
+    wLabelStrIdx = nStrIdxLabel;
     if (!nValue)
     {
         return 0;
@@ -5983,7 +5979,7 @@ int32_t __fastcall SKILLDESC_AppendValueThenTextLine(struct Unicode *pwszText, i
         Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_4001_percent));
     }
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
-    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdxSuffix));
+    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nStrIdxSuffix));
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline));
     return 1;
 }
@@ -5994,7 +5990,7 @@ int32_t __fastcall SKILLDESC_AppendValueThenTextLine(struct Unicode *pwszText, i
 //  parameter is int16_t, the truncation the sentinel test is made in), when nValue is zero, or when nMax is not positive. The sign convention is
 //  the family's: "+%d" only when bSigned is set and nValue is non-negative, and only on the first of the two numbers; the second always uses the
 //  plain form. Both numbers are printed, from the two separate stack arguments. The original inlines SKILLDESC_FormatInt here.
-int32_t __fastcall SKILLDESC_AppendValueOverValueLine(struct Unicode *pwszText, int16_t nStrIdxLabel, int32_t nStrIdxSuffix, int32_t nValue, int32_t nMax, int32_t bSigned)
+int32_t __fastcall SKILLDESC_AppendValueOverValueLine(struct Unicode *pwszText, D2C_StringIndices nStrIdxLabel, D2C_StringIndices nStrIdxSuffix, int32_t nValue, int32_t nMax, int32_t bSigned)
 {
     Unicode dest[32];
     char src[32];
@@ -6003,7 +5999,7 @@ int32_t __fastcall SKILLDESC_AppendValueOverValueLine(struct Unicode *pwszText, 
     {
         return 0;
     }
-    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdxLabel));
+    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nStrIdxLabel));
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon));
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
     SKILLDESC_FormatInt(dest, nValue, bSigned);
@@ -6013,7 +6009,7 @@ int32_t __fastcall SKILLDESC_AppendValueOverValueLine(struct Unicode *pwszText, 
     Unicode::toUnicode(dest, src, 32);
     Unicode::strcat(pwszText, dest);
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
-    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdxSuffix));
+    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nStrIdxSuffix));
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline));
     return 1;
 }
@@ -6024,21 +6020,21 @@ int32_t __fastcall SKILLDESC_AppendValueOverValueLine(struct Unicode *pwszText, 
 //  is the 5382 "dummy" sentinel (unlike SKILLDESC_AppendValueThenTextLine, which merely omits the label). The 32-Unicode buffer is constructed
 //  (0x6FB1487F..0x6FB14894) and never written or read again; the source declared one it did not use, and it is declared, and therefore
 //  constructed, as found.
-int32_t __fastcall SKILLDESC_AppendTextPairLine(struct Unicode *pwszText, int32_t nStrIdxLabel, int32_t nStrIdxText)
+int32_t __fastcall SKILLDESC_AppendTextPairLine(struct Unicode *pwszText, D2C_StringIndices nStrIdxLabel, D2C_StringIndices nStrIdxText)
 {
     Unicode dest[32];
 
     D2C_StringIndices wLabelStrIdx;
 
-    wLabelStrIdx = (D2C_StringIndices)(int16_t)nStrIdxLabel;
-    if ((uint16_t)nStrIdxLabel == STR_IDX_5382_dummy || (uint16_t)nStrIdxText == STR_IDX_5382_dummy)
+    wLabelStrIdx = nStrIdxLabel;
+    if (nStrIdxLabel == STR_IDX_5382_dummy || nStrIdxText == STR_IDX_5382_dummy)
     {
         return 0;
     }
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wLabelStrIdx));
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon));
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
-    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdxText));
+    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nStrIdxText));
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline));
     return 1;
 }
@@ -6048,14 +6044,14 @@ int32_t __fastcall SKILLDESC_AppendTextPairLine(struct Unicode *pwszText, int32_
 //  `<label>: <text> <value>[%]\n`: the same six arguments as SKILLDESC_AppendValueThenTextLine with the text and the number swapped, and the
 //  guards in the other order: this one tests the label first and the value second, and both return 0. The original inlines
 //  SKILLDESC_FormatInt here.
-int32_t __fastcall SKILLDESC_AppendTextThenValueLine(struct Unicode *pwszText, int32_t nStrIdxLabel, int32_t nStrIdxText, int32_t nValue, int32_t bSigned, int32_t bPercent)
+int32_t __fastcall SKILLDESC_AppendTextThenValueLine(struct Unicode *pwszText, D2C_StringIndices nStrIdxLabel, D2C_StringIndices nStrIdxText, int32_t nValue, int32_t bSigned, int32_t bPercent)
 {
     Unicode dest[32];
 
     D2C_StringIndices wLabelStrIdx;
 
-    wLabelStrIdx = (D2C_StringIndices)(int16_t)nStrIdxLabel;
-    if ((uint16_t)nStrIdxLabel == STR_IDX_5382_dummy)
+    wLabelStrIdx = nStrIdxLabel;
+    if (nStrIdxLabel == STR_IDX_5382_dummy)
     {
         return 0;
     }
@@ -6067,7 +6063,7 @@ int32_t __fastcall SKILLDESC_AppendTextThenValueLine(struct Unicode *pwszText, i
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(wLabelStrIdx));
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3997_colon));
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
-    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex((D2C_StringIndices)nStrIdxText));
+    Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(nStrIdxText));
     Unicode::strcat(pwszText, D2LANG_GetStringFromTblIndex(STR_IDX_3995_space));
     Unicode::strcat(pwszText, dest);
     if (bPercent)
@@ -6081,19 +6077,17 @@ int32_t __fastcall SKILLDESC_AppendTextThenValueLine(struct Unicode *pwszText, i
 
 //1.10f: D2Client.0x6FB14A30
 //  The one member of the family that lets the tbl string be the format: it fetches nStrIdxFormat and hands it to Unicode::sprintf with a
-//  256-wide stack buffer and a single integer argument, then appends a newline. Guards on the 5382 "dummy" sentinel like the others. The guard
-//  and the lookup are on the low word while the parameter is an int: nStrIdx = (__int16)nStrIdxFormat is computed once and both the sentinel
-//  test and the tbl lookup use it, so an index with anything in the high half would be refused as 5382 and read short otherwise. Reproduced.
+//  256-wide stack buffer and a single integer argument, then appends a newline. Guards on the 5382 "dummy" sentinel like the others.
 //  D2Lang's Unicode::sprintf consumes an argument for %%, so a tbl format containing %% would read past the single argument. The call is
 //  bounded: the buffer is 256 Unicode and the length is passed.
-int32_t __fastcall SKILLDESC_AppendSprintfLine(struct Unicode *pwszText, int32_t nStrIdxFormat, int32_t nValue)
+int32_t __fastcall SKILLDESC_AppendSprintfLine(struct Unicode *pwszText, D2C_StringIndices nStrIdxFormat, int32_t nValue)
 {
     Unicode src[256];
 
     D2C_StringIndices nStrIdx;
 
-    nStrIdx = (D2C_StringIndices)(int16_t)nStrIdxFormat;
-    if ((uint16_t)nStrIdxFormat == STR_IDX_5382_dummy)
+    nStrIdx = nStrIdxFormat;
+    if (nStrIdxFormat == STR_IDX_5382_dummy)
     {
         return 0;
     }
@@ -6127,13 +6121,13 @@ int32_t __fastcall SKILLDESC_ValidateMonsterId(D2C_MonsterIds nMonsterId)
 //  measured from the corner (gnScreenWidth - 128, gnScreenHeight - 52), so it follows the resolution. The fifth argument to
 //  D2Win_10129_DrawFramedText, nAlign, is 1 where the level builder passes 0; the colour is 0 in both. The original has descline 0x35 draw
 //  the same hint with this body inlined (0x6FB128BC..0x6FB1292D) while 0x36..0x38 call it.
-void __fastcall SKILLDESC_DrawQuantityHint(int32_t nQuantity, int32_t nStringId)
+void __fastcall SKILLDESC_DrawQuantityHint(int32_t nQuantity, D2C_StringIndices nStringId)
 {
     Unicode wszText[100];
 
     D2C_StringIndices nStrIdx;
 
-    nStrIdx = (D2C_StringIndices)(int16_t)nStringId;
+    nStrIdx = nStringId;
     Unicode::sprintf(100, wszText, D2LANG_GetStringFromTblIndex(STR_IDX_4184_scrollbooktext), nQuantity);
     Unicode::strcat(wszText, D2LANG_GetStringFromTblIndex(STR_IDX_3998_newline));
     Unicode::strcat(wszText, D2LANG_GetStringFromTblIndex(nStrIdx));

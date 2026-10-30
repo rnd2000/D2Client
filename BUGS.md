@@ -732,6 +732,17 @@ Real defects, reached in ordinary play, that nothing downstream can observe.
 
 `inv.cpp`. **Opened 2026-09-10, settled 2026-09-11.**
 
+**RE-ARGUED 2026-10-29: REFUTED -- the char ABI, not a defect.** VC6 writes the
+low byte of a register over an unrelated value only for an argument whose
+parameter it knows to be a byte; for an `int` it widens first -- `xor ecx, ecx /
+mov cl, ...` before GAME_SetLadderGame, whose parameter is a dword. So the four
+shop sites below pass BYTE parameters in the original's source, and the masks
+the trail lists are the callees widening their byte, not a repair of
+contaminated bits. `D2C_ItemInvPage` is one byte (`INVPAGE_NULL` is the byte 255
+that INV_OnGridLeftClick tests, `cmp bl, 0FFh`) and INV_GetVendorPageInventory
+takes a `uint8_t`; inv.cpp passes the byte at all six of its sites, with no
+local to declare zero. The text below is the reading of 2026-09-11.
+
 Five call sites write **only the low byte** of a register that holds something
 else and hand the whole dword on as an `int` page number:
 
@@ -781,6 +792,13 @@ harmlessness is a property of the callees, not of the store.
 ## The quest screen's copy of the same store
 
 `0x6FB05FB7`, `QuestLog.cpp`.
+
+**RE-ARGUED 2026-10-30: REFUTED -- the word ABI, and the shape was misquoted.**
+The instruction at 0x6FB05FB7 is `mov cx, [ecx*2+6FBB62C8h]`, a WORD load of the
+entry's wTailStringId over a record offset, not `mov cl, <page>`; and
+TEXT_ShowQuestScrollingText takes its string id as a 16-bit parameter (both
+callers write only `cx`, every use is 16-bit), which is what VC6 writes for one.
+QuestLog.cpp passes the word. The text below is the reading of 2026-09.
 
 `mov cl, <page>` over a register holding something else, then the whole dword
 forwarded. **Cannot fire at all**: an assert eleven lines above bounds the
@@ -1168,6 +1186,21 @@ and marked DEAD.
 
 `SKILLDESC_BuildDescLine`, `SkillDesc.cpp`. **Found 2026-09-17**, at the
 unit's re-check against the bytes; verdict the same day.
+
+**RE-ARGUED 2026-10-30: REFUTED -- the ABI of a 16-bit argument, not a defect.**
+The eight helpers the dispatcher hands the indices to (SkillDesc.cpp's
+AppendTextPairLine, AppendTextThenValueLine, AppendSprintfLine,
+AppendTextThenValue, AppendElemDamageLine, DrawQuantityHint,
+AppendFramesAsSeconds, AppendRangeBetweenTexts) read all eleven of their text
+parameters as words: five by the body's own 16-bit test (`cmp bp, 1506h`, `cmp
+word ptr [esp+4Ch], 1506h`, `test si, si`), six passed whole to
+D2LANG_GetStringFromTblIndex, which reads sixteen bits on every path. A word
+written into the low half of a register or a dword slot and passed on whole is
+how VC6 hands a 16-bit argument over, so the two slots below hold WORD locals of
+the original's source and "read whole" is the argument pass. Those parameters
+are `D2C_StringIndices` (AppendElemDamageLine's override, 0 for none,
+`uint16_t`), and so are the dispatcher's wDescTextA, nDescTextB and nStrIdx. The
+text below is the reading of 2026-09-17.
 
 Two stack slots of the dispatcher are written sixteen bits wide and read
 thirty-two bits wide, and nothing else writes their upper halves first:
@@ -4869,6 +4902,16 @@ Reproduced -- the write is the bytes' shift, add and mask.
 
 `0x6FAA8EC7`..`0x6FAA8EE3`, `Game.cpp`. **Argued 2026-09-22** at Game.cpp's
 second close. **INERT.**
+
+**RE-ARGUED 2026-10-30: REFUTED -- the word ABI, not a pointer's half.**
+PLAYER_OnMouseClick's nMoveFlags is a 16-bit parameter: VC6 writes only `ax`
+over an unrelated value for one (for a byte it would load `mov al`, for an `int`
+it widens first), and the callee reads only its low byte (0x6FB49A29). So the
+source passes LOWORD(wParam) and no part of the pointer; PLAYER_OnMouseClick
+takes a `uint16_t` and Game.cpp passes the word. What the entry also says still
+stands: the word is wParam's MK_* keys, not the flags the other three handlers
+build -- the source's choice, read by the same byte test. The text below is the
+reading of 2026-09-22.
 
     6FAA8EC7  call CUNIT_GetPlayer   ; eax = the player
     6FAA8ED9  mov  ax, [esi+8]          ; LOWORD(wParam) into ax

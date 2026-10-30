@@ -1921,11 +1921,6 @@ void __stdcall INV_StashOnLButtonUp(SMSGHANDLER_PARAMS *pMsg)
 }
 
 //  The NPC shop panel's handlers.
-//  BUG: three places pass on a page byte stored into the low byte of a register that holds something else, so the upper 24 bits of the dword
-//  handed to INV_GetVendorPageInventory / INV_OnGridLeftClick are stale: 0x6FAEA587 (mov cl, 3, ecx last written by SOUNDINST_PlaySound's
-//  return), 0x6FAEA7F2 (mov cl, byte ptr gnVendorPage, ecx last written by CUNIT_FindUnitByGuidAndType's return) and 0x6FAEA175 in
-//  INV_NpcShopOnMouseMove (ecx held gInvNpcShopRect.nLeft, so the upper bits are non-zero in every layout). REACHABLE, INERT: every consumer
-//  masks the value to eight bits or overwrites it. The same partial store is reproduced here.
 //  gNpcShopTabs is an array of four 20-byte records (bEnabled, bPressed, nHoverTextId, nInventoryMode, nBaseFrame, nCursorFrame), which is
 //  why every loop over it steps five ints; each of the five tab setters at the end of this file writes all six fields of one record.
 //  A second inv.cpp assert, FOG_DisplayAssert("sgbNPCMaxPages < MAX_INV_PAGES", <inv.cpp>, 8870), is pushed at 0x6FAEAB18 in
@@ -1982,13 +1977,10 @@ void __stdcall INV_NpcShopOnDismissKey(SMSGHANDLER_PARAMS *pMsg)
 //  Cursor moved over the shop. The mode test is five equalities, modes 0, 1, 3, 2 and 4 in that order.
 //  The hover is suppressed while an item is on the cursor: CURSOR_GetHeldUnit() non-null with the cursor inside the shop rect skips the whole
 //  body and writes nothing, so dragging an item across the vendor's stock leaves the description alone.
-//  nInvPage is gInvNpcShopRect.nLeft with its low byte replaced by gnVendorPage (the partial store noted at the head of the shop handlers);
-//  the upper 24 bits are non-zero in every layout and the value crosses into D2Common.
 void __stdcall INV_NpcShopOnMouseMove(SMSGHANDLER_PARAMS *pMsg)
 {
     int32_t nX;
     int32_t nY;
-    int32_t nInvPage;
     D2UnitGUID nNpcGUID;
     D2UnitStrc *pNpc;
     D2InventoryStrc *pInventory;
@@ -2021,8 +2013,6 @@ void __stdcall INV_NpcShopOnMouseMove(SMSGHANDLER_PARAMS *pMsg)
         return;
     }
 
-    //  ecx holds the rect's left edge here, and only its low byte is replaced
-    nInvPage = gInvNpcShopRect.nLeft;
     pInventory = pNpc->pInventory;
 
     if (nX < gInvNpcShopRect.nLeft || nX > gInvNpcShopRect.nRight || nY < gInvNpcShopRect.nTop || nY > gInvNpcShopRect.nBottom)
@@ -2040,9 +2030,7 @@ void __stdcall INV_NpcShopOnMouseMove(SMSGHANDLER_PARAMS *pMsg)
         return;
     }
 
-    //  the partial store, see the note at the head of the shop handlers
-    *(uint8_t *)&nInvPage = gnVendorPage;
-    INV_PixelToGridCell(pNpc, pInventory, NULL, nX, nY, &gInvNpcShopGrid, (D2C_ItemInvPage)nInvPage);
+    INV_PixelToGridCell(pNpc, pInventory, NULL, nX, nY, &gInvNpcShopGrid, (D2C_ItemInvPage)gnVendorPage);
     pMsg->bReturn = 1;
     pMsg->lResult = 0;
     gnNpcTradeMode = 0;
@@ -2059,13 +2047,11 @@ void __stdcall INV_NpcShopOnMouseMove(SMSGHANDLER_PARAMS *pMsg)
 //  assigned, and ours carries an explicit initialiser.
 //  Clicking the selected tab again closes it: it is deselected, sgInventoryMode goes back to 1 and the cursor is emptied. If a different tab
 //  was selected the new one is set and the old one cleared; if the tab's own record is not 1, everything is cleared and the mode resets.
-//  The second partial store: nInvPage's low byte is gnVendorPage over whatever CUNIT_FindUnitByGuidAndType left in ecx, then pushed whole
-//  into INV_OnGridLeftClick.
 void __stdcall INV_NpcShopOnLButtonDown(SMSGHANDLER_PARAMS *pMsg)
 {
     int32_t nXpos;
     int32_t nYpos;
-    int32_t nInvPage;
+    uint8_t nInvPage;
     int32_t iTab;
     int32_t nTabHit;
     int32_t nTabPrevSelected;
@@ -2155,7 +2141,7 @@ void __stdcall INV_NpcShopOnLButtonDown(SMSGHANDLER_PARAMS *pMsg)
                 goto CONSUME;
             }
             SOUNDINST_PlaySound(SOUND_CURSOR_SWITCH, NULL, 0, 0, 0);
-            *(uint8_t *)&nInvPage = 0;
+            nInvPage = 0;
         }
         //  D2ExpRes: BuySellTabsClick3 [BuySell] detours at the `lea eax, [ecx+0F0h]` this +240 compiles to.
         else if (nXpos <= gnBorderXDifference + 160)
@@ -2165,7 +2151,7 @@ void __stdcall INV_NpcShopOnLButtonDown(SMSGHANDLER_PARAMS *pMsg)
                 goto CONSUME;
             }
             SOUNDINST_PlaySound(SOUND_CURSOR_SWITCH, NULL, 0, 0, 0);
-            *(uint8_t *)&nInvPage = 1;
+            nInvPage = 1;
         }
         else if (nXpos <= gnBorderXDifference + 240)
         {
@@ -2174,7 +2160,7 @@ void __stdcall INV_NpcShopOnLButtonDown(SMSGHANDLER_PARAMS *pMsg)
                 goto CONSUME;
             }
             SOUNDINST_PlaySound(SOUND_CURSOR_SWITCH, NULL, 0, 0, 0);
-            *(uint8_t *)&nInvPage = 2;
+            nInvPage = 2;
         }
         else
         {
@@ -2183,10 +2169,9 @@ void __stdcall INV_NpcShopOnLButtonDown(SMSGHANDLER_PARAMS *pMsg)
                 goto CONSUME;
             }
             SOUNDINST_PlaySound(SOUND_CURSOR_SWITCH, NULL, 0, 0, 0);
-            *(uint8_t *)&nInvPage = 3;
+            nInvPage = 3;
         }
         gnVendorPageHoldUntil = 0;
-        //  the partial store: only the low byte above was written, the upper 24 bits are whatever SOUNDINST_PlaySound left in ecx
         INV_GetVendorPageInventory(nInvPage);
         goto CONSUME;
     }
@@ -2278,9 +2263,7 @@ void __stdcall INV_NpcShopOnLButtonDown(SMSGHANDLER_PARAMS *pMsg)
         pNpc = CUNIT_FindUnitByGuidAndType(nNpcGUID, UNIT_MONSTER);
         if (pNpc)
         {
-            //  the second partial store: ecx holds whatever CUNIT_FindUnitByGuidAndType left
-            *(uint8_t *)&nInvPage = gnVendorPage;
-            INV_OnGridLeftClick(pNpc, pNpc->pInventory, nXpos, nYpos, (uint8_t)pMsg->wParam, &gInvNpcShopGrid, (D2C_ItemInvPage)nInvPage);
+            INV_OnGridLeftClick(pNpc, pNpc->pInventory, nXpos, nYpos, (uint8_t)pMsg->wParam, &gInvNpcShopGrid, (D2C_ItemInvPage)gnVendorPage);
         }
     }
 
@@ -3377,8 +3360,7 @@ void __fastcall INV_NpcShopSetTabEmpty(int32_t nSlot)
 //  load/close/anim pair with the trade panel's three resets and one refusal (0x6FAECFE0..0x6FAED27B). UI_RegisterPanelHandlers calls the
 //  loaders, UI_UnregisterPanelHandlers the closers and the NPCMENU state machine the trade trio. The first half of the cube's and the stash's
 //  close functions is the same code as their dismiss-key handlers (escape and panel teardown converge).
-//  Both close functions end with MSG_SendCmd3Words(79, ...) reached with mov cl, 4Fh, which writes only the low byte of ecx. That is correct
-//  here, unlike the shop's partial stores, because the callee's parameter is a char and lives in CL; the callees of the shop's stores take an int.
+//  Both close functions end with MSG_SendCmd3Words(79, ...): mov cl, 4Fh writes only the low byte of ecx, the callee's parameter being a char.
 
 //  The module's single copy of the string DATA\GLOBAL (0x6FB743EC); other source files of ours declare their own.
 static const char aDataGlobalInv[] = "DATA\\GLOBAL";
@@ -3742,14 +3724,13 @@ void __fastcall INV_ClearHoverForItem(D2UnitStrc *pItem)
 }
 
 //1.10f: D2Client.0x6FAE8F90
-//  Rebuilds the vendor's page tabs and picks a page that has something on it. The argument is clamped to 0 when its low byte is 5 or more (five
-//  inventory pages), so an out-of-range request silently becomes the first page.
+//  Rebuilds the vendor's page tabs and picks a page that has something on it. The argument, a byte, is clamped to 0 when it is 5 or more
+//  (five inventory pages), so an out-of-range request silently becomes the first page.
 //  gnVendorPageHoldUntil is a deadline, not a cache: while it is non-zero this function does nothing. INV_NpcShopBuildTabs arms it at now + 500,
 //  INV_UpdateAndDrawPanels expires it once the clock passes, and INV_NpcShopOnLButtonDown clears it to force an immediate rebuild.
 //  Then it walks the NPC's inventory, buckets every item by ITEMS_GetInvPage into five counters, marks each side tab as having items or not, and
 //  selects a page: the one asked for if it has items, otherwise the next occupied one within four tries (the limit stops an empty vendor spinning).
-//  The and 0xFF mask is written as the bytes have it; it is why the callers' partial stores are harmless.
-void __fastcall INV_GetVendorPageInventory(int32_t nInvPage)
+void __fastcall INV_GetVendorPageInventory(uint8_t nInvPage)
 {
     uint8_t nStartPage;
     uint8_t nRequestedPage;
@@ -3765,12 +3746,12 @@ void __fastcall INV_GetVendorPageInventory(int32_t nInvPage)
     uint8_t nItemPage;
     int32_t aItemsPerPage[5];
 
-    nStartPage = (uint8_t)nInvPage;
-    nRequestedPage = (uint8_t)nInvPage;
+    nStartPage = nInvPage;
+    nRequestedPage = nInvPage;
     dwNpcGUID = nInvPage;
-    if ((uint8_t)nInvPage >= 5u)
+    if (nInvPage >= 5u)
     {
-        //  only the low byte of the slot is cleared; the upper three keep whatever the caller's register held
+        //  only the low byte of the slot is cleared, as in the original; the dword is overwritten before anything reads it
         nStartPage = 0;
         *(uint8_t *)&dwNpcGUID = 0;
         nRequestedPage = 0;
@@ -3897,7 +3878,6 @@ void __cdecl INV_NpcShopBuildTabs(void)
     int32_t bVendorGamble;
     D2UnitStrc *pNpc;
     UINT_PTR nTab;
-    int32_t nInvPage;
     int32_t bHasTabs;
     uint32_t dwClassId;
     uint32_t nClassIdFrom512;
@@ -4121,11 +4101,7 @@ HAS_TABS:
     bHasTabs = 1;
 
 GET_PAGE:
-    //  DIFFERENCE: the original sets only the low byte of an ecx nobody initialised and hands the whole dword on (a partial store); reading an
-    //  uninitialised local is undefined in C, so ours is declared zero. Unobservable: every consumer masks to eight bits.
-    nInvPage = 0;
-    *(uint8_t *)&nInvPage = gnVendorPage;
-    INV_GetVendorPageInventory(nInvPage);
+    INV_GetVendorPageInventory(gnVendorPage);
     if (bHasTabs)
     {
         gnVendorPageHoldUntil = GetTickCount() + 500;
@@ -4153,7 +4129,6 @@ void __cdecl INV_NpcShopApplyTabSelection(void)
     D2UnitStrc *pNpc;
     int32_t nMouseX;
     int32_t nMouseY;
-    int32_t nVendorPage;
     D2UnitGUID dwNpcGUID;
 
     if (sgInventoryMode != 1 && sgInventoryMode != 2 && sgInventoryMode != 4 && sgInventoryMode != 3)
@@ -4215,12 +4190,7 @@ void __cdecl INV_NpcShopApplyTabSelection(void)
     nMouseY = CURSOR_GetMouseY();
     if (nMouseX >= gInvNpcShopGrid.nGridLeft && nMouseX <= gInvNpcShopGrid.nGridRight && nMouseY >= gInvNpcShopGrid.nGridTop && nMouseY <= gInvNpcShopGrid.nGridBottom)
     {
-        //  DIFFERENCE: the original ends with a partial store, the low byte of nVendorPage over a register nobody set, and hands the whole
-        //  dword to INV_PixelToGridCell; reading an uninitialised local is undefined in C, so ours is zero. Unobservable: every consumer
-        //  masks to eight bits.
-        nVendorPage = 0;
-        *(uint8_t *)&nVendorPage = gnVendorPage;
-        INV_PixelToGridCell(pNpc, pNpc->pInventory, NULL, nMouseX, nMouseY, &gInvNpcShopGrid, (D2C_ItemInvPage)nVendorPage);
+        INV_PixelToGridCell(pNpc, pNpc->pInventory, NULL, nMouseX, nMouseY, &gInvNpcShopGrid, (D2C_ItemInvPage)gnVendorPage);
         gnNpcTradeMode = 0;
     }
 }
@@ -4727,7 +4697,6 @@ void __fastcall INV_DrawGridHighlight(D2InventoryGridInfoStrc *pGridInfo, int32_
     int32_t nX;
     int32_t nY;
     int32_t nBoxHeight;
-    uint32_t dwColor;
 
     nRowY = nCellY;
     nRowEnd = nCellY + nHeight;
@@ -4746,11 +4715,7 @@ void __fastcall INV_DrawGridHighlight(D2InventoryGridInfoStrc *pGridInfo, int32_
             nY = pGridInfo->nGridTop + nRowY * nBoxHeight;
             if (nX >= 0 && nX < gnViewportRight && nY >= 0 && nY < gnViewportBottom)
             {
-                //  BUG: a partial store (the low byte over the other bytes of the register) feeding GFX_DrawFilledRect's full uint32_t dwColor, which
-                //  does not mask. INERT: nColorIdx indexes a five-element array, so the upper 24 bits are already zero.
-                dwColor = nColorIdx;
-                *(uint8_t *)&dwColor = gInvHighlightColors[nColorIdx];
-                GFX_DrawFilledRect(nX, nY, pGridInfo->nGridBoxWidth, nBoxHeight, dwColor, 0);
+                GFX_DrawFilledRect(nX, nY, pGridInfo->nGridBoxWidth, nBoxHeight, gInvHighlightColors[nColorIdx], 0);
             }
         }
         ++nRowY;

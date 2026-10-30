@@ -562,13 +562,13 @@ int32_t __fastcall SKILLS_CltDoFunc75(D2UnitStrc *pUnit, D2C_Skills nSkillId, in
     nMagnitude = pSkillsTxt ? pSkillsTxt->dwParam[0] : 0;
 
     pSkillsTxt = DATATBLS_GetSkillsTxtRecordById(nSkillId);
-    nRampUpMs = 1000 * (pSkillsTxt ? pSkillsTxt->dwParam[1] : 0) / 25;
+    nRampUpMs = (int32_t)((uint32_t)(pSkillsTxt ? pSkillsTxt->dwParam[1] : 0) * 1000u) / 25;
 
     pSkillsTxt = DATATBLS_GetSkillsTxtRecordById(nSkillId);
-    nHoldMs = 1000 * (pSkillsTxt ? pSkillsTxt->dwParam[2] : 0) / 25;
+    nHoldMs = (int32_t)((uint32_t)(pSkillsTxt ? pSkillsTxt->dwParam[2] : 0) * 1000u) / 25;
 
     pSkillsTxt = DATATBLS_GetSkillsTxtRecordById(nSkillId);
-    nRampDownMs = 1000 * (pSkillsTxt ? pSkillsTxt->dwParam[3] : 0) / 25;
+    nRampDownMs = (int32_t)((uint32_t)(pSkillsTxt ? pSkillsTxt->dwParam[3] : 0) * 1000u) / 25;
 
     VIEWEFFECTS_StartScreenShake(nMagnitude, nRampUpMs, nHoldMs, nRampDownMs);
     return 1;

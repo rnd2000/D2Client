@@ -985,6 +985,7 @@ void __fastcall MISSILE_CltDoFunc12(D2UnitStrc *pMissile)
     int32_t nMissileId;
     int32_t nThird;
     int32_t nRampMs;
+    int32_t nHoldProduct;
     int32_t nHoldMs;
 
     pMissilesTxt = NULL;
@@ -1004,7 +1005,10 @@ void __fastcall MISSILE_CltDoFunc12(D2UnitStrc *pMissile)
     {
         nThird = (int32_t)pMissilesTxt->dwCltParam[1] / 3;
         nRampMs = (int32_t)(25000u * (uint32_t)nThird) / 25;
-        nHoldMs = (int32_t)(25000u * (uint32_t)((int32_t)pMissilesTxt->dwCltParam[1] - 2 * nThird)) / 25;
+        //  the hold's divide by 25 as the original computes it: MSVC folds the plain form into a multiply by 1000, wrong once the product wraps
+        nHoldProduct = (int32_t)(25000u * (uint32_t)((int32_t)pMissilesTxt->dwCltParam[1] - 2 * nThird));
+        nHoldMs = (int32_t)(((int64_t)nHoldProduct * 0x51EB851FLL) >> 35);
+        nHoldMs += (int32_t)((uint32_t)nHoldMs >> 31);
         VIEWEFFECTS_StartScreenShake((int32_t)pMissilesTxt->dwCltParam[0], nRampMs, nHoldMs, nRampMs);
     }
 
@@ -2677,6 +2681,7 @@ void __fastcall MISSILE_CltDoFunc29(D2UnitStrc *pMissile)
     int32_t nPeriod;
     int32_t nThird;
     int32_t nRampMs;
+    int32_t nHoldProduct;
     int32_t nHoldMs;
     int32_t nDebrisId;
 
@@ -2735,7 +2740,10 @@ void __fastcall MISSILE_CltDoFunc29(D2UnitStrc *pMissile)
     {
         nThird = (int32_t)pMissilesTxt->dwCltParam[1] / 3;
         nRampMs = (int32_t)(25000u * (uint32_t)nThird) / 25;
-        nHoldMs = (int32_t)(25000u * (uint32_t)((int32_t)pMissilesTxt->dwCltParam[1] - 2 * nThird)) / 25;
+        //  the hold's divide by 25 as the original computes it: MSVC folds the plain form into a multiply by 1000, wrong once the product wraps
+        nHoldProduct = (int32_t)(25000u * (uint32_t)((int32_t)pMissilesTxt->dwCltParam[1] - 2 * nThird));
+        nHoldMs = (int32_t)(((int64_t)nHoldProduct * 0x51EB851FLL) >> 35);
+        nHoldMs += (int32_t)((uint32_t)nHoldMs >> 31);
         VIEWEFFECTS_StartScreenShake(8, nRampMs, nHoldMs, nRampMs);
     }
 
